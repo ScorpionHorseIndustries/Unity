@@ -130,7 +130,7 @@ public class InstalledItem {
   }
 
   private static void informNeighbours(InstalledItem item) {
-    Dictionary<string, Tile> ngbrs = WorldController.Instance.getNeighbours(item);
+    Dictionary<string, Tile> ngbrs = WorldController.Instance.GetNeighbours(item);
     informNeighbour(item, ngbrs["north"]);
     informNeighbour(item, ngbrs["east"]);
     informNeighbour(item, ngbrs["south"]);

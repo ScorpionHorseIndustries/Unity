@@ -62,14 +62,19 @@ public class SpriteController : MonoBehaviour {
   public void SetTileSprite(Tile t) {
     SpriteRenderer sr = WorldController.Instance.GetGameObjectFromTile(t).GetComponent<SpriteRenderer>();
     //Debug.Log("give me sprite: " + t.type.spriteName);
-    sr.sprite = GetSprite(t.type.spriteName);
+    sr.sprite = GetRandomSprite(t.type.sprites);//GetSprite(t.type.spriteName);
 
+  }
+
+  public Sprite GetRandomSprite(string[] tSprites) {
+    return GetSprite(tSprites[Random.Range(0, tSprites.Length)]);
   }
 
   public Sprite GetSprite(string name) {
     if (sprites.ContainsKey(name)) {
       return sprites[name];
     } else {
+      Debug.Log("could not locate sprite [" + name + "]");
       return sprites["sprite_error"];
     }
   }
@@ -81,10 +86,15 @@ public class SpriteController : MonoBehaviour {
     */
   }
 
+  public Sprite GetSprite(Character c) {
+    return GetSprite(c.spriteName);
+  }
 
   public SpriteHolder GetSprite(InstalledItem item) {
     SpriteHolder sp = new SpriteHolder();
-    sp.s = sprites[item.getRandomSpriteName()];
+    sp.s = GetSprite(item.getRandomSpriteName());
+
+
     if (item.randomRotation) {
       int r = Random.Range(0, 4);
       sp.r = 90 * r;
@@ -97,7 +107,7 @@ public class SpriteController : MonoBehaviour {
       int y = item.tile.y;
       bool n, e, s, w;
       int nc = 0;
-      Dictionary<string, Tile> ngbrs = WorldController.Instance.getNeighbours(item);
+      Dictionary<string, Tile> ngbrs = WorldController.Instance.GetNeighbours(item);
       Tile north = ngbrs["north"];
       Tile east = ngbrs["east"];
       Tile south = ngbrs["south"];
@@ -117,7 +127,7 @@ public class SpriteController : MonoBehaviour {
 
           break;
         case 1:
-          sp.s = sprites[item.sprite_s];
+          sp.s = GetSprite(item.sprite_s);
           if (n) {
             sp.r = 180;
           } else if (e) {
@@ -127,13 +137,13 @@ public class SpriteController : MonoBehaviour {
           }
           break;
         case 2:
-          sp.s = sprites[item.sprite_ns];
+          sp.s = GetSprite(item.sprite_ns);
           if (e && w) {
             sp.r = 90;
           } else if (n && s) {
             sp.r = 0;
           } else {
-            sp.s = sprites[item.sprite_sw];
+            sp.s = GetSprite(item.sprite_sw);
             if (s && w) {
 
             } else if (n && e) {
@@ -146,7 +156,7 @@ public class SpriteController : MonoBehaviour {
           }
           break;
         case 3:
-          sp.s = sprites[item.sprite_nsw];
+          sp.s = GetSprite(item.sprite_nsw);
 
           if (n && s && w) {
 
@@ -160,7 +170,7 @@ public class SpriteController : MonoBehaviour {
 
           break;
         case 4:
-          sp.s = sprites[item.sprite_nesw];
+          sp.s = GetSprite(item.sprite_nesw);
           break;
 
       }

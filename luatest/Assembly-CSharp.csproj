@@ -72,6 +72,7 @@
     <Compile Include="Assets\Controller\SpriteController.cs" />
     <Compile Include="Assets\Controller\TrashController.cs" />
     <Compile Include="Assets\Controller\WorldController.cs" />
+    <Compile Include="Assets\DataModels\Character.cs" />
     <Compile Include="Assets\DataModels\Job.cs" />
     <Compile Include="Assets\Example\ExampleBehaviour.cs" />
     <Compile Include="Assets\Example\SpawnSphere.cs" />

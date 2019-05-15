@@ -5,70 +5,84 @@ using System;
 
 
 public class Tile {
-	//public enum TYPE {DIRT,GRASS,EMPTY,WALL }
-	Action<Tile> cbChanged;
+  //public enum TYPE {DIRT,GRASS,EMPTY,WALL }
+  Action<Tile> cbChanged;
 
-	//public Tile.TYPE type { get { return type; } set { type = value; if (cbTypeChanged != null) cbTypeChanged(this); } }
-	public TileType type { get; private set; }
-	public LooseItem looseItem { get; private set; }
-	public InstalledItem installedItem { get; private set; }
+  //public Tile.TYPE type { get { return type; } set { type = value; if (cbTypeChanged != null) cbTypeChanged(this); } }
+  public TileType type { get; private set; }
+  public LooseItem looseItem { get; private set; }
+  public InstalledItem installedItem { get; private set; }
 
-	public int x { get; private set; }
-	public int y { get; private set; }
-	public World world { get; private set; }
+  public int x { get; private set; }
+  public int y { get; private set; }
+  public World world { get; private set; }
 
-	public bool pendingJob = false;
+  public bool pendingJob = false;
 
-	public Tile(World world, TileType type, int x, int y)
-	{
-		this.type = type;
-		this.x = x;
-		this.y = y;
-		this.world = world;
+  public Tile(World world, TileType type, int x, int y) {
+    this.type = type;
+    this.x = x;
+    this.y = y;
+    this.world = world;
 
-	}
+  }
 
-	public override String ToString()
-	{
+  public override String ToString() {
     return "tile: " + type + " (" + x + "," + y + ") pendingJob:" + pendingJob + " hasInstalled: " + (installedItem != null) + " hasLoose: " + (looseItem != null);
-	}
+  }
 
-	public void cbRegisterOnChanged(Action<Tile> cb)
-	{
-		cbChanged += cb;
-	}
+  public void cbRegisterOnChanged(Action<Tile> cb) {
+    cbChanged += cb;
+  }
 
-	public void cbUnregisterOnChanged(Action<Tile> cb) {
-		cbChanged -= cb;
-	}
+  public void cbUnregisterOnChanged(Action<Tile> cb) {
+    cbChanged -= cb;
+  }
 
-	public TileType getType ()
-	{
-		return type;
-	}
+  public TileType getType() {
+    return type;
+  }
 
-	public void SetType(TileType t)
-	{
-		type = t;
-		if (cbChanged != null)
-		{
-			cbChanged(this);
-		}
-	}
+  public void SetType(TileType t) {
+    type = t;
+    if (cbChanged != null) {
+      cbChanged(this);
+    }
+  }
 
-	public bool placeInstalledObject(InstalledItem instobj) {
-		if (instobj == null) {
-			this.installedItem = null;
-			return true;
-		}
-		if (this.installedItem == null) {
-			this.installedItem = instobj;
-			return true;
-		} else {
-			return false;
-		}
-	}
+  public bool placeInstalledObject(InstalledItem instobj) {
+    if (instobj == null) {
+      this.installedItem = null;
+      return true;
+    }
+    if (this.installedItem == null) {
+      this.installedItem = instobj;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public bool IsNeighbour(Tile o, bool diagonal = false) {
+
+    if ((o.x == x && (o.y == y + 1 || o.y == y - 1)) || (o.y == y && (o.x == x + 1 || o.x == x - 1))) {
+      return true;
+    } else if (diagonal) {
+      if ((o.x == x - 1 || o.x == x + 1) && (o.y == y - 1 || o.y == y + 1)) {
+
+        return true;
+      } else {
+        return false;
+      }
+    } else {
 
 
-    
+      return false;
+
+    }
+
+  }
+
+
+
 }

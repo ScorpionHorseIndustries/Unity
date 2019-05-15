@@ -28,7 +28,7 @@ public class TileType {
 	private TileType(string name, string[] sprites) {
 		this.name = name;
 		this.sprites = sprites;
-		this.spriteName = sprites[Random.Range(0, sprites.Length)];
+		this.spriteName = sprites[0];
 	}
 
 	public override string ToString() {
@@ -49,11 +49,19 @@ public class TileType {
 		JArray ja = (JArray)job["tileTypes"];
 		foreach (JObject j in ja) {
 			string n = (string)j["name"];
-			JArray nja = (JArray)j["sprites"];
+      string prefix = Funcs.jsonGetString(j["spritePrefix"], "");
+      int num = Funcs.jsonGetInt(j["sprites"], 0);
+
+      int offset = Funcs.jsonGetInt(j["spritesOffset"], 0);
+
+      
+			
 			List<string> sprites = new List<string>();
-			foreach (string njas in nja) {
-				sprites.Add(njas);
-			}
+
+      for (int i = offset; i < offset + num; i += 1) {
+        sprites.Add(prefix + i);
+      }
+
 			//Debug.Log(n + " " + sprites[0] + " " + sprites.Count);
 			TileType t = new TileType(n, sprites.ToArray<string>());
 			t.rangeLow = (float)j["rangeLow"];

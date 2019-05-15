@@ -45,5 +45,21 @@ public static class Funcs
     }
   }
 
+  public static float QuickDistance(float x1, float y1, float x2, float y2) {
+    float d = Mathf.Pow(x1 - x2, 2) + Mathf.Pow(y1 - y2, 2);
+
+
+    return d;
+  }
+
+  public static float Distance(Tile A, Tile B) {
+    return Distance(A.x, A.y, B.x, B.y);
+  }
+  public static float Distance(float x1, float y1, float x2, float y2) {
+    float d = Mathf.Sqrt(Mathf.Pow(x1 - x2, 2) + Mathf.Pow(y1 - y2, 2));
+
+
+    return d;
+  }
 
 }

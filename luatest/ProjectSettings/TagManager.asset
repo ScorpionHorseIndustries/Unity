@@ -42,6 +42,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ground
+    uniqueID: 739130187
+    locked: 0
+  - name: Objects
+    uniqueID: 4033547021
+    locked: 0
+  - name: Characters
+    uniqueID: 2466846857
+    locked: 0
+  - name: Sky
+    uniqueID: 552278615
+    locked: 0
   - name: TileUI
     uniqueID: 4266438913
     locked: 0

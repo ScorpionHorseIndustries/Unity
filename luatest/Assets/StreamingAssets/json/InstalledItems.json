@@ -2,7 +2,7 @@
   "InstalledItems" : [ 
   {
     "name" : "installed::wall",
-    "sprite" : "wall_none",
+    "sprite" : "walls_none",
 	"sprites" : [],
     "linked" : true,
     "neighbour_s" : "walls_s",
@@ -33,8 +33,8 @@
   },
     {
     "name" : "installed::atm",
-	"sprite" : "installed_atm",
-	"sprites" : [],
+	"sprite" : "installed_atm_0",
+	"sprites" : ["installed_atm_0", "installed_atm_1", "installed_atm_2", "installed_atm_3"],
       "movementFactor" : 0,
 	  "linked" : false,
 	  "trash" : false,

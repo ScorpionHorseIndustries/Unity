@@ -22,6 +22,15 @@ public class JobQueue {
     
   }
 
+  public Job GetNextJob() {
+    if (jobs.Count == 0) {
+      return null;
+    } else {
+      return Pop();
+    }
+    
+  }
+
   public Job Pop() {
     return jobs.Dequeue();
   }
@@ -38,4 +47,8 @@ public class JobQueue {
     cbJobCreated -= cb;
 
   }
+
+  public void OnJobComplete(Job j) {
+    
+  } 
 }

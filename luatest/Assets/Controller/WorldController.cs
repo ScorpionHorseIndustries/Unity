@@ -11,9 +11,10 @@ public class WorldController : MonoBehaviour {
   [SerializeField]
   public GameObject buildProgressSprite;
   public GameObject cashText;
-  private Dictionary<Tile, GameObject> tilesGameObjectsMap;
-  private Dictionary<InstalledItem, GameObject> installedItemGameObjects;
-
+  private Dictionary<Tile, GameObject> Tiles_GO_Map;
+  private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
+  private Dictionary<Character, GameObject> Characters_GO_Map;
+  private Dictionary<Job, GameObject> Job_GO_Map = new Dictionary<Job, GameObject>();
 
   public EventSystem eventSystem;
   public static WorldController Instance { get; private set; }
@@ -47,8 +48,10 @@ public class WorldController : MonoBehaviour {
 
     TileType.LoadFromFile();
 
-    tilesGameObjectsMap = new Dictionary<Tile, GameObject>();
-    installedItemGameObjects = new Dictionary<InstalledItem, GameObject>();
+    Tiles_GO_Map = new Dictionary<Tile, GameObject>();
+    InstalledItems_GO_Map = new Dictionary<InstalledItem, GameObject>();
+    Characters_GO_Map = new Dictionary<Character, GameObject>();
+    
     eventSystem = EventSystem.current;
     Debug.Log("create world");
     world = new World();
@@ -63,6 +66,9 @@ public class WorldController : MonoBehaviour {
     sprCon.world = this.world;
 
     world.jobQueue.cbRegisterJobCreated(OnJobCreated);
+    world.RegisterCharacterChangedCB(OnCharacterChanged);
+    world.RegisterCharacterCreatedCB(OnCharacterCreated);
+    world.CreateCharacters();
 
   }
 
@@ -86,24 +92,29 @@ public class WorldController : MonoBehaviour {
 
     countdown -= Time.deltaTime;
     if (countdown < 0) {
-      addCurrency(UnityEngine.Random.Range(-1f, 4f));
+      //addCurrency(UnityEngine.Random.Range(-1f, 4f));
       countdown = 2;
     }
+
+
+    //add pause and speed controls
+    world.Update(Time.deltaTime);
+
 
 
   }
 
   public GameObject GetGameObjectFromTile(Tile t) {
-    if (tilesGameObjectsMap.ContainsKey(t)) {
-      return tilesGameObjectsMap[t];
+    if (Tiles_GO_Map.ContainsKey(t)) {
+      return Tiles_GO_Map[t];
     } else {
       return null;
     }
   }
 
   public GameObject GetGameObjectFromInstalledItem(InstalledItem item) {
-    if (installedItemGameObjects.ContainsKey(item)) {
-      return installedItemGameObjects[item];
+    if (InstalledItems_GO_Map.ContainsKey(item)) {
+      return InstalledItems_GO_Map[item];
     } else {
       return null;
     }
@@ -118,18 +129,34 @@ public class WorldController : MonoBehaviour {
     for (int x = 0; x < world.width; x += 1) {
       for (int y = 0; y < world.height; y += 1) {
         Tile t = world.getTileAt(x, y);
-        GameObject tile_go = new GameObject();
-        tile_go.name = "tile_" + x + "_" + y;
-        tile_go.transform.Translate(t.x, t.y, 0);
-        tile_go.transform.SetParent(this.transform, true);
-        tile_go.AddComponent<SpriteRenderer>();
+        GameObject go = CreateGameObject("tile_" + x + "_" + y, x, y);
+        //GameObject tile_go = new GameObject();
+        //tile_go.name = "tile_" + x + "_" + y;
+        //tile_go.transform.Translate(t.x, t.y, 0);
+        //tile_go.transform.SetParent(this.transform, true);
+        //tile_go.AddComponent<SpriteRenderer>();
 
-        tilesGameObjectsMap.Add(t, tile_go);
+        Tiles_GO_Map.Add(t, go);
+        go.GetComponent<SpriteRenderer>().sortingLayerName = "Ground";
 
         t.cbRegisterOnChanged(SetTileSprite);
 
       }
     }
+  }
+
+  public GameObject CreateGameObject(string name, int x, int y, bool withSprite = true) {
+    GameObject go = new GameObject();
+    go.name = name;
+    go.transform.Translate(x, y, 0);
+    go.transform.SetParent(this.transform, true);
+
+    if (withSprite) {
+      go.AddComponent<SpriteRenderer>();
+    }
+
+    return go;
+
   }
 
   public void SetTileSprite(Tile t) {
@@ -139,12 +166,12 @@ public class WorldController : MonoBehaviour {
   public void OnInstalledItemCreated(InstalledItem inst) {
     //create a visible game object
 
-    GameObject go = new GameObject();
-    installedItemGameObjects.Add(inst, go);
 
-    go.name = inst.type + "_" + inst.tile.x + "_" + inst.tile.y;
-    go.transform.position = new Vector2(inst.tile.x, inst.tile.y);
-    SpriteRenderer spr = go.AddComponent<SpriteRenderer>();
+    GameObject go = CreateGameObject(inst.type + "_" + inst.tile.x + "_" + inst.tile.y, inst.tile.x, inst.tile.y);
+    InstalledItems_GO_Map.Add(inst, go);
+    SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+
+    
     SpriteHolder sh = SpriteController.Instance.GetSprite(inst);
     if (sh.r != 0) {
       spr.transform.Rotate(0, 0, sh.r);
@@ -154,9 +181,37 @@ public class WorldController : MonoBehaviour {
     spr.sprite = sh.s; // sprites[inst.spriteName];
     spr.sortingOrder += 1;
     go.transform.SetParent(this.transform, true);
+    spr.sortingLayerName = "Objects";
 
     //world.RegisterInstalledItemCB(inst);
     inst.RegisterCB(OnInstalledItemChanged);
+
+  }
+
+  void OnCharacterCreated(Character chr) {
+    string name = "char_" + chr.GetHashCode();
+
+
+    GameObject go = CreateGameObject(name, chr.PosTile.x, chr.PosTile.y);
+    SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+    spr.sprite = sprCon.GetSprite(chr);
+    spr.sortingLayerName = "Characters";
+    Characters_GO_Map.Add(chr, go);
+  }
+
+
+
+  void OnCharacterDestroyed(Character c) {
+
+  }
+
+  void OnCharacterChanged(Character c) {
+    if (Characters_GO_Map.ContainsKey(c)) {
+      GameObject go = Characters_GO_Map[c];
+      Vector2 pos = new Vector2(c.X, c.Y);
+
+      go.transform.position = pos;
+    }
 
   }
 
@@ -168,6 +223,7 @@ public class WorldController : MonoBehaviour {
 
     GameObject g = SimplePool.Spawn(buildProgressSprite, new Vector2(j.tile.x, j.tile.y), Quaternion.identity);
     g.transform.SetParent(this.transform, true);
+    Job_GO_Map.Add(j,g);
     /*
 foreach (Tile tile in dragArea)
 {
@@ -181,14 +237,17 @@ foreach (Tile tile in dragArea)
 
   void OnJobEnded(Job j) {
     //delete sprites
+    GameObject go = Job_GO_Map[j];
+    SimplePool.Despawn(go);
+    Job_GO_Map.Remove(j);
   }
 
 
   void OnInstalledItemChanged(InstalledItem item) {
     //Debug.LogError("OnInstalledItemChanged " + item + " NOT IMPLEMENTED");
 
-    if (installedItemGameObjects.ContainsKey(item)) {
-      GameObject go = installedItemGameObjects[item];
+    if (InstalledItems_GO_Map.ContainsKey(item)) {
+      GameObject go = InstalledItems_GO_Map[item];
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
       SpriteHolder sh = SpriteController.Instance.GetSprite(item);
       spr.sprite = sh.s;
@@ -198,11 +257,29 @@ foreach (Tile tile in dragArea)
 
   }
 
-  public Dictionary<string, Tile> getNeighbours(InstalledItem item) {
-    return getNeighbours(item.tile);
+  public List<Tile> GetNeighboursList(InstalledItem item) {
+    return GetNeighboursList(item.tile);
   }
 
-  public Dictionary<string, Tile> getNeighbours(Tile t) {
+  public List<Tile> GetNeighboursList(Tile t) {
+    Dictionary<string, Tile> tiles = GetNeighbours(t);
+
+    List<Tile> rt = new List<Tile>();
+    foreach (string s in tiles.Keys) {
+      Tile tt = tiles[s];
+      if (tt != null) {
+        rt.Add(tt);
+      }
+    }
+
+    return rt;
+  }
+
+  public Dictionary<string, Tile> GetNeighbours(InstalledItem item) {
+    return GetNeighbours(item.tile);
+  }
+
+  public Dictionary<string, Tile> GetNeighbours(Tile t) {
     Dictionary<string, Tile> dct = new Dictionary<string, Tile>();
 
     dct["north"] = world.getTileAt(t.x, t.y + 1);
@@ -225,5 +302,6 @@ foreach (Tile tile in dragArea)
   }
 
 }
+
 
 

@@ -41,6 +41,7 @@ public class BuildController : MonoBehaviour {
 
   public void CreateBuildJobs(List<Tile> tiles) {
 
+    string localBuild = build; 
     if (buildType != BUILDTYPE.NONE) {
       switch (buildType) {
         //InstalledItem item = 
@@ -50,10 +51,10 @@ public class BuildController : MonoBehaviour {
             if (world.isInstalledItemPositionValid(build, tile)) {
               Job j = new Job(
                     tile,
-                    (theJob) => { OnInstalledItemJobComplete(String.Copy(build), theJob.tile); },
+                    (theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
                     (theJob) => { OnInstalledItemJobCancelled(theJob); },
                     1,
-                    String.Copy(build)
+                    localBuild
                   );
               world.jobQueue.Push(j);
               tile.pendingJob = true;
@@ -77,8 +78,9 @@ public class BuildController : MonoBehaviour {
   }
 
   private void OnInstalledItemJobComplete(string itemToBuild, Tile tile) {
-    world.PlaceInstalledObject(itemToBuild, tile);
     tile.pendingJob = false;
+    world.PlaceInstalledObject(itemToBuild, tile);
+    
   }
 
   private void OnInstalledItemJobCancelled(Job job) {

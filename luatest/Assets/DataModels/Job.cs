@@ -5,19 +5,23 @@ using System;
 
 public class Job {
 
-	public Tile tile { get; private set; }
-	float jobTime;
-	Action<Job> cbJobComplete;
-	Action<Job> cbJobCancelled;
+
+  public bool finished { get; private set; } = false;
+  public bool cancelled { get; private set; } = false;
+
+  public Tile tile { get; private set; }
+  float jobTime;
+  Action<Job> cbJobComplete;
+  Action<Job> cbJobCancelled;
   public string jobType { get; protected set; } = "NONE";
-	public Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, float jobTime, string jobType) {
-		this.tile = tile;
-		this.jobTime = jobTime;
-		this.cbJobComplete += cbJobComplete;
-		this.cbJobCancelled += cbJobCancelled;
+  public Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, float jobTime, string jobType) {
+    this.tile = tile;
+    this.jobTime = jobTime;
+    this.cbJobComplete += cbJobComplete;
+    this.cbJobCancelled += cbJobCancelled;
     this.jobType = jobType;
 
-	}
+  }
 
   public override string ToString() {
     return "job (" + jobTime + ") " + jobType + " @" + tile.ToString();
@@ -25,33 +29,36 @@ public class Job {
 
 
   public void Work(float time) {
-		jobTime -= time;
+    jobTime -= time;
 
-		if (jobTime <= 0) {
-			if (cbJobComplete != null) {
-				cbJobComplete(this);
-			}
-		}
-	}
+    if (jobTime <= 0) {
+      if (cbJobComplete != null) {
+        cbJobComplete(this);
+      }
+      finished = true;
+    }
+  }
 
-	public void Cancel() {
-		if (cbJobCancelled != null) {
-			cbJobCancelled(this);
-		}
-	}
-	public void cbRegisterJobComplete(Action<Job> cb) {
-		this.cbJobComplete += cb;
-	}
+  public void Cancel() {
+    finished = true;
+    cancelled = true;
+    if (cbJobCancelled != null) {
+      cbJobCancelled(this);
+    }
+  }
+  public void cbRegisterJobComplete(Action<Job> cb) {
+    this.cbJobComplete += cb;
+  }
 
-	public void cbUnregisterJobComplete(Action<Job> cb) {
-		this.cbJobComplete -= cb;
-	}
+  public void cbUnregisterJobComplete(Action<Job> cb) {
+    this.cbJobComplete -= cb;
+  }
 
-	public void cbRegisterJobCancelled(Action<Job> cb) {
-		this.cbJobCancelled += cb;
-	}
+  public void cbRegisterJobCancelled(Action<Job> cb) {
+    this.cbJobCancelled += cb;
+  }
 
-	public void cbUnregisterJobCancelled(Action<Job> cb) {
-		this.cbJobCancelled -= cb;
-	}
+  public void cbUnregisterJobCancelled(Action<Job> cb) {
+    this.cbJobCancelled -= cb;
+  }
 }

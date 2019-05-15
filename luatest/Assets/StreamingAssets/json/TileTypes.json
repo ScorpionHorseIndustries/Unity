@@ -1,0 +1,47 @@
+{
+  "tileTypes" : [
+    {
+      "name" : "dirt",
+      "sprites" : ["tile_dirt"],
+	  "rangeLow" : 0.6,
+	  "rangeHigh" : 0.8,
+      "build" : true  
+    },
+    {
+      "name" : "grass",
+      "sprites" : ["tile_grass"],
+	  "rangeLow" : 0.2,
+	  "rangeHigh" : 0.6,
+	  "build" : true
+    },
+        {
+      "name" : "water",
+      "sprites" : ["tile_water"],
+	  "rangeLow" : 0,
+	  "rangeHigh" : 0.2,
+	  "build" : false
+    },
+     {
+	 "name" : "stone",
+      "sprites" : ["tile_stone"],
+	  "rangeLow" : 0.8,
+	  "rangeHigh" : 1,
+	  "build" : true
+    },
+	
+        {
+      "name" : "concrete",
+      "sprites" : ["tile_concrete"],
+	  "rangeLow" : -100,
+	  "rangeHigh" : -100,
+	  "build" : true
+    },
+        {
+      "name" : "empty",
+      "sprites" : ["tile_empty"],
+	  "rangeLow" : -1,
+	  "rangeHigh" : -1,
+	  "build" : false
+    }
+    ]
+}

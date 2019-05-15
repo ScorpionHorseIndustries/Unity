@@ -1,0 +1,47 @@
+{
+  "InstalledItems" : [ 
+  {
+    "name" : "installed::wall",
+    "sprite" : "wall_none",
+	"sprites" : [],
+    "linked" : true,
+    "neighbour_s" : "walls_s",
+    "neighbour_ns" : "walls_ns",
+    "neighbour_nsw" : "walls_nsw",
+    "neighbour_sw" : "walls_sw",
+    "neighbour_nesw" : "walls_nesw",
+    "movementFactor" : 0.00,
+	"trash" : false,
+	"build" : true
+    
+  },
+  {
+    "name" : "installed::organic_trash",
+	"sprite" : "corpse_0",
+    "sprites" : [
+      "corpse_0",
+      "corpse_1",
+      "corpse_2",
+      "corpse_3"
+      ],
+      "movementFactor" : 0.8,
+	  "linked" : false,
+	  "trash" : true,
+	  "build" : false,
+	  "randomRotation" : true
+      
+  },
+    {
+    "name" : "installed::atm",
+	"sprite" : "installed_atm",
+	"sprites" : [],
+      "movementFactor" : 0,
+	  "linked" : false,
+	  "trash" : false,
+	  "build" : true,
+	  "randomRotation" : false
+      
+  }
+
+]
+}

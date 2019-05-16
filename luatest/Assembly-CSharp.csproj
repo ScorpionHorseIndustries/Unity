@@ -129,6 +129,10 @@
     <Compile Include="Assets\NLua\Platform\BindFlags.cs" />
     <Compile Include="Assets\NLua\Platform\CLSCompliantAttribute.cs" />
     <Compile Include="Assets\NLua\ProxyType.cs" />
+    <Compile Include="Assets\Paths\PathAStar.cs" />
+    <Compile Include="Assets\Paths\PathEdge.cs" />
+    <Compile Include="Assets\Paths\PathNode.cs" />
+    <Compile Include="Assets\Paths\TileNodeMap.cs" />
     <Compile Include="Assets\scrChest.cs" />
     <Compile Include="Assets\scrInventory.cs" />
     <Compile Include="Assets\Scriptables\scroItems.cs" />

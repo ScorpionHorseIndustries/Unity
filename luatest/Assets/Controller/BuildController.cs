@@ -58,7 +58,7 @@ public class BuildController : MonoBehaviour {
                   );
               world.jobQueue.Push(j);
               tile.pendingJob = true;
-              Debug.Log("jobs in queue: " +world.jobQueue.Count);
+              //Debug.Log("jobs in queue: " +world.jobQueue.Count);
 
             }
           }

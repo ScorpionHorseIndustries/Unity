@@ -41,6 +41,7 @@ public class WorldController : MonoBehaviour {
     cbReady += cb;
     actualReady += 1;
   }
+  
 
   void Start() {
 
@@ -69,6 +70,10 @@ public class WorldController : MonoBehaviour {
     world.RegisterCharacterChangedCB(OnCharacterChanged);
     world.RegisterCharacterCreatedCB(OnCharacterCreated);
     world.CreateCharacters();
+
+    world.SetAllNeighbours();
+    world.nodeMap = new TileNodeMap(world);
+    
 
   }
 
@@ -217,13 +222,15 @@ public class WorldController : MonoBehaviour {
 
   void OnJobCreated(Job j) {
 
-    sprCon.JobCreated(j);
-    j.cbRegisterJobComplete(OnJobEnded);
-    j.cbRegisterJobCancelled(OnJobEnded);
+    if (!Job_GO_Map.ContainsKey(j)) {
+      sprCon.JobCreated(j);
+      j.cbRegisterJobComplete(OnJobEnded);
+      j.cbRegisterJobCancelled(OnJobEnded);
 
-    GameObject g = SimplePool.Spawn(buildProgressSprite, new Vector2(j.tile.x, j.tile.y), Quaternion.identity);
-    g.transform.SetParent(this.transform, true);
-    Job_GO_Map.Add(j,g);
+      GameObject g = SimplePool.Spawn(buildProgressSprite, new Vector2(j.tile.x, j.tile.y), Quaternion.identity);
+      g.transform.SetParent(this.transform, true);
+      Job_GO_Map.Add(j, g);
+    }
     /*
 foreach (Tile tile in dragArea)
 {
@@ -234,6 +241,8 @@ foreach (Tile tile in dragArea)
 }
 */
   }
+
+
 
   void OnJobEnded(Job j) {
     //delete sprites

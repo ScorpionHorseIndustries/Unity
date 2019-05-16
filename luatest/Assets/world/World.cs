@@ -23,6 +23,8 @@ public class World {
   List<Character> characters = new List<Character>();
 
   private static readonly float NOISE_FACTOR = 0.05f;
+  public TileNodeMap nodeMap;
+
 
 
 
@@ -44,9 +46,21 @@ public class World {
 
 
     }
+    
     createInstalledItemProtos();
 
     //CreateCharacters();
+  }
+
+  public void SetAllNeighbours() {
+    for (int x = 0; x < width; x += 1) {
+      for (int y = 0; y < height; y += 1) {
+        tiles[x, y].SetNeighbours(); 
+        
+      }
+
+
+    }
   }
 
   public void Update(float deltaTime) {
@@ -62,15 +76,23 @@ public class World {
   }
 
   public void CreateCharacters() {
-    for (int i = 0; i < 10; i += 1) {
+    int attempts = 0;
+    int created = 0;
+    while(created < 20 && attempts < 10000) {
       int x = UnityEngine.Random.Range(0, width);
       int y = UnityEngine.Random.Range(0, height);
-      Character c = new Character(this, tiles[x,y]);
-      characters.Add(c);
-      if (cbCharacterCreated != null) {
-        cbCharacterCreated(c);
+      Tile t = getTileAt(x, y);
+
+      if (t.type.movementFactor >= 0.5) {
+
+        Character c = new Character(this, tiles[x, y]);
+        characters.Add(c);
+        if (cbCharacterCreated != null) {
+          cbCharacterCreated(c);
+        }
+        c.CBRegisterOnChanged(OnCharacterChanged);
+        created += 1;
       }
-      c.CBRegisterOnChanged(OnCharacterChanged);
     }
 
   }
@@ -141,10 +163,10 @@ public class World {
   }
 
 
-  private InstalledItem InstalledItemProto(string name, string spriteName, float movementCost, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate) {
+  private InstalledItem InstalledItemProto(string name, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate) {
     InstalledItem proto = null;
     if (!installedItemProtos.ContainsKey(name)) {
-      proto = InstalledItem.CreatePrototype(name, spriteName, movementCost, width, height, linksToNeighbour, build, trash, rotate);
+      proto = InstalledItem.CreatePrototype(name, spriteName, movementFactor, width, height, linksToNeighbour, build, trash, rotate);
       installedItemProtos.Add(name, proto);
 
     }
@@ -162,7 +184,8 @@ public class World {
 
   public void RandomiseTiles() {
     Debug.Log("Randomise Tiles");
-
+    float xo = UnityEngine.Random.Range(-10, 10);
+    float yo = UnityEngine.Random.Range(-10, 10);
     float xx = 0;
     float yy = 0;
     for (int x = 0; x < width; x += 1) {
@@ -171,7 +194,7 @@ public class World {
         yy = ((float)y) * NOISE_FACTOR;
         Tile t = tiles[x, y];
         //if (UnityEngine.Random.Range(0,2) == 0)
-        float f = Mathf.PerlinNoise(xx, yy);
+        float f = Mathf.PerlinNoise(xx + xo, yy + yo);
         TileType tt = TileType.TYPES["empty"];
         foreach (string k in TileType.TYPES.Keys) {
           TileType tempT = TileType.TYPES[k];
@@ -206,6 +229,7 @@ public class World {
         if (cbInstalledItem != null) {
           cbInstalledItem(inst);
         }
+        DestroyPathNodes();
       } else {
         //Debug.Log("failed to place item " + buildItem);
       }
@@ -253,9 +277,15 @@ public class World {
 
   }
 
+  private void DestroyPathNodes() {
+    nodeMap = null;
+
+  }
+
   void OnTileChanged(Tile t) {
     if (cbTileChanged != null) {
       cbTileChanged(t);
+      DestroyPathNodes();
     }
   }
 

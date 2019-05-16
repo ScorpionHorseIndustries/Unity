@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
-public static class Funcs 
-{
-	public static string getSpriteName(string name) {
-		name = name.Replace(':', '_');
+public static class Funcs {
+  public static string getSpriteName(string name) {
+    name = name.Replace(':', '_');
 
 
 
-		return name;
-	}
+    return name;
+  }
 
   public static string jsonGetString(JToken token, string df) {
-    
+
     if (token == null) {
-      return df; 
+      return df;
     } else {
       return (string)token;
     }
@@ -50,6 +49,15 @@ public static class Funcs
 
 
     return d;
+  }
+
+  public static float TaxiDistance(Tile A, Tile B) {
+    return TaxiDistance(A.x, A.y, B.x, B.y);
+  }
+
+  public static float TaxiDistance(float x1, float y1, float x2, float y2) {
+
+    return Mathf.Abs(x2 - x1) + Mathf.Abs(y2 - y1);
   }
 
   public static float Distance(Tile A, Tile B) {

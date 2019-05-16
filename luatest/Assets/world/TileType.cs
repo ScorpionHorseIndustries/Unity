@@ -16,7 +16,8 @@ public class TileType {
 	public string spriteName { get; private set; }
 	public string[] sprites { get; private set; }
 	public float rangeLow, rangeHigh;
-	public bool build { get; private set; } = true;
+	public bool build { get; private set; } = true; //can be built on
+  public float movementFactor { get; private set; }
 	private TileType(string name, string spriteName)  {
 		this.name = name;
 		this.spriteName = spriteName;
@@ -32,7 +33,8 @@ public class TileType {
 	}
 
 	public override string ToString() {
-		return name + " " + spriteName + " (" + rangeLow + "->" + rangeHigh + ") build?:" + build;
+    return name;
+		//return name + " " + spriteName + " (" + rangeLow + "->" + rangeHigh + ") build?:" + build;
 	}
 
 	
@@ -67,7 +69,8 @@ public class TileType {
 			t.rangeLow = (float)j["rangeLow"];
 			t.rangeHigh = (float)j["rangeHigh"];
 			t.build = (bool)j["build"];
-			Debug.Log(t);
+      t.movementFactor = Funcs.jsonGetFloat(j["movementFactor"], 0.5f);
+			
 			TYPES.Add(n, t);
 		}
 		loaded = true;

@@ -8,7 +8,7 @@ public class InstalledItem {
 
   public Tile tile { get; private set; } //an object could be more than one tile
   public string type { get; private set; }
-  public float movementCost { get; private set; } = 1;
+  public float movementFactor { get; private set; } = 1;
   /// TODO: implement larger objects
   /// TODO: implement rotation
   public int width { get; private set; } = 1;
@@ -57,11 +57,11 @@ public class InstalledItem {
     setLinkedSpriteNames(Item.sprite_ns, Item.sprite_nsw, Item.sprite_s, Item.sprite_sw, Item.sprite_nesw);
   }
 
-  public static InstalledItem CreatePrototype(string type, string spriteName, float movementCost, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate) {
+  public static InstalledItem CreatePrototype(string type, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate) {
     InstalledItem o = new InstalledItem();
     o.type = type;
     o.spriteName = spriteName;
-    o.movementCost = movementCost;
+    o.movementFactor = movementFactor;
     o.width = width;
     o.height = height;
     o.linksToNeighbour = linksToNeighbour;
@@ -83,7 +83,7 @@ public class InstalledItem {
     //Debug.Log("InstalledItem.CreateInstance");
     InstalledItem o = new InstalledItem();
     o.type = proto.type;
-    o.movementCost = proto.movementCost;
+    o.movementFactor = proto.movementFactor;
     o.width = proto.width;
     o.height = proto.height;
     o.tile = tile;

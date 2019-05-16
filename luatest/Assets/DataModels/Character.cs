@@ -3,9 +3,9 @@ using UnityEditor;
 using System.Collections.Generic;
 using System;
 
-public class Character  {
+public class Character {
 
-
+  private float findJobCoolDown = 1;
   Action<Character> cbCharacterChanged;
   World world;
   public float X {
@@ -29,13 +29,14 @@ public class Character  {
 
   public Tile PosTile { get; private set; }
   public Tile DstTile { get; private set; }
-  
+
   float movementPerc = 0;
-  float cd = 1;
+  //float cd = 1;
   private bool changed = false;
   private Job myJob;
+  private PathAStar path;
 
-  public Character (World world, Tile startTile) {
+  public Character(World world, Tile startTile) {
     PosTile = DstTile = startTile;
     this.world = world;
 
@@ -45,14 +46,32 @@ public class Character  {
   public void Update(float deltaTime) {
 
     if (myJob == null) {
-      myJob = world.jobQueue.GetNextJob();
+      if (findJobCoolDown > 0) {
+        findJobCoolDown -= deltaTime;
 
+      } else {
+        findJobCoolDown = 1;
+        myJob = world.jobQueue.GetNextJob();
 
-      if (myJob != null) {
-        myJob.cbRegisterJobComplete(OnJobEnded);
-        myJob.cbUnregisterJobCancelled(OnJobEnded);
-        DstTile = myJob.tile;
-        //SetDestination(myJob.tile);
+        if (myJob != null) {
+          myJob.cbRegisterJobComplete(OnJobEnded);
+          myJob.cbUnregisterJobCancelled(OnJobEnded);
+
+          path = new PathAStar(world, PosTile, myJob.tile);
+
+          if (path.foundPath) {
+            Debug.Log("found path");
+          } else {
+            path = null;
+            Debug.LogError("Could not find path");
+            world.jobQueue.Push(myJob);
+            myJob.cbUnregisterJobComplete(OnJobEnded);
+            myJob.cbUnregisterJobCancelled(OnJobEnded);
+            myJob = null;
+
+          }
+          //SetDestination(myJob.tile);
+        }
       }
     }
 
@@ -61,7 +80,14 @@ public class Character  {
     //Debug.Log("Character.Update" + deltaTime);
     if (PosTile != DstTile) {
       float distanceToTravel = Funcs.Distance(PosTile, DstTile);
-      float distThisFrame = movementSpeed * deltaTime;
+      float sp = movementSpeed;
+      if (movementPerc > 0.5) {
+        sp *= DstTile.movementFactor;
+      } else {
+        sp *= PosTile.movementFactor;
+
+      }
+      float distThisFrame = sp * deltaTime;
       movementPerc += (distThisFrame / distanceToTravel);
       movementPerc = Mathf.Clamp(movementPerc, 0, 1);
 
@@ -71,9 +97,19 @@ public class Character  {
       }
       changed = true;
     } else {
-      if (myJob != null) {
-        myJob.Work(deltaTime);
- 
+      if (path != null) {
+        DstTile = path.GetNextTile();
+        if (DstTile == null) {
+          DstTile = PosTile;
+          path = null;
+        }
+      } else {
+        if (myJob != null && PosTile == myJob.tile) {
+          if (myJob != null) {
+            myJob.Work(deltaTime);
+
+          }
+        }
       }
 
     }

@@ -63,6 +63,7 @@ public class InputController : MonoBehaviour {
     HALF_tileSize = tileSize / 2;
     bCon = BuildController.Instance;
     bCon.inputCon = this;
+    cam.transform.position = new Vector3(wcon.world.width / 2, wcon.world.height / 2, cam.transform.position.z);
   }
   void Start() {
     WorldController.Instance.cbRegisterReady(Init);

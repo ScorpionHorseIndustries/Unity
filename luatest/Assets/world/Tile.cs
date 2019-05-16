@@ -13,11 +13,26 @@ public class Tile {
   public LooseItem looseItem { get; private set; }
   public InstalledItem installedItem { get; private set; }
 
+  public Dictionary<string, Tile> neighbours = new Dictionary<string, Tile>();
+  public List<Tile> neighboursList = new List<Tile>();
+
   public int x { get; private set; }
   public int y { get; private set; }
   public World world { get; private set; }
 
   public bool pendingJob = false;
+
+  public float movementFactor { get {
+      float ws = type.movementFactor;
+
+      if (installedItem != null) {
+        ws *= installedItem.movementFactor;
+        
+      } else if (looseItem != null) {
+        ws *= 0.8f;
+      }
+      return ws;
+    } }
 
   public Tile(World world, TileType type, int x, int y) {
     this.type = type;
@@ -28,7 +43,8 @@ public class Tile {
   }
 
   public override String ToString() {
-    return "tile: " + type + " (" + x + "," + y + ") pendingJob:" + pendingJob + " hasInstalled: " + (installedItem != null) + " hasLoose: " + (looseItem != null);
+    return "tile: " + type + " (" + x + "," + y + ")"; 
+    //return "tile: " + type + " (" + x + "," + y + "), p:" + pendingJob + ", i: " + (installedItem != null) + ", l: " + (looseItem != null);
   }
 
   public void cbRegisterOnChanged(Action<Tile> cb) {
@@ -63,12 +79,24 @@ public class Tile {
     }
   }
 
-  public bool IsNeighbour(Tile o, bool diagonal = false) {
+  public void SetNeighbours() {
+    neighboursList.Clear();
+    neighbours.Clear();
 
-    if ((o.x == x && (o.y == y + 1 || o.y == y - 1)) || (o.y == y && (o.x == x + 1 || o.x == x - 1))) {
+    neighbours = WorldController.Instance.GetNeighbours(this);
+    neighboursList = WorldController.Instance.GetNeighboursList(this);
+
+  }
+
+  public bool IsNeighbour(Tile o, bool diagonal = false) {
+    int xdiff = Mathf.Abs(x - o.x);
+    int ydiff = Mathf.Abs(y - o.y);
+
+
+    if (xdiff + ydiff == 1) {
       return true;
     } else if (diagonal) {
-      if ((o.x == x - 1 || o.x == x + 1) && (o.y == y - 1 || o.y == y + 1)) {
+      if ( xdiff == 1 && ydiff == 1) {
 
         return true;
       } else {

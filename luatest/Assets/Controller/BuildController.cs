@@ -5,7 +5,7 @@ using System;
 
 public class BuildController : MonoBehaviour {
   public WorldController wcon;
-  public World world;
+  //public World world;
   public InputController inputCon;
   public static BuildController Instance { get; private set; }
 
@@ -18,13 +18,13 @@ public class BuildController : MonoBehaviour {
   }
 
   private void Init(string s) {
-    Debug.Log("init " + this.name);
-    wcon = WorldController.Instance;
-    world = wcon.world;
+
   }
   private void Start() {
-    WorldController.Instance.cbRegisterReady(Init);
-
+    //WorldController.Instance.cbRegisterReady(Init);
+    Debug.Log("init " + this.name);
+    wcon = WorldController.Instance;
+    //world = wcon.world;
 
   }
   public enum BUILDTYPE {
@@ -48,7 +48,7 @@ public class BuildController : MonoBehaviour {
         case BUILDTYPE.INSTALLEDITEM:
           foreach (Tile tile in tiles) {
             //tile.placeInstalledObject();
-            if (world.isInstalledItemPositionValid(build, tile)) {
+            if (wcon.world.isInstalledItemPositionValid(build, tile)) {
               Job j = new Job(
                     tile,
                     (theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
@@ -56,7 +56,7 @@ public class BuildController : MonoBehaviour {
                     1,
                     localBuild
                   );
-              world.jobQueue.Push(j);
+              wcon.world.jobQueue.Push(j);
               tile.pendingJob = true;
               //Debug.Log("jobs in queue: " +world.jobQueue.Count);
 
@@ -79,7 +79,7 @@ public class BuildController : MonoBehaviour {
 
   private void OnInstalledItemJobComplete(string itemToBuild, Tile tile) {
     tile.pendingJob = false;
-    world.PlaceInstalledObject(itemToBuild, tile);
+    wcon.world.PlaceInstalledObject(itemToBuild, tile);
     
   }
 

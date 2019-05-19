@@ -4,22 +4,37 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
-
+using System.Xml.Serialization;
+using System.IO;
 
 public class WorldController : MonoBehaviour {
 
   [SerializeField]
   public GameObject buildProgressSprite;
   public GameObject cashText;
+  public GameObject LinePrefab;
+  public GameObject TextPrefab;
   private Dictionary<Tile, GameObject> Tiles_GO_Map;
   private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
   private Dictionary<Character, GameObject> Characters_GO_Map;
-  private Dictionary<Job, GameObject> Job_GO_Map = new Dictionary<Job, GameObject>();
+  private Dictionary<Job, GameObject> Job_GO_Map;
 
   public EventSystem eventSystem;
   public static WorldController Instance { get; private set; }
-  public SpriteController sprCon;
-  public JobController jobCon;
+  public GameObject prfSpriteController;
+  public GameObject prfJobController;
+  public GameObject prfInputController;
+  public GameObject prfTrashController;
+  public GameObject prfBuildController;
+  public GameObject prfSoundController;
+
+  public SpriteController spriteController;
+  public JobController jobController;
+  public InputController inputController;
+  public BuildController buildController;
+  public SoundController soundController;
+  public TrashController trashController;
+  private List<GameObject> controllers = new List<GameObject>();
 
   private float countdown = 2f;
   private float money = 0;
@@ -33,26 +48,24 @@ public class WorldController : MonoBehaviour {
     }
     Instance = this;
   }
-  Action<string> cbReady;
-  private const int EXPECTED = 5;
-  private int actualReady = 0;
-  private bool initDone = false;
-  public void cbRegisterReady(Action<string> cb) {
-    cbReady += cb;
-    actualReady += 1;
-  }
-  
 
-  void Start() {
+  //Action<string> cbReady;
+  //private const int EXPECTED = 5;
+  //private int actualReady = 0;
+  //private bool initDone = false;
+  //public void cbRegisterReady(Action<string> cb) {
+  //  cbReady += cb;
+  //  actualReady += 1;
+  //}
 
-
-
+  public void CreateNewWorld() {
     TileType.LoadFromFile();
 
     Tiles_GO_Map = new Dictionary<Tile, GameObject>();
     InstalledItems_GO_Map = new Dictionary<InstalledItem, GameObject>();
     Characters_GO_Map = new Dictionary<Character, GameObject>();
-    
+    Job_GO_Map = new Dictionary<Job, GameObject>();
+
     eventSystem = EventSystem.current;
     Debug.Log("create world");
     world = new World();
@@ -62,18 +75,93 @@ public class WorldController : MonoBehaviour {
     //create game objects for tiles
     world.RegisterInstalledItemCB(OnInstalledItemCreated);
 
-    sprCon = SpriteController.Instance;
-    sprCon.wcon = this;
-    sprCon.world = this.world;
+    spriteController = SpriteController.Instance;
+    spriteController.wcon = this;
+    //spriteController.world = this.world;
 
     world.jobQueue.cbRegisterJobCreated(OnJobCreated);
-    world.RegisterCharacterChangedCB(OnCharacterChanged);
-    world.RegisterCharacterCreatedCB(OnCharacterCreated);
+    world.CBRegisterCharacterChanged(OnCharacterChanged);
+    world.CBRegisterCharacterCreated(OnCharacterCreated);
+    world.CBRegisterCharacterKilled(OnCharacterKilled);
     world.CreateCharacters();
 
     world.SetAllNeighbours();
     world.nodeMap = new TileNodeMap(world);
+
+    //initDone = false;
+  }
+
+  public void Restart() {
+    world.Kill();
+    world = null;
+
+    foreach (Tile t in Tiles_GO_Map.Keys) {
+      GameObject go = Tiles_GO_Map[t];
+      Destroy(go);
+
+
+
+    }
+
+    foreach (Job j in Job_GO_Map.Keys) {
+      Destroy(Job_GO_Map[j]);
+    }
+    Job_GO_Map = null;
+    Tiles_GO_Map.Clear();
+    Tiles_GO_Map = null;
+    CreateNewWorld();
+  }
+
+
+  void Start() {
+    InstantiateController(prfSpriteController);
+    InstantiateController(prfInputController);
+    InstantiateController(prfBuildController);
+
+    InstantiateController(prfJobController);
+    InstantiateController(prfTrashController);
+    InstantiateController(prfSoundController);
+    this.spriteController = SpriteController.Instance;
+    this.inputController = InputController.Instance;
+
+    this.buildController = BuildController.Instance;
+    this.jobController = JobController.Instance;
+    this.trashController = TrashController.Instance;
+    this.soundController = SoundController.Instance;
     
+    CreateNewWorld();
+    Debug.Log("init done " + this.name);
+  }
+
+  void InstantiateController(GameObject controllerPrefab) {
+    GameObject g = Instantiate(controllerPrefab, this.transform.position, Quaternion.identity);
+    g.transform.SetParent(this.transform, true);
+    controllers.Add(g);
+
+  }
+
+  private void DestroyControllers() {
+    foreach (GameObject g in controllers) {
+      Destroy(g);
+    }
+    controllers.Clear();
+  }
+
+  public void SaveWorld() {
+    XmlSerializer xml = new XmlSerializer(typeof(World));
+
+    TextWriter writer = new StringWriter();
+
+    xml.Serialize(writer, world);
+    writer.Close();
+    Debug.Log(writer.ToString());
+
+  }
+
+  public void LoadWorld() {
+    //reload the scene
+    //reset all data
+    //remove old references
 
   }
 
@@ -86,14 +174,15 @@ public class WorldController : MonoBehaviour {
   // Update is called once per frame
   void Update() {
 
-    if (actualReady < EXPECTED) {
-      return;
-    } else {
-      if (!initDone) {
-        cbReady("hi");
-        initDone = true;
-      }
-    }
+    //if (actualReady < EXPECTED) {
+    //  Debug.Log("Ready: " + actualReady);
+    //  return;
+    //} else {
+    //  if (!initDone) {
+    //    cbReady("hi");
+    //    initDone = true;
+    //  }
+    //}
 
     countdown -= Time.deltaTime;
     if (countdown < 0) {
@@ -176,7 +265,7 @@ public class WorldController : MonoBehaviour {
     InstalledItems_GO_Map.Add(inst, go);
     SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
 
-    
+
     SpriteHolder sh = SpriteController.Instance.GetSprite(inst);
     if (sh.r != 0) {
       spr.transform.Rotate(0, 0, sh.r);
@@ -193,14 +282,37 @@ public class WorldController : MonoBehaviour {
 
   }
 
+  public void setBuildType_InstalledItem(string item) {
+    buildController.SetBuild(BuildController.BUILDTYPE.INSTALLEDITEM, item);
+  }
+
+  public void setBuildType_Tile(string tile) {
+    buildController.SetBuild(BuildController.BUILDTYPE.TILE, tile);
+  }
+
+  void OnCharacterKilled(Character c) {
+    if (Characters_GO_Map.ContainsKey(c)) {
+      GameObject go = Characters_GO_Map[c];
+      Destroy(go);
+      Characters_GO_Map.Remove(c);
+    }
+  }
+
   void OnCharacterCreated(Character chr) {
-    string name = "char_" + chr.GetHashCode();
+    string name = chr.name + "_" + chr.GetHashCode();
 
 
     GameObject go = CreateGameObject(name, chr.PosTile.x, chr.PosTile.y);
     SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
-    spr.sprite = sprCon.GetSprite(chr);
+    spr.sprite = spriteController.GetSprite(chr);
     spr.sortingLayerName = "Characters";
+    GameObject gln = Instantiate(LinePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+    gln.transform.SetParent(go.transform, true);
+
+    GameObject gtx = Instantiate(TextPrefab, go.transform.position, Quaternion.identity);
+    gtx.transform.SetParent(go.transform, true);
+
+
     Characters_GO_Map.Add(chr, go);
   }
 
@@ -216,6 +328,57 @@ public class WorldController : MonoBehaviour {
       Vector2 pos = new Vector2(c.X, c.Y);
 
       go.transform.position = pos;
+
+      SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+      LineRenderer ln = go.GetComponentInChildren<LineRenderer>();
+      TMPro.TextMeshPro txt = go.GetComponentInChildren<TMPro.TextMeshPro>();
+      txt.text = c.name + "\n" + c.state.ToString();
+
+      ln.positionCount = 3;
+      ln.SetPosition(0, c.pos);
+      ln.SetPosition(1, c.dst);
+      ln.SetPosition(2, c.pos);
+      
+
+      if (c.path != null) {
+        ln.positionCount = ln.positionCount + c.path.Length + 1;
+        ln.SetPosition(3, c.pos);
+
+        PathNode<Tile>[] pa = c.path.path;
+        for (int i = 0; i < pa.Length; i += 1) {
+          PathNode<Tile> pn = pa[i];
+          Tile t = pn.data;
+
+          ln.SetPosition(4 + i, new Vector2(t.x, t.y));
+        }
+
+
+      }
+
+      switch (c.state) {
+        case Character.STATE.RESET:
+        case Character.STATE.FIND_PATH:
+        case Character.STATE.FIND_JOB:
+        case Character.STATE.IDLE:
+          spr.sprite = spriteController.GetSprite(c.spriteName_IDLE);
+          break;
+        //  break;
+        //
+        //  break;
+        //
+        //  break;
+        //
+        //  break;
+        //case Character.STATE.MOVE:
+        //  break;
+        //case Character.STATE.WORK_JOB:
+        //  break;
+        //case Character.STATE.FIND_EMPTY:
+        //  break;
+        default:
+          spr.sprite = spriteController.GetSprite(c.spriteName);
+          break;
+      }
     }
 
   }
@@ -223,7 +386,7 @@ public class WorldController : MonoBehaviour {
   void OnJobCreated(Job j) {
 
     if (!Job_GO_Map.ContainsKey(j)) {
-      sprCon.JobCreated(j);
+      spriteController.JobCreated(j);
       j.cbRegisterJobComplete(OnJobEnded);
       j.cbRegisterJobCancelled(OnJobEnded);
 
@@ -266,12 +429,12 @@ foreach (Tile tile in dragArea)
 
   }
 
-  public List<Tile> GetNeighboursList(InstalledItem item) {
+  public List<Tile> GetNeighboursList(InstalledItem item, bool allowDiag = false) {
     return GetNeighboursList(item.tile);
   }
 
-  public List<Tile> GetNeighboursList(Tile t) {
-    Dictionary<string, Tile> tiles = GetNeighbours(t);
+  public List<Tile> GetNeighboursList(Tile t, bool allowDiag = false) {
+    Dictionary<string, Tile> tiles = GetNeighbours(t, allowDiag);
 
     List<Tile> rt = new List<Tile>();
     foreach (string s in tiles.Keys) {
@@ -284,17 +447,24 @@ foreach (Tile tile in dragArea)
     return rt;
   }
 
-  public Dictionary<string, Tile> GetNeighbours(InstalledItem item) {
-    return GetNeighbours(item.tile);
+  public Dictionary<string, Tile> GetNeighbours(InstalledItem item, bool allowDiag = false) {
+    return GetNeighbours(item.tile, allowDiag);
   }
 
-  public Dictionary<string, Tile> GetNeighbours(Tile t) {
+  public Dictionary<string, Tile> GetNeighbours(Tile t, bool allowDiag = false) {
     Dictionary<string, Tile> dct = new Dictionary<string, Tile>();
 
     dct["north"] = world.getTileAt(t.x, t.y + 1);
     dct["south"] = world.getTileAt(t.x, t.y - 1);
     dct["east"] = world.getTileAt(t.x + 1, t.y);
     dct["west"] = world.getTileAt(t.x - 1, t.y);
+
+    if (allowDiag) {
+      dct["northwest"] = world.getTileAt(t.x - 1, t.y + 1);
+      dct["northeast"] = world.getTileAt(t.x + 1, t.y + 1);
+      dct["southwest"] = world.getTileAt(t.x - 1, t.y - 1);
+      dct["southeast"] = world.getTileAt(t.x + 1, t.y - 1);
+    }
 
 
     return dct;

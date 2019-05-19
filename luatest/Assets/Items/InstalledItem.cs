@@ -169,4 +169,8 @@ public class InstalledItem {
   public bool isPositionValid_Door(int x, int y) {
     return false;
   }
+
+  public override string ToString() {
+    return "installed item: " + this.type;
+  }
 }

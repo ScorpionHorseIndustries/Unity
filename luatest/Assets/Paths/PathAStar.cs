@@ -17,8 +17,16 @@ public class PathAStar {
   Dictionary<PathNode<Tile>, float> gScore = new Dictionary<PathNode<Tile>, float>();
   Dictionary<PathNode<Tile>, float> fScore = new Dictionary<PathNode<Tile>, float>();
 
+  public int Length { get {
+      return pathQ.Count;
+    } }
 
-  private readonly float VLARGE = Mathf.Pow(10, 9);
+  public PathNode<Tile>[] path { get {
+      return pathQ.ToArray();
+    } }
+
+
+  private readonly float VLARGE = Mathf.Pow(10, 10);
   public bool foundPath { get; private set; } = false;
 
   public PathAStar(World world, Tile start, Tile end) {
@@ -49,15 +57,15 @@ public class PathAStar {
     //  Debug.Log("f " + pnt.GetHashCode() + ": " + fScore[pnt]);
     //}
 
-    foreach (PathNode<Tile> t in pathQ) {
-      Debug.Log("tile: " + t.data.x + "," + t.data.y);
-    }
+    //foreach (PathNode<Tile> t in pathQ) {
+    //  //Debug.Log("tile: " + t.data.x + "," + t.data.y);
+    //}
 
-    closed.Clear();
-    gScore.Clear();
-    fScore.Clear();
-    cameFrom.Clear();
-    open.Clear();
+    closed = null;
+    gScore = null;
+    fScore = null;
+    cameFrom = null;
+    open = null;
 
 
 
@@ -84,14 +92,6 @@ public class PathAStar {
     for (int i = path2.Count-1; i >= 0; i -= 1) {
       pathQ.Enqueue(path2[i]);
     }
-
-    //for (int i = 0; i < path2.Count; i += 1) {
-    //  pathQ.Enqueue(path2[i]);
-    //}
-
-
-
-
 
 
   }
@@ -182,7 +182,7 @@ public class PathAStar {
     if (fScore.ContainsKey(p)) {
       return fScore[p];
     } else {
-      return VLARGE;
+      return Mathf.Infinity;
     }
   }
 
@@ -190,7 +190,7 @@ public class PathAStar {
     if (gScore.ContainsKey(p)) {
       return gScore[p];
     } else {
-      return VLARGE;
+      return Mathf.Infinity;
     }
   }
   private float Heuristic(PathNode<Tile> start, PathNode<Tile> end) {
@@ -203,7 +203,7 @@ public class PathAStar {
   }
 
   private float Heuristic(Tile start, Tile end) {
-    float r = Funcs.TaxiDistance(start, end);
+    float r = Funcs.Distance(start, end);
 
     return r;
   }

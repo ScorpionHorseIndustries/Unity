@@ -14,7 +14,10 @@ public class Tile {
   public InstalledItem installedItem { get; private set; }
 
   public Dictionary<string, Tile> neighbours = new Dictionary<string, Tile>();
+  public Dictionary<string, Tile> neighboursDiag = new Dictionary<string, Tile>();
+  
   public List<Tile> neighboursList = new List<Tile>();
+  public List<Tile> neighboursListDiag = new List<Tile>();
 
   public int x { get; private set; }
   public int y { get; private set; }
@@ -79,12 +82,12 @@ public class Tile {
     }
   }
 
-  public void SetNeighbours() {
+  public void SetNeighbours(bool allowDiagonalNeighbours) {
     neighboursList.Clear();
     neighbours.Clear();
 
-    neighbours = WorldController.Instance.GetNeighbours(this);
-    neighboursList = WorldController.Instance.GetNeighboursList(this);
+    neighbours = WorldController.Instance.GetNeighbours(this, allowDiagonalNeighbours);
+    neighboursList = WorldController.Instance.GetNeighboursList(this, allowDiagonalNeighbours);
 
   }
 

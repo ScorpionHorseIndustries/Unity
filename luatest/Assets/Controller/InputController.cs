@@ -49,12 +49,25 @@ public class InputController : MonoBehaviour {
   private bool tilesFound = false;
 
 
+  public static InputController Instance { get; private set; }
+  private void Awake() {
+    if (Instance != null) {
+      Debug.LogError("THERE SHOULD ONLY BE ONE SPRITE CONTROLLER YOU DING DONG");
+    }
+    Instance = this;
+  }
+
+
   //private string buildItem = "";
   //private string buildTile = "";
 
   // Start is called before the first frame update
   private bool initialised = false;
-  void Init(string s) {
+  //void Init(string s) {
+
+  //}
+  void Start() {
+    //WorldController.Instance.cbRegisterReady(Init);
     Debug.Log("init " + this.name);
     initialised = true;
     wcon = WorldController.Instance;
@@ -64,27 +77,29 @@ public class InputController : MonoBehaviour {
     bCon = BuildController.Instance;
     bCon.inputCon = this;
     cam.transform.position = new Vector3(wcon.world.width / 2, wcon.world.height / 2, cam.transform.position.z);
-  }
-  void Start() {
-    WorldController.Instance.cbRegisterReady(Init);
-
+    cursorPrefab = Instantiate(cursorPrefab, this.transform.position, Quaternion.identity);
+    cursorPrefab.transform.SetParent(this.transform, true);
 
   }
 
-  public void setBuildType_InstalledItem(string item) {
-    bCon.SetBuild(BuildController.BUILDTYPE.INSTALLEDITEM, item);
-  }
 
-  public void setBuildType_Tile(string tile) {
-    bCon.SetBuild(BuildController.BUILDTYPE.TILE, tile);
-  }
 
   void updateCamera() {
 
+    float lr = Input.GetAxis("Horizontal");
+    float ud = Input.GetAxis("Vertical");
+    //Debug.Log(lr + "," + ud);
+    Vector2 diff = Vector2.zero;  
     if (Input.GetMouseButton(MOUSE_MIDDLE)) {
-      Vector2 diff = lastFrame - mousePos;
-      cam.transform.Translate(diff);
+      
+      diff = lastFrame - mousePos;
+
+
     }
+    diff.Set(diff.x + lr, diff.y + ud);
+    cam.transform.Translate(diff);
+
+
     currentZoom = cam.orthographicSize;
     currentZoom -= currentZoom * Input.GetAxis("Mouse ScrollWheel");
 
@@ -113,7 +128,11 @@ public class InputController : MonoBehaviour {
     cx = mx - lastX;
     cy = my - lastY;
     mouseOverTile = WorldController.Instance.world.getTileAt(mx, my);
-
+    //if (mouseOverTile != null) {
+    //  Debug.Log(mouseOverTile);
+    //} else {
+    //  Debug.Log("move over nothing");
+    //}
 
     updateDrag();
 

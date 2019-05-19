@@ -50,11 +50,11 @@ public class TileNodeMap {
         Tile t = world.getTileAt(x, y);
 
         float mv = t.movementFactor;
-        if (mv > 0) {
+        //if (mv > 0) {
           nodes[x, y] = new PathNode<Tile>(t);
           TilesToNodesDct.Add(t, nodes[x, y]);
           //NodesToTilesDct.Add(nodes[x, y], t);
-        }
+        //}
       }
     }
     int countEdges = 0;
@@ -64,7 +64,11 @@ public class TileNodeMap {
       if (tile.neighboursList.Count > 0) {
         foreach (Tile tile_neighbour in tile.neighboursList) {
           if (tile_neighbour != null && tile_neighbour.movementFactor > 0) {
-            PathEdge<Tile> e = new PathEdge<Tile>(tile_neighbour, TilesToNodesDct[tile_neighbour], 1.0f/tile_neighbour.movementFactor);
+            
+
+            if (IsClippingCorner(tile, tile_neighbour)) continue;
+            float mf = 1.0f / Mathf.Pow(tile_neighbour.movementFactor, 2);
+            PathEdge<Tile> e = new PathEdge<Tile>(tile_neighbour, TilesToNodesDct[tile_neighbour], mf);
             edges.Add(e);
             countEdges += 1;
 
@@ -77,15 +81,42 @@ public class TileNodeMap {
       
     }
 
-    Debug.Log("number of nodes " + nodes.Length);
-    //Debug.Log("number of dct nodes " + TilesToNodesDct.Count);
-    Debug.Log("number of edges = " + countEdges);
+    //Debug.Log("number of nodes " + nodes.Length);
+    ////Debug.Log("number of dct nodes " + TilesToNodesDct.Count);
+    //Debug.Log("number of edges = " + countEdges);
 
     //for (int x = 0; x < width; x += 1) {
     //  for (int y = 0; y < height; y += 1) {
     //    Tile t = world.getTileAt(x, y);
     //  }
     //}
+  }
+
+  bool IsClippingCorner(Tile c, Tile n) {
+
+    if (c == null || n == null) return false;
+    int td = (int)Funcs.TaxiDistance(c, n);
+
+    if (td == 2) {
+      int dx = c.x - n.x;
+      int dy = c.y - n.y;
+
+      Tile t = world.getTileAt(c.x - dx, c.y);
+
+
+      if (t == null || t.movementFactor <= 0.1) {
+        return true;
+      } else {
+        Tile tt = world.getTileAt(c.x, c.y - dy);
+        if (tt == null || tt.movementFactor <= 0.1) {
+          return true;
+        }
+      }
+
+
+
+    }
+    return false;
   }
 
 }

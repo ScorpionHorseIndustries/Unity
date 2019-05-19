@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Job {
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
+public class Job : IXmlSerializable {
 
+  public readonly string jobId;
   public bool finished { get; private set; } = false;
   public bool cancelled { get; private set; } = false;
 
   public Tile tile { get; private set; }
-  float jobTime;
+  public float jobTime { get; private set; }
   Action<Job> cbJobComplete;
   Action<Job> cbJobCancelled;
   public string jobType { get; protected set; } = "NONE";
@@ -20,6 +24,7 @@ public class Job {
     this.cbJobComplete += cbJobComplete;
     this.cbJobCancelled += cbJobCancelled;
     this.jobType = jobType;
+    this.jobId = "job_"+Guid.NewGuid().ToString();
 
   }
 
@@ -61,4 +66,36 @@ public class Job {
   public void cbUnregisterJobCancelled(Action<Job> cb) {
     this.cbJobCancelled -= cb;
   }
+
+  public XmlSchema GetSchema() {
+    return null;
+  }
+
+  public void ReadXml(XmlReader reader) {
+    
+  }
+
+  public void WriteXml(XmlWriter writer) {
+    Job j = this;
+    writer.WriteStartElement("job");
+
+    writer.WriteElementString("type", j.jobType);
+    writer.WriteElementString("id", j.jobId);
+    writer.WriteElementString("onComplete", cbJobComplete.ToString());
+    writer.WriteElementString("onCancelled", cbJobCancelled.ToString());
+    writer.WriteElementString("time", j.jobTime.ToString());
+    writer.WriteStartElement("tile");
+    writer.WriteElementString("x", j.tile.x.ToString());
+    writer.WriteElementString("y", j.tile.y.ToString());
+
+
+    writer.WriteEndElement();
+
+    writer.WriteEndElement();
+  }
+}
+
+class JobTask {
+  
+
 }

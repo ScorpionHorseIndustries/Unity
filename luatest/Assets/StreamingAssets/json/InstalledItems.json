@@ -10,7 +10,7 @@
     "neighbour_nsw" : "walls_nsw",
     "neighbour_sw" : "walls_sw",
     "neighbour_nesw" : "walls_nesw",
-    "movementFactor" : 0.5,
+    "movementFactor" : 0.01,
 	"trash" : false,
 	"build" : true
     

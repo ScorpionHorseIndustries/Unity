@@ -57,3 +57,6 @@ TagManager:
   - name: TileUI
     uniqueID: 4266438913
     locked: 0
+  - name: Debug
+    uniqueID: 611124619
+    locked: 0

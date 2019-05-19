@@ -6,11 +6,92 @@ using System.Linq;
 using System.IO;
 using Newtonsoft.Json.Linq;
 
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+using System.Text;
 
-public class World {
+public class World : IXmlSerializable {
 
-  Dictionary<string, InstalledItem> installedItemProtos = new Dictionary<string, InstalledItem>();
+  //LOADING AND SAVING
 
+
+  public XmlSchema GetSchema() {
+    return null;
+  }
+
+  public void WriteXml(XmlWriter writer) {
+    writer.WriteElementString("width", width.ToString());
+    writer.WriteElementString("height", height.ToString());
+    writer.WriteElementString("tileSize", tileSize.ToString());
+    writer.WriteStartElement("characters");
+
+    foreach (Character c in characters) {
+      writer.WriteStartElement("character");
+      writer.WriteElementString("name", c.name);
+      writer.WriteElementString("xPos", ((int)c.X).ToString());
+      writer.WriteElementString("yPos", ((int)c.Y).ToString());
+      writer.WriteElementString("state", c.state.ToString());
+      writer.WriteElementString("job", "....");
+
+      writer.WriteEndElement();
+
+    }
+    writer.WriteEndElement();
+
+    writer.WriteStartElement("tileTypes");
+
+    Dictionary<string, int> types = new Dictionary<string, int>();
+    int counter = 0;
+    foreach (string st in TileType.TYPES.Keys) {
+      TileType type = TileType.TYPES[st];
+      types[st] = counter;
+      
+      writer.WriteStartElement("tileType");
+      writer.WriteElementString("name", st);
+      writer.WriteElementString("id", counter.ToString());
+
+      writer.WriteEndElement();
+      counter += 1;
+    }
+
+    writer.WriteEndElement();
+
+    StringBuilder str = new StringBuilder();
+    
+    for (int x = 0; x < width; x += 1) {
+      for (int y = 0; y < height; y += 1) {
+        Tile t = getTileAt(x, y);
+        //str.Append(t.x + "_" + t.y + "_" + types[t.type.name] + ";");
+        str.Append(types[t.type.name] + ";");
+        
+      }
+    }
+    Debug.Log("original: " + str.Length + "\n" + str.ToString());
+
+    byte[] tileByes = Funcs.Zip(str.ToString());
+    Debug.Log("bytes: " + tileByes.Length);
+    writer.WriteStartElement("tiles");
+    writer.WriteBase64(tileByes, 0, tileByes.Length);
+    writer.WriteEndElement();
+
+
+    jobQueue.WriteXml(writer);
+
+  }
+
+  public void ReadXml(XmlReader reader) {
+
+  }
+
+
+
+  //END LOADING
+
+  Dictionary<string, InstalledItem> installedItemProtos;
+
+
+  private float xSeed, ySeed,noiseFactor;
   private Tile[,] tiles;
   public int width { get; private set; }
   public int height { get; private set; }
@@ -19,17 +100,42 @@ public class World {
   Action<Tile> cbTileChanged;
   Action<Character> cbCharacterChanged;
   Action<Character> cbCharacterCreated;
+  Action<Character> cbCharacterKilled;
   public JobQueue jobQueue;
   List<Character> characters = new List<Character>();
+  bool allowDiagonalNeighbours = true;
 
-  private static readonly float NOISE_FACTOR = 0.05f;
+  //private static readonly float NOISE_FACTOR = 0.05f;
+  [NonSerialized]
   public TileNodeMap nodeMap;
+  private readonly int NUMBER_OF_ROBOTS = 10;
+
+  private readonly int TEST_WIDTH = 30;
+  private readonly int TEST_HEIGHT = 30;
 
 
 
+  public void Kill() {
+    jobQueue = null;
+    installedItemProtos.Clear();
+    installedItemProtos = null;
+    tiles = null;
+    nodeMap = null;
 
-  public World(int width = 100, int height = 100, int tileSize = 32) {
+    foreach (Character c in characters) {
+      c.Kill();
+      if (cbCharacterKilled != null) {
+        cbCharacterKilled(c);
+      }
+    }
+    characters = null;
+  }
 
+  void Init(int width, int height, int tileSize) {
+    xSeed = UnityEngine.Random.Range(-10f, 10f);
+    ySeed = UnityEngine.Random.Range(-10f, 10f);
+    noiseFactor = UnityEngine.Random.Range(0.01f, 0.1f);
+    installedItemProtos = new Dictionary<string, InstalledItem>();
     jobQueue = new JobQueue();
 
 
@@ -46,17 +152,25 @@ public class World {
 
 
     }
-    
+    loadNames();
     createInstalledItemProtos();
+  }
 
+
+  public World() {
+    Init(TEST_WIDTH, TEST_HEIGHT, 32);
+  }
+  public World(int width = 50, int height = 50, int tileSize = 32) {
+
+    Init(width, height, tileSize);
     //CreateCharacters();
   }
 
   public void SetAllNeighbours() {
     for (int x = 0; x < width; x += 1) {
       for (int y = 0; y < height; y += 1) {
-        tiles[x, y].SetNeighbours(); 
-        
+        tiles[x, y].SetNeighbours(allowDiagonalNeighbours);
+
       }
 
 
@@ -78,7 +192,7 @@ public class World {
   public void CreateCharacters() {
     int attempts = 0;
     int created = 0;
-    while(created < 20 && attempts < 10000) {
+    while (created < NUMBER_OF_ROBOTS && attempts < 10000) {
       int x = UnityEngine.Random.Range(0, width);
       int y = UnityEngine.Random.Range(0, height);
       Tile t = getTileAt(x, y);
@@ -170,6 +284,7 @@ public class World {
       installedItemProtos.Add(name, proto);
 
     }
+    Debug.Log("prototype created: " + proto);
 
     return proto;
   }
@@ -184,14 +299,14 @@ public class World {
 
   public void RandomiseTiles() {
     Debug.Log("Randomise Tiles");
-    float xo = UnityEngine.Random.Range(-10, 10);
-    float yo = UnityEngine.Random.Range(-10, 10);
+    float xo = xSeed;// UnityEngine.Random.Range(-10, 10);
+    float yo = ySeed; // UnityEngine.Random.Range(-10, 10);
     float xx = 0;
     float yy = 0;
     for (int x = 0; x < width; x += 1) {
-      xx = ((float)x) * NOISE_FACTOR;
+      xx = ((float)x) * noiseFactor;
       for (int y = 0; y < height; y += 1) {
-        yy = ((float)y) * NOISE_FACTOR;
+        yy = ((float)y) * noiseFactor;
         Tile t = tiles[x, y];
         //if (UnityEngine.Random.Range(0,2) == 0)
         float f = Mathf.PerlinNoise(xx + xo, yy + yo);
@@ -247,33 +362,44 @@ public class World {
 
   }
 
-  public void RegisterTileChangedCB(Action<Tile> cb) {
+  public void CBRegisterTileChanged(Action<Tile> cb) {
     cbTileChanged += cb;
 
   }
 
-  public void UnregisterTileChangedCB(Action<Tile> cb) {
+  public void CBUnregisterTileChanged(Action<Tile> cb) {
     cbTileChanged -= cb;
 
   }
 
-  public void RegisterCharacterChangedCB(Action<Character> cb) {
+  public void CBRegisterCharacterChanged(Action<Character> cb) {
     cbCharacterChanged += cb;
 
   }
 
-  public void UnregisterCharacterChangedCB(Action<Character> cb) {
+  public void CBUnregisterCharacterChanged(Action<Character> cb) {
     cbCharacterChanged -= cb;
 
   }
 
-  public void RegisterCharacterCreatedCB(Action<Character> cb) {
+  public void CBRegisterCharacterCreated(Action<Character> cb) {
     cbCharacterCreated += cb;
 
   }
 
-  public void UnregisterCharacterCreatedCB(Action<Character> cb) {
+  public void CBUnregisterCharacterCreated(Action<Character> cb) {
     cbCharacterCreated -= cb;
+
+  }
+
+
+  public void CBRegisterCharacterKilled(Action<Character> cb) {
+    cbCharacterKilled += cb;
+
+  }
+
+  public void CBUnregisterCharacterKilled(Action<Character> cb) {
+    cbCharacterKilled -= cb;
 
   }
 
@@ -290,8 +416,37 @@ public class World {
   }
 
   public bool isInstalledItemPositionValid(string itemType, Tile t) {
+    if (t == null ) {
+      Debug.LogError("isInstalledItemPositionValid: tile cannot be null");
+    }
+
+    if (itemType == null) {
+      Debug.LogError("isInstalledItemPositionValid: itemType cannot be null");
+    }
+
+    if (installedItemProtos == null) {
+      Debug.LogError("isInstalledItemPositionValid: installedItemProtos cannot be null");
+    }
     return installedItemProtos[itemType].funcPositionValid(t.x, t.y);
   }
+
+  public string GetName() {
+    string name1 = names[UnityEngine.Random.Range(0, names.Length)];
+    string name2 = names[UnityEngine.Random.Range(0, names.Length)];
+
+    return name1 + "_" + name2;
+
+  }
+
+  private void loadNames() {
+    names = File.ReadAllLines(Application.streamingAssetsPath + "/csv/surnames.csv");
+
+    //foreach (string line in lines)
+    //  Console.WriteLine(line);
+  }
+
+
+  public string[] names;
 
 }
 

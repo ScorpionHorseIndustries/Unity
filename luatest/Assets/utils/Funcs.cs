@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Text;
+using System.IO.Compression;
+
 public static class Funcs {
   public static string getSpriteName(string name) {
     name = name.Replace(':', '_');
@@ -68,6 +72,66 @@ public static class Funcs {
 
 
     return d;
+  }
+
+  public static void CopyTo(Stream src, Stream dest) {
+    byte[] bytes = new byte[4096];
+
+    int cnt;
+
+    while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0) {
+      dest.Write(bytes, 0, cnt);
+    }
+  }
+
+  public static byte[] Zip(string str) {
+    var bytes = Encoding.UTF8.GetBytes(str);
+
+    using (var msi = new MemoryStream(bytes))
+    using (var mso = new MemoryStream()) {
+      using (var gs = new GZipStream(mso, CompressionMode.Compress)) {
+        //msi.CopyTo(gs);
+        CopyTo(msi, gs);
+      }
+
+      return mso.ToArray();
+    }
+  }
+
+  public static string Unzip(byte[] bytes) {
+    using (var msi = new MemoryStream(bytes))
+    using (var mso = new MemoryStream()) {
+      using (var gs = new GZipStream(msi, CompressionMode.Decompress)) {
+        //gs.CopyTo(mso);
+        CopyTo(gs, mso);
+      }
+
+      return Encoding.UTF8.GetString(mso.ToArray());
+    }
+  }
+
+  static void Main(string[] args) {
+    byte[] r1 = Zip("StringStringStringStringStringStringStringStringStringStringStringStringStringString");
+    string r2 = Unzip(r1);
+  }
+
+  public static string Base64Encode(byte[] bytes) {
+    return System.Convert.ToBase64String(bytes);
+  }
+
+  public static byte[] Base64Decode(string base64EncodedData, bool whatever) {
+    return  System.Convert.FromBase64String(base64EncodedData);
+    
+  }
+
+    public static string Base64Encode(string plainText) {
+    byte[] plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+    return System.Convert.ToBase64String(plainTextBytes);
+  }
+
+  public static string Base64Decode(string base64EncodedData) {
+    byte[] base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+    return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
   }
 
 }

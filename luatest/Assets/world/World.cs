@@ -60,61 +60,34 @@ public class World : IXmlSerializable {
     }
   }
 
-  void Init(int width, int height, int tileSize, bool SeedsSet = false, string[] tilesArray = null) {
-    if (!SeedsSet) {
-      xSeed = UnityEngine.Random.Range(-10f, 10f);
-      ySeed = UnityEngine.Random.Range(-10f, 10f);
-      noiseFactor = UnityEngine.Random.Range(0.01f, 0.1f);
-    }
+  private void SetCollections() {
     installedItemProtos = new Dictionary<string, InstalledItem>();
     installedItemProtos_BY_ID = new Dictionary<int, string>();
     characters = new List<Character>();
     jobQueue = new JobQueue();
-
-    createInstalledItemProtos();
     tiles = new Tile[width, height];
+  }
+
+  void InitNew(int width, int height, int tileSize) {
+
+    xSeed = UnityEngine.Random.Range(-10f, 10f);
+    ySeed = UnityEngine.Random.Range(-10f, 10f);
+    noiseFactor = UnityEngine.Random.Range(0.01f, 0.1f);
+
+
+    
     this.width = width;
     this.height = height;
     this.tileSize = tileSize;
 
+    SetCollections();
+
+    createInstalledItemProtos();
+
     createEmptyTiles();
-    if (tilesArray != null) {
-      for (int x = 0; x < width; x += 1) {
-        for (int y = 0; y < height; y += 1) {
-          int idx = y + x * width;
-          //Debug.Log(tilesArray[idx]);
 
-          string si = tilesArray[idx];
-          int typeIndex = -1; // int.Parse(tilesArray[idx]);
-          int installedItemId = -1;
-          //string installedItemName = null;
-          
-          if (int.TryParse(si, out typeIndex)) {
-
-          } else {
-            if (si.Contains("I")) {
-              string[] siparts = si.Split('I');
-
-              typeIndex = int.Parse(siparts[0]);
-              installedItemId = int.Parse(siparts[1]);
-
-            } 
-          }
-
-          
-
-          TileType tt = TileType.TYPES_BY_ID[typeIndex];
-          
-          tiles[x, y].SetType(tt);
-          if (installedItemId > 0) {
-            InstalledItem item = InstalledItem.CreateInstance(this,getInstalledItemProtoById(installedItemId), tiles[x, y]);
-          }
-          
-        }
-      }
-    }
     loadNames();
-    
+
   }
 
 
@@ -123,7 +96,7 @@ public class World : IXmlSerializable {
   }
   public World(int width = 50, int height = 50, int tileSize = 32) {
 
-    Init(width, height, tileSize);
+    InitNew(width, height, tileSize);
     //CreateCharacters();
   }
 
@@ -225,7 +198,7 @@ public class World : IXmlSerializable {
       int id = Funcs.jsonGetInt(j["id"], -1);
 
       InstalledItem proto = InstalledItemProto(name, sprite, movement, w, h, linked, build, trash, rotate, id);
-      
+
       if (linked) {
         string n_s = Funcs.jsonGetString(j["neighbour_s"], "");
         string n_ns = Funcs.jsonGetString(j["neighbour_ns"], "");
@@ -274,8 +247,8 @@ public class World : IXmlSerializable {
 
     List<int[,]> maps = new List<int[,]>();
 
-    for (int i = 0; i < TileType.countNatural-1; i += 1) {
-      maps.Add(MakeInitialMap(50 - (i*3), Time.time + "_" + i.ToString()));
+    for (int i = 0; i < TileType.countNatural - 1; i += 1) {
+      maps.Add(MakeInitialMap(50 - (i * 3), Time.time + "_" + i.ToString()));
     }
 
     for (int i = 0; i < maps.Count; i += 1) {
@@ -415,7 +388,7 @@ public class World : IXmlSerializable {
       //Debug.LogError("no prototype for InstalledItem of type \"" + buildItem + "\"");
 
     } else {
-      InstalledItem inst = InstalledItem.CreateInstance(this,proto, tile);
+      InstalledItem inst = InstalledItem.CreateInstance(this, proto, tile);
       if (inst != null) {
         if (cbInstalledItem != null) {
           cbInstalledItem(inst);
@@ -539,22 +512,6 @@ public class World : IXmlSerializable {
     writer.WriteElementString("ySeed", ySeed.ToString());
     writer.WriteElementString("noiseFactor", noiseFactor.ToString());
 
-    //Dictionary<string, int> protos = new Dictionary<string, int>();
-
-    //writer.WriteStartElement("installedItemProtos");
-    //int counter = 0;
-    //foreach (string name in installedItemProtos.Keys) {
-    //  InstalledItem item = installedItemProtos[name];
-    //  writer.WriteStartElement("installedItemProto");
-    //  writer.WriteElementString("name", name);
-    //  writer.WriteElementString("id", counter.ToString());
-    //  writer.WriteEndElement();
-    //  protos[name] = counter;
-    //  counter += 1;
-    //}
-
-    //writer.WriteEndElement();
-
     writer.WriteStartElement("characters");
 
     foreach (Character c in characters) {
@@ -633,7 +590,10 @@ public class World : IXmlSerializable {
 
     while (reader.NodeType != XmlNodeType.Element)
       reader.Read();
+
     XElement xe = XElement.Load(reader);
+
+
 
     Debug.Log("XE = " + xe);
 
@@ -648,20 +608,64 @@ public class World : IXmlSerializable {
     byte[] tb = Funcs.Base64Decode(tilesString, true);
 
     tilesString = Funcs.Unzip(tb);
-
+    foreach (XElement chrxml in xe.Elements().Where(e => e.Name.LocalName == "character")) {
+      Debug.Log("characters: " + chrxml);
+    }
+    
 
 
     Debug.Log("seeds: " + xSeed + " " + ySeed + " " + noiseFactor);
     Debug.Log("Tiles: " + tilesString.Length + ":" + tilesString);
 
-    string[] sep = { ";" };
-    string[] tilesArray = tilesString.Split(sep, System.StringSplitOptions.RemoveEmptyEntries);
+    
+    string[] tilesArray = tilesString.Split(';');
 
     Debug.Log("length of array " + tilesArray.Length + " width x height: " + (width * height));
+    SetCollections();
+    createInstalledItemProtos();
+    createEmptyTiles();
+    SetTilesFromArray(tilesArray);
+    loadNames();
+
+    //Init(width, height, 32, true, tilesArray);
+  }
+
+  private void SetTilesFromArray(string[] tilesArray) {
+    if (tilesArray != null) {
+      for (int x = 0; x < width; x += 1) {
+        for (int y = 0; y < height; y += 1) {
+          int idx = y + x * width;
+          //Debug.Log(tilesArray[idx]);
+
+          string si = tilesArray[idx];
+          int typeIndex = -1; // int.Parse(tilesArray[idx]);
+          int installedItemId = -1;
+          //string installedItemName = null;
+
+          if (int.TryParse(si, out typeIndex)) {
+
+          } else {
+            if (si.Contains("I")) {
+              string[] siparts = si.Split('I');
+
+              typeIndex = int.Parse(siparts[0]);
+              installedItemId = int.Parse(siparts[1]);
+
+            }
+          }
 
 
 
-    Init(width, height, 32, true, tilesArray);
+          TileType tt = TileType.TYPES_BY_ID[typeIndex];
+
+          tiles[x, y].SetType(tt);
+          if (installedItemId > 0) {
+            InstalledItem item = InstalledItem.CreateInstance(this, getInstalledItemProtoById(installedItemId), tiles[x, y]);
+          }
+
+        }
+      }
+    }
   }
 
 

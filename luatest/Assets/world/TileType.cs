@@ -13,7 +13,7 @@ public class TileType {
   public static Dictionary<int, TileType> TYPES_BY_ID = new Dictionary<int, TileType>();
 
   public int id { get; private set; }
-  private static bool loaded = false;
+  //private static bool loaded = false;
   public string name { get; private set; }
   public string spriteName { get; private set; }
   public string[] sprites { get; private set; }
@@ -44,7 +44,9 @@ public class TileType {
 	
 
 	public static void LoadFromFile() {
-		if (loaded) return;
+
+    TYPES.Clear();
+    TYPES_BY_ID.Clear();
     countNatural = 0;
 
     string path = Application.streamingAssetsPath + "/json/TileTypes.json";
@@ -87,7 +89,7 @@ public class TileType {
         countNatural += 1;
       }
 		}
-		loaded = true;
+		//loaded = true;
 
 
 		

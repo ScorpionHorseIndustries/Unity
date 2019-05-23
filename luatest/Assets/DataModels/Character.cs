@@ -88,7 +88,7 @@ public class Character {
   //float cd = 1;
   private bool changed = false;
   public Job myJob;
-  public  PathAStar path;
+  public PathAStar path;
 
   public Character(World world, Tile startTile) {
     PosTile = DstTile = startTile;

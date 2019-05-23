@@ -12,19 +12,11 @@ public class TrashController : MonoBehaviour {
   private int countOfTrash = 0;
   // Start is called before the first frame update
 
-  public static TrashController Instance { get; private set; }
+
   private void Awake() {
-    if (Instance != null) {
-      Debug.LogError("THERE SHOULD ONLY BE ONE SPRITE CONTROLLER YOU DING DONG");
-    }
-    Instance = this;
-  }
-  void Init(string s) {
 
   }
-    
-  
-  void Start() {
+  public void Init() {
     //WorldController.Instance.cbRegisterReady(Init);
 
     Debug.Log("init " + this.name);
@@ -39,6 +31,11 @@ public class TrashController : MonoBehaviour {
       }
     }
     PlaceTrash();
+  }
+    
+  
+  void Start() {
+
 
   }
 
@@ -49,7 +46,7 @@ public class TrashController : MonoBehaviour {
 
       Tile tile = wcon.world.getTileAt(x, y);
       InstalledItem item = trashList[Random.Range(0, trashList.Count)];
-      if (wcon.world.isInstalledItemPositionValid(item.type, tile)) {
+      if (wcon.world.isInstalledItemPositionValid(wcon.world,item.type, tile)) {
         wcon.world.PlaceInstalledObject(item.type, tile);
         countOfTrash += 1;
       }

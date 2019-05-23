@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System;
 using System.Xml.Serialization;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class WorldController : MonoBehaviour {
 
@@ -14,6 +15,8 @@ public class WorldController : MonoBehaviour {
   public GameObject cashText;
   public GameObject LinePrefab;
   public GameObject TextPrefab;
+  public GameObject currentTileText;
+
   private Dictionary<Tile, GameObject> Tiles_GO_Map;
   private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
   private Dictionary<Character, GameObject> Characters_GO_Map;
@@ -41,6 +44,8 @@ public class WorldController : MonoBehaviour {
   //public Sprite dirtSprite;
   //public Sprite grassSprite;
   public World world { get; private set; }
+  public static bool loadWorld { get; private set; }
+
   // Start is called before the first frame update
   private void Awake() {
     if (Instance != null) {
@@ -58,25 +63,52 @@ public class WorldController : MonoBehaviour {
   //  actualReady += 1;
   //}
 
-  public void CreateNewWorld() {
-    TileType.LoadFromFile();
+  public void CreateWorldFromSave() {
+    //Init();
 
-    Tiles_GO_Map = new Dictionary<Tile, GameObject>();
-    InstalledItems_GO_Map = new Dictionary<InstalledItem, GameObject>();
-    Characters_GO_Map = new Dictionary<Character, GameObject>();
-    Job_GO_Map = new Dictionary<Job, GameObject>();
+    XmlSerializer xml = new XmlSerializer(typeof(World));
 
-    eventSystem = EventSystem.current;
-    Debug.Log("create world");
-    world = new World();
-    Debug.Log("create tile objects");
+    //Debug.Log("save string = " + PlayerPrefs.GetString("save"));
+    TextReader reader = new StringReader(PlayerPrefs.GetString("save"));
+
+    world = (World)xml.Deserialize(reader);
+
+    reader.Close();
+
     createTileGameObjects();
-    world.RandomiseTiles();
+    foreach (Tile t in Tiles_GO_Map.Keys) {
+      SetTileSprite(t);
+    }
+    world.RegisterInstalledItemCB(OnInstalledItemCreated);
+
+    //spriteController = SpriteController.Instance;
+    //spriteController.wcon = this;
+    //spriteController.world = this.world;
+
+    world.jobQueue.cbRegisterJobCreated(OnJobCreated);
+    world.CBRegisterCharacterChanged(OnCharacterChanged);
+    world.CBRegisterCharacterCreated(OnCharacterCreated);
+    world.CBRegisterCharacterKilled(OnCharacterKilled);
+    world.SetAllNeighbours();
+    //Debug.Log(writer.ToString());
+    //world = new World();
+  }
+
+  public void CreateNewWorld() {
+
+
+
+
+    world = new World(World.TEST_WIDTH, World.TEST_HEIGHT);
+
+    createTileGameObjects();
+    //world.RandomiseTiles();
+    world.GenerateMap();
     //create game objects for tiles
     world.RegisterInstalledItemCB(OnInstalledItemCreated);
 
-    spriteController = SpriteController.Instance;
-    spriteController.wcon = this;
+    //spriteController = SpriteController.Instance;
+    //spriteController.wcon = this;
     //spriteController.world = this.world;
 
     world.jobQueue.cbRegisterJobCreated(OnJobCreated);
@@ -86,9 +118,23 @@ public class WorldController : MonoBehaviour {
     world.CreateCharacters();
 
     world.SetAllNeighbours();
-    world.nodeMap = new TileNodeMap(world);
+    //world.nodeMap = new TileNodeMap(world);
 
     //initDone = false;
+  }
+
+  public void Init() {
+    CreateControllers();
+
+    TileType.LoadFromFile();
+
+    Tiles_GO_Map = new Dictionary<Tile, GameObject>();
+    InstalledItems_GO_Map = new Dictionary<InstalledItem, GameObject>();
+    Characters_GO_Map = new Dictionary<Character, GameObject>();
+    Job_GO_Map = new Dictionary<Job, GameObject>();
+
+    eventSystem = EventSystem.current;
+
   }
 
   public void Restart() {
@@ -97,6 +143,9 @@ public class WorldController : MonoBehaviour {
 
     foreach (Tile t in Tiles_GO_Map.Keys) {
       GameObject go = Tiles_GO_Map[t];
+      if (t.installedItem != null) {
+        t.installedItem.Destroy();
+      }
       Destroy(go);
 
 
@@ -109,11 +158,13 @@ public class WorldController : MonoBehaviour {
     Job_GO_Map = null;
     Tiles_GO_Map.Clear();
     Tiles_GO_Map = null;
+    DestroyControllers();
+    Init();
     CreateNewWorld();
+    InitialiseControllers();
   }
 
-
-  void Start() {
+  private void CreateControllers() {
     InstantiateController(prfSpriteController);
     InstantiateController(prfInputController);
     InstantiateController(prfBuildController);
@@ -121,15 +172,37 @@ public class WorldController : MonoBehaviour {
     InstantiateController(prfJobController);
     InstantiateController(prfTrashController);
     InstantiateController(prfSoundController);
-    this.spriteController = SpriteController.Instance;
-    this.inputController = InputController.Instance;
+    this.spriteController = FindObjectOfType<SpriteController>();//FindSpriteController.Instance;
+    this.spriteController.wcon = this;
+    this.inputController = FindObjectOfType<InputController>();//InputController.Instance;
 
-    this.buildController = BuildController.Instance;
-    this.jobController = JobController.Instance;
-    this.trashController = TrashController.Instance;
-    this.soundController = SoundController.Instance;
-    
-    CreateNewWorld();
+    this.buildController = FindObjectOfType<BuildController>();//.Instance;
+    this.jobController = FindObjectOfType<JobController>();//.Instance;
+    this.trashController = FindObjectOfType<TrashController>();//.Instance;
+    this.soundController = FindObjectOfType<SoundController>();//.Instance;
+  }
+
+  private void InitialiseControllers() {
+    inputController.Init();
+    buildController.Init();
+    trashController.Init();
+    soundController.Init();
+    jobController.Init();
+
+  }
+
+
+  void Start() {
+
+
+    Init();
+    if (loadWorld) {
+      loadWorld = false;
+      CreateWorldFromSave();
+    } else {
+      CreateNewWorld();
+    }
+    InitialiseControllers();
     Debug.Log("init done " + this.name);
   }
 
@@ -155,6 +228,11 @@ public class WorldController : MonoBehaviour {
     xml.Serialize(writer, world);
     writer.Close();
     Debug.Log(writer.ToString());
+    PlayerPrefs.SetString("save", writer.ToString());
+
+    StreamWriter sw = new StreamWriter(Application.streamingAssetsPath + "/xml/save.xml");
+    sw.Write(writer.ToString());
+    sw.Close();
 
   }
 
@@ -162,7 +240,8 @@ public class WorldController : MonoBehaviour {
     //reload the scene
     //reset all data
     //remove old references
-
+    loadWorld = true;
+    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
   }
 
   private void addCurrency(float amt) {
@@ -195,6 +274,12 @@ public class WorldController : MonoBehaviour {
     world.Update(Time.deltaTime);
 
 
+
+  }
+
+  public void UpdateCurrentTile(Tile t) {
+    Text txt = currentTileText.GetComponent<Text>();
+    txt.text = t.type + " " + t.x + "," + t.y;
 
   }
 
@@ -254,7 +339,7 @@ public class WorldController : MonoBehaviour {
   }
 
   public void SetTileSprite(Tile t) {
-    SpriteController.Instance.SetTileSprite(t);
+    spriteController.SetTileSprite(t);
   }
 
   public void OnInstalledItemCreated(InstalledItem inst) {
@@ -266,7 +351,7 @@ public class WorldController : MonoBehaviour {
     SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
 
 
-    SpriteHolder sh = SpriteController.Instance.GetSprite(inst);
+    SpriteHolder sh = spriteController.GetSprite(inst);
     if (sh.r != 0) {
       spr.transform.Rotate(0, 0, sh.r);
     }
@@ -278,7 +363,32 @@ public class WorldController : MonoBehaviour {
     spr.sortingLayerName = "Objects";
 
     //world.RegisterInstalledItemCB(inst);
-    inst.RegisterCB(OnInstalledItemChanged);
+    inst.CBRegisterChanged(OnInstalledItemChanged);
+    inst.CBRegisterDestroyed(OnInstalledItemDestroyed);
+
+
+  }
+
+  void OnInstalledItemChanged(InstalledItem item) {
+    //Debug.LogError("OnInstalledItemChanged " + item + " NOT IMPLEMENTED");
+
+    if (InstalledItems_GO_Map.ContainsKey(item)) {
+      GameObject go = InstalledItems_GO_Map[item];
+      SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+      SpriteHolder sh = spriteController.GetSprite(item);
+      spr.sprite = sh.s;
+      spr.transform.rotation = Quaternion.identity;
+      spr.transform.Rotate(0, 0, sh.r);
+    }
+
+  }
+
+  void OnInstalledItemDestroyed(InstalledItem item) {
+    if (InstalledItems_GO_Map.ContainsKey(item)) {
+      GameObject instgo = InstalledItems_GO_Map[item];
+      Destroy(instgo);
+      InstalledItems_GO_Map.Remove(item);
+    }
 
   }
 
@@ -310,6 +420,7 @@ public class WorldController : MonoBehaviour {
     gln.transform.SetParent(go.transform, true);
 
     GameObject gtx = Instantiate(TextPrefab, go.transform.position, Quaternion.identity);
+    gtx.transform.Translate(3, 0, 0);
     gtx.transform.SetParent(go.transform, true);
 
 
@@ -323,11 +434,27 @@ public class WorldController : MonoBehaviour {
   }
 
   void OnCharacterChanged(Character c) {
+    bool n, e, s, w;
+    n = e = s = w = false;
     if (Characters_GO_Map.ContainsKey(c)) {
       GameObject go = Characters_GO_Map[c];
       Vector2 pos = new Vector2(c.X, c.Y);
-
+      Vector2 oldPos = go.transform.position;
       go.transform.position = pos;
+
+      Vector2 deltaPos = oldPos - pos;
+
+
+      if (deltaPos.x < 0) {
+        e = true;
+      } else if (deltaPos.x > 0) {
+        w = true;
+
+      } else if (deltaPos.y < 0) {
+        n = true;
+      } else if (deltaPos.y > 0) {
+        s = true;
+      }
 
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
       LineRenderer ln = go.GetComponentInChildren<LineRenderer>();
@@ -338,7 +465,7 @@ public class WorldController : MonoBehaviour {
       ln.SetPosition(0, c.pos);
       ln.SetPosition(1, c.dst);
       ln.SetPosition(2, c.pos);
-      
+
 
       if (c.path != null) {
         ln.positionCount = ln.positionCount + c.path.Length + 1;
@@ -354,7 +481,7 @@ public class WorldController : MonoBehaviour {
 
 
       }
-
+      spr.flipX = false;
       switch (c.state) {
         case Character.STATE.RESET:
         case Character.STATE.FIND_PATH:
@@ -377,6 +504,16 @@ public class WorldController : MonoBehaviour {
         //  break;
         default:
           spr.sprite = spriteController.GetSprite(c.spriteName);
+
+          if (n) {
+            spr.sprite = spriteController.GetSprite(c.spriteNameNorth);
+          } else if (e) {
+            spr.sprite = spriteController.GetSprite(c.spriteNameEast);
+            spr.flipX = true;
+          } else if (w) {
+            spr.sprite = spriteController.GetSprite(c.spriteNameWest);
+
+          }
           break;
       }
     }
@@ -415,19 +552,7 @@ foreach (Tile tile in dragArea)
   }
 
 
-  void OnInstalledItemChanged(InstalledItem item) {
-    //Debug.LogError("OnInstalledItemChanged " + item + " NOT IMPLEMENTED");
 
-    if (InstalledItems_GO_Map.ContainsKey(item)) {
-      GameObject go = InstalledItems_GO_Map[item];
-      SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
-      SpriteHolder sh = SpriteController.Instance.GetSprite(item);
-      spr.sprite = sh.s;
-      spr.transform.rotation = Quaternion.identity;
-      spr.transform.Rotate(0, 0, sh.r);
-    }
-
-  }
 
   public List<Tile> GetNeighboursList(InstalledItem item, bool allowDiag = false) {
     return GetNeighboursList(item.tile);

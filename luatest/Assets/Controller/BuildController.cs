@@ -7,24 +7,20 @@ public class BuildController : MonoBehaviour {
   public WorldController wcon;
   //public World world;
   public InputController inputCon;
-  public static BuildController Instance { get; private set; }
+ 
 
   private void Awake() {
-    if (Instance != null) {
-      Debug.LogError("THERE SHOULD ONLY BE BUILD CONTROLLER");
-    } else {
-      Instance = this;
-    }
-  }
-
-  private void Init(string s) {
 
   }
-  private void Start() {
+
+  public void Init() {
     //WorldController.Instance.cbRegisterReady(Init);
     Debug.Log("init " + this.name);
     wcon = WorldController.Instance;
     //world = wcon.world;
+  }
+  private void Start() {
+
 
   }
   public enum BUILDTYPE {
@@ -48,7 +44,7 @@ public class BuildController : MonoBehaviour {
         case BUILDTYPE.INSTALLEDITEM:
           foreach (Tile tile in tiles) {
             //tile.placeInstalledObject();
-            if (wcon.world.isInstalledItemPositionValid(build, tile)) {
+            if (wcon.world.isInstalledItemPositionValid(wcon.world,build, tile)) {
               Job j = new Job(
                     tile,
                     (theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },

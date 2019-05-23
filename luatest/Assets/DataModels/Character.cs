@@ -66,6 +66,10 @@ public class Character {
   public bool CanMoveDiagonally { get; private set; } = true;
   public string spriteName { get; private set; } = "robot_front";
   public string spriteName_IDLE { get; private set; } = "robot_sitting";
+  public string spriteNameNorth { get; private set; } = "robot_back";
+  public string spriteNameEast { get; private set; } = "robot_side";
+  public string spriteNameSouth { get; private set; } = "robot_front";
+  public string spriteNameWest { get; private set; } = "robot_side";
 
   float movementSpeed = 5; //tiles per second
   //float avgMoveSpd = 0;

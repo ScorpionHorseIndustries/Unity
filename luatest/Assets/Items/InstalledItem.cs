@@ -6,6 +6,7 @@ using System;
 
 public class InstalledItem {
 
+  public int prototypeId { get; private set; }
   public Tile tile { get; private set; } //an object could be more than one tile
   public string type { get; private set; }
   public float movementFactor { get; private set; } = 1;
@@ -30,7 +31,8 @@ public class InstalledItem {
 
   //
   Action<InstalledItem> cbOnChanged;
-  public Func<int, int, bool> funcPositionValid;
+  Action<InstalledItem> cbOnDestroyed;
+  public Func<World, int, int, bool> funcPositionValid;
 
 
 
@@ -57,8 +59,9 @@ public class InstalledItem {
     setLinkedSpriteNames(Item.sprite_ns, Item.sprite_nsw, Item.sprite_s, Item.sprite_sw, Item.sprite_nesw);
   }
 
-  public static InstalledItem CreatePrototype(string type, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate) {
+  public static InstalledItem CreatePrototype(string type, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate, int id) {
     InstalledItem o = new InstalledItem();
+    o.prototypeId = id;
     o.type = type;
     o.spriteName = spriteName;
     o.movementFactor = movementFactor;
@@ -76,12 +79,13 @@ public class InstalledItem {
 
   }
 
-  public static InstalledItem CreateInstance(InstalledItem proto, Tile tile) {
-    if (!proto.funcPositionValid(tile.x, tile.y)) {
+  public static InstalledItem CreateInstance(World world, InstalledItem proto, Tile tile) {
+    if (!proto.funcPositionValid(world, tile.x, tile.y)) {
       return null;
     }
     //Debug.Log("InstalledItem.CreateInstance");
     InstalledItem o = new InstalledItem();
+    o.prototypeId = proto.prototypeId;
     o.type = proto.type;
     o.movementFactor = proto.movementFactor;
     o.width = proto.width;
@@ -144,20 +148,34 @@ public class InstalledItem {
     }
   }
 
+  public void Destroy() {
+    if (cbOnDestroyed != null) {
+      cbOnDestroyed(this);
+    }
+  }
 
 
-  public void RegisterCB(Action<InstalledItem> cb) {
+
+  public void CBRegisterChanged(Action<InstalledItem> cb) {
     cbOnChanged += cb;
   }
 
-  public void UnregisterCB(Action<InstalledItem> cb) {
+  public void CBUnregisterChanged(Action<InstalledItem> cb) {
     cbOnChanged -= cb;
+  }
+
+  public void CBRegisterDestroyed(Action<InstalledItem> cb) {
+    cbOnDestroyed += cb;
+  }
+
+  public void CBUnregisterDestroyed(Action<InstalledItem> cb) {
+    cbOnDestroyed -= cb;
   }
 
 
 
-  public bool isPositionValid(int x, int y) {
-    Tile t = WorldController.Instance.world.getTileAt(x, y);
+  public bool isPositionValid(World world, int x, int y) {
+    Tile t = world.getTileAt(x, y);
     //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
     if (t == null || !t.type.build || t.installedItem != null || t.looseItem != null || t.pendingJob) {
       return false;

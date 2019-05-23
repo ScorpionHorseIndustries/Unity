@@ -1,9 +1,10 @@
 {
   "InstalledItems" : [ 
   {
+    "id" : 1,
     "name" : "installed::wall",
     "sprite" : "walls_none",
-	"sprites" : [],
+    "sprites" : [],
     "linked" : true,
     "neighbour_s" : "walls_s",
     "neighbour_ns" : "walls_ns",
@@ -11,13 +12,14 @@
     "neighbour_sw" : "walls_sw",
     "neighbour_nesw" : "walls_nesw",
     "movementFactor" : 0.01,
-	"trash" : false,
-	"build" : true
+    "trash" : false,
+    "build" : true
     
   },
   {
+    "id" : 2,
     "name" : "installed::organic_trash",
-	"sprite" : "corpse_0",
+    "sprite" : "corpse_0",
     "sprites" : [
       "corpse_0",
       "corpse_1",
@@ -25,32 +27,34 @@
       "corpse_3"
       ],
       "movementFactor" : 0.8,
-	  "linked" : false,
-	  "trash" : true,
-	  "build" : false,
-	  "randomRotation" : true
+      "linked" : false,
+      "trash" : true,
+      "build" : false,
+      "randomRotation" : true
       
   },
     {
+    "id" : 3,
     "name" : "installed::atm",
-	"sprite" : "installed_atm_0",
-	"sprites" : ["installed_atm_0", "installed_atm_1", "installed_atm_2", "installed_atm_3"],
+    "sprite" : "installed_atm_0",
+    "sprites" : ["installed_atm_0", "installed_atm_1", "installed_atm_2", "installed_atm_3"],
       "movementFactor" : 0.5,
-	  "linked" : false,
-	  "trash" : false,
-	  "build" : true,
-	  "randomRotation" : false
+      "linked" : false,
+      "trash" : false,
+      "build" : true,
+      "randomRotation" : false
       
   },
       {
+    "id" : 4,
     "name" : "installed::recycler",
-	"sprite" : "installed_recycler_0",
-	"sprites" : [],
+    "sprite" : "installed_recycler_0",
+    "sprites" : [],
       "movementFactor" : 0.5,
-	  "linked" : false,
-	  "trash" : false,
-	  "build" : true,
-	  "randomRotation" : false
+      "linked" : false,
+      "trash" : false,
+      "build" : true,
+      "randomRotation" : false
       
   }
 

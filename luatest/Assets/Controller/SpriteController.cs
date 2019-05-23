@@ -13,12 +13,9 @@ public class SpriteController : MonoBehaviour {
   public WorldController wcon;
   //public World world;
 
-  public static SpriteController Instance { get; private set; }
+ 
   private void Awake() {
-    if (Instance != null) {
-      Debug.LogError("THERE SHOULD ONLY BE ONE SPRITE CONTROLLER YOU DING DONG");
-    }
-    Instance = this;
+  
     LoadSprites();
   }
 

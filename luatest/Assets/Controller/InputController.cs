@@ -49,12 +49,9 @@ public class InputController : MonoBehaviour {
   private bool tilesFound = false;
 
 
-  public static InputController Instance { get; private set; }
+  
   private void Awake() {
-    if (Instance != null) {
-      Debug.LogError("THERE SHOULD ONLY BE ONE SPRITE CONTROLLER YOU DING DONG");
-    }
-    Instance = this;
+  
   }
 
 
@@ -63,10 +60,7 @@ public class InputController : MonoBehaviour {
 
   // Start is called before the first frame update
   private bool initialised = false;
-  //void Init(string s) {
-
-  //}
-  void Start() {
+  public void Init() {
     //WorldController.Instance.cbRegisterReady(Init);
     Debug.Log("init " + this.name);
     initialised = true;
@@ -74,11 +68,15 @@ public class InputController : MonoBehaviour {
     cam = Camera.main;
     tileSize = wcon.world.tileSize;
     HALF_tileSize = tileSize / 2;
-    bCon = BuildController.Instance;
+    bCon = WorldController.Instance.buildController;
     bCon.inputCon = this;
     cam.transform.position = new Vector3(wcon.world.width / 2, wcon.world.height / 2, cam.transform.position.z);
     cursorPrefab = Instantiate(cursorPrefab, this.transform.position, Quaternion.identity);
     cursorPrefab.transform.SetParent(this.transform, true);
+
+  }
+  void Start() {
+
 
   }
 
@@ -128,6 +126,9 @@ public class InputController : MonoBehaviour {
     cx = mx - lastX;
     cy = my - lastY;
     mouseOverTile = WorldController.Instance.world.getTileAt(mx, my);
+    if (mouseOverTile != null) {
+      WorldController.Instance.UpdateCurrentTile(mouseOverTile);
+    }
     //if (mouseOverTile != null) {
     //  Debug.Log(mouseOverTile);
     //} else {

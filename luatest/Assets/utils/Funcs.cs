@@ -134,4 +134,13 @@ public static class Funcs {
     return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
   }
 
+
+  public static string TitleCase(string s) {
+    string ss = s[0].ToString().ToUpper();
+
+    ss += s.Substring(1).ToLower();
+
+
+    return ss;
+  }
 }

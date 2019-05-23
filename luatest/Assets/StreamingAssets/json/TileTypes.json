@@ -1,6 +1,7 @@
 {
   "tileTypes" : [
       {
+	  "id" : 1,
       "name" : "snow",
       "spritePrefix" : "tiles_",
 	  "sprites" : 8,
@@ -8,9 +9,11 @@
 	  "rangeLow" : 0.8,
 	  "rangeHigh" : 1,
       "build" : true,
-	   "movementCost" : 50
+	   "movementCost" : 50,
+	   "height" : 4
     },
     {
+		"id" : 2,
       "name" : "dirt",
       "spritePrefix" : "tiles_",
 	  "sprites" : 8,
@@ -18,9 +21,11 @@
 	  "rangeLow" : 0.5,
 	  "rangeHigh" : 0.7,
       "build" : true,
-	  "movementCost" : 25
+	  "movementCost" : 25,
+	  "height" : 2
     },
     {
+	"id" : 3,
       "name" : "grass",
       "spritePrefix" : "tiles_",
 	  "sprites" : 8,
@@ -28,9 +33,11 @@
 	  "rangeLow" : 0.2,
 	  "rangeHigh" : 0.6,
 	  "build" : true,
-	  "movementFactor" : 0.75
+	  "movementFactor" : 0.75,
+	  "height" : 1
     },
         {
+		"id" : 4,
       "name" : "water",
       "spritePrefix" : "tiles_",
 	  "sprites" : 8,
@@ -38,9 +45,11 @@
 	  "rangeLow" : 0,
 	  "rangeHigh" : 0.2,
 	  "build" : false,
-	  "movementFactor" : 0.1
+	  "movementFactor" : 0.1,
+	  "height" : 0
     },
      {
+	 "id" : 5,
 	 "name" : "stone",
       "spritePrefix" : "tiles_",
 	  "sprites" : 8,
@@ -48,10 +57,12 @@
 	  "rangeLow" : 0.7,
 	  "rangeHigh" : 0.8,
 	  "build" : true,
-	  "movementFactor" : 0.9
+	  "movementFactor" : 0.9,
+	  "height" : 3
     },
 	
         {
+		"id" : 6,
       "name" : "concrete",
       "spritePrefix" : "tiles_",
 	  "sprites" : 8,
@@ -59,9 +70,11 @@
 	  "rangeLow" : -100,
 	  "rangeHigh" : -100,
 	  "build" : true,
-	  "movementFactor" : 0.9
+	  "movementFactor" : 0.9,
+	  "height" : -1
     },
         {
+		"id" : 0,
       "name" : "empty",
       "spritePrefix" : "tiles_",
 	  "sprites" : 8,
@@ -69,7 +82,8 @@
 	  "rangeLow" : -1,
 	  "rangeHigh" : -1,
 	  "build" : false,
-	  "movementFactor" : 0
+	  "movementFactor" : 0,
+	  "height" : -1
     }
     ]
 }

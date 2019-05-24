@@ -86,8 +86,8 @@ public class Tile {
     neighboursList.Clear();
     neighbours.Clear();
 
-    neighbours = WorldController.Instance.GetNeighbours(this, allowDiagonalNeighbours);
-    neighboursList = WorldController.Instance.GetNeighboursList(this, allowDiagonalNeighbours);
+    neighbours = world.GetNeighbours(this, allowDiagonalNeighbours);
+    neighboursList = world.GetNeighboursList(this, allowDiagonalNeighbours);
 
   }
 

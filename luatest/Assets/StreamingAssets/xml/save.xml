@@ -3,69 +3,69 @@
   <width>100</width>
   <height>100</height>
   <tileSize>32</tileSize>
-  <xSeed>-5.087066</xSeed>
-  <ySeed>0.1352873</ySeed>
-  <noiseFactor>0.01413412</noiseFactor>
+  <xSeed>-9.950888</xSeed>
+  <ySeed>-3.448819</ySeed>
+  <noiseFactor>0.03886835</noiseFactor>
   <characters>
     <character>
       <name>Kasin Bilby</name>
-      <xPos>1</xPos>
-      <yPos>12</yPos>
+      <xPos>61</xPos>
+      <yPos>42</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Schwarzenberg Tenace</name>
-      <xPos>1</xPos>
-      <yPos>6</yPos>
+      <xPos>61</xPos>
+      <yPos>39</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Study Grosman</name>
-      <xPos>1</xPos>
-      <yPos>8</yPos>
+      <xPos>60</xPos>
+      <yPos>34</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Clackler Zinsli</name>
-      <xPos>1</xPos>
-      <yPos>13</yPos>
+      <xPos>60</xPos>
+      <yPos>48</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Gremmer Dougharty</name>
-      <xPos>1</xPos>
-      <yPos>9</yPos>
+      <xPos>61</xPos>
+      <yPos>41</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Panus Gargis</name>
-      <xPos>1</xPos>
-      <yPos>14</yPos>
+      <xPos>61</xPos>
+      <yPos>46</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Leborgne Lorich</name>
-      <xPos>1</xPos>
-      <yPos>10</yPos>
+      <xPos>61</xPos>
+      <yPos>44</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Dropkin Golis</name>
-      <xPos>1</xPos>
-      <yPos>11</yPos>
+      <xPos>61</xPos>
+      <yPos>36</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Mckeogh Caspi</name>
-      <xPos>0</xPos>
-      <yPos>16</yPos>
+      <xPos>61</xPos>
+      <yPos>40</yPos>
       <state>IDLE</state>
     </character>
     <character>
       <name>Sovich Gropp</name>
-      <xPos>2</xPos>
-      <yPos>1</yPos>
-      <state>FIND_JOB</state>
+      <xPos>61</xPos>
+      <yPos>45</yPos>
+      <state>IDLE</state>
     </character>
   </characters>
   <tileTypes>
@@ -98,6 +98,7 @@
       <id>0</id>
     </tileType>
   </tileTypes>
-  <tiles>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</tiles>
+  <tiles>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</tiles>
+  <installed>H4sIAAAAAAAACz3TyRXDIAwE0JasFZD77ysaMc7pP0aILY6WlK5XG38ardhN1JEmS6M5tyZPLRRFy0erlTDL1tUxXTEFWgXqJpX6StkpS7ropufa+1yFss+NOg3K9Rz7txv9/tx9XP7OOtCo06DfPJzLlX3KPmWfsk/Zp+xT9hn7nAZNuuiGeMR7T593Mdj7+Tj1c98tnltvpw6xTghzYc57hDJX5nrXaw/eO4x1Y93Y58wduY6TB/Pg/GCezJN5Mp97OrzjzfHmOU7p5Ic5f8fsewb9xotueq7znUChSo065Xrf+vOdpOAd2n4P3DO9ZPKotHY53n3cDrNw7N3bY7j7+vhTRMl5f0PnSNlAAwAA</installed>
   <Jobs />
 </World>

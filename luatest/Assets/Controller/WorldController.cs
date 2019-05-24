@@ -78,8 +78,18 @@ public class WorldController : MonoBehaviour {
     createTileGameObjects();
     foreach (Tile t in Tiles_GO_Map.Keys) {
       SetTileSprite(t);
+
+      if (t.installedItem != null) {
+        OnInstalledItemCreated(t.installedItem);
+
+      }
     }
     world.RegisterInstalledItemCB(OnInstalledItemCreated);
+
+    foreach (Character chr in world.characters) {
+      OnCharacterCreated(chr);
+
+    }
 
     //spriteController = SpriteController.Instance;
     //spriteController.wcon = this;
@@ -554,56 +564,7 @@ foreach (Tile tile in dragArea)
 
 
 
-  public List<Tile> GetNeighboursList(InstalledItem item, bool allowDiag = false) {
-    return GetNeighboursList(item.tile);
-  }
-
-  public List<Tile> GetNeighboursList(Tile t, bool allowDiag = false) {
-    Dictionary<string, Tile> tiles = GetNeighbours(t, allowDiag);
-
-    List<Tile> rt = new List<Tile>();
-    foreach (string s in tiles.Keys) {
-      Tile tt = tiles[s];
-      if (tt != null) {
-        rt.Add(tt);
-      }
-    }
-
-    return rt;
-  }
-
-  public Dictionary<string, Tile> GetNeighbours(InstalledItem item, bool allowDiag = false) {
-    return GetNeighbours(item.tile, allowDiag);
-  }
-
-  public Dictionary<string, Tile> GetNeighbours(Tile t, bool allowDiag = false) {
-    Dictionary<string, Tile> dct = new Dictionary<string, Tile>();
-
-    dct["north"] = world.getTileAt(t.x, t.y + 1);
-    dct["south"] = world.getTileAt(t.x, t.y - 1);
-    dct["east"] = world.getTileAt(t.x + 1, t.y);
-    dct["west"] = world.getTileAt(t.x - 1, t.y);
-
-    if (allowDiag) {
-      dct["northwest"] = world.getTileAt(t.x - 1, t.y + 1);
-      dct["northeast"] = world.getTileAt(t.x + 1, t.y + 1);
-      dct["southwest"] = world.getTileAt(t.x - 1, t.y - 1);
-      dct["southeast"] = world.getTileAt(t.x + 1, t.y - 1);
-    }
-
-
-    return dct;
-  }
-
-
-  private bool hasMatchingNeighbour(Tile t, InstalledItem item) {
-    if (t == null || t.installedItem == null || !t.installedItem.type.Equals(item.type)) {
-      return false;
-    } else {
-      return true;
-    }
-
-  }
+ 
 
 }
 

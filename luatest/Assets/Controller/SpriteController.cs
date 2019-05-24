@@ -105,7 +105,7 @@ public class SpriteController : MonoBehaviour {
       int y = item.tile.y;
       bool n, e, s, w;
       int nc = 0;
-      Dictionary<string, Tile> ngbrs = WorldController.Instance.GetNeighbours(item);
+      Dictionary<string, Tile> ngbrs = WorldController.Instance.world.GetNeighbours(item);
       Tile north = ngbrs["north"];
       Tile east = ngbrs["east"];
       Tile south = ngbrs["south"];

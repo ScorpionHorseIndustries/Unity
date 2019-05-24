@@ -30,8 +30,8 @@ public class InstalledItem {
 
 
   //
-  Action<InstalledItem> cbOnChanged;
-  Action<InstalledItem> cbOnDestroyed;
+  public Action<InstalledItem> cbOnChanged;
+  public Action<InstalledItem> cbOnDestroyed;
   public Func<World, int, int, bool> funcPositionValid;
 
 
@@ -108,7 +108,7 @@ public class InstalledItem {
     if (o.linksToNeighbour) {
       //this type needs to tell it's neighbours about its creation
 
-      InstalledItem.informNeighbours(o);
+      world.informNeighbours(o);
 
 
     }
@@ -133,20 +133,9 @@ public class InstalledItem {
 
   }
 
-  private static void informNeighbours(InstalledItem item) {
-    Dictionary<string, Tile> ngbrs = WorldController.Instance.GetNeighbours(item);
-    informNeighbour(item, ngbrs["north"]);
-    informNeighbour(item, ngbrs["east"]);
-    informNeighbour(item, ngbrs["south"]);
-    informNeighbour(item, ngbrs["west"]);
 
-  }
 
-  private static void informNeighbour(InstalledItem item, Tile t) {
-    if (t != null && t.installedItem != null && item.type.Equals(t.installedItem.type)) {
-      t.installedItem.cbOnChanged(t.installedItem);
-    }
-  }
+
 
   public void Destroy() {
     if (cbOnDestroyed != null) {

@@ -16,7 +16,40 @@ public class Character {
     WORK_JOB,
     FIND_EMPTY
   }
-  
+  private static Dictionary<string, STATE> static_STATES = null;
+
+  /// <summary>
+  /// returns the state for the string version of the state
+  /// if you send "IDLE" you get the actual enum STATE.IDLE
+  /// Get it?
+  /// got it?
+  /// good.
+  /// </summary>
+  /// <param name="state"></param>
+  /// <returns></returns>
+  public static STATE GetState(string state) {
+
+
+    if (static_STATES == null) {
+      static_STATES = new Dictionary<string, STATE>();
+      var val = Enum.GetValues(typeof(STATE));
+      foreach (STATE s in val) {
+        static_STATES[s.ToString()] = s;
+      }
+    }
+
+    if (static_STATES.ContainsKey(state)) {
+      return static_STATES[state];
+    }
+
+
+
+    return STATE.IDLE;
+
+  }
+
+  //properties
+
   public STATE state { get; private set; }
   private float findJobCoolDown = 0.5f;
   private Tile target = null;
@@ -35,10 +68,12 @@ public class Character {
     }
   }
 
-  public Vector2 pos { get {
+  public Vector2 pos {
+    get {
       pPos.Set(this.X, this.Y);
       return pPos;
-    } }
+    }
+  }
 
   public Vector2 dst {
     get {
@@ -52,10 +87,11 @@ public class Character {
       if (myJob != null) {
         pJob.Set(myJob.tile.x, myJob.tile.y);
         return pJob;
-} else {
+      } else {
         return pos;
       }
-    } }
+    }
+  }
 
   private Vector2 pPos = new Vector2();
   private Vector2 pDst = new Vector2();
@@ -90,6 +126,15 @@ public class Character {
   public Job myJob;
   public PathAStar path;
 
+
+
+  //constructors
+  public Character(World world, Tile tile, string name, string state) {
+    PosTile = DstTile = tile;
+    this.world = world;
+    this.name = name;
+    this.state = GetState(state);
+  }
   public Character(World world, Tile startTile) {
     PosTile = DstTile = startTile;
     this.world = world;
@@ -115,7 +160,7 @@ public class Character {
             PosTile = t;
             DstTile = t;
             movementPerc = 0;
-            
+
           } else {
             //while (countOfTrash < amountOfTrash) {
             bool found = false;
@@ -447,7 +492,7 @@ public class Character {
   }
 
   public void CBRegisterOnKilled(Action<Character> cb) {
-    cbCharacterKilled+= cb;
+    cbCharacterKilled += cb;
   }
 
   public void CBUnregisterOnKilled(Action<Character> cb) {

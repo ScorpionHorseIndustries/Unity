@@ -2,10 +2,11 @@
 using UnityEditor;
 using System.Collections.Generic;
 using System;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Xml.Schema;
 
-
-
-public class Character {
+public class Character : IXmlSerializable {
 
   public enum STATE {
     IDLE,
@@ -499,4 +500,30 @@ public class Character {
     cbCharacterKilled -= cb;
   }
 
+  public XmlSchema GetSchema() {
+    return null;
+  }
+
+  public void ReadXml(XmlReader reader) {
+
+  }
+
+  public void WriteXml(XmlWriter writer) {
+
+    writer.WriteStartElement("character");
+    writer.WriteElementString("name", name);
+    writer.WriteElementString("xPos", ((int)X).ToString());
+    writer.WriteElementString("yPos", ((int)Y).ToString());
+    writer.WriteElementString("state", state.ToString());
+    if (myJob != null) {
+      myJob.WriteXml(writer);
+      //writer.WriteElementString("job", "....");
+    } else {
+      writer.WriteStartElement("Job");
+      writer.WriteEndElement();
+    }
+
+    writer.WriteEndElement();
+
+  }
 }

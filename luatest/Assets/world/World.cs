@@ -598,17 +598,7 @@ public class World : IXmlSerializable {
     writer.WriteStartElement("characters");
 
     foreach (Character c in characters) {
-      writer.WriteStartElement("character");
-      writer.WriteElementString("name", c.name);
-      writer.WriteElementString("xPos", ((int)c.X).ToString());
-      writer.WriteElementString("yPos", ((int)c.Y).ToString());
-      writer.WriteElementString("state", c.state.ToString());
-      if (c.myJob != null) {
-        c.myJob.WriteXml(writer);
-        //writer.WriteElementString("job", "....");
-      }
-
-      writer.WriteEndElement();
+      c.WriteXml(writer);
 
     }
     writer.WriteEndElement();

@@ -11,9 +11,11 @@
     "neighbour_nsw" : "walls_nsw",
     "neighbour_sw" : "walls_sw",
     "neighbour_nesw" : "walls_nesw",
-    "movementFactor" : 0.01,
+	"neighbourTypes" : ["installed::door", "installed::wall"],
+    "movementFactor" : 0.00,
     "trash" : false,
-    "build" : true
+    "build" : true,
+	"enclosesRoom" : true
     
   },
   {
@@ -30,7 +32,8 @@
       "linked" : false,
       "trash" : true,
       "build" : false,
-      "randomRotation" : true
+      "randomRotation" : true,
+	  "enclosesRoom" : false
       
   },
     {
@@ -42,7 +45,8 @@
       "linked" : false,
       "trash" : false,
       "build" : true,
-      "randomRotation" : false
+      "randomRotation" : false,
+	  "enclosesRoom" : false
       
   },
       {
@@ -54,9 +58,28 @@
       "linked" : false,
       "trash" : false,
       "build" : true,
-      "randomRotation" : false
+      "randomRotation" : false,
+	  "enclosesRoom" : false
       
-  }
+  },
+    {
+    "id" : 5,
+    "name" : "installed::door",
+    "sprite" : "installed_door_0",
+    "sprites" : [],
+    "linked" : true,
+    "movementFactor" : 0.9,
+    "trash" : false,
+    "build" : true,
+	"neighbourTypes" : ["installed::wall"],
+	 "neighbour_s" : "installed_door_0",
+    "neighbour_ns" : "installed_door_0",
+    "neighbour_nsw" : "installed_door_0",
+    "neighbour_sw" : "installed_door_0",
+    "neighbour_nesw" : "installed_door_0",
+	"enclosesRoom" : true
+    
+  },
 
 ]
 }

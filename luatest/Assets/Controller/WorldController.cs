@@ -27,7 +27,7 @@ public class WorldController : MonoBehaviour {
   public GameObject prfSpriteController;
   public GameObject prfJobController;
   public GameObject prfInputController;
-  public GameObject prfTrashController;
+  //public GameObject prfTrashController;
   public GameObject prfBuildController;
   public GameObject prfSoundController;
 
@@ -36,7 +36,7 @@ public class WorldController : MonoBehaviour {
   public InputController inputController;
   public BuildController buildController;
   public SoundController soundController;
-  public TrashController trashController;
+  //public TrashController trashController;
   private List<GameObject> controllers = new List<GameObject>();
 
   private float countdown = 2f;
@@ -113,8 +113,9 @@ public class WorldController : MonoBehaviour {
 
     createTileGameObjects();
     //world.RandomiseTiles();
-    world.GenerateMap();
+    MapGenerator.MakeNewMap(world, world.height, world.width);
     //create game objects for tiles
+
     world.RegisterInstalledItemCB(OnInstalledItemCreated);
 
     //spriteController = SpriteController.Instance;
@@ -128,6 +129,8 @@ public class WorldController : MonoBehaviour {
     world.CreateCharacters();
 
     world.SetAllNeighbours();
+
+    world.PlaceTrash();
     //world.nodeMap = new TileNodeMap(world);
 
     //initDone = false;
@@ -180,7 +183,7 @@ public class WorldController : MonoBehaviour {
     InstantiateController(prfBuildController);
 
     InstantiateController(prfJobController);
-    InstantiateController(prfTrashController);
+    //InstantiateController(prfTrashController);
     InstantiateController(prfSoundController);
     this.spriteController = FindObjectOfType<SpriteController>();//FindSpriteController.Instance;
     this.spriteController.wcon = this;
@@ -188,19 +191,37 @@ public class WorldController : MonoBehaviour {
 
     this.buildController = FindObjectOfType<BuildController>();//.Instance;
     this.jobController = FindObjectOfType<JobController>();//.Instance;
-    this.trashController = FindObjectOfType<TrashController>();//.Instance;
+    //this.trashController = FindObjectOfType<TrashController>();//.Instance;
     this.soundController = FindObjectOfType<SoundController>();//.Instance;
   }
 
   private void InitialiseControllers() {
     inputController.Init();
     buildController.Init();
-    trashController.Init();
+    //trashController.Init();
     soundController.Init();
     jobController.Init();
 
   }
 
+  private void OnDrawGizmos() {
+    Gizmos.color = Color.white;
+    if (world != null && world.characters != null) {
+      foreach (Character chr in world.characters) {
+
+        if (chr.path != null) {
+          Vector2 a = chr.pos;
+          Vector2 b = new Vector2();
+          foreach (PathNode<Tile> pnt in chr.path.path) {
+            b.Set(pnt.data.x, pnt.data.y);
+            Gizmos.DrawLine(a, b);
+            a = b;
+          }
+
+        }
+      }
+    }
+  }
 
   void Start() {
 
@@ -289,7 +310,7 @@ public class WorldController : MonoBehaviour {
 
   public void UpdateCurrentTile(Tile t) {
     Text txt = currentTileText.GetComponent<Text>();
-    txt.text = t.type + " " + t.x + "," + t.y;
+    txt.text = t.type + " " + t.x + "," + t.y + " r:" + t.room.id;
 
   }
 
@@ -362,6 +383,9 @@ public class WorldController : MonoBehaviour {
 
 
     SpriteHolder sh = spriteController.GetSprite(inst);
+    if (inst.type == "installed::door") {
+      spriteController.GetDoorSprite(inst, sh);
+    }
     if (sh.r != 0) {
       spr.transform.Rotate(0, 0, sh.r);
     }
@@ -385,7 +409,12 @@ public class WorldController : MonoBehaviour {
     if (InstalledItems_GO_Map.ContainsKey(item)) {
       GameObject go = InstalledItems_GO_Map[item];
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+
       SpriteHolder sh = spriteController.GetSprite(item);
+      if (item.type == "installed::door") {
+        spriteController.GetDoorSprite(item, sh);
+      }
+
       spr.sprite = sh.s;
       spr.transform.rotation = Quaternion.identity;
       spr.transform.Rotate(0, 0, sh.r);
@@ -426,12 +455,12 @@ public class WorldController : MonoBehaviour {
     SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
     spr.sprite = spriteController.GetSprite(chr);
     spr.sortingLayerName = "Characters";
-    GameObject gln = Instantiate(LinePrefab, new Vector3(0, 0, 0), Quaternion.identity);
-    gln.transform.SetParent(go.transform, true);
+    //GameObject gln = Instantiate(LinePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+    //gln.transform.SetParent(go.transform, true);
 
-    GameObject gtx = Instantiate(TextPrefab, go.transform.position, Quaternion.identity);
-    gtx.transform.Translate(3, 0, 0);
-    gtx.transform.SetParent(go.transform, true);
+    //GameObject gtx = Instantiate(TextPrefab, go.transform.position, Quaternion.identity);
+    //gtx.transform.Translate(3, 0, 0);
+    //gtx.transform.SetParent(go.transform, true);
 
 
     Characters_GO_Map.Add(chr, go);
@@ -467,30 +496,30 @@ public class WorldController : MonoBehaviour {
       }
 
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
-      LineRenderer ln = go.GetComponentInChildren<LineRenderer>();
-      TMPro.TextMeshPro txt = go.GetComponentInChildren<TMPro.TextMeshPro>();
-      txt.text = c.name + "\n" + c.state.ToString();
+      //LineRenderer ln = go.GetComponentInChildren<LineRenderer>();
+      //TMPro.TextMeshPro txt = go.GetComponentInChildren<TMPro.TextMeshPro>();
+      //txt.text = c.name + "\n" + c.state.ToString();
 
-      ln.positionCount = 3;
-      ln.SetPosition(0, c.pos);
-      ln.SetPosition(1, c.dst);
-      ln.SetPosition(2, c.pos);
-
-
-      if (c.path != null) {
-        ln.positionCount = ln.positionCount + c.path.Length + 1;
-        ln.SetPosition(3, c.pos);
-
-        PathNode<Tile>[] pa = c.path.path;
-        for (int i = 0; i < pa.Length; i += 1) {
-          PathNode<Tile> pn = pa[i];
-          Tile t = pn.data;
-
-          ln.SetPosition(4 + i, new Vector2(t.x, t.y));
-        }
+      //ln.positionCount = 3;
+      //ln.SetPosition(0, c.pos);
+      //ln.SetPosition(1, c.dst);
+      //ln.SetPosition(2, c.pos);
 
 
-      }
+      //if (c.path != null) {
+      //  ln.positionCount = ln.positionCount + c.path.Length + 1;
+      //  ln.SetPosition(3, c.pos);
+
+      //  PathNode<Tile>[] pa = c.path.path;
+      //  for (int i = 0; i < pa.Length; i += 1) {
+      //    PathNode<Tile> pn = pa[i];
+      //    Tile t = pn.data;
+
+      //    ln.SetPosition(4 + i, new Vector2(t.x, t.y));
+      //  }
+
+
+      //}
       spr.flipX = false;
       switch (c.state) {
         case Character.STATE.RESET:
@@ -564,7 +593,7 @@ foreach (Tile tile in dragArea)
 
 
 
- 
+
 
 }
 

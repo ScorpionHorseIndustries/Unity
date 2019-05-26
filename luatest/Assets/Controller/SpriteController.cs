@@ -6,22 +6,22 @@ public class SpriteController : MonoBehaviour {
 
 
   private Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
-  
 
 
-  
+
+
   public WorldController wcon;
   //public World world;
 
- 
+
   private void Awake() {
-  
+
     LoadSprites();
   }
 
   void Start() {
     Debug.Log("init done " + this.name);
-    
+
 
   }
 
@@ -88,6 +88,27 @@ public class SpriteController : MonoBehaviour {
     return GetSprite(c.spriteName);
   }
 
+  public SpriteHolder GetDoorSprite(InstalledItem door, SpriteHolder sh) {
+    float openness = door.itemParameters.GetFloat("openness");
+
+    int index = (int) (openness / (1.0f / 7.0f));
+    sh.s = GetSprite("installed_door_" + index);
+    //if (openness > 0.75) {
+    //  sh.s = GetSprite("installed_door_25");
+    //} else if (openness > 0.5 && openness <= 0.75) {
+    //  sh.s = GetSprite("installed_door_50");
+    //} else if (openness > 0.1 && openness <= 0.5) {
+    //  sh.s = GetSprite("installed_door_75");
+    //} else {
+      
+    //}
+
+
+    return sh;
+
+
+  }
+
   public SpriteHolder GetSprite(InstalledItem item) {
     SpriteHolder sp = new SpriteHolder();
     sp.s = GetSprite(item.getRandomSpriteName());
@@ -98,57 +119,57 @@ public class SpriteController : MonoBehaviour {
       sp.r = 90 * r;
     }
 
-    
+
 
     if (item.linksToNeighbour) {
       int x = item.tile.x;
       int y = item.tile.y;
-      bool n, e, s, w;
-      int nc = 0;
-      Dictionary<string, Tile> ngbrs = WorldController.Instance.world.GetNeighbours(item);
-      Tile north = ngbrs["north"];
-      Tile east = ngbrs["east"];
-      Tile south = ngbrs["south"];
-      Tile west = ngbrs["west"];
+      bool northMatches, eastMatches, southMatches, westMatches;
+      int countOfNeighbours = 0;
+      //Dictionary<string, Tile> ngbrs = WorldController.Instance.world.GetNeighbours(item);
+      Tile north = item.tile.GetNeighbour(World.NORTH);
+      Tile east = item.tile.GetNeighbour(World.EAST);
+      Tile south = item.tile.GetNeighbour(World.SOUTH);
+      Tile west = item.tile.GetNeighbour(World.WEST);
 
-      n = hasMatchingNeighbour(north, item);
-      if (n) nc += 1;
-      e = hasMatchingNeighbour(east, item);
-      if (e) nc += 1;
-      s = hasMatchingNeighbour(south, item);
-      if (s) nc += 1;
-      w = hasMatchingNeighbour(west, item);
-      if (w) nc += 1;
+      northMatches = hasMatchingNeighbour(north, item);
+      if (northMatches) countOfNeighbours += 1;
+      eastMatches = hasMatchingNeighbour(east, item);
+      if (eastMatches) countOfNeighbours += 1;
+      southMatches = hasMatchingNeighbour(south, item);
+      if (southMatches) countOfNeighbours += 1;
+      westMatches = hasMatchingNeighbour(west, item);
+      if (westMatches) countOfNeighbours += 1;
 
-      switch (nc) {
+      switch (countOfNeighbours) {
         case 0:
 
           break;
         case 1:
           sp.s = GetSprite(item.sprite_s);
-          if (n) {
+          if (northMatches) {
             sp.r = 180;
-          } else if (e) {
+          } else if (eastMatches) {
             sp.r = 90;
-          } else if (w) {
+          } else if (westMatches) {
             sp.r = -90;
           }
           break;
         case 2:
           sp.s = GetSprite(item.sprite_ns);
-          if (e && w) {
+          if (eastMatches && westMatches) {
             sp.r = 90;
-          } else if (n && s) {
+          } else if (northMatches && southMatches) {
             sp.r = 0;
           } else {
             sp.s = GetSprite(item.sprite_sw);
-            if (s && w) {
+            if (southMatches && westMatches) {
 
-            } else if (n && e) {
+            } else if (northMatches && eastMatches) {
               sp.r = -180;
-            } else if (n && w) {
+            } else if (northMatches && westMatches) {
               sp.r = -90;
-            } else if (e && s) {
+            } else if (eastMatches && southMatches) {
               sp.r = 90;
             }
           }
@@ -156,13 +177,13 @@ public class SpriteController : MonoBehaviour {
         case 3:
           sp.s = GetSprite(item.sprite_nsw);
 
-          if (n && s && w) {
+          if (northMatches && southMatches && westMatches) {
 
-          } else if (n && e && w) {
+          } else if (northMatches && eastMatches && westMatches) {
             sp.r = -90;
-          } else if (e && s && w) {
+          } else if (eastMatches && southMatches && westMatches) {
             sp.r = 90;
-          } else if (n && e && s) {
+          } else if (northMatches && eastMatches && southMatches) {
             sp.r = 180;
           }
 
@@ -181,7 +202,7 @@ public class SpriteController : MonoBehaviour {
   }
 
   private bool hasMatchingNeighbour(Tile t, InstalledItem item) {
-    if (t == null || t.installedItem == null || !t.installedItem.type.Equals(item.type)) {
+    if (t == null || t.installedItem == null || !item.neighbourTypes.Contains(t.installedItem.type)) {
       return false;
     } else {
       return true;

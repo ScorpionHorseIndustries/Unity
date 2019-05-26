@@ -4,54 +4,30 @@ using UnityEngine;
 
 public class TrashController : MonoBehaviour {
 
-  Dictionary<string, InstalledItem> protos;
-  List<InstalledItem> trashList;
+  //Dictionary<string, InstalledItem> protos;
+  //List<InstalledItem> trashPrototypes;
+  //List<InstalledItem> trashInstances;
   
-  WorldController wcon;
-  private readonly int amountOfTrash = 10;
-  private int countOfTrash = 0;
-  // Start is called before the first frame update
+  //WorldController wcon;
+  //private readonly int amountOfTrash = 10;
+  //private int countOfTrash = 0;
+  //// Start is called before the first frame update
 
 
-  private void Awake() {
+  //private void Awake() {
 
-  }
-  public void Init() {
-    //WorldController.Instance.cbRegisterReady(Init);
+  //}
+  //public void Init() {
 
-    Debug.Log("init " + this.name);
-    wcon = WorldController.Instance;
-    protos = wcon.world.getProtoList();
-    trashList = new List<InstalledItem>();
-
-    foreach (string ss in protos.Keys) {
-      InstalledItem item = protos[ss];
-      if (item.trash) {
-        trashList.Add(item);
-      }
-    }
-    PlaceTrash();
-  }
+  //}
     
   
-  void Start() {
+  //void Start() {
 
 
-  }
+  //}
 
-  void PlaceTrash() {
-    while(countOfTrash < amountOfTrash) {
-      int x = Random.Range(0, wcon.world.width);
-      int y = Random.Range(0, wcon.world.height);
-
-      Tile tile = wcon.world.getTileAt(x, y);
-      InstalledItem item = trashList[Random.Range(0, trashList.Count)];
-      if (wcon.world.isInstalledItemPositionValid(wcon.world,item.type, tile)) {
-        wcon.world.PlaceInstalledObject(item.type, tile);
-        countOfTrash += 1;
-      }
-    }
-  }
+ 
 
  
 }

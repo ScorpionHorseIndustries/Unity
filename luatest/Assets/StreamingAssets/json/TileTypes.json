@@ -1,5 +1,17 @@
 {
   "tileTypes" : [
+          {
+		"id" : 0,
+      "name" : "empty",
+      "spritePrefix" : "tiles_",
+	  "sprites" : 8,
+	  "spritesOffset" : 8,
+	  "rangeLow" : -1,
+	  "rangeHigh" : -1,
+	  "build" : false,
+	  "movementFactor" : 0,
+	  "height" : -1
+    },
       {
 	  "id" : 1,
       "name" : "snow",
@@ -73,12 +85,13 @@
 	  "movementFactor" : 0.9,
 	  "height" : -1
     },
-        {
-		"id" : 0,
-      "name" : "empty",
+
+	  {
+	  "id" : 7,
+      "name" : "bedrock",
       "spritePrefix" : "tiles_",
 	  "sprites" : 8,
-	  "spritesOffset" : 8,
+	  "spritesOffset" : 64,
 	  "rangeLow" : -1,
 	  "rangeHigh" : -1,
 	  "build" : false,

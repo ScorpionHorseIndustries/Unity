@@ -2,6 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//public class TilePathEdge : PathEdge<Tile> {
+//  public new PathNode node;
+//  public TilePathEdge(Tile type, PathNode n, float cost) : base(type, n, cost) {
+
+//  }
+//}
+
+//public class PathNode : PathNode<Tile> {
+//  public new TilePathEdge[] edges;
+//  public PathNode(Tile data) : base(data) {
+//  }
+//}
 public class TileNodeMap {
 
   //makes a path finding node map
@@ -68,6 +81,9 @@ public class TileNodeMap {
 
             if (IsClippingCorner(tile, tile_neighbour)) continue;
             float mf = 1.0f / Mathf.Pow(tile_neighbour.movementFactor, 2);
+            if (tile_neighbour.pendingJob) {
+              mf *= 2f;
+            }
             PathEdge<Tile> e = new PathEdge<Tile>(tile_neighbour, TilesToNodesDct[tile_neighbour], mf);
             edges.Add(e);
             countEdges += 1;

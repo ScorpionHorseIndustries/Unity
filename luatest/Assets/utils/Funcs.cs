@@ -15,6 +15,14 @@ public static class Funcs {
     return name;
   }
 
+  public static JArray jsonGetArray(JObject o, string name) {
+    if (o.Property(name) != null) {
+      return (JArray)o[name];
+    } else {
+      return null;
+    }
+  }
+
   public static string jsonGetString(JToken token, string df) {
 
     if (token == null) {
@@ -110,10 +118,7 @@ public static class Funcs {
     }
   }
 
-  static void Main(string[] args) {
-    byte[] r1 = Zip("StringStringStringStringStringStringStringStringStringStringStringStringStringString");
-    string r2 = Unzip(r1);
-  }
+
 
   public static string Base64Encode(byte[] bytes) {
     return System.Convert.ToBase64String(bytes);
@@ -136,11 +141,26 @@ public static class Funcs {
 
 
   public static string TitleCase(string s) {
-    string ss = s[0].ToString().ToUpper();
+    s = s.ToUpper();
+    string ss = "";
+    if (s.Substring(0,2) == "MC") {
+      ss = "Mc";
+      ss += s[2].ToString().ToUpper();
+      ss += s.Substring(3).ToLower();
+    } else {
+      ss = s[0].ToString().ToUpper();
+      ss += s.Substring(1).ToLower();
+    }
+    
 
-    ss += s.Substring(1).ToLower();
+    
 
 
     return ss;
+  }
+
+
+  public static bool Chance(int chance = 50) {
+    return UnityEngine.Random.Range(0, 100) < chance;
   }
 }

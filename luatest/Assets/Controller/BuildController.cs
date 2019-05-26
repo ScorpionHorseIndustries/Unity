@@ -75,7 +75,7 @@ public class BuildController : MonoBehaviour {
 
   private void OnInstalledItemJobComplete(string itemToBuild, Tile tile) {
     tile.pendingJob = false;
-    wcon.world.PlaceInstalledObject(itemToBuild, tile);
+    wcon.world.PlaceInstalledItem(itemToBuild, tile);
     
   }
 

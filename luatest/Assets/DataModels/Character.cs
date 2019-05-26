@@ -53,6 +53,7 @@ public class Character : IXmlSerializable {
 
   public STATE state { get; private set; }
   private float findJobCoolDown = 0.5f;
+  private float coolDown = 0;
   private Tile target = null;
   Action<Character> cbCharacterChanged;
   Action<Character> cbCharacterKilled;
@@ -127,22 +128,40 @@ public class Character : IXmlSerializable {
   public Job myJob;
   public PathAStar path;
 
+  private bool findNewPath = false;
+
+
+  private float waitingTimer = 0;
+
+
 
 
   //constructors
   public Character(World world, Tile tile, string name, string state) {
-    PosTile = DstTile = tile;
+    DstTile = tile;
+    SetPosTile(tile);
     this.world = world;
     this.name = name;
     this.state = GetState(state);
   }
   public Character(World world, Tile startTile) {
-    PosTile = DstTile = startTile;
+    DstTile = startTile;
+    SetPosTile(startTile);
     this.world = world;
     state = STATE.IDLE;
     this.name = world.GetName();
 
   }
+  public void PleaseMove(Character asker) {
+    
+    if (state == STATE.IDLE) {
+      state = STATE.FIND_EMPTY;
+      //Debug.Log(asker.name + " asked " + name + " to move. They said \"ok\"");
+    } else {
+      //Debug.Log(asker.name + " asked " + name + " to move. They said \"no\"");
+    }
+  }
+
 
   public void Update(float deltaTime) {
     //Debug.Log(state + " (" + PosTile.x + "," + PosTile.y + ")-->(" + DstTile.x + "," + DstTile.y + ")");
@@ -195,12 +214,15 @@ public class Character : IXmlSerializable {
         path = null;
         findJobCoolDown = UnityEngine.Random.Range(0.5f, 1f);
         target = null;
+        findNewPath = false;
         movementPerc = 0;
         state = STATE.IDLE;
+        waitingTimer = 0;
         //pathAttempts = 0;
 
         break;
       case STATE.FIND_JOB:
+        findNewPath = false;
         //Debug.Log(name + " Finding a job...");
         myJob = world.jobQueue.GetNextJob();
         if (myJob != null) {
@@ -214,11 +236,16 @@ public class Character : IXmlSerializable {
         }
         break;
       case STATE.FIND_PATH:
+        findNewPath = false;
         //Debug.Log(name + " Finding a path...");
         //pathAttempts = 0;
         if (target != null) {
-          path = new PathAStar(world, PosTile, target);
-          if (path.foundPath) {
+          if (myJob != null) {
+            path = PathFinder.FindPath(world, PosTile, target, true, true);
+          } else {
+            path = new PathAStar(world, PosTile, target);
+          }
+          if (path != null && path.foundPath) {
             state = STATE.MOVE;
           } else {
             state = STATE.RESET;
@@ -229,66 +256,80 @@ public class Character : IXmlSerializable {
         break;
       case STATE.MOVE:
 
-
+        //if (findNewPath) {
+        //  state = STATE.FIND_PATH;
+        //} else {
 
 
         if (PosTile != DstTile) {
           float distanceToTravel = Funcs.Distance(PosTile, DstTile);
-          float sp = movementSpeed;
-          //if (movementPerc > 0.5) {
-          sp *= Mathf.Clamp(DstTile.movementFactor, 0.2f, 1f);
-          //} else {
-          //  sp *= PosTile.movementFactor;
 
-          //}
-          float distThisFrame = sp * deltaTime;
-          /*
-          avgMoveSpdSum += (distThisFrame / distanceToTravel);
-          avgMoveSpdCount += 1;
-          avgMoveSpdReset += deltaTime;
-          
-          if (avgMoveSpdReset > 3) {
-            avgMoveSpd = (avgMoveSpdSum / avgMoveSpdCount) / deltaTime;
-            avgMoveSpdCount = 0;
-            avgMoveSpdReset = 0;
-            avgMoveSpdSum = 0;
-            Debug.Log(name +": My Average Speed is: " + avgMoveSpd);
-            if (avgMoveSpd < 0.5) {
-              avgMoveSpdWarnings += 1;
-              if (avgMoveSpdWarnings >= avgMoveSpdWarningsLimit) {
-                avgMoveSpdWarnings = 0;
-                pathAttempts += 1;
-                if (pathAttempts >= pathAttemptsLimit) {
-                  pathAttempts = 0;
-                  state = STATE.RESET;
-                  //ReturnJob();
-                } else {
-                  state = STATE.FIND_PATH;
-                }
+          bool never = false;
+          bool soon = false;
+          switch (DstTile.CanEnter(this)) {
+            case Tile.CAN_ENTER.YES:
+              break;
+            case Tile.CAN_ENTER.NEVER:
+              never = true;
+              break;
+            case Tile.CAN_ENTER.SOON:
+              soon = true;
+              break;
+            default:
+              break;
+          }
 
+
+
+
+          if (never) {
+            state = STATE.RESET;
+          } else if (soon) {
+            waitingTimer += deltaTime;
+            if (waitingTimer > 3) {
+              state = STATE.RESET;
+              waitingTimer = 0;
+            }
+            //wait;
+          } else {
+            waitingTimer = 0;
+
+
+
+            float sp = movementSpeed;
+            //if (movementPerc > 0.5) {
+            sp *= Mathf.Clamp(DstTile.movementFactor, 0.2f, 1f);
+            //} else {
+            //  sp *= PosTile.movementFactor;
+
+            //}
+            float distThisFrame = sp * deltaTime;
+
+
+
+            movementPerc += (distThisFrame / distanceToTravel);
+            movementPerc = Mathf.Clamp(movementPerc, 0, 1);
+
+
+
+            if (movementPerc >= 1) {
+              SetPosTile(DstTile);
+              //PosTile = DstTile;
+              movementPerc = 0;
+              if (findNewPath) {
+                findNewPath = false;
+                state = STATE.FIND_PATH;
 
               }
             }
-
-          }
-          */
-
-
-          movementPerc += (distThisFrame / distanceToTravel);
-          movementPerc = Mathf.Clamp(movementPerc, 0, 1);
-
-
-
-          if (movementPerc >= 1) {
-            PosTile = DstTile;
-            movementPerc = 0;
           }
           changed = true;
         } else {
           if (path != null) {
-            DstTile = path.GetNextTile();
-            if (DstTile == null) {
-              DstTile = PosTile;
+            //DstTile = path.GetNextTile();
+            if (!SetDestination(path.GetNextTile())) {
+              SetDestination(PosTile);
+              //DstTile = PosTile;
               path = null;
               //state = STATE.RESET;
             }
@@ -301,11 +342,25 @@ public class Character : IXmlSerializable {
           }
 
         }
+
         break;
       case STATE.WORK_JOB:
+        
         //Debug.Log(name + " working...");
-        if (myJob != null && PosTile == myJob.tile) {
-          myJob.Work(deltaTime);
+        if (myJob != null && (myJob.tile.IsNeighbour(PosTile) || PosTile == myJob.tile)) {
+          if (coolDown > 0) {
+            coolDown -= deltaTime;
+            coolDown = Mathf.Clamp(coolDown, 0f, 10f);
+          } else {
+            if (myJob.tile.countOfOccupied == 0 || (myJob.tile.countOfOccupied == 1 && myJob.tile.IsItMe(this))) {
+              myJob.Work(deltaTime);
+            } else {
+              coolDown = UnityEngine.Random.Range(0.5f, 1.5f);
+              myJob.tile.PleaseMove(this);
+            }
+          }
+        } else {
+          state = STATE.RESET;
         }
         break;
       case STATE.FIND_EMPTY:
@@ -327,7 +382,7 @@ public class Character : IXmlSerializable {
         cbCharacterChanged(this);
       }
     }
-
+    findNewPath = false;
 
   }
 
@@ -367,26 +422,26 @@ public class Character : IXmlSerializable {
     if (PosTile != DstTile) {
       float distanceToTravel = Funcs.Distance(PosTile, DstTile);
       float sp = movementSpeed;
-      if (movementPerc > 0.5) {
-        sp *= DstTile.movementFactor;
-      } else {
-        sp *= PosTile.movementFactor;
+      //if (movementPerc > 0.5) {
+      sp *= DstTile.movementFactor;
+      //} else {
+      //  sp *= PosTile.movementFactor;
 
-      }
+      //}
       float distThisFrame = sp * deltaTime;
       movementPerc += (distThisFrame / distanceToTravel);
       movementPerc = Mathf.Clamp(movementPerc, 0, 1);
 
       if (movementPerc >= 1) {
-        PosTile = DstTile;
+        SetPosTile(DstTile);
         movementPerc = 0;
       }
       changed = true;
     } else {
       if (path != null) {
-        DstTile = path.GetNextTile();
-        if (DstTile == null) {
-          DstTile = PosTile;
+        //DstTile = 
+        if (!SetDestination(path.GetNextTile())) {
+          SetDestination(PosTile);
           path = null;
         }
       } else {
@@ -438,11 +493,11 @@ public class Character : IXmlSerializable {
   }
 
   public bool SetDestination(Tile dst) {
-    if (dst.IsNeighbour(PosTile, CanMoveDiagonally)) {
+    if (dst != null && dst.movementFactor > 0 && (dst.IsNeighbour(PosTile, CanMoveDiagonally) || dst == PosTile) ) {
       DstTile = dst;
       return true;
     } else {
-      Debug.Log("Character SetDestination was given a tile that was not a neighbour of the current tile...");
+      //Debug.Log("Character SetDestination was given a tile that was not a neighbour of the current tile...");
       return false;
     }
 
@@ -450,8 +505,19 @@ public class Character : IXmlSerializable {
 
   }
 
+  private void SetPosTile(Tile t) {
+    if (t != PosTile) {
+      if (PosTile != null) {
+        PosTile.Leave(this);
+      }
+      PosTile = t;
+      t.Enter(this);
+    }
+  }
+
   public bool IsEmpty(Tile t) {
-    return (t.installedItem == null && t.looseItem == null && t.movementFactor > 0.3 && !t.pendingJob);
+    return t.IsEmpty();
+
   }
 
   public Tile FindEmpty(Tile t) {
@@ -505,6 +571,13 @@ public class Character : IXmlSerializable {
   }
 
   public void ReadXml(XmlReader reader) {
+
+  }
+
+  public void PathNodesDestroyed() {
+    if (Funcs.Chance(30)) {
+      findNewPath = true;
+    }
 
   }
 

@@ -1,84 +1,53 @@
 <?xml version="1.0" encoding="utf-16"?>
 <World>
-  <width>100</width>
-  <height>100</height>
+  <width>20</width>
+  <height>20</height>
   <tileSize>32</tileSize>
-  <xSeed>-9.950888</xSeed>
-  <ySeed>-3.448819</ySeed>
-  <noiseFactor>0.03886835</noiseFactor>
+  <xSeed>-2.832991</xSeed>
+  <ySeed>3.355734</ySeed>
+  <noiseFactor>0.07917862</noiseFactor>
   <characters>
     <character>
-      <name>Kasin Bilby</name>
-      <xPos>61</xPos>
-      <yPos>42</yPos>
+      <name>Motz Brohl</name>
+      <xPos>2</xPos>
+      <yPos>4</yPos>
       <state>IDLE</state>
       <Job />
     </character>
     <character>
-      <name>Schwarzenberg Tenace</name>
-      <xPos>61</xPos>
-      <yPos>39</yPos>
+      <name>Madero Iijima</name>
+      <xPos>4</xPos>
+      <yPos>14</yPos>
       <state>IDLE</state>
       <Job />
     </character>
     <character>
-      <name>Study Grosman</name>
-      <xPos>60</xPos>
-      <yPos>34</yPos>
+      <name>Pureco Batchan</name>
+      <xPos>3</xPos>
+      <yPos>17</yPos>
       <state>IDLE</state>
       <Job />
     </character>
     <character>
-      <name>Clackler Zinsli</name>
-      <xPos>60</xPos>
-      <yPos>48</yPos>
+      <name>Berce Freyre</name>
+      <xPos>4</xPos>
+      <yPos>5</yPos>
       <state>IDLE</state>
       <Job />
     </character>
     <character>
-      <name>Gremmer Dougharty</name>
-      <xPos>61</xPos>
-      <yPos>41</yPos>
-      <state>IDLE</state>
-      <Job />
-    </character>
-    <character>
-      <name>Panus Gargis</name>
-      <xPos>61</xPos>
-      <yPos>46</yPos>
-      <state>IDLE</state>
-      <Job />
-    </character>
-    <character>
-      <name>Leborgne Lorich</name>
-      <xPos>61</xPos>
-      <yPos>44</yPos>
-      <state>IDLE</state>
-      <Job />
-    </character>
-    <character>
-      <name>Dropkin Golis</name>
-      <xPos>61</xPos>
-      <yPos>36</yPos>
-      <state>IDLE</state>
-      <Job />
-    </character>
-    <character>
-      <name>Mckeogh Caspi</name>
-      <xPos>61</xPos>
-      <yPos>40</yPos>
-      <state>IDLE</state>
-      <Job />
-    </character>
-    <character>
-      <name>Sovich Gropp</name>
-      <xPos>61</xPos>
-      <yPos>45</yPos>
+      <name>Hallquist Diraimondo</name>
+      <xPos>1</xPos>
+      <yPos>15</yPos>
       <state>IDLE</state>
       <Job />
     </character>
   </characters>
   <tileTypes>
+    <tileType>
+      <name>empty</name>
+      <id>0</id>
+    </tileType>
     <tileType>
       <name>snow</name>
       <id>1</id>
@@ -104,11 +73,11 @@
       <id>6</id>
     </tileType>
     <tileType>
-      <name>empty</name>
-      <id>0</id>
+      <name>bedrock</name>
+      <id>7</id>
     </tileType>
   </tileTypes>
-  <tiles>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</tiles>
-  <installed>H4sIAAAAAAAACz3TSZYEIQgE0CsVo0Ld/15NSFSv/hMEhzS1pfV8dfDPoB138BYZogtkawy1U+TTB3Nkpj2tT8JsO6tjumIKtA7k9fQpWH18NOlE3max85W2akv6G19a66y/ClVq1GlQ9nPsa7yo98+u4/Lv6wONOg36m4d9ubJOWaesU9Yp65R1yjpjndOgSQ+9EJe75/R3LwZnPX++fOH+pOOz+fHlIfqEMC6M8xyhjCvjuv3Gwn2HMW/MG+uccUdcn7kWzh3BfLAumM95Msgn88l8su87t8MdX44v66v1xYtxfteccwf9jQ+9tNb3bqBQpUadst+v/3s3KbiXce4H5873XsfoNDjfAe/92H634/uux4t3frIRvrMdDO+0w29w53rwU9nOqmip7x/UqLVhjwMAAA==</installed>
+  <tiles>H4sIAAAAAAAAC63SQQ7AIAgEwDdJQzj4/3+VxtLWjeAemj1JBg2qdSPTiIRTz97pnfb0zBV0q7BOaacwRxV04sndV6Ec68tp4aIyOzxXUoc9f7ohDw/Oke9Zv4eAy+TOvZW4T/bPWz8BBED/2CADAAA=</tiles>
+  <installed>H4sIAAAAAAAACzXLyxEAEAwE0Ha42SBh9d+XTMjtzX6EQmOpRzipD5owzwKLeNg5RssI8DqF8dmJ+F4FmgjgYAAAAA==</installed>
   <Jobs />
 </World>

@@ -7,7 +7,7 @@ public class PathAStar {
   protected World world;
   PathNode<Tile> startNode, endNode;
   TileNodeMap nodeMap;
-  //List<PathNode<Tile>> path = new List<PathNode<Tile>>();
+  //List<PathNode<Tile><Tile>> path = new List<PathNode<Tile><Tile>>();
   Queue<PathNode<Tile>> pathQ = new Queue<PathNode<Tile>>();
   Dictionary<PathNode<Tile>, Tile> nodesToTile = new Dictionary<PathNode<Tile>, Tile>();
 
@@ -17,13 +17,19 @@ public class PathAStar {
   Dictionary<PathNode<Tile>, float> gScore = new Dictionary<PathNode<Tile>, float>();
   Dictionary<PathNode<Tile>, float> fScore = new Dictionary<PathNode<Tile>, float>();
 
-  public int Length { get {
-      return pathQ.Count;
-    } }
+  public float totalCost { get; private set; }
 
-  public PathNode<Tile>[] path { get {
+  public int Length {
+    get {
+      return pathQ.Count;
+    }
+  }
+
+  public PathNode<Tile>[] path {
+    get {
       return pathQ.ToArray();
-    } }
+    }
+  }
 
 
   private readonly float VLARGE = Mathf.Pow(10, 10);
@@ -49,15 +55,15 @@ public class PathAStar {
 
     foundPath = FindPath();
 
-    //foreach (PathNode<Tile> pnt in gScore.Keys) {
+    //foreach (PathNode<Tile><Tile> pnt in gScore.Keys) {
     //  Debug.Log("g " + pnt.GetHashCode() + ": " + gScore[pnt]);
     //}
 
-    //foreach (PathNode<Tile> pnt in fScore.Keys) {
+    //foreach (PathNode<Tile><Tile> pnt in fScore.Keys) {
     //  Debug.Log("f " + pnt.GetHashCode() + ": " + fScore[pnt]);
     //}
 
-    //foreach (PathNode<Tile> t in pathQ) {
+    //foreach (PathNode<Tile><Tile> t in pathQ) {
     //  //Debug.Log("tile: " + t.data.x + "," + t.data.y);
     //}
 
@@ -76,20 +82,29 @@ public class PathAStar {
 
   private void ReconstructPath(PathNode<Tile> current) {
     List<PathNode<Tile>> path2 = new List<PathNode<Tile>>();
-
+    totalCost = 0;
     //Debug.Log("number of items in CameFrom: " + cameFrom.Count);
     path2.Add(current);
 
     //pathQ.Enqueue(current);
     while (cameFrom.ContainsKey(current)) {
+      PathNode<Tile> hold = current;
       current = cameFrom[current];
+
+      foreach (PathEdge<Tile> e in current.edges) {
+        if (e.node == hold) {
+          totalCost += e.cost;
+          break;
+        }
+      }
       //pathQ.Enqueue(current);
       path2.Add(current);
 
     }
 
     ////put ya thing down flip and reverse it
-    for (int i = path2.Count-1; i >= 0; i -= 1) {
+    for (int i = path2.Count - 1; i >= 0; i -= 1) {
+
       pathQ.Enqueue(path2[i]);
     }
 

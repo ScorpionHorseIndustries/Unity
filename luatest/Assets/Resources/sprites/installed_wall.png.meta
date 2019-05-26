@@ -13,7 +13,7 @@ TextureImporter:
     second: walls_nesw
   - first:
       213: 8147275610191718606
-    second: walls_door
+    second: installed_door
   - first:
       213: -24075806118037059
     second: walls_s
@@ -23,6 +23,15 @@ TextureImporter:
   - first:
       213: 5741625908138131414
     second: walls_sw
+  - first:
+      213: 5439987938575720426
+    second: installed_door_50
+  - first:
+      213: 5855953504851942925
+    second: installed_door_75
+  - first:
+      213: -2982065111774075882
+    second: installed_door_25
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -168,7 +177,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: walls_door
+      name: installed_door
       rect:
         serializedVersion: 2
         x: 96
@@ -247,6 +256,69 @@ TextureImporter:
       bones: []
       spriteID: 225a0da8edcd8424c840a089aea0054d
       internalID: 5741625908138131414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: installed_door_50
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b76875678eafd54ba0e75a883945203
+      internalID: 5439987938575720426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: installed_door_75
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 310bd87505309f24cac1eee3add530db
+      internalID: 5855953504851942925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: installed_door_25
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70a45dde3a8e8b04bb545ab6c343e676
+      internalID: -2982065111774075882
       vertices: []
       indices: 
       edges: []

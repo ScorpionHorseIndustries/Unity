@@ -3,6 +3,7 @@
   {
     "id" : 1,
     "name" : "installed::wall",
+	"niceName" : "Wall",
     "sprite" : "walls_none",
     "sprites" : [],
     "linked" : true,
@@ -21,6 +22,7 @@
   {
     "id" : 2,
     "name" : "installed::organic_trash",
+	"niceName" : "Organic Trash",
     "sprite" : "corpse_0",
     "sprites" : [
       "corpse_0",
@@ -39,6 +41,7 @@
     {
     "id" : 3,
     "name" : "installed::atm",
+	"niceName" : "ATM",
     "sprite" : "installed_atm_0",
     "sprites" : ["installed_atm_0", "installed_atm_1", "installed_atm_2", "installed_atm_3"],
       "movementFactor" : 0.5,
@@ -52,6 +55,7 @@
       {
     "id" : 4,
     "name" : "installed::recycler",
+	"niceName" : "Recycler",
     "sprite" : "installed_recycler_0",
     "sprites" : [],
       "movementFactor" : 0.5,
@@ -65,6 +69,7 @@
     {
     "id" : 5,
     "name" : "installed::door",
+	"niceName" : "Door",
     "sprite" : "installed_door_0",
     "sprites" : [],
     "linked" : true,

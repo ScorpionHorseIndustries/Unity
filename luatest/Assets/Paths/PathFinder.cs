@@ -8,65 +8,98 @@ using UnityEngine;
 
 public static class PathFinder {
 
-
-  public static void AddTile(List<Tile> tiles, Tile tile) {
+  private static Dictionary<Tile, float> dct = new Dictionary<Tile, float>();
+  public static void AddTile(Tile tile) {
+    float v = 0;
     if (tile != null) {
-      if (tile.IsEmpty()) {
-        tiles.Add(tile);
+      //return (installedItem == null && inventoryItem == null && movementFactor > 0.3 && !pendingJob);
+
+      if (tile.installedItem != null) {
+        return;
       }
+
+      if (tile.movementFactor == 0) {
+        return;
+      }
+
+      if (tile.pendingJob) {
+        v += 10;
+      }
+
+      if (tile.inventoryItem != null) {
+        v += 5;
+      }
+      if (tile.movementFactor < 0.3) {
+        v += 50;
+        
+      }
+
+      dct[tile] = v;
     }
   }
   public static PathAStar FindPath(World world, Tile start, Tile end, bool allowNeighbours, bool preferNeighbours) {
 
-
-    float start_time = UnityEngine.Time.realtimeSinceStartup;
+    dct.Clear();
+    //float start_time = UnityEngine.Time.realtimeSinceStartup;
     
     List<Tile> tiles = new List<Tile>();
     Dictionary<Tile, PathAStar> paths = new Dictionary<Tile, PathAStar>();
 
     tiles.Add(end);
+    dct[end] = 100;
 
     if (allowNeighbours) {
       //Dictionary<string, Tile> neighbours = new Dictionary<string, Tile>();
-      AddTile(tiles, end.neighbours[World.NORTH]);
-      AddTile(tiles, end.neighbours[World.EAST]);
-      AddTile(tiles, end.neighbours[World.SOUTH]);
-      AddTile(tiles, end.neighbours[World.WEST]);
+      AddTile(end.neighbours[World.NORTH]);
+      AddTile(end.neighbours[World.EAST]);
+      AddTile(end.neighbours[World.SOUTH]);
+      AddTile(end.neighbours[World.WEST]);
 
 
 
     }
 
-
-
-    List<PathAStar> pathsToConsider = new List<PathAStar>();
-    foreach (Tile t in tiles) {
-      
-      PathAStar pp = new PathAStar(world, start, t);
-
+    foreach (KeyValuePair<Tile, float> kvp in dct.OrderBy(key => key.Value)) {
+      Debug.Log("kvp:" + kvp.Key + ":" + kvp.Value);
+      PathAStar pp = new PathAStar(world, start, kvp.Key);
       if (pp.foundPath) {
-        pathsToConsider.Add(pp);
+        return pp;
       }
 
     }
 
-    PathAStar path = null;
-    float lowest = 0; // float.PositiveInfinity;
-    foreach (PathAStar p in pathsToConsider) {
+    return null;
 
-      if (p != null) {
-        if (path == null || p.totalCost < lowest) {
-          path = p;
-          lowest = p.totalCost;
 
-        }
 
-      }
-    }
+    //List<PathAStar> pathsToConsider = new List<PathAStar>();
+    //foreach (Tile t in tiles) {
+      
+    //  PathAStar pp = new PathAStar(world, start, t);
 
-    float end_time = UnityEngine.Time.realtimeSinceStartup;
-    //Debug.Log("found a path in " + (end_time - start_time));
-    return path;
+    //  if (pp.foundPath) {
+    //    pathsToConsider.Add(pp);
+    //  }
+
+    //}
+
+    //PathAStar path = null;
+    //float lowest = 0; // float.PositiveInfinity;
+    //foreach (PathAStar p in pathsToConsider) {
+
+    //  if (p != null) {
+    //    if (path == null || p.totalCost < lowest) {
+    //      path = p;
+    //      lowest = p.totalCost;
+
+    //    }
+
+    //  }
+    //}
+
+    ////float end_time = UnityEngine.Time.realtimeSinceStartup;
+    ////Debug.Log("found a path in " + (end_time - start_time));
+    //return path;
 
   }
 

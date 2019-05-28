@@ -7,7 +7,19 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
+
+
 public class Job : IXmlSerializable {
+
+  struct JobResource {
+    string name;
+    int qtyRequired;
+    int qtyDelivered;
+    int qtyAssigned;
+  }
+
+  private List<JobResource> resourcesRequired = new List<JobResource>();
+  
 
   public readonly string jobId;
   public bool finished { get; private set; } = false;

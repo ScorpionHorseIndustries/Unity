@@ -25,6 +25,17 @@ public class Room {
 
   }
 
+  public List<Tile> getTiles() {
+    return tiles;
+
+  }
+
+  public void AssignList(List<Tile> tiles) {
+    foreach(Tile t  in tiles) {
+      AssignTile(t);
+    }
+  }
+
   public void AssignTile(Tile t) {
     if (t.room != null) {
       t.room.tiles.Remove(t);
@@ -58,10 +69,10 @@ public class Room {
     closedSet.Clear();
     tileQu.Clear();
 
-    ActualFloodFill(world, tile.North, oldRoom);
-    ActualFloodFill(world, tile.East, oldRoom);
-    ActualFloodFill(world, tile.South, oldRoom);
-    ActualFloodFill(world, tile.West, oldRoom);
+    ActualFloodFill(world, tile, tile.North, oldRoom);
+    ActualFloodFill(world, tile, tile.East, oldRoom);
+    ActualFloodFill(world, tile, tile.South, oldRoom);
+    ActualFloodFill(world, tile, tile.West, oldRoom);
 
     if (oldRoom != world.outside) {
       tile.room = world.outside;
@@ -85,7 +96,13 @@ public class Room {
   private static List<Tile> closedSet = new List<Tile>();
   private static Queue<Tile> tileQu = new Queue<Tile>();
 
-  public static void ActualFloodFill(World world, Tile tile, Room oldRoom) {
+  public static void ActualFloodFill(World world, Tile sourceTile, Tile tile, Room oldRoom) {
+
+    if (tile == null) {
+      world.outside.AssignTile(sourceTile);
+      return;
+    }
+
 
     if (!OkToAdd(tile, oldRoom)) {
       
@@ -94,7 +111,9 @@ public class Room {
 
 
     Room newRoom = new Room(world);
-
+    Room outside = world.outside;
+    List<Tile> changedList = new List<Tile>();
+    bool assignToOutside = false;
 
     tileQu.Enqueue(tile);
     while (tileQu.Count > 0) {
@@ -103,15 +122,24 @@ public class Room {
 
       if (t.room == oldRoom) {
         newRoom.AssignTile(t);
+        changedList.Add(t);
 
-        AddToTileQu(t.North, oldRoom);
-        AddToTileQu(t.East, oldRoom);
-        AddToTileQu(t.South, oldRoom);
-        AddToTileQu(t.West, oldRoom);
+
+        if (t.North == null || t.East == null || t.South == null || t.West == null) {
+          assignToOutside = true;
+        } else {
+          AddToTileQu(t.North, oldRoom);
+          AddToTileQu(t.East, oldRoom);
+          AddToTileQu(t.South, oldRoom);
+          AddToTileQu(t.West, oldRoom);
+        }
 
       }
     }
     newRoom.AssignTile(tile);
+    if (assignToOutside) {
+      outside.AssignList(changedList);
+    }
 
   }
 

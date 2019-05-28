@@ -49,6 +49,7 @@ MonoBehaviour:
     type: 3}
   TextPrefab: {fileID: 2426644345995441649, guid: f52c837dd8f9cab4ebda5043e823e9f4,
     type: 3}
+  currentTileText: {fileID: 0}
   eventSystem: {fileID: 0}
   prfSpriteController: {fileID: 6579583868471155061, guid: bed9557bd8abfe14ca5241551bf1082d,
     type: 3}
@@ -56,15 +57,14 @@ MonoBehaviour:
     type: 3}
   prfInputController: {fileID: 4181545500797560190, guid: f97eba976670a81409c0980c91945588,
     type: 3}
-  prfTrashController: {fileID: 8355356436345874231, guid: 5dec6c64130f8b04e895f95afabbed01,
-    type: 3}
-  prfBuildContrller: {fileID: 4322996005583499440, guid: 2a26d9a7bf689a24991f983ad54e6ed9,
+  prfBuildController: {fileID: 4322996005583499440, guid: 2a26d9a7bf689a24991f983ad54e6ed9,
     type: 3}
   prfSoundController: {fileID: 2362975027602925122, guid: 20328cc0fb08ce04ab0127413707c5db,
+    type: 3}
+  prfInventoryItemText: {fileID: 816212458685300780, guid: c061b6ccda722324998954c9240de5b1,
     type: 3}
   spriteController: {fileID: 0}
   jobController: {fileID: 0}
   inputController: {fileID: 0}
   buildController: {fileID: 0}
   soundController: {fileID: 0}
-  trashController: {fileID: 0}

@@ -30,10 +30,10 @@ public class World : IXmlSerializable {
   //testing
   public static readonly int NUMBER_OF_ROBOTS = 5;
 
-  public static readonly int TEST_WIDTH = 20;
-  public static readonly int TEST_HEIGHT = 20;
+  public static readonly int TEST_WIDTH = 50;
+  public static readonly int TEST_HEIGHT = 50;
 
-  public static readonly int M_M_MAXIMUM_TRASH = 10;
+  public static readonly int M_M_MAXIMUM_TRASH = 25;
 
 
 
@@ -47,6 +47,7 @@ public class World : IXmlSerializable {
   public string[] names;
   private Tile[,] tiles;
   public List<Room> rooms;
+  //public List<InventoryItem> inventoryItems;
   //properties
   private float xSeed, ySeed, noiseFactor;
 
@@ -75,6 +76,8 @@ public class World : IXmlSerializable {
     }
   }
 
+  public InventoryManager inventoryManager;
+
   //callbacks
   Action<InstalledItem> cbInstalledItem;
   Action<Tile> cbTileChanged;
@@ -83,7 +86,12 @@ public class World : IXmlSerializable {
   Action<Character> cbCharacterKilled;
   Action cbPathNodesDestroyed;
 
+  Action<InventoryItem> cbInventoryItemCreated;
+  Action<InventoryItem> cbInventoryItemChanged;
+  Action<InventoryItem> cbInventoryItemDestroyed;
 
+  //collections
+  string[] savedInstalledItems;
 
 
 
@@ -115,6 +123,8 @@ public class World : IXmlSerializable {
     trashInstances = new List<InstalledItem>();
     rooms = new List<Room>();
     rooms.Add(new Room(this));
+    //inventoryItems = new List<InventoryItem>();
+    inventoryManager = new InventoryManager(this);
     //outside = rooms[0];
   }
 
@@ -133,10 +143,56 @@ public class World : IXmlSerializable {
     SetCollections();
 
     CreateAllInstalledItemPrototypes();
+    InventoryItem.LoadFromFile();
 
     CreateEmptyTiles();
 
     loadNames();
+
+ 
+
+  }
+
+  public Tile GetRandomEmptyTile() {
+
+    Tile t = null;
+    int counter = 0;
+    while(t == null && counter < 100) {
+      counter += 1;
+
+      t = GetRandomTile();
+
+      if (!t.IsEmpty()) {
+        t = null;
+
+      }
+
+    }
+
+
+    return t;
+
+
+  }
+
+  public Tile GetRandomTile() {
+    Tile t = getTileAt(UnityEngine.Random.Range(0, width), UnityEngine.Random.Range(0, height));
+
+    
+
+    return t;
+  }
+
+  public void SetJoinedSprites() {
+    for (int x = 0; x < width; x += 1) {
+      for (int y = 0; y < height; y += 1) {
+        Tile t = getTileAt(x, y);
+        if (t != null && t.installedItem != null) {
+          informNeighbours(t.installedItem);
+
+        }
+      }
+    }
 
   }
 
@@ -160,6 +216,7 @@ public class World : IXmlSerializable {
 
     }
   }
+
 
 
   //-------------------------------ROOOMS--------------------------
@@ -281,8 +338,10 @@ public class World : IXmlSerializable {
 
     JArray installedItemsArray = (JArray)jo["InstalledItems"];
 
+
     foreach (JObject installedItemJson in installedItemsArray) {
       string name = Funcs.jsonGetString(installedItemJson["name"], "unnamed_" + unnamedCounter);
+      string niceName = Funcs.jsonGetString(installedItemJson["niceName"], "JSON MISSING");
       unnamedCounter += 1;
       string sprite = Funcs.jsonGetString(installedItemJson["sprite"], "");
       List<string> sprites = new List<string>();
@@ -319,7 +378,7 @@ public class World : IXmlSerializable {
       int id = Funcs.jsonGetInt(installedItemJson["id"], -1);
       bool enclosesRoom = Funcs.jsonGetBool(installedItemJson["enclosesRoom"], false);
 
-      InstalledItem proto = CreateOneInstalledItemPrototype(name, sprite, movement, w, h, linked, build, trash, rotate, id, enclosesRoom);
+      InstalledItem proto = CreateOneInstalledItemPrototype(name, niceName, sprite, movement, w, h, linked, build, trash, rotate, id, enclosesRoom);
       proto.neighbourTypes = neighbourTypeList;
       //proto.roomEnclosure = enclosesRoom;
 
@@ -355,10 +414,10 @@ public class World : IXmlSerializable {
   }
 
 
-  private InstalledItem CreateOneInstalledItemPrototype(string name, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate, int id, bool enclosesRoom) {
+  private InstalledItem CreateOneInstalledItemPrototype(string name, string niceName, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate, int id, bool enclosesRoom) {
     InstalledItem proto = null;
     if (!installedItemProtos.ContainsKey(name)) {
-      proto = InstalledItem.CreatePrototype(name, spriteName, movementFactor, width, height, linksToNeighbour, build, trash, rotate, id, enclosesRoom);
+      proto = InstalledItem.CreatePrototype(name, niceName, spriteName, movementFactor, width, height, linksToNeighbour, build, trash, rotate, id, enclosesRoom);
       installedItemProtos.Add(name, proto);
       installedItemProtos_BY_ID.Add(proto.prototypeId, name);
 
@@ -437,7 +496,33 @@ public class World : IXmlSerializable {
     }
   }
 
-  public void PlaceInstalledItem(string buildItem, Tile tile) {
+  public InventoryItem PlaceInventoryItem(string type, Tile tile, int qty) {
+    InventoryItem proto = InventoryItem.GetPrototype(type);
+
+    if (proto != null) {
+      InventoryItem item = InventoryItem.CreateInventoyItemInstance(type);
+
+      if (item != null) {
+        
+        item.currentStack = qty;
+        if (tile.PlaceInventoryItem(item)) {
+          if (tile.inventoryItem != null) {
+            if (cbInventoryItemCreated != null) {
+              cbInventoryItemCreated(tile.inventoryItem);
+            }
+          }
+
+        }
+
+      }
+
+
+    }
+
+    return null;
+  }
+
+  public InstalledItem PlaceInstalledItem(string buildItem, Tile tile) {
     ///TODO: Assumes 1x1 tiles
     ///with no rotation
     ///
@@ -454,7 +539,7 @@ public class World : IXmlSerializable {
           cbInstalledItem(inst);
           installedItems.Add(inst);
           if (inst.trash) {
-            Debug.Log("Added trash:" + inst.type);
+            //Debug.Log("Added trash:" + inst.type);
             trashInstances.Add(inst);
           }
         }
@@ -468,11 +553,13 @@ public class World : IXmlSerializable {
           DestroyPathNodes();
 
         }
+
+        return inst;
       } else {
         //Debug.Log("failed to place item " + buildItem);
       }
     }
-
+    return null;
   }
 
   private void DestroyRoomNodes() {
@@ -499,6 +586,36 @@ public class World : IXmlSerializable {
 
   public void CBUnregisterTileChanged(Action<Tile> cb) {
     cbTileChanged -= cb;
+
+  }
+
+  public void CBRegisterInventoryItemCreated(Action<InventoryItem> cb) {
+    cbInventoryItemCreated += cb;
+
+  }
+
+  public void CBUnregisterInventoryItemCreated(Action<InventoryItem> cb) {
+    cbInventoryItemCreated -= cb;
+
+  }
+
+  public void CBRegisterInventoryItemChanged(Action<InventoryItem> cb) {
+    cbInventoryItemChanged += cb;
+
+  }
+
+  public void CBUnregisterInventoryItemChanged(Action<InventoryItem> cb) {
+    cbInventoryItemChanged -= cb;
+
+  }
+
+  public void CBRegisterInventoryItemDestroyed(Action<InventoryItem> cb) {
+    cbInventoryItemDestroyed += cb;
+
+  }
+
+  public void CBUnregisterInventoryItemDestroyed(Action<InventoryItem> cb) {
+    cbInventoryItemDestroyed -= cb;
 
   }
 
@@ -727,7 +844,7 @@ public class World : IXmlSerializable {
           }
           installedData.Append(")");
           str_installed.Append(installedData + ";");
-        } else if (t.looseItem != null) {
+        } else if (t.inventoryItem != null) {
           ///FIXME:
           ///
         }
@@ -786,7 +903,7 @@ public class World : IXmlSerializable {
     byte[] ib = Funcs.Base64Decode(installed_string, true);
     installed_string = Funcs.Unzip(ib);
     char[] c = { ';' };
-    string[] installedArray = installed_string.Split(c, StringSplitOptions.RemoveEmptyEntries);
+    savedInstalledItems = installed_string.Split(c, StringSplitOptions.RemoveEmptyEntries);
 
     Debug.Log("installed: " + installed_string);
 
@@ -810,9 +927,10 @@ public class World : IXmlSerializable {
     Debug.Log("length of array " + tilesArray.Length + " width x height: " + (width * height));
     SetCollections();
     CreateAllInstalledItemPrototypes();
+    InventoryItem.LoadFromFile();
     CreateEmptyTiles();
     SetTilesFromArray(tilesArray);
-    SetInstalledFromArray(installedArray);
+    //SetInstalledFromArray(installedArray);
 
 
     //---------CHARACTERS
@@ -844,10 +962,10 @@ public class World : IXmlSerializable {
     //Init(width, height, 32, true, tilesArray);
   }
 
-  private void SetInstalledFromArray(string[] installedArray) {
+  public void SetInstalledFromArray() {
 
-    if (installedArray != null) {
-      foreach (string s in installedArray) {
+    if (savedInstalledItems != null) {
+      foreach (string s in savedInstalledItems) {
         string[] ss = s.Split(':');
         //Debug.Log(String.Format("0:\"{0}\" 1:\"{1}\" 2:\"{2}\"", ss[0], ss[1], ss[2]));
         int installedItemId = int.Parse(ss[0]);
@@ -860,7 +978,9 @@ public class World : IXmlSerializable {
 
         Tile t = getTileAt(x, y);
         if (installedItemId > 0 && x >= 0 && y >= 0 && t != null) {
-          InstalledItem item = InstalledItem.CreateInstance(this, getInstalledItemProtoById(installedItemId), t);
+
+
+          InstalledItem item = PlaceInstalledItem(getInstalledItemProtoById(installedItemId).type, t);//InstalledItem.CreateInstance(this, getInstalledItemProtoById(installedItemId), t);
           installedItems.Add(item);
           if (prms != null) {
             item.SetParameters(prms);
@@ -881,8 +1001,8 @@ public class World : IXmlSerializable {
 
           string si = tilesArray[idx];
           int typeIndex = -1; // int.Parse(tilesArray[idx]);
-          //int installedItemId = -1;
-          //string installedItemName = null;
+                              //int installedItemId = -1;
+                              //string installedItemName = null;
 
           if (int.TryParse(si, out typeIndex)) {
             TileType tt = TileType.TYPES_BY_ID[typeIndex];

@@ -177,6 +177,7 @@ public class Character : IXmlSerializable {
           Tile t = FindEmpty(PosTile);
           changed = true;
           if (t != null) {
+            PosTile.Leave(this);
             PosTile = t;
             DstTile = t;
             movementPerc = 0;
@@ -192,6 +193,7 @@ public class Character : IXmlSerializable {
 
               //InstalledItem item = trashList[Random.Range(0, trashList.Count)];
               if (IsEmpty(tile)) {
+                PosTile.Leave(this);
                 PosTile = t;
                 DstTile = t;
                 found = true;
@@ -210,6 +212,7 @@ public class Character : IXmlSerializable {
       case STATE.RESET:
         //Debug.Log(name + " resetting...");
         ReturnJob();
+        SetDestination(PosTile);
         myJob = null;
         path = null;
         findJobCoolDown = UnityEngine.Random.Range(0.5f, 1f);
@@ -575,9 +578,9 @@ public class Character : IXmlSerializable {
   }
 
   public void PathNodesDestroyed() {
-    if (Funcs.Chance(30)) {
-      findNewPath = true;
-    }
+    //if (Funcs.Chance(30)) {
+    //  findNewPath = true;
+    //}
 
   }
 

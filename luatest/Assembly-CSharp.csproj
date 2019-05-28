@@ -75,8 +75,9 @@
     <Compile Include="Assets\DataModels\Character.cs" />
     <Compile Include="Assets\DataModels\InstalledItem.cs" />
     <Compile Include="Assets\DataModels\InstalledItemActions.cs" />
+    <Compile Include="Assets\DataModels\InventoryItem.cs" />
+    <Compile Include="Assets\DataModels\InventoryManager.cs" />
     <Compile Include="Assets\DataModels\Job.cs" />
-    <Compile Include="Assets\DataModels\LooseItem.cs" />
     <Compile Include="Assets\DataModels\Room.cs" />
     <Compile Include="Assets\Example\ExampleBehaviour.cs" />
     <Compile Include="Assets\Example\SpawnSphere.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Assets\utils\ItemParameters.cs" />
     <Compile Include="Assets\utils\MapGenerator.cs" />
     <Compile Include="Assets\utils\SerializableDictionary.cs" />
+    <Compile Include="Assets\utils\SetSortingLayer.cs" />
     <Compile Include="Assets\utils\SimplePool.cs" />
     <Compile Include="Assets\world\Tile.cs" />
     <Compile Include="Assets\world\TileType.cs" />

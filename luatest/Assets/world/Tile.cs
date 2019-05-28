@@ -18,7 +18,7 @@ public class Tile {
   public Room room;
   //public Tile.TYPE type { get { return type; } set { type = value; if (cbTypeChanged != null) cbTypeChanged(this); } }
   public TileType type { get; private set; }
-  public LooseItem looseItem { get; private set; }
+  public InventoryItem inventoryItem { get; private set; }
   public InstalledItem installedItem { get; private set; }
 
   public Dictionary<string, Tile> neighbours = new Dictionary<string, Tile>();
@@ -38,11 +38,27 @@ public class Tile {
   public Tile East { get { return GetNeighbour(World.EAST); } }
   public Tile South { get { return GetNeighbour(World.SOUTH); } }
   public Tile West { get { return GetNeighbour(World.WEST); } }
+  public bool pendingJob = false;
 
   public void Enter(Character c) {
     if (!occupiedBy.Contains(c)) {
       occupiedBy.Add(c);
     }
+  }
+
+  public string WhoIsHere() {
+    string s = "";
+    int c = 0;
+    foreach (Character chr in occupiedBy) {
+      if (c > 0) {
+        s += "\n";
+      }
+      s += chr.name + "(" + chr.state.ToString() + ")";
+      c += 1;
+    }
+
+
+    return s;
   }
 
   public bool IsItMe(Character me) {
@@ -61,7 +77,7 @@ public class Tile {
     }
   }
 
-  public bool pendingJob = false;
+  
 
   public float movementFactor {
     get {
@@ -70,7 +86,7 @@ public class Tile {
       if (installedItem != null) {
         ws *= installedItem.movementFactor;
 
-      } else if (looseItem != null) {
+      } else if (inventoryItem != null) {
         ws *= 0.8f;
       }
       return ws;
@@ -109,6 +125,46 @@ public class Tile {
     }
   }
 
+  //public InventoryItem RemoveInventoryItem(int qty) {
+
+  //  if ()
+  //  return null;
+
+  //}
+
+  public bool PlaceInventoryItem(InventoryItem inv) {
+
+    if (inv == null) {
+      inventoryItem = null;
+      return true;
+    } 
+
+    if (inventoryItem != null) {
+      //something here already... combine?
+      if (inv.type == inventoryItem.type) {
+        if (inventoryItem.currentStack + inv.currentStack > inv.maxStackSize) {
+          inv.currentStack -= inv.maxStackSize - inventoryItem.currentStack;
+          inventoryItem.currentStack = inventoryItem.maxStackSize;
+        } else {
+          inventoryItem.currentStack += inv.currentStack;
+          inv.currentStack = 0;
+          
+        }
+        return true;
+      } else {
+        Debug.LogError("cannot add " + inv.type + " to a stack of " + inventoryItem.type);
+
+      }
+    } else {
+      inventoryItem = inv.Copy();
+      inv.currentStack = 0;
+      inventoryItem.SetTile(this);
+      return true;
+    }
+
+    return false;
+  }
+
   public bool placeInstalledObject(InstalledItem instobj) {
     if (instobj == null) {
       this.installedItem = null;
@@ -123,7 +179,7 @@ public class Tile {
   }
 
   public bool IsEmpty() {
-    return (installedItem == null && looseItem == null && movementFactor > 0.3 && !pendingJob);
+    return (installedItem == null && inventoryItem == null && movementFactor > 0.3 && !pendingJob);
   }
 
   public void SetNeighbours(bool allowDiagonalNeighbours) {

@@ -51,8 +51,8 @@ TagManager:
   - name: Characters
     uniqueID: 2466846857
     locked: 0
-  - name: Sky
-    uniqueID: 552278615
+  - name: InventoryUI
+    uniqueID: 3721446513
     locked: 0
   - name: TileUI
     uniqueID: 4266438913

@@ -13,8 +13,9 @@ public class InstalledItem {
 
   public Func<InstalledItem, Tile.CAN_ENTER> enterRequested;
 
+  public string niceName { get; private set; }
   public int prototypeId { get; private set; }
-  public Tile tile { get; private set; } //an object could be more than one tile
+  public Tile tile { get; private set; } //an object could be more than one tile... so...
   public string type { get; private set; }
   public float movementFactor { get; private set; } = 1;
   /// TODO: implement larger objects
@@ -56,8 +57,9 @@ public class InstalledItem {
 
   }
 
-  public static InstalledItem CreatePrototype(string type, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate, int id, bool enclosesRoom) {
+  public static InstalledItem CreatePrototype(string type, string niceName, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate, int id, bool enclosesRoom) {
     InstalledItem o = new InstalledItem();
+    o.niceName = niceName;
     o.prototypeId = id;
     o.type = type;
     o.spriteName = spriteName;
@@ -82,6 +84,7 @@ public class InstalledItem {
     //this.updateActions = new List<Action>();
     this.prototypeId = proto.prototypeId;
     this.type = proto.type; // nice field name, doofus.
+    this.niceName = proto.niceName;
     this.movementFactor = proto.movementFactor;
     this.width = proto.width;
     this.height = proto.height;
@@ -212,7 +215,7 @@ public class InstalledItem {
   public bool isPositionValid(World world, int x, int y) {
     Tile t = world.getTileAt(x, y);
     //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
-    if (t == null || !t.type.build || t.installedItem != null || t.looseItem != null || t.pendingJob) {
+    if (t == null || !t.type.build || t.installedItem != null || t.inventoryItem != null || t.pendingJob) {
       return false;
     } else {
       return true;

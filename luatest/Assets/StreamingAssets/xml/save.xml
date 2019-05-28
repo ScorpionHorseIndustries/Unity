@@ -3,41 +3,41 @@
   <width>20</width>
   <height>20</height>
   <tileSize>32</tileSize>
-  <xSeed>-2.832991</xSeed>
-  <ySeed>3.355734</ySeed>
-  <noiseFactor>0.07917862</noiseFactor>
+  <xSeed>2.095047</xSeed>
+  <ySeed>-2.279901</ySeed>
+  <noiseFactor>0.0369001</noiseFactor>
   <characters>
     <character>
-      <name>Motz Brohl</name>
-      <xPos>2</xPos>
-      <yPos>4</yPos>
+      <name>Taufer Matlick</name>
+      <xPos>14</xPos>
+      <yPos>13</yPos>
       <state>IDLE</state>
       <Job />
     </character>
     <character>
-      <name>Madero Iijima</name>
-      <xPos>4</xPos>
-      <yPos>14</yPos>
+      <name>Rapier Suszek</name>
+      <xPos>16</xPos>
+      <yPos>11</yPos>
       <state>IDLE</state>
       <Job />
     </character>
     <character>
-      <name>Pureco Batchan</name>
-      <xPos>3</xPos>
-      <yPos>17</yPos>
+      <name>Massel Shroff</name>
+      <xPos>9</xPos>
+      <yPos>13</yPos>
       <state>IDLE</state>
       <Job />
     </character>
     <character>
-      <name>Berce Freyre</name>
-      <xPos>4</xPos>
-      <yPos>5</yPos>
+      <name>Gugger Kivela</name>
+      <xPos>14</xPos>
+      <yPos>13</yPos>
       <state>IDLE</state>
       <Job />
     </character>
     <character>
-      <name>Hallquist Diraimondo</name>
-      <xPos>1</xPos>
+      <name>Papadakos Michelich</name>
+      <xPos>15</xPos>
       <yPos>15</yPos>
       <state>IDLE</state>
       <Job />
@@ -77,7 +77,7 @@
       <id>7</id>
     </tileType>
   </tileTypes>
-  <tiles>H4sIAAAAAAAAC63SQQ7AIAgEwDdJQzj4/3+VxtLWjeAemj1JBg2qdSPTiIRTz97pnfb0zBV0q7BOaacwRxV04sndV6Ec68tp4aIyOzxXUoc9f7ohDw/Oke9Zv4eAy+TOvZW4T/bPWz8BBED/2CADAAA=</tiles>
-  <installed>H4sIAAAAAAAACzXLyxEAEAwE0Ha42SBh9d+XTMjtzX6EQmOpRzipD5owzwKLeNg5RssI8DqF8dmJ+F4FmgjgYAAAAA==</installed>
+  <tiles>H4sIAAAAAAAACzO3NicSGqJAMzhEFh1VR111plRRZwqEhO01RYKE1RkBIbK5hljtNYKrw64S5g+EKvzqDPGqwhbOuNURBwFVa0NOIAMAAA==</tiles>
+  <installed>H4sIAAAAAAAAC6WTwW7EIAxEf6eVqlUMmABVr/2PHqJqpTatlN5W+fcFjMd7prcXE8Zja6BCJZWn51eqkBVoARHINXKNAoiFXGH5zYkYV2j/335+t33fjuN8uy3nS//8u35v7fPieFSu+2ctvH98HdspajQs+QKQ9lSClsJDiTxoeOMSpcTqiKcdNRHVjWW0iuoj6toi1haxtgiTcUhQWdXR2i/MOVohvMJbpTF0UnMJnhI8JVxNWFyCuyxXXYUsNvM/bGb0yuhQ1cYCKuVZ5XoXKV0spgsaNtSOlnGyc7JzxJbmc9tloIjkVsogOPbmWKPNHf10c2/vMtQoiHjAYPI0JrUZ0zCmYZuGbRq2/TLSRfZ+CM+FLIdkQSRLYkM2jIZ9ujsxVITXugQAAA==</installed>
   <Jobs />
 </World>

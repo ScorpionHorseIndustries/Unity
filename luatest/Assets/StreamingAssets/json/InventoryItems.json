@@ -1,0 +1,25 @@
+{
+"InventoryItems" : [
+{
+"id" : 1,
+"type" : "inv::steel_plates",
+"niceName" : "Steel Plates",
+"stackSize" : 32,
+"spriteName" : "plates_0"
+},
+{
+"id" : 2,
+"type" : "inv::copper_plates",
+"niceName" : "Copper Plates",
+"stackSize" : 32,
+"spriteName" : "plates_1"
+},
+{
+"id" : 3,
+"type" : "inv::stone_slabs",
+"niceName" : "Stone Slabs",
+"stackSize" : 32,
+"spriteName" : "plates_2"
+}
+]
+}

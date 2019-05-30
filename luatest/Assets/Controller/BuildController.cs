@@ -38,22 +38,26 @@ public class BuildController : MonoBehaviour {
   public void CreateBuildJobs(List<Tile> tiles) {
 
     string localBuild = build; 
+
     if (buildType != BUILDTYPE.NONE) {
       switch (buildType) {
         //InstalledItem item = 
         case BUILDTYPE.INSTALLEDITEM:
           foreach (Tile tile in tiles) {
             //tile.placeInstalledObject();
+            string localRecipe = InstalledItem.GetRecipeName(localBuild);
             if (wcon.world.isInstalledItemPositionValid(wcon.world,build, tile)) {
               Job j = new Job(
                     tile,
-                    (theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
-                    (theJob) => { OnInstalledItemJobCancelled(theJob); },
+                    OnInstalledItemJobComplete, //(theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
+                    OnInstalledItemJobCancelled,
+                    JOB_TYPE.BUILD,
                     1,
                     localBuild
                   );
               wcon.world.jobQueue.Push(j);
-              tile.pendingJob = true;
+              tile.AddJob(j);
+              //tile.pendingJob = true;
               //Debug.Log("jobs in queue: " +world.jobQueue.Count);
 
             }
@@ -73,13 +77,20 @@ public class BuildController : MonoBehaviour {
     buildType = BUILDTYPE.NONE;
   }
 
-  private void OnInstalledItemJobComplete(string itemToBuild, Tile tile) {
-    tile.pendingJob = false;
-    wcon.world.PlaceInstalledItem(itemToBuild, tile);
-    
+  private void OnInstalledItemJobComplete(Job job) {
+    job.tile.RemoveJob(job);
+    //job.tile.pendingJob = false;
+    wcon.world.PlaceInstalledItem(job.description, job.tile);
+
   }
 
+  //private void OnInstalledItemJobComplete(string itemToBuild, Tile tile) {
+    
+    
+  //}
+
   private void OnInstalledItemJobCancelled(Job job) {
-    job.tile.pendingJob = false;
+
+    job.tile.RemoveJob(job);
   }
 }

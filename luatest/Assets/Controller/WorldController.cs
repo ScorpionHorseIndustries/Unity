@@ -19,10 +19,11 @@ public class WorldController : MonoBehaviour {
 
 
   private Dictionary<Tile, GameObject> Tiles_GO_Map;
+  private Dictionary<Tile, GameObject> TilesInventoryItems_GO_Map;
   private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
   private Dictionary<Character, GameObject> Characters_GO_Map;
   private Dictionary<Job, GameObject> Job_GO_Map;
-  private Dictionary<InventoryItem, GameObject> invItem_GO_Map;
+  //private Dictionary<InventoryItem, GameObject> invItem_GO_Map;
 
   public EventSystem eventSystem;
   public static WorldController Instance { get; private set; }
@@ -99,9 +100,9 @@ public class WorldController : MonoBehaviour {
     world.CBRegisterCharacterChanged(OnCharacterChanged);
     world.CBRegisterCharacterCreated(OnCharacterCreated);
     world.CBRegisterCharacterKilled(OnCharacterKilled);
-    world.CBRegisterInventoryItemCreated(OnInventoryItemCreated);
-    world.CBRegisterInventoryItemChanged(OnInventoryItemChanged);
-    world.CBRegisterInventoryItemDestroyed(OnInventryItemDestoyed);
+    world.CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlacedOnTile);
+    world.CBRegisterInventoryItemChangedOnTile(OnInventoryItemChanged);
+    world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
     world.SetAllNeighbours();
     world.SetInstalledFromArray();
 
@@ -141,9 +142,9 @@ public class WorldController : MonoBehaviour {
     world.CBRegisterCharacterChanged(OnCharacterChanged);
     world.CBRegisterCharacterCreated(OnCharacterCreated);
     world.CBRegisterCharacterKilled(OnCharacterKilled);
-    world.CBRegisterInventoryItemCreated(OnInventoryItemCreated);
-    world.CBRegisterInventoryItemChanged(OnInventoryItemChanged);
-    world.CBRegisterInventoryItemDestroyed(OnInventryItemDestoyed);
+    world.CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlacedOnTile);
+    world.CBRegisterInventoryItemChangedOnTile(OnInventoryItemChanged);
+    world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
     world.CreateCharacters();
 
     world.SetAllNeighbours();
@@ -155,11 +156,11 @@ public class WorldController : MonoBehaviour {
       Tile b = world.GetRandomEmptyTile();
       Tile c = world.GetRandomEmptyTile();
       if (a != null)
-        world.PlaceInventoryItem("inv::steel_plates", a, UnityEngine.Random.Range(1, 32));
+        world.PlaceTileInventoryItem("inv::steel_plates", a, UnityEngine.Random.Range(16, 32));
       if (b != null)
-        world.PlaceInventoryItem("inv::copper_plates", b, UnityEngine.Random.Range(1, 32));
+        world.PlaceTileInventoryItem("inv::copper_plates", b, UnityEngine.Random.Range(16, 32));
       if (c != null)
-        world.PlaceInventoryItem("inv::stone_slabs", c, UnityEngine.Random.Range(1, 32));
+        world.PlaceTileInventoryItem("inv::stone_slabs", c, UnityEngine.Random.Range(16, 32));
     }
     //world.nodeMap = new TileNodeMap(world);
 
@@ -175,7 +176,8 @@ public class WorldController : MonoBehaviour {
     InstalledItems_GO_Map = new Dictionary<InstalledItem, GameObject>();
     Characters_GO_Map = new Dictionary<Character, GameObject>();
     Job_GO_Map = new Dictionary<Job, GameObject>();
-    invItem_GO_Map = new Dictionary<InventoryItem, GameObject>();
+    //invItem_GO_Map = new Dictionary<InventoryItem, GameObject>();
+    TilesInventoryItems_GO_Map = new Dictionary<Tile, GameObject>();
 
     eventSystem = EventSystem.current;
 
@@ -200,14 +202,16 @@ public class WorldController : MonoBehaviour {
       Destroy(Job_GO_Map[j]);
     }
 
-    foreach(InventoryItem item in invItem_GO_Map.Keys) {
+    foreach(GameObject go in TilesInventoryItems_GO_Map.Values) {
+      Destroy(go);
+      
 
     }
     Job_GO_Map = null;
-    Tiles_GO_Map.Clear();
+    
     Tiles_GO_Map = null;
-    invItem_GO_Map.Clear();
-    invItem_GO_Map = null;
+
+    TilesInventoryItems_GO_Map = null;
     DestroyControllers();
     Init();
     CreateNewWorld();
@@ -359,6 +363,7 @@ public class WorldController : MonoBehaviour {
     displayMe += "\nPos:(" + t.x + "," + t.y + ")";
     displayMe += "\nRoom:" + t.room.id;
     displayMe += "\nInstalled:" + (t.installedItem == null ? "" : t.installedItem.niceName);
+    displayMe += "\nJobs: " + t.JobsToString();
     displayMe += "\nItems:" + (t.inventoryItem == null ? "" : t.inventoryItem.niceName + " " + t.inventoryItem.currentStack + "/" + t.inventoryItem.maxStackSize);
     displayMe += "\n" + t.WhoIsHere();
 
@@ -490,29 +495,38 @@ public class WorldController : MonoBehaviour {
 
   }
 
-  void OnInventoryItemCreated(InventoryItem item) {
-    if (!invItem_GO_Map.ContainsKey(item)) {
-      GameObject go = CreateGameObject(item.type + "-" + item.GetHashCode(), item.tile.x, item.tile.y, true);
+  void OnInventoryItemPlacedOnTile(Tile tile) {
+    if (tile.inventoryItem == null) return;
+    if (!TilesInventoryItems_GO_Map.ContainsKey(tile)) {
+      GameObject go = CreateGameObject("inv_"+tile.x + "," + tile.y + "_" + tile.inventoryItem, tile.x, tile.y, true);
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
-      spr.sprite = spriteController.GetSprite(item.spriteName);
+      spr.sprite = spriteController.GetSprite(tile.inventoryItem.spriteName);
       spr.sortingLayerName = "Objects";
       GameObject txt = Instantiate(prfInventoryItemText, go.transform.position, Quaternion.identity);
       txt.transform.SetParent(go.transform, true);
-      txt.GetComponent<TextMesh>().text = item.currentStack.ToString();
-      invItem_GO_Map[item] = go;
+      txt.GetComponent<TextMesh>().text = tile.inventoryItem.currentStack.ToString();
+      TilesInventoryItems_GO_Map[tile] = go;
     }
   }
 
-  void OnInventoryItemChanged(InventoryItem item) {
+  void OnInventoryItemChanged(Tile tile) {
+    if (TilesInventoryItems_GO_Map.ContainsKey(tile)) {
+      GameObject go = TilesInventoryItems_GO_Map[tile];
+      TextMesh txt = go.GetComponentInChildren<TextMesh>();
+      if (txt != null) {
+        txt.text = tile.inventoryItem.currentStack.ToString();
+      }
+    }
 
   }
 
-  void OnInventryItemDestoyed(InventoryItem item) {
+  void OnInventryItemDestoyed(Tile tile) {
 
-    if (invItem_GO_Map.ContainsKey(item)) {
-      GameObject go = invItem_GO_Map[item];
+    if (TilesInventoryItems_GO_Map.ContainsKey(tile)) {
+      GameObject go = TilesInventoryItems_GO_Map[tile];
       Destroy(go);
-      invItem_GO_Map.Remove(item);
+      TilesInventoryItems_GO_Map.Remove(tile);
+      //invItem_GO_Map.Remove(item);
     }
 
   }

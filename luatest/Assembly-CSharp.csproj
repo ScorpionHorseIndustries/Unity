@@ -78,6 +78,7 @@
     <Compile Include="Assets\DataModels\InventoryItem.cs" />
     <Compile Include="Assets\DataModels\InventoryManager.cs" />
     <Compile Include="Assets\DataModels\Job.cs" />
+    <Compile Include="Assets\DataModels\Recipe.cs" />
     <Compile Include="Assets\DataModels\Room.cs" />
     <Compile Include="Assets\Example\ExampleBehaviour.cs" />
     <Compile Include="Assets\Example\SpawnSphere.cs" />

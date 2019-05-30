@@ -16,7 +16,8 @@
     "movementFactor" : 0.00,
     "trash" : false,
     "build" : true,
-	"enclosesRoom" : true
+	"enclosesRoom" : true,
+	"recipe" : "recipe::installed::wall"
     
   },
   {
@@ -49,7 +50,8 @@
       "trash" : false,
       "build" : true,
       "randomRotation" : false,
-	  "enclosesRoom" : false
+	  "enclosesRoom" : false,
+	  "recipe" : "recipe::installed::atm"
       
   },
       {
@@ -63,7 +65,8 @@
       "trash" : false,
       "build" : true,
       "randomRotation" : false,
-	  "enclosesRoom" : false
+	  "enclosesRoom" : false,
+	  "recipe" : "recipe::installed::recycler"
       
   },
     {
@@ -82,7 +85,8 @@
     "neighbour_nsw" : "installed_door_0",
     "neighbour_sw" : "installed_door_0",
     "neighbour_nesw" : "installed_door_0",
-	"enclosesRoom" : true
+	"enclosesRoom" : true,
+	"recipe" : "recipe::installed::door"
     
   },
 

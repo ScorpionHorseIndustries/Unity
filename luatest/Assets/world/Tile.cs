@@ -38,7 +38,34 @@ public class Tile {
   public Tile East { get { return GetNeighbour(World.EAST); } }
   public Tile South { get { return GetNeighbour(World.SOUTH); } }
   public Tile West { get { return GetNeighbour(World.WEST); } }
-  public bool pendingJob = false;
+  private List<Job> pendingJobs = new List<Job>();
+
+
+  public bool pendingJob {
+    get {
+      return pendingJobs.Count > 0;
+    }
+  }
+
+  public bool AddJob(Job job) {
+    if (!pendingJobs.Contains(job)) {
+      pendingJobs.Add(job);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public bool RemoveJob(Job job) {
+    if (pendingJobs.Contains(job)) {
+      pendingJobs.Remove(job);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
 
   public void Enter(Character c) {
     if (!occupiedBy.Contains(c)) {
@@ -77,7 +104,7 @@ public class Tile {
     }
   }
 
-  
+
 
   public float movementFactor {
     get {
@@ -132,12 +159,21 @@ public class Tile {
 
   //}
 
+  public void RemoveInventoryItem() {
+    inventoryItem = null;
+  }
+
+
+  
+
+
+
   public bool PlaceInventoryItem(InventoryItem inv) {
 
     if (inv == null) {
       inventoryItem = null;
       return true;
-    } 
+    }
 
     if (inventoryItem != null) {
       //something here already... combine?
@@ -148,7 +184,7 @@ public class Tile {
         } else {
           inventoryItem.currentStack += inv.currentStack;
           inv.currentStack = 0;
-          
+
         }
         return true;
       } else {
@@ -241,6 +277,16 @@ public class Tile {
 
   }
 
+  public string JobsToString() {
+    string output = "";
+    foreach (Job j in pendingJobs) {
+      output += j.jobType;
+      if (j.recipe != null) {
+        output += j.recipe;
 
+      }
+    }
 
+    return output;
+  }
 }

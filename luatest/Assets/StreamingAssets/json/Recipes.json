@@ -1,0 +1,52 @@
+{
+  "Recipes": [
+    {
+      "name": "recipe::installed::wall",
+      "id": 1,
+      "buildTime" : 1,
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 1
+        },
+        {
+          "name": "inv::stone_slabs",
+          "qty": 4
+        }
+      ]
+    },
+    {
+      "name": "recipe::installed::atm",
+      "id": 2,
+      "buildTime" : 1,
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 4
+        }
+      ]
+    },
+    {
+      "name": "recipe::installed::recycler",
+      "id": 3,
+      "buildTime" : 1,
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 4
+        }
+      ]
+    },
+    {
+      "name": "recipe::installed::door",
+      "id": 3,
+      "buildTime" : 1,
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 2
+        }
+      ]
+    }
+  ]
+}

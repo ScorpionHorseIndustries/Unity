@@ -8,36 +8,108 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 
 
+public enum JOB_TYPE {
+  NONE,BUILD, HAUL
+}
 
 public class Job : IXmlSerializable {
 
-  struct JobResource {
-    string name;
-    int qtyRequired;
-    int qtyDelivered;
-    int qtyAssigned;
-  }
+   
 
-  private List<JobResource> resourcesRequired = new List<JobResource>();
-  
+  //struct JobResource {
+  //  string name;
+  //  int qtyRequired;
+  //  int qtyDelivered;
+  //  int qtyAssigned;
+  //}
+
+  //private List<JobResource> resourcesRequired;
+
 
   public readonly string jobId;
   public bool finished { get; private set; } = false;
   public bool cancelled { get; private set; } = false;
+  public Recipe recipe;
 
   public Tile tile { get; private set; }
   public float jobTime { get; private set; }
   Action<Job> cbJobComplete;
+  Action<string> cbCarryComplete;
   Action<Job> cbJobCancelled;
-  public string jobType { get; protected set; } = "NONE";
-  public Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, float jobTime, string jobType) {
+  public JOB_TYPE jobType { get; protected set; } 
+  public string recipeResourceName { get; private set; }
+  public int recipeResouceQty { get; private set; }
+  public string description { get; private set; }
+  public Job parent;
+  public Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name, Job parent) {
+    this.tile = tile;
+    this.jobTime = 1f;
+
+    if (type == JOB_TYPE.HAUL) {
+      this.jobTime = 0.1f;
+    }
+      
+    this.parent = parent;
+
+    this.cbJobComplete += cbJobComplete;
+    if (cbJobCancelled != null) {
+      this.cbJobCancelled += cbJobCancelled;
+
+    }
+    //this.cbJobCancelled += cbJobCancelled;
+    this.jobType = type;
+    this.description = description;
+    this.jobId = "job_" + Guid.NewGuid().ToString();
+    this.recipe = recipe;
+    this.recipeResourceName = name;
+    this.recipeResouceQty = recipe.resources[name].qtyRequired;
+
+
+  }
+
+  public Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, float jobTime, string description ) {
     this.tile = tile;
     this.jobTime = jobTime;
     this.cbJobComplete += cbJobComplete;
     this.cbJobCancelled += cbJobCancelled;
-    this.jobType = jobType;
-    this.jobId = "job_"+Guid.NewGuid().ToString();
+    this.description = description;
+    this.jobType = type;
+    this.jobId = "job_" + Guid.NewGuid().ToString();
 
+    //resourcesRequired = new List<JobResource>();
+
+    if (jobType == JOB_TYPE.BUILD) {
+      string recipeName = InstalledItem.prototypeRecipes[description];
+      if (recipeName != null) {
+        recipe = Recipe.GetRecipe(recipeName);
+        this.jobTime = recipe.buildTime;
+      }
+    }
+
+  }
+
+  public bool IsRecipeFinished() {
+    if (recipe == null) {
+      return true;
+    }
+
+    bool r = true;
+
+    foreach (Recipe.RecipeResource rr in recipe.resources.Values) {
+      if (rr.qtyRemaining > 0) {
+        r = false;
+        break;
+      }
+
+    }
+
+    return r;
+  }
+
+  public void ResourceAdded(string name) {
+    if (recipe != null) {
+      recipe.Add(name, recipe.resources[name].qtyRequired);
+    }
   }
 
   public override string ToString() {
@@ -84,14 +156,15 @@ public class Job : IXmlSerializable {
   }
 
   public void ReadXml(XmlReader reader) {
-    
+
   }
 
   public void WriteXml(XmlWriter writer) {
     Job j = this;
     writer.WriteStartElement("job");
 
-    writer.WriteElementString("type", j.jobType);
+    writer.WriteElementString("jobType", j.jobType.ToString());
+    writer.WriteElementString("description", j.description);
     writer.WriteElementString("id", j.jobId);
     writer.WriteElementString("onComplete", cbJobComplete.ToString());
     writer.WriteElementString("onCancelled", cbJobCancelled.ToString());
@@ -108,6 +181,6 @@ public class Job : IXmlSerializable {
 }
 
 class JobTask {
-  
+
 
 }

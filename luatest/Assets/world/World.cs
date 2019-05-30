@@ -28,18 +28,18 @@ public class World : IXmlSerializable {
   public static readonly string SOUTHEAST = "southeast";
 
   //testing
-  public static readonly int NUMBER_OF_ROBOTS = 5;
+  public static readonly int NUMBER_OF_ROBOTS = 3;
 
-  public static readonly int TEST_WIDTH = 50;
-  public static readonly int TEST_HEIGHT = 50;
+  public static readonly int TEST_WIDTH = 30;
+  public static readonly int TEST_HEIGHT = 30;
 
-  public static readonly int M_M_MAXIMUM_TRASH = 25;
+  public static readonly int M_M_MAXIMUM_TRASH = 0;
 
 
 
   //collections
-  Dictionary<string, InstalledItem> installedItemProtos;
-  Dictionary<int, string> installedItemProtos_BY_ID;
+
+
   public List<InstalledItem> trashPrototypes;
   public List<InstalledItem> trashInstances;
   private List<InstalledItem> installedItems;
@@ -86,9 +86,9 @@ public class World : IXmlSerializable {
   Action<Character> cbCharacterKilled;
   Action cbPathNodesDestroyed;
 
-  Action<InventoryItem> cbInventoryItemCreated;
-  Action<InventoryItem> cbInventoryItemChanged;
-  Action<InventoryItem> cbInventoryItemDestroyed;
+  Action<Tile> cbTileInventoryItemPlacedOnTile;
+  Action<Tile> cbTileInventoryItemChangedOnTile;
+  Action<Tile> cbTileInventoryItemRemovedFromTile;
 
   //collections
   string[] savedInstalledItems;
@@ -113,8 +113,8 @@ public class World : IXmlSerializable {
   }
 
   private void SetCollections() {
-    installedItemProtos = new Dictionary<string, InstalledItem>();
-    installedItemProtos_BY_ID = new Dictionary<int, string>();
+    //installedItemProtos = new Dictionary<string, InstalledItem>();
+    //installedItemProtos_BY_ID = new Dictionary<int, string>();
     characters = new List<Character>();
     jobQueue = new JobQueue();
     tiles = new Tile[width, height];
@@ -125,6 +125,7 @@ public class World : IXmlSerializable {
     rooms.Add(new Room(this));
     //inventoryItems = new List<InventoryItem>();
     inventoryManager = new InventoryManager(this);
+
     //outside = rooms[0];
   }
 
@@ -139,47 +140,42 @@ public class World : IXmlSerializable {
     this.width = width;
     this.height = height;
     this.tileSize = tileSize;
-
+    SetCallbacks();
     SetCollections();
 
-    CreateAllInstalledItemPrototypes();
+    //CreateAllInstalledItemPrototypes();
+    InstalledItem.LoadFromFile();
     InventoryItem.LoadFromFile();
+    Recipe.LoadFromFile();
 
     CreateEmptyTiles();
 
     loadNames();
 
- 
+
 
   }
 
-  public Tile GetRandomEmptyTile() {
+  void SetCallbacks() {
+    CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlaced);
+    CBRegisterInventoryItemRemovedFromTile(OnInventoryItemRemoved);
+  }
 
+  public Tile GetRandomEmptyTile() {
     Tile t = null;
     int counter = 0;
-    while(t == null && counter < 100) {
+    while (t == null && counter < 100) {
       counter += 1;
-
       t = GetRandomTile();
-
       if (!t.IsEmpty()) {
         t = null;
-
       }
-
     }
-
-
     return t;
-
-
   }
 
   public Tile GetRandomTile() {
     Tile t = getTileAt(UnityEngine.Random.Range(0, width), UnityEngine.Random.Range(0, height));
-
-    
-
     return t;
   }
 
@@ -210,10 +206,7 @@ public class World : IXmlSerializable {
     for (int x = 0; x < width; x += 1) {
       for (int y = 0; y < height; y += 1) {
         tiles[x, y].SetNeighbours(allowDiagonalNeighbours);
-
       }
-
-
     }
   }
 
@@ -309,12 +302,12 @@ public class World : IXmlSerializable {
   //-========================================INSTALLED ITEMS---=========================================
 
   public Dictionary<string, InstalledItem> getProtoList() {
-    return installedItemProtos;
+    return InstalledItem.prototypes;
   }
 
   public InstalledItem getInstalledItemProtoById(int id) {
-    if (installedItemProtos_BY_ID.ContainsKey(id)) {
-      return getInstalledItemProto(installedItemProtos_BY_ID[id]);
+    if (InstalledItem.prototypesById.ContainsKey(id)) {
+      return getInstalledItemProto(InstalledItem.prototypesById[id]);
 
     } else {
       return null;
@@ -322,117 +315,17 @@ public class World : IXmlSerializable {
   }
 
   public InstalledItem getInstalledItemProto(string item) {
-    if (installedItemProtos.ContainsKey(item)) {
-      return installedItemProtos[item];
+    if (InstalledItem.prototypes.ContainsKey(item)) {
+      return InstalledItem.prototypes[item];
     } else {
       return null;
     }
   }
 
-  private void CreateAllInstalledItemPrototypes() {
-    int unnamedCounter = 0;
-    string path = Application.streamingAssetsPath + "/json/InstalledItems.json";
-
-    string json = File.ReadAllText(path);
-    JObject jo = JObject.Parse(json);
-
-    JArray installedItemsArray = (JArray)jo["InstalledItems"];
 
 
-    foreach (JObject installedItemJson in installedItemsArray) {
-      string name = Funcs.jsonGetString(installedItemJson["name"], "unnamed_" + unnamedCounter);
-      string niceName = Funcs.jsonGetString(installedItemJson["niceName"], "JSON MISSING");
-      unnamedCounter += 1;
-      string sprite = Funcs.jsonGetString(installedItemJson["sprite"], "");
-      List<string> sprites = new List<string>();
-      JArray spritesJsonArray = (JArray)installedItemJson["sprites"];
-      foreach (string tempSpriteName in spritesJsonArray) {
-        sprites.Add(tempSpriteName);
-      }
-      bool linked = Funcs.jsonGetBool(installedItemJson["linked"], false);
-      List<string> neighbourTypeList = new List<string>();
-      if (linked) {
-
-        JArray neighbourTypes = Funcs.jsonGetArray(installedItemJson, "neighbourTypes");//(JArray)installedItemJson["neighbourTypes"];
-
-        if (neighbourTypes != null) {
-          foreach (string s in neighbourTypes) {
-            neighbourTypeList.Add(s);
-            Debug.Log("added [" + s + "]");
-          }
-        }
 
 
-      }
-      if (!neighbourTypeList.Contains(name)) {
-        neighbourTypeList.Add(name);
-      }
-
-
-      float movement = Funcs.jsonGetFloat(installedItemJson["movementFactor"], 1);
-      bool trash = Funcs.jsonGetBool(installedItemJson["trash"], false);
-      bool build = Funcs.jsonGetBool(installedItemJson["build"], false);
-      bool rotate = Funcs.jsonGetBool(installedItemJson["randomRotation"], false);
-      int w = Funcs.jsonGetInt(installedItemJson["width"], 1);
-      int h = Funcs.jsonGetInt(installedItemJson["height"], 1);
-      int id = Funcs.jsonGetInt(installedItemJson["id"], -1);
-      bool enclosesRoom = Funcs.jsonGetBool(installedItemJson["enclosesRoom"], false);
-
-      InstalledItem proto = CreateOneInstalledItemPrototype(name, niceName, sprite, movement, w, h, linked, build, trash, rotate, id, enclosesRoom);
-      proto.neighbourTypes = neighbourTypeList;
-      //proto.roomEnclosure = enclosesRoom;
-
-      Debug.Log(proto.ToString());
-
-      if (linked) {
-        string n_s = Funcs.jsonGetString(installedItemJson["neighbour_s"], "");
-        string n_ns = Funcs.jsonGetString(installedItemJson["neighbour_ns"], "");
-        string n_nsw = Funcs.jsonGetString(installedItemJson["neighbour_nsw"], "");
-        string n_sw = Funcs.jsonGetString(installedItemJson["neighbour_sw"], "");
-        string n_nesw = Funcs.jsonGetString(installedItemJson["neighbour_nesw"], "");
-        proto.setLinkedSpriteNames(n_ns, n_nsw, n_s, n_sw, n_nesw);
-      }
-
-      if (sprites.Count > 0) {
-        proto.setRandomSprites(sprites);
-        //Debug.Log("proto " + proto.type + " has " + proto.randomSprites.Count + " random sprites");
-
-      }
-
-    }
-    //InstalledItem proto = InstalledItemProto("installed::wall", "walls_none", 0, 1, 1,true);
-    //
-
-    foreach (string ss in installedItemProtos.Keys) {
-      InstalledItem item = installedItemProtos[ss];
-      if (item.trash) {
-        trashPrototypes.Add(item);
-      }
-    }
-
-
-  }
-
-
-  private InstalledItem CreateOneInstalledItemPrototype(string name, string niceName, string spriteName, float movementFactor, int width, int height, bool linksToNeighbour, bool build, bool trash, bool rotate, int id, bool enclosesRoom) {
-    InstalledItem proto = null;
-    if (!installedItemProtos.ContainsKey(name)) {
-      proto = InstalledItem.CreatePrototype(name, niceName, spriteName, movementFactor, width, height, linksToNeighbour, build, trash, rotate, id, enclosesRoom);
-      installedItemProtos.Add(name, proto);
-      installedItemProtos_BY_ID.Add(proto.prototypeId, name);
-
-      if (name == "installed::door") {
-        proto.itemParameters.SetFloat("openness", 0f);
-        proto.itemParameters.SetFloat("opentime", 0.25f);
-        proto.updateActions += InstalledItemActions.Door_UpdateActions;
-
-        proto.enterRequested += InstalledItemActions.Door_EnterRequested;
-      }
-    }
-    Debug.Log("prototype created: " + proto);
-
-    return proto;
-  }
 
   public Tile getTileAt(int x, int y) {
     if (x < 0 || x > width - 1 || y < 0 || y > height - 1) {
@@ -496,26 +389,66 @@ public class World : IXmlSerializable {
     }
   }
 
-  public InventoryItem PlaceInventoryItem(string type, Tile tile, int qty) {
+
+  //inventory items
+  private void OnInventoryItemPlaced(Tile tile) {
+    inventoryManager.AddInventoryItem(tile.inventoryItem);
+  }
+
+  private void OnInventoryItemRemoved(Tile tile) {
+    inventoryManager.RemoveInventoryItem(tile.inventoryItem);
+  }
+
+  public InventoryItem PlaceTileInventoryItem(string type, Tile tile, int qty) {
     InventoryItem proto = InventoryItem.GetPrototype(type);
 
     if (proto != null) {
       InventoryItem item = InventoryItem.CreateInventoyItemInstance(type);
 
       if (item != null) {
-        
+
         item.currentStack = qty;
         if (tile.PlaceInventoryItem(item)) {
           if (tile.inventoryItem != null) {
-            if (cbInventoryItemCreated != null) {
-              cbInventoryItemCreated(tile.inventoryItem);
+            if (cbTileInventoryItemPlacedOnTile != null) {
+              cbTileInventoryItemPlacedOnTile(tile);
             }
+            return item;
           }
 
         }
 
       }
 
+
+    }
+
+    return null;
+  }
+
+  public InventoryItem TakeTileInventoryItem(Tile tile, string name, int qty) {
+    if (tile.inventoryItem != null) {
+      if (tile.inventoryItem.type == name) {
+        if (tile.inventoryItem.currentStack == qty) {
+          //take all
+          InventoryItem item = tile.inventoryItem;
+          
+          if (cbTileInventoryItemRemovedFromTile != null) {
+            cbTileInventoryItemRemovedFromTile(tile);
+          }
+          tile.RemoveInventoryItem();
+          return item;
+        } else {
+          
+          InventoryItem item = InventoryItem.CreateInventoyItemInstance(name);
+          item.currentStack = qty;
+          tile.inventoryItem.currentStack -= qty;
+          if (cbTileInventoryItemChangedOnTile != null) {
+            cbTileInventoryItemChangedOnTile(tile);
+          }
+          return item;
+        }
+      }
 
     }
 
@@ -589,33 +522,33 @@ public class World : IXmlSerializable {
 
   }
 
-  public void CBRegisterInventoryItemCreated(Action<InventoryItem> cb) {
-    cbInventoryItemCreated += cb;
+  public void CBRegisterInventoryItemPlacedOnTile(Action<Tile> cb) {
+    cbTileInventoryItemPlacedOnTile += cb;
 
   }
 
-  public void CBUnregisterInventoryItemCreated(Action<InventoryItem> cb) {
-    cbInventoryItemCreated -= cb;
+  public void CBUnregisterInventoryItemPlacedOnTile(Action<Tile> cb) {
+    cbTileInventoryItemPlacedOnTile -= cb;
 
   }
 
-  public void CBRegisterInventoryItemChanged(Action<InventoryItem> cb) {
-    cbInventoryItemChanged += cb;
+  public void CBRegisterInventoryItemChangedOnTile(Action<Tile> cb) {
+    cbTileInventoryItemChangedOnTile += cb;
 
   }
 
-  public void CBUnregisterInventoryItemChanged(Action<InventoryItem> cb) {
-    cbInventoryItemChanged -= cb;
+  public void CBUnregisterInventoryItemChangedOnTile(Action<Tile> cb) {
+    cbTileInventoryItemChangedOnTile -= cb;
 
   }
 
-  public void CBRegisterInventoryItemDestroyed(Action<InventoryItem> cb) {
-    cbInventoryItemDestroyed += cb;
+  public void CBRegisterInventoryItemRemovedFromTile(Action<Tile> cb) {
+    cbTileInventoryItemRemovedFromTile += cb;
 
   }
 
-  public void CBUnregisterInventoryItemDestroyed(Action<InventoryItem> cb) {
-    cbInventoryItemDestroyed -= cb;
+  public void CBUnregisterInventoryItemRemovedFromTile(Action<Tile> cb) {
+    cbTileInventoryItemRemovedFromTile -= cb;
 
   }
 
@@ -686,10 +619,8 @@ public class World : IXmlSerializable {
       Debug.LogError("isInstalledItemPositionValid: itemType cannot be null");
     }
 
-    if (installedItemProtos == null) {
-      Debug.LogError("isInstalledItemPositionValid: installedItemProtos cannot be null");
-    }
-    return installedItemProtos[itemType].funcPositionValid(world, t.x, t.y);
+
+    return InstalledItem.prototypes[itemType].funcPositionValid(world, t.x, t.y);
   }
 
   public string GetName() {
@@ -926,8 +857,11 @@ public class World : IXmlSerializable {
 
     Debug.Log("length of array " + tilesArray.Length + " width x height: " + (width * height));
     SetCollections();
-    CreateAllInstalledItemPrototypes();
+    SetCallbacks();
+    //CreateAllInstalledItemPrototypes();
+    InstalledItem.LoadFromFile();
     InventoryItem.LoadFromFile();
+    Recipe.LoadFromFile();
     CreateEmptyTiles();
     SetTilesFromArray(tilesArray);
     //SetInstalledFromArray(installedArray);
@@ -972,14 +906,8 @@ public class World : IXmlSerializable {
         int x = int.Parse(ss[1]);
         int y = int.Parse(ss[2]);
         string prms = ss[3];
-
-
-
-
         Tile t = getTileAt(x, y);
         if (installedItemId > 0 && x >= 0 && y >= 0 && t != null) {
-
-
           InstalledItem item = PlaceInstalledItem(getInstalledItemProtoById(installedItemId).type, t);//InstalledItem.CreateInstance(this, getInstalledItemProtoById(installedItemId), t);
           installedItems.Add(item);
           if (prms != null) {
@@ -1020,8 +948,8 @@ public class World : IXmlSerializable {
 
   public void Kill() {
     jobQueue = null;
-    installedItemProtos = null;
-    installedItemProtos_BY_ID = null;
+    //installedItemProtos = null;
+    //installedItemProtos_BY_ID = null;
     trashPrototypes = null;
     trashInstances = null;
     tiles = null;

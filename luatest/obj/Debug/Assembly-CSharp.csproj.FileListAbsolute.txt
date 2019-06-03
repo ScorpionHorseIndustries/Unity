@@ -206,7 +206,6 @@ S:\unity\luatest\Temp\bin\Debug\Unity.CollabProxy.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.DataPrivacy.pdb
 S:\unity\luatest\Temp\bin\Debug\nunit.framework.xml
-S:\unity\luatest\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
 S:\unity\luatest\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
 S:\unity\luatest\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 S:\unity\luatest\obj\Debug\Assembly-CSharp.dll
@@ -278,3 +277,7 @@ S:\unity\luatest\Temp\bin\Debug\UnityEngine.WindModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.XRModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.UI.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TestRunner.xml
+S:\unity\luatest\Temp\bin\Debug\Priority Queue.dll
+S:\unity\luatest\Temp\bin\Debug\Priority Queue.pdb
+S:\unity\luatest\Temp\bin\Debug\Priority Queue.xml
+S:\unity\luatest\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache

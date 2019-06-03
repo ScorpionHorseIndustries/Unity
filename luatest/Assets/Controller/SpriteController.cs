@@ -62,6 +62,12 @@ public class SpriteController : MonoBehaviour {
     //Debug.Log("give me sprite: " + t.type.spriteName);
     sr.sprite = GetRandomSprite(t.type.sprites);//GetSprite(t.type.spriteName);
 
+    if (t.zone == null) {
+      sr.color = Color.white;
+    } else {
+      sr.color = new Color(1, 0, 0,0.1f);
+    }
+
   }
 
   public Sprite GetRandomSprite(string[] tSprites) {
@@ -122,8 +128,8 @@ public class SpriteController : MonoBehaviour {
 
 
     if (item.linksToNeighbour) {
-      int x = item.tile.x;
-      int y = item.tile.y;
+      int x = item.tile.world_x;
+      int y = item.tile.world_y;
       bool northMatches, eastMatches, southMatches, westMatches;
       int countOfNeighbours = 0;
       //Dictionary<string, Tile> ngbrs = WorldController.Instance.world.GetNeighbours(item);

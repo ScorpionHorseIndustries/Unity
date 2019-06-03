@@ -66,13 +66,13 @@ public class Character : IXmlSerializable {
   World world;
   public float X {
     get {
-      return Mathf.Lerp(PosTile.x, DstTile.x, movementPerc);
+      return Mathf.Lerp(PosTile.world_x, DstTile.world_x, movementPerc);
     }
   }
 
   public float Y {
     get {
-      return Mathf.Lerp(PosTile.y, DstTile.y, movementPerc);
+      return Mathf.Lerp(PosTile.world_y, DstTile.world_y, movementPerc);
     }
   }
 
@@ -85,7 +85,7 @@ public class Character : IXmlSerializable {
 
   public Vector2 dst {
     get {
-      pDst.Set(DstTile.x, DstTile.y);
+      pDst.Set(DstTile.world_x, DstTile.world_y);
       return pDst;
     }
   }
@@ -93,7 +93,7 @@ public class Character : IXmlSerializable {
   public Vector2 job {
     get {
       if (myJob != null) {
-        pJob.Set(myJob.tile.x, myJob.tile.y);
+        pJob.Set(myJob.tile.world_x, myJob.tile.world_y);
         return pJob;
       } else {
         return pos;
@@ -133,7 +133,7 @@ public class Character : IXmlSerializable {
   private bool changed = false;
   public Job myJob;
 
-  public PathAStar path;
+  public TilePathAStar path;
 
   private bool findNewPath = false;
 
@@ -214,7 +214,7 @@ public class Character : IXmlSerializable {
           int x = UnityEngine.Random.Range(0, world.width);
           int y = UnityEngine.Random.Range(0, world.height);
 
-          Tile tile = world.getTileAt(x, y);
+          Tile tile = world.GetTileAt(x, y);
 
           //InstalledItem item = trashList[Random.Range(0, trashList.Count)];
           if (IsEmpty(tile)) {
@@ -249,7 +249,7 @@ public class Character : IXmlSerializable {
   private void StateFindResource(float deltaTime) {
     if (myJob != null) {
       if (carryingItem != null) {
-        if (carryingItem.currentStack == myJob.recipeResouceQty) {
+        if (carryingItem.currentStack >= myJob.recipeResouceQty) {
           //you can go to the destination
 
           target = haulTo;
@@ -312,7 +312,7 @@ public class Character : IXmlSerializable {
       if (myJob != null) {
         path = PathFinder.FindPath(world, PosTile, target, true, true);
       } else {
-        path = new PathAStar(world, PosTile, target);
+        path = new TilePathAStar(world, PosTile, target);
       }
       if (path != null && path.foundPath) {
         state = STATE.MOVE;
@@ -420,6 +420,9 @@ public class Character : IXmlSerializable {
   }
 
   private bool PickupItem(InventoryItem item) {
+    if (item == null) {
+      return false;
+    }
     if (carryingItem == null) {
       carryingItem = item;
       return true;
@@ -458,7 +461,11 @@ public class Character : IXmlSerializable {
   }
 
   private void StatePickUp(float deltaTime) {
-    if (PickupItem(world.TakeTileInventoryItem(target, myJob.recipeResourceName, myJob.recipeResouceQty))) {
+    int qty = 0;
+    if (carryingItem != null) {
+      qty = carryingItem.currentStack;
+    }
+    if (PickupItem(world.TakeTileInventoryItem(target, myJob.recipeResourceName, myJob.recipeResouceQty-qty))) {
       state = STATE.FIND_RESOURCE;
     } else {
       Debug.Log("Could not pick up stuff");

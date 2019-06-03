@@ -58,15 +58,24 @@ public class TileNodeMap {
     TilesToNodesDct = new Dictionary<Tile, PathNode<Tile>>();
     //NodesToTilesDct = new Dictionary<PathNode<Tile>, Tile>();
 
+    //foreach (TileChunk chunk in world.chunkList) {
+    //  for (int x = 0; x < TileChunk.CHUNK_WIDTH; x += 1) {
+    //    for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
+
+
+    //    }
+    //  }
+    //}
+
     for (int x = 0; x < width; x += 1) {
       for (int y = 0; y < height; y += 1) {
-        Tile t = world.getTileAt(x, y);
+        Tile t = world.GetTileAt(x, y);
 
         float mv = t.movementFactor;
         //if (mv > 0) {
-          nodes[x, y] = new PathNode<Tile>(t);
-          TilesToNodesDct.Add(t, nodes[x, y]);
-          //NodesToTilesDct.Add(nodes[x, y], t);
+        nodes[x, y] = new PathNode<Tile>(t);
+        TilesToNodesDct.Add(t, nodes[x, y]);
+        //NodesToTilesDct.Add(nodes[x, y], t);
         //}
       }
     }
@@ -77,11 +86,11 @@ public class TileNodeMap {
       if (tile.neighboursList.Count > 0) {
         foreach (Tile tile_neighbour in tile.neighboursList) {
           if (tile_neighbour != null && tile_neighbour.movementFactor > 0) {
-            
+
 
             if (IsClippingCorner(tile, tile_neighbour)) continue;
             float mf = 1.0f / Mathf.Pow(tile_neighbour.movementFactor, 2);
-            if (tile_neighbour.pendingJob) {
+            if (tile_neighbour.HasPendingJob) {
               mf *= 2f;
             }
             PathEdge<Tile> e = new PathEdge<Tile>(tile_neighbour, TilesToNodesDct[tile_neighbour], mf);
@@ -92,9 +101,9 @@ public class TileNodeMap {
         }
       }
       node.edges = edges.ToArray();
-      
 
-      
+
+
     }
 
     //Debug.Log("number of nodes " + nodes.Length);
@@ -114,16 +123,16 @@ public class TileNodeMap {
     int td = (int)Funcs.TaxiDistance(c, n);
 
     if (td == 2) {
-      int dx = c.x - n.x;
-      int dy = c.y - n.y;
+      int dx = c.world_x - n.world_x;
+      int dy = c.world_y - n.world_y;
 
-      Tile t = world.getTileAt(c.x - dx, c.y);
+      Tile t = world.GetTileIfChunkExists(c.world_x - dx, c.world_y);
 
 
       if (t == null || t.movementFactor <= 0.1) {
         return true;
       } else {
-        Tile tt = world.getTileAt(c.x, c.y - dy);
+        Tile tt = world.GetTileIfChunkExists(c.world_x, c.world_y - dy);
         if (tt == null || tt.movementFactor <= 0.1) {
           return true;
         }

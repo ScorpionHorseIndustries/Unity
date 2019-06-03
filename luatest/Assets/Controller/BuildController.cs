@@ -24,7 +24,7 @@ public class BuildController : MonoBehaviour {
 
   }
   public enum BUILDTYPE {
-    NONE, INSTALLEDITEM, TILE
+    NONE, INSTALLEDITEM, TILE,ZONE
   }
 
   private BUILDTYPE buildType = BUILDTYPE.NONE;
@@ -68,6 +68,9 @@ public class BuildController : MonoBehaviour {
             TileType tt = TileType.TYPES[build];
             tile.SetType(tt);
           }
+          break;
+        case BUILDTYPE.ZONE:
+          wcon.world.zones.Add(new TileZone(tiles));
           break;
 
 

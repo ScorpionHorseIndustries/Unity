@@ -10,17 +10,28 @@ class MapGenerator {
   List<int[,]> maps = new List<int[,]>();
   int width, height;
   World world;
+  string seed;
 
   public static void MakeNewMap(World world, int width, int height) {
     new MapGenerator(world, width, height);
 
   }
+
+  public static void MakeNewMap(World world, string seed) {
+    new MapGenerator(world, seed);
+  }
   private MapGenerator(World world, int width, int height) {
     this.width = width;
     this.height = height;
     this.world = world;
+    this.seed = DateTime.Now.ToString();
     GenerateMap();
 
+  }
+
+  private MapGenerator(World world, string seed) {
+    this.world = world;
+    this.seed = seed;
   }
 
   private void GenerateMap() {
@@ -31,8 +42,8 @@ class MapGenerator {
     
 
     for (int i = 0; i < TileType.countNatural - 1; i += 1) {
-      String seed = DateTime.Now.ToString() + "_" + i + "_" + Guid.NewGuid().ToString();
-      maps.Add(MakeInitialMap(55 - (i * 3), seed));
+      String currentSeed = seed + "_" + i;
+      maps.Add(MakeInitialMap(55 - (i * 3), currentSeed));
       //Debug.Log(seed);
     }
 
@@ -53,7 +64,7 @@ class MapGenerator {
     for (int x = 0; x < width; x += 1) {
       for (int y = 0; y < height; y += 1) {
         int j = map[x, y];
-        Tile t = world.getTileAt(x, y);
+        Tile t = world.GetTileAt(x, y);
         //if (UnityEngine.Random.Range(0,2) == 0)
         //float f = Mathf.PerlinNoise(xx + xo, yy + yo);
         TileType tt = TileType.TYPES["empty"];
@@ -73,8 +84,8 @@ class MapGenerator {
     }
 
     for (int x = 0; x < width; x += 1) {
-      Tile tt = world.getTileAt(x, 0);
-      Tile tb = world.getTileAt(x, height-1);
+      Tile tt = world.GetTileAt(x, 0);
+      Tile tb = world.GetTileAt(x, height-1);
 
       TileType type = TileType.TYPES["bedrock"];
 
@@ -82,8 +93,8 @@ class MapGenerator {
       tb.SetType(type);
     }
     for (int y = 0; y < height; y += 1) {
-      Tile tt = world.getTileAt(0, y);
-      Tile tb = world.getTileAt(width-1, y);
+      Tile tt = world.GetTileAt(0, y);
+      Tile tb = world.GetTileAt(width-1, y);
 
       TileType type = TileType.TYPES["bedrock"];
 

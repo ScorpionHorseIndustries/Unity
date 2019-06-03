@@ -49,9 +49,9 @@ public class InputController : MonoBehaviour {
   private bool tilesFound = false;
 
 
-  
+
   private void Awake() {
-  
+
   }
 
 
@@ -60,6 +60,7 @@ public class InputController : MonoBehaviour {
 
   // Start is called before the first frame update
   private bool initialised = false;
+  public Bounds camBounds;
   public void Init() {
     //WorldController.Instance.cbRegisterReady(Init);
     Debug.Log("init " + this.name);
@@ -87,17 +88,18 @@ public class InputController : MonoBehaviour {
     float lr = Input.GetAxis("Horizontal");
     float ud = Input.GetAxis("Vertical");
     //Debug.Log(lr + "," + ud);
-    Vector2 diff = Vector2.zero;  
+    Vector2 diff = Vector2.zero;
     if (Input.GetMouseButton(MOUSE_MIDDLE)) {
-      
+
       diff = lastFrame - mousePos;
 
 
     }
     diff.Set(diff.x + lr, diff.y + ud);
+    
     cam.transform.Translate(diff);
 
-
+    float tempzoom = cam.orthographicSize;
     currentZoom = cam.orthographicSize;
     currentZoom -= currentZoom * Input.GetAxis("Mouse ScrollWheel");
 
@@ -105,8 +107,19 @@ public class InputController : MonoBehaviour {
 
     cam.orthographicSize = currentZoom;
 
+    if (diff.sqrMagnitude > 0 || tempzoom != currentZoom || camBounds == null) {
+      camBounds = OrthographicBounds();
+      //Debug.Log(camBounds);
 
+    }
 
+  }
+
+  public Bounds OrthographicBounds() {
+    float screenAspect = (float)Screen.width / (float)Screen.height;
+    float cameraHeight = cam.orthographicSize * 2;
+    Bounds bounds = new Bounds( cam.transform.position,new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
+    return bounds;
   }
   // Update is called once per frame
   void Update() {
@@ -125,9 +138,11 @@ public class InputController : MonoBehaviour {
     //mp.Set(mouseX, mouseY);
     cx = mx - lastX;
     cy = my - lastY;
-    mouseOverTile = WorldController.Instance.world.getTileAt(mx, my);
-    if (mouseOverTile != null) {
-      WorldController.Instance.UpdateCurrentTile(mouseOverTile);
+    if (mx >= 0 && my >= 0) {
+      mouseOverTile = WorldController.Instance.world.GetTileAt(mx, my);
+      if (mouseOverTile != null) {
+        WorldController.Instance.UpdateCurrentTile(mouseOverTile);
+      }
     }
     //if (mouseOverTile != null) {
     //  Debug.Log(mouseOverTile);
@@ -177,10 +192,10 @@ public class InputController : MonoBehaviour {
 
   private void drawCursors() {
     if (tilesFound) {
-      cursorPrefab.transform.position = new Vector2(tileTL.x - 0.5f, tileTL.y + 0.5f);
+      cursorPrefab.transform.position = new Vector2(tileTL.world_x - 0.5f, tileTL.world_y + 0.5f);
 
-      float x = tileTR.x - tileTL.x;// dragRightMost.x - dragLeftMost.x;
-      float y = tileTL.y - tileBR.y; // dragLeftMost.y - dragRightMost.y;
+      float x = tileTR.world_x - tileTL.world_x;// dragRightMost.x - dragLeftMost.x;
+      float y = tileTL.world_y - tileBR.world_y; // dragLeftMost.y - dragRightMost.y;
       cursorPrefab.GetComponent<SpriteRenderer>().size = new Vector2(x + 1, y + 1);
       cursorPrefab.SetActive(true);
       /*
@@ -232,8 +247,8 @@ public class InputController : MonoBehaviour {
 
     for (int xx = start_x; xx <= end_x; xx += 1) {
       for (int yy = start_y; yy <= end_y; yy += 1) {
-        Tile tile = WorldController.Instance.world.getTileAt(xx, yy);
-
+        Tile tile = WorldController.Instance.world.GetTileIfChunkExists(xx, yy);
+        //Debug.Log(String.Format("x,y: {0},{1}", xx, yy));
         if (tile != null) {
           dragArea.Add(tile);
           tilesFound = true;
@@ -243,16 +258,16 @@ public class InputController : MonoBehaviour {
           tileBR = coalesce(tileBR, tile);
 
 
-          if (tile.x <= tileTL.x && tile.y >= tileTL.y) {
+          if (tile.world_x <= tileTL.world_x && tile.world_y >= tileTL.world_y) {
             tileTL = tile;
           }
-          if (tile.x >= tileTR.x && tile.y >= tileTR.y) {
+          if (tile.world_x >= tileTR.world_x && tile.world_y >= tileTR.world_y) {
             tileTR = tile;
           }
-          if (tile.x <= tileBL.x && tile.y <= tileBL.y) {
+          if (tile.world_x <= tileBL.world_x && tile.world_y <= tileBL.world_y) {
             tileBL = tile;
           }
-          if (tile.x >= tileBR.x && tile.y <= tileBR.y) {
+          if (tile.world_x >= tileBR.world_x && tile.world_y <= tileBR.world_y) {
             tileBR = tile;
           }
 

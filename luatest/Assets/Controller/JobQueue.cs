@@ -5,19 +5,21 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-
-
+using Priority_Queue;
 
 public class JobQueue : IXmlSerializable {
 
   Action<Job> cbJobCreated;
-  protected Queue<Job> jobs = new Queue<Job>();
+  //protected Queue<Job> jobs = new Queue<Job>();
+  protected SimplePriorityQueue<Job> jobs = new SimplePriorityQueue<Job>();
   private Queue<Job> problemJobs = new Queue<Job>();
 
 
-  public int Count { get {
+  public int Count {
+    get {
       return jobs.Count;
-    } }
+    }
+  }
 
   public JobQueue() {
 
@@ -29,23 +31,43 @@ public class JobQueue : IXmlSerializable {
       foreach (string resourceName in j.recipe.resources.Keys) {
         //(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name) {
         Job nj = new Job(j.tile, HaulJobComplete, HaulJobCancelled, JOB_TYPE.HAUL, JOB_TYPE.HAUL.ToString(), j.recipe, resourceName, j);
-        jobs.Enqueue(nj);
+        jobs.Enqueue(nj, 1f);
 
 
 
       }
     }
-    jobs.Enqueue(j);
+    jobs.Enqueue(j, 5);
     if (cbJobCreated != null) {
       cbJobCreated(j);
     }
-    
+
+  }
+
+  public void Update() {
+    List<Job> tempJobs = new List<Job>();
+
+    while (jobs.Count > 0) {
+      tempJobs.Add(jobs.Dequeue());
+    }
+
+    foreach (Job job in tempJobs) {
+      if (job.jobType == JOB_TYPE.HAUL) {
+        jobs.Enqueue(job, 1);
+      } else if (job.jobType == JOB_TYPE.BUILD) { 
+        if (job.IsRecipeFinished()) {
+          jobs.Enqueue(job, 0.5f);
+        } else {
+          jobs.Enqueue(job, 1.5f);
+        }
+      }
+    }
   }
 
   public void HaulJobComplete(Job job) {
     job.recipe.Add(job.recipeResourceName, job.recipe.resources[job.recipeResourceName].qtyRequired);
     job.tile.RemoveJob(job);
-    
+
   }
 
   public void HaulJobCancelled(Job job) {
@@ -59,9 +81,9 @@ public class JobQueue : IXmlSerializable {
   public Job GetNextJob() {
     if (jobs.Count == 0) {
       if (problemJobs.Count > 0) {
-        jobs.Enqueue(problemJobs.Dequeue());
+        jobs.Enqueue(problemJobs.Dequeue(), 1);
 
-        
+
       }
       return null;
     } else {
@@ -74,7 +96,7 @@ public class JobQueue : IXmlSerializable {
           if (j.jobType == JOB_TYPE.HAUL) {
 
           } else if (!j.IsRecipeFinished()) {
-            jobs.Enqueue(j);
+            jobs.Enqueue(j, 2);
             continue;
 
           }
@@ -83,15 +105,11 @@ public class JobQueue : IXmlSerializable {
       }
       return null;
     }
-    
+
   }
 
   private Job Pop() {
     return jobs.Dequeue();
-  }
-
-  public Job Peek() {
-    return jobs.Peek();
   }
 
   public void cbRegisterJobCreated(Action<Job> cb) {
@@ -104,7 +122,7 @@ public class JobQueue : IXmlSerializable {
   }
 
   public void OnJobComplete(Job j) {
-    
+
   }
 
   public XmlSchema GetSchema() {
@@ -113,14 +131,14 @@ public class JobQueue : IXmlSerializable {
 
   public void ReadXml(XmlReader reader) {
 
-    
+
   }
 
   public void WriteXml(XmlWriter writer) {
 
     writer.WriteStartElement("Jobs");
 
-    foreach(Job j in jobs) {
+    foreach (Job j in jobs) {
       j.WriteXml(writer);
     }
 

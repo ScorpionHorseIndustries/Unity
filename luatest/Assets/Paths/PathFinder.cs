@@ -22,7 +22,7 @@ public static class PathFinder {
         return;
       }
 
-      if (tile.pendingJob) {
+      if (tile.HasPendingJob) {
         v += 10;
       }
 
@@ -37,13 +37,13 @@ public static class PathFinder {
       dct[tile] = v;
     }
   }
-  public static PathAStar FindPath(World world, Tile start, Tile end, bool allowNeighbours, bool preferNeighbours) {
+  public static TilePathAStar FindPath(World world, Tile start, Tile end, bool allowNeighbours, bool preferNeighbours) {
 
     dct.Clear();
     //float start_time = UnityEngine.Time.realtimeSinceStartup;
     
     List<Tile> tiles = new List<Tile>();
-    Dictionary<Tile, PathAStar> paths = new Dictionary<Tile, PathAStar>();
+    Dictionary<Tile, TilePathAStar> paths = new Dictionary<Tile, TilePathAStar>();
 
     tiles.Add(end);
     dct[end] = 100;
@@ -61,7 +61,7 @@ public static class PathFinder {
 
     foreach (KeyValuePair<Tile, float> kvp in dct.OrderBy(key => key.Value)) {
       Debug.Log("kvp:" + kvp.Key + ":" + kvp.Value);
-      PathAStar pp = new PathAStar(world, start, kvp.Key);
+      TilePathAStar pp = new TilePathAStar(world, start, kvp.Key);
       if (pp.foundPath) {
         return pp;
       }

@@ -64,7 +64,7 @@ public static class Funcs {
   }
 
   public static float TaxiDistance(Tile A, Tile B) {
-    return TaxiDistance(A.x, A.y, B.x, B.y);
+    return TaxiDistance(A.world_x, A.world_y, B.world_x, B.world_y);
   }
 
   public static float TaxiDistance(float x1, float y1, float x2, float y2) {
@@ -73,7 +73,7 @@ public static class Funcs {
   }
 
   public static float Distance(Tile A, Tile B) {
-    return Distance(A.x, A.y, B.x, B.y);
+    return Distance(A.world_x, A.world_y, B.world_x, B.world_y);
   }
   public static float Distance(float x1, float y1, float x2, float y2) {
     float d = Mathf.Sqrt(Mathf.Pow(x1 - x2, 2) + Mathf.Pow(y1 - y2, 2));

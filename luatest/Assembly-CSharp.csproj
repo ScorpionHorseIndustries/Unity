@@ -80,6 +80,7 @@
     <Compile Include="Assets\DataModels\Job.cs" />
     <Compile Include="Assets\DataModels\Recipe.cs" />
     <Compile Include="Assets\DataModels\Room.cs" />
+    <Compile Include="Assets\DataModels\TileZone.cs" />
     <Compile Include="Assets\Example\ExampleBehaviour.cs" />
     <Compile Include="Assets\Example\SpawnSphere.cs" />
     <Compile Include="Assets\Example\TestBehaviour.cs" />
@@ -133,11 +134,13 @@
     <Compile Include="Assets\NLua\Platform\BindFlags.cs" />
     <Compile Include="Assets\NLua\Platform\CLSCompliantAttribute.cs" />
     <Compile Include="Assets\NLua\ProxyType.cs" />
+    <Compile Include="Assets\Paths\ChunkNodeMap.cs" />
     <Compile Include="Assets\Paths\PathAStar.cs" />
     <Compile Include="Assets\Paths\PathEdge.cs" />
     <Compile Include="Assets\Paths\PathFinder.cs" />
     <Compile Include="Assets\Paths\PathNode.cs" />
     <Compile Include="Assets\Paths\TileNodeMap.cs" />
+    <Compile Include="Assets\Paths\TilePathAStar.cs" />
     <Compile Include="Assets\scrChest.cs" />
     <Compile Include="Assets\scrInventory.cs" />
     <Compile Include="Assets\Scriptables\scroItems.cs" />
@@ -150,8 +153,10 @@
     <Compile Include="Assets\utils\SetSortingLayer.cs" />
     <Compile Include="Assets\utils\SimplePool.cs" />
     <Compile Include="Assets\world\Tile.cs" />
+    <Compile Include="Assets\world\TileChunk.cs" />
     <Compile Include="Assets\world\TileType.cs" />
     <Compile Include="Assets\world\World.cs" />
+    <None Include="Assets\Libs\Priority Queue.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
@@ -380,6 +385,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>S:/unity/luatest/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Priority Queue">
+      <HintPath>S:/unity/luatest/Assets/Libs/Priority Queue.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>S:/unity/luatest/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Editor.dll</HintPath>

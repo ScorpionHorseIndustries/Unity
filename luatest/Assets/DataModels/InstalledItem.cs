@@ -201,9 +201,9 @@ public class InstalledItem {
   //-------------------------------POSITION METHODS----------------------------------
 
   public bool isPositionValid(World world, int x, int y) {
-    Tile t = world.getTileAt(x, y);
+    Tile t = world.GetTileAt(x, y);
     //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
-    if (t == null || !t.type.build || t.installedItem != null || t.inventoryItem != null || t.pendingJob) {
+    if (t == null || !t.type.build || t.installedItem != null || t.inventoryItem != null || t.HasPendingJob) {
       return false;
     } else {
       return true;
@@ -226,7 +226,7 @@ public class InstalledItem {
   //-----------------------STATIC METHODS------------------
 
   public static InstalledItem CreateInstance(World world, InstalledItem proto, Tile tile) {
-    if (!proto.funcPositionValid(world, tile.x, tile.y)) {
+    if (!proto.funcPositionValid(world, tile.world_x, tile.world_y)) {
       return null;
     }
     //Debug.Log("InstalledItem.CreateInstance");

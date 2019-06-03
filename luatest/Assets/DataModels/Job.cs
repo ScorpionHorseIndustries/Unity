@@ -170,8 +170,8 @@ public class Job : IXmlSerializable {
     writer.WriteElementString("onCancelled", cbJobCancelled.ToString());
     writer.WriteElementString("time", j.jobTime.ToString());
     writer.WriteStartElement("tile");
-    writer.WriteElementString("x", j.tile.x.ToString());
-    writer.WriteElementString("y", j.tile.y.ToString());
+    writer.WriteElementString("x", j.tile.world_x.ToString());
+    writer.WriteElementString("y", j.tile.world_y.ToString());
 
 
     writer.WriteEndElement();

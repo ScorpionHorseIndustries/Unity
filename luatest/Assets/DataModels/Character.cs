@@ -18,6 +18,8 @@ public class Character : IXmlSerializable {
     WORK_JOB,
     PICK_UP,
     DROP_OFF,
+    DROP_OFF_AT_TILE,
+    DROP_OFF_AT_JOB,
     FIND_EMPTY,
     FIND_RESOURCE
   }
@@ -32,6 +34,8 @@ public class Character : IXmlSerializable {
   /// </summary>
   /// <param name="state"></param>
   /// <returns></returns>
+  /// 
+
   public static STATE GetState(string state) {
 
 
@@ -64,6 +68,7 @@ public class Character : IXmlSerializable {
   Action<Character> cbCharacterChanged;
   Action<Character> cbCharacterKilled;
   World world;
+  private float spawnTextCountDown = 0;
   public float X {
     get {
       return Mathf.Lerp(PosTile.world_x, DstTile.world_x, movementPerc);
@@ -140,7 +145,8 @@ public class Character : IXmlSerializable {
 
   private float waitingTimer = 0;
 
-  private InventoryItem carryingItem = null;
+  //private InventoryItem carryingItem = null;
+  public Inventory inventory;
   STATE newStateWhenMoveComplete = STATE.NONE;
 
 
@@ -153,6 +159,7 @@ public class Character : IXmlSerializable {
     this.world = world;
     this.name = name;
     this.state = GetState(state);
+    inventory = new Inventory(world, 1, INVENTORY_TYPE.CHARACTER, this);
   }
   public Character(World world, Tile startTile) {
     DstTile = startTile;
@@ -160,7 +167,7 @@ public class Character : IXmlSerializable {
     this.world = world;
     state = STATE.IDLE;
     this.name = world.GetName();
-
+    inventory = new Inventory(world, 1, INVENTORY_TYPE.CHARACTER, this);
   }
   public void PleaseMove(Character asker) {
 
@@ -248,23 +255,54 @@ public class Character : IXmlSerializable {
 
   private void StateFindResource(float deltaTime) {
     if (myJob != null) {
-      if (carryingItem != null) {
-        if (carryingItem.currentStack >= myJob.recipeResouceQty) {
+      if (!inventory.IsEmpty()) {
+        if (inventory.HowMany(myJob.recipeResourceName) >= myJob.recipeResouceQty) {
           //you can go to the destination
-
+          myJob.qtyFulfilled = inventory.HowMany(myJob.recipeResourceName);
           target = haulTo;
           state = STATE.FIND_PATH;
-          newStateWhenMoveComplete = STATE.DROP_OFF;
+          newStateWhenMoveComplete = (myJob.subType == JOB_SUBTYPE.HAUL_TO_TILE) ? STATE.DROP_OFF_AT_TILE : STATE.DROP_OFF_AT_JOB;
+          //if (myJob.subType == JOB_SUBTYPE.HAUL_TO_TILE) {
+          //  newStateWhenMoveComplete = STATE.DROP_OFF_AT_TILE;
+
+          //} else {
+          //  newStateWhenMoveComplete = STATE.DROP_OFF_AT_JOB;
+          //}
         } else {
-          target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName);
+          if (myJob.subType == JOB_SUBTYPE.HAUL_TO_TILE) {
+            target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName, false);
+
+            if (target == null) {
+              target = haulTo;
+              state = STATE.FIND_PATH;
+              newStateWhenMoveComplete = STATE.DROP_OFF_AT_TILE;
+            } else {
+              int a = myJob.tile.InventoryTotal(myJob.recipeResourceName);//myJob.tile.inventoryItem != null ? myJob.tile.inventoryItem.currentStack : 0;
+
+              int b = InventoryItem.GetStackSize(myJob.recipeResourceName); //GetPrototype(target.inventoryItem.type).maxStackSize;
+              int c = inventory.HowMany(myJob.recipeResourceName);
+              myJob.recipeResouceQty = b - a - c;
+            }
+          } else {
+
+            target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName);
+          }
           haulFrom = target;
           state = STATE.FIND_PATH;
           newStateWhenMoveComplete = STATE.PICK_UP;
         }
 
       } else {
+
+
+
         haulTo = myJob.tile;
-        target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName);
+        if (myJob.subType == JOB_SUBTYPE.HAUL_TO_TILE) {
+          target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName, false);
+        } else {
+          target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName);
+        }
+
         haulFrom = target;
         state = STATE.FIND_PATH;
         newStateWhenMoveComplete = STATE.PICK_UP;
@@ -282,6 +320,7 @@ public class Character : IXmlSerializable {
     myJob = world.jobQueue.GetNextJob();
     if (myJob != null) {
       //do something
+      myJob.worker = this;
       myJob.cbRegisterJobComplete(OnJobEnded);
       myJob.cbUnregisterJobCancelled(OnJobEnded);
 
@@ -406,35 +445,65 @@ public class Character : IXmlSerializable {
 
   }
 
-  private void DropItem() {
-    if (carryingItem != null) {
-      if (carryingItem.currentStack > 0) {
-        Tile t = FindEmpty(PosTile);
-        if (t != null) {
-          world.PlaceTileInventoryItem(carryingItem.type, t, carryingItem.currentStack);
 
-        }
-      }
-      carryingItem = null;
-    }
-  }
+  private void DropAll() {
 
-  private bool PickupItem(InventoryItem item) {
-    if (item == null) {
-      return false;
-    }
-    if (carryingItem == null) {
-      carryingItem = item;
-      return true;
-    } else {
-      if (carryingItem.type == item.type) {
-        carryingItem.currentStack += item.currentStack;
-        return true;
+    while (!inventory.IsEmpty()) {
+      Tile t = FindEmpty(PosTile);
+      if (t != null) {
+        string itemName = inventory.GetFirst();
+        int qtyToPlace = inventory.HowMany(itemName);
+        int qtyPlaced = t.AddToInventory(itemName, qtyToPlace);
+        inventory.RemoveItem(itemName, qtyPlaced);
       } else {
-        return false;
+        break;
       }
     }
   }
+
+
+  private void DropItem(Tile tile = null) {
+    if (!inventory.IsEmpty()) {
+      if (inventory.TotalQty() > 0) {
+        Tile t = null;
+        if (tile == null) {
+
+
+          DropAll();
+
+
+        } else {
+          t = tile;
+          string itemName = inventory.GetFirst();
+          int qtyToPlace = inventory.HowMany(itemName);
+          int qtyPlaced = t.AddToInventory(itemName, qtyToPlace);
+          inventory.RemoveItem(itemName, qtyPlaced);
+
+          DropAll();
+        }
+
+
+      }
+
+    }
+  }
+
+  //private bool PickupItem(string itemName, int qty) {
+  //  if (item == null) {
+  //    return false;
+  //  }
+  //  if (carryingItem == null) {
+  //    carryingItem = item;
+  //    return true;
+  //  } else {
+  //    if (carryingItem.type == item.type) {
+  //      carryingItem.currentStack += item.currentStack;
+  //      return true;
+  //    } else {
+  //      return false;
+  //    }
+  //  }
+  //}
 
   private void StateWorkJob(float deltaTime) {
     //Debug.Log(name + " working...");
@@ -461,16 +530,33 @@ public class Character : IXmlSerializable {
   }
 
   private void StatePickUp(float deltaTime) {
-    int qty = 0;
-    if (carryingItem != null) {
-      qty = carryingItem.currentStack;
-    }
-    if (PickupItem(world.TakeTileInventoryItem(target, myJob.recipeResourceName, myJob.recipeResouceQty-qty))) {
-      state = STATE.FIND_RESOURCE;
+
+    string itemName = myJob.recipeResourceName;
+    int qty = inventory.HowMany(name);
+
+
+    int qtyNeeded = myJob.recipeResouceQty - myJob.qtyFulfilled - qty;
+
+    int qtyTaken = target.RemoveFromInventory(itemName, qtyNeeded);
+
+    if (qtyTaken > 0) {
+      if (inventory.AddItem(itemName, qtyTaken) == qtyTaken) {
+        state = STATE.FIND_RESOURCE;
+      } else {
+        state = STATE.RESET;
+      }
     } else {
-      Debug.Log("Could not pick up stuff");
       state = STATE.RESET;
     }
+
+
+    //if (PickupItem(world.TakeTileInventoryItem(target, myJob.recipeResourceName, myJob.recipeResouceQty-qty))) {
+    //  myJob.qtyFulfilled = carryingItem.currentStack;
+    //  state = STATE.FIND_RESOURCE;
+    //} else {
+    //  Debug.Log("Could not pick up stuff");
+    //  state = STATE.RESET;
+    //}
 
 
 
@@ -479,17 +565,43 @@ public class Character : IXmlSerializable {
 
 
 
-    carryingItem.currentStack = 0;
+    //carryingItem.currentStack = 0;
     DropItem();
 
     myJob.Work(myJob.jobTime);
-    
+
+  }
+
+
+  private void StateDropOffAtJob(float deltaTime) {
+    if (myJob != null) {
+      string carrying = inventory.GetFirst();
+      int qty = inventory.HowMany(carrying);
+      int qtyGiven = myJob.inventory.AddItem(carrying, qty);
+      inventory.RemoveItem(carrying, qtyGiven);
+      myJob.Work(myJob.jobTime);
+    } else {
+      state = STATE.RESET;
+    }
+  }
+
+  private void StateDropOffAtTile(float deltaTime) {
+    if (myJob != null) {
+      DropItem(myJob.tile);
+      myJob.Work(myJob.jobTime);
+    } else {
+      state = STATE.RESET;
+    }
   }
 
 
   //----------------------------------
 
   public void Update(float deltaTime) {
+    spawnTextCountDown -= deltaTime;
+    if (spawnTextCountDown < 0) {
+      spawnTextCountDown = 0;
+    }
     //Debug.Log(state + " (" + PosTile.x + "," + PosTile.y + ")-->(" + DstTile.x + "," + DstTile.y + ")");
 
     //if (PosTile.movementFactor == 0) {
@@ -522,6 +634,13 @@ public class Character : IXmlSerializable {
       case STATE.DROP_OFF:
         StateDropOff(deltaTime);
         break;
+      case STATE.DROP_OFF_AT_TILE:
+        StateDropOffAtTile(deltaTime);
+        break;
+      case STATE.DROP_OFF_AT_JOB:
+        StateDropOffAtJob(deltaTime);
+        break;
+
       case STATE.FIND_EMPTY:
         StateFindEmpty(deltaTime);
         break;
@@ -534,6 +653,12 @@ public class Character : IXmlSerializable {
     }
 
     if (hold != state || state == STATE.MOVE || changed) {
+      if (hold != state) {
+        if (spawnTextCountDown <= 0) {
+          WorldController.Instance.SpawnText(state.ToString(), (int)X, (int)Y);
+          spawnTextCountDown = 1;
+        }
+      }
       if (cbCharacterChanged != null) {
         cbCharacterChanged(this);
       }
@@ -541,6 +666,7 @@ public class Character : IXmlSerializable {
     findNewPath = false;
 
   }
+
 
 
   private void ReturnJob() {
@@ -560,6 +686,7 @@ public class Character : IXmlSerializable {
       Debug.LogError("telling character about a job that does not belong to them");
 
     } else {
+      if (!myJob.finished) ReturnJob();
       myJob = null;
       target = FindEmpty(PosTile);
       if (target != null) {

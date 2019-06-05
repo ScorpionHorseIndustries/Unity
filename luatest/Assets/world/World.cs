@@ -35,6 +35,12 @@ public class World : IXmlSerializable {
 
   public static readonly int M_M_MAXIMUM_TRASH = 30;
 
+  public void OnInventoryItemChangedOnTile(Tile tile) {
+    if (cbTileInventoryItemChangedOnTile != null) {
+      cbTileInventoryItemChangedOnTile(tile);
+    }
+  }
+
 
 
 
@@ -94,9 +100,9 @@ public class World : IXmlSerializable {
   Action<Character> cbCharacterKilled;
   Action cbPathNodesDestroyed;
 
-  Action<Tile> cbTileInventoryItemPlacedOnTile;
+  //Action<Tile> cbTileInventoryItemPlacedOnTile;
   Action<Tile> cbTileInventoryItemChangedOnTile;
-  Action<Tile> cbTileInventoryItemRemovedFromTile;
+  //Action<Tile> cbTileInventoryItemRemovedFromTile;
 
   Action<TileChunk> cbChunkCreated;
 
@@ -181,7 +187,7 @@ public class World : IXmlSerializable {
     //installedItemProtos = new Dictionary<string, InstalledItem>();
     //installedItemProtos_BY_ID = new Dictionary<int, string>();
     characters = new List<Character>();
-    jobQueue = new JobQueue();
+    jobQueue = new JobQueue(this);
     //tiles = new Tile[width, height];
     installedItems = new List<InstalledItem>();
     trashPrototypes = new List<InstalledItem>();
@@ -224,8 +230,8 @@ public class World : IXmlSerializable {
   }
 
   void SetCallbacks() {
-    CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlaced);
-    CBRegisterInventoryItemRemovedFromTile(OnInventoryItemRemoved);
+    //CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlaced);
+    //CBRegisterInventoryItemRemovedFromTile(OnInventoryItemRemoved);
   }
 
   public Tile GetRandomEmptyTile() {
@@ -497,70 +503,72 @@ public class World : IXmlSerializable {
   }
 
 
-  //inventory items
-  private void OnInventoryItemPlaced(Tile tile) {
-    inventoryManager.AddInventoryItem(tile.inventoryItem);
+  ////inventory items
+  //private void OnInventoryItemPlaced(Tile tile) {
+  //  //inventoryManager.AddInventoryItem(tile.inventoryItem);
+  //}
+
+  //private void OnInventoryItemRemoved(Tile tile) {
+  //  //inventoryManager.RemoveInventoryItem(tile.inventoryItem);
+  //}
+
+  public int PlaceTileInventoryItem(string type, Tile tile, int qty) {
+
+    return tile.AddToInventory(type, qty);
+    //InventoryItem proto = InventoryItem.GetPrototype(type);
+
+    //if (proto != null) {
+    //  InventoryItem item = InventoryItem.CreateInventoyItemInstance(type);
+
+    //  if (item != null) {
+
+    //    item.currentStack = qty;
+    //    if (tile.PlaceInventoryItem(item)) {
+    //      if (tile.inventoryItem != null) {
+    //        if (cbTileInventoryItemPlacedOnTile != null) {
+    //          cbTileInventoryItemPlacedOnTile(tile);
+    //        }
+    //        return item;
+    //      }
+
+    //    }
+
+    //  }
+
+
+    //}
+
+    //return null;
   }
 
-  private void OnInventoryItemRemoved(Tile tile) {
-    inventoryManager.RemoveInventoryItem(tile.inventoryItem);
-  }
+  //public InventoryItem TakeTileInventoryItem(Tile tile, string name, int qty) {
+  //  if (tile.inventoryItem != null) {
+  //    if (tile.inventoryItem.type == name) {
+  //      if (tile.inventoryItem.currentStack <= qty) {
+  //        //take all
+  //        InventoryItem item = tile.inventoryItem;
 
-  public InventoryItem PlaceTileInventoryItem(string type, Tile tile, int qty) {
-    InventoryItem proto = InventoryItem.GetPrototype(type);
+  //        if (cbTileInventoryItemRemovedFromTile != null) {
+  //          cbTileInventoryItemRemovedFromTile(tile);
+  //        }
+  //        tile.RemoveInventoryItem();
+  //        return item;
+  //      } else if (tile.inventoryItem.currentStack > qty) {
 
-    if (proto != null) {
-      InventoryItem item = InventoryItem.CreateInventoyItemInstance(type);
+  //        InventoryItem item = InventoryItem.CreateInventoyItemInstance(name);
+  //        item.currentStack = qty;
+  //        tile.inventoryItem.currentStack -= qty;
+  //        if (cbTileInventoryItemChangedOnTile != null) {
+  //          cbTileInventoryItemChangedOnTile(tile);
+  //        }
+  //        return item;
+  //      }
+  //    }
 
-      if (item != null) {
+  //  }
 
-        item.currentStack = qty;
-        if (tile.PlaceInventoryItem(item)) {
-          if (tile.inventoryItem != null) {
-            if (cbTileInventoryItemPlacedOnTile != null) {
-              cbTileInventoryItemPlacedOnTile(tile);
-            }
-            return item;
-          }
-
-        }
-
-      }
-
-
-    }
-
-    return null;
-  }
-
-  public InventoryItem TakeTileInventoryItem(Tile tile, string name, int qty) {
-    if (tile.inventoryItem != null) {
-      if (tile.inventoryItem.type == name) {
-        if (tile.inventoryItem.currentStack <= qty) {
-          //take all
-          InventoryItem item = tile.inventoryItem;
-
-          if (cbTileInventoryItemRemovedFromTile != null) {
-            cbTileInventoryItemRemovedFromTile(tile);
-          }
-          tile.RemoveInventoryItem();
-          return item;
-        } else if (tile.inventoryItem.currentStack > qty) {
-
-          InventoryItem item = InventoryItem.CreateInventoyItemInstance(name);
-          item.currentStack = qty;
-          tile.inventoryItem.currentStack -= qty;
-          if (cbTileInventoryItemChangedOnTile != null) {
-            cbTileInventoryItemChangedOnTile(tile);
-          }
-          return item;
-        }
-      }
-
-    }
-
-    return null;
-  }
+  //  return null;
+  //}
 
   public InstalledItem PlaceInstalledItem(string buildItem, Tile tile) {
     ///TODO: Assumes 1x1 tiles
@@ -631,15 +639,15 @@ public class World : IXmlSerializable {
 
   }
 
-  public void CBRegisterInventoryItemPlacedOnTile(Action<Tile> cb) {
-    cbTileInventoryItemPlacedOnTile += cb;
+  //public void CBRegisterInventoryItemPlacedOnTile(Action<Tile> cb) {
+  //  cbTileInventoryItemPlacedOnTile += cb;
 
-  }
+  //}
 
-  public void CBUnregisterInventoryItemPlacedOnTile(Action<Tile> cb) {
-    cbTileInventoryItemPlacedOnTile -= cb;
+  //public void CBUnregisterInventoryItemPlacedOnTile(Action<Tile> cb) {
+  //  cbTileInventoryItemPlacedOnTile -= cb;
 
-  }
+  //}
 
   public void CBRegisterInventoryItemChangedOnTile(Action<Tile> cb) {
     cbTileInventoryItemChangedOnTile += cb;
@@ -651,15 +659,15 @@ public class World : IXmlSerializable {
 
   }
 
-  public void CBRegisterInventoryItemRemovedFromTile(Action<Tile> cb) {
-    cbTileInventoryItemRemovedFromTile += cb;
+  //public void CBRegisterInventoryItemRemovedFromTile(Action<Tile> cb) {
+  //  cbTileInventoryItemRemovedFromTile += cb;
 
-  }
+  //}
 
-  public void CBUnregisterInventoryItemRemovedFromTile(Action<Tile> cb) {
-    cbTileInventoryItemRemovedFromTile -= cb;
+  //public void CBUnregisterInventoryItemRemovedFromTile(Action<Tile> cb) {
+  //  cbTileInventoryItemRemovedFromTile -= cb;
 
-  }
+  //}
 
   public void CBRegisterCharacterChanged(Action<Character> cb) {
     cbCharacterChanged += cb;
@@ -726,8 +734,9 @@ public class World : IXmlSerializable {
     if (cbTileChanged != null) {
       cbTileChanged(t);
       DestroyPathNodes();
+      GetNeighbours(t, true);
     }
-    GetNeighbours(t, true);
+    
   }
 
   public bool isInstalledItemPositionValid(World world, string itemType, Tile t) {
@@ -982,9 +991,6 @@ public class World : IXmlSerializable {
           }
           installedData.Append(")");
           str_installed.Append(installedData + ";");
-        } else if (t.inventoryItem != null) {
-          ///FIXME:
-          ///
         }
 
 

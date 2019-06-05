@@ -13,13 +13,17 @@ public class Tile {
   }
   //public enum TYPE {DIRT,GRASS,EMPTY,WALL }
   Action<Tile> cbChanged;
+  Action<Tile> cbInventoryItemChanged;
+  //Action<Tile> cbInventoryItemRemoved;
+  
 
   public TileChunk chunk { get; protected set; }
   public Room room;
   //public Tile.TYPE type { get { return type; } set { type = value; if (cbTypeChanged != null) cbTypeChanged(this); } }
   public TileType type { get; private set; }
-  public InventoryItem inventoryItem { get; private set; }
+  //public InventoryItem inventoryItem { get; private set; }
   public InstalledItem installedItem { get; private set; }
+  private Inventory inventory;
 
   public Dictionary<string, Tile> neighbours = new Dictionary<string, Tile>();
   //public Dictionary<string, Tile> neighboursDiag = new Dictionary<string, Tile>();
@@ -58,6 +62,7 @@ public class Tile {
     this.local_y = y;
     this.world = world;
     this.chunk = chunk;
+    this.inventory = new Inventory(world,1, INVENTORY_TYPE.TILE, this);
     //world.GetNeighbours(this, true);
     //foreach(Tile t in neighbours.Values) {
     //  neighboursList.Add(t);
@@ -147,6 +152,31 @@ public class Tile {
   }
 
 
+  public int AddToInventory(string type, int qty) {
+
+    int acceptedQty = inventory.AddItem(type, qty);
+
+    if (cbInventoryItemChanged != null ) {
+      cbInventoryItemChanged(this);
+    }
+    return acceptedQty;
+
+  }
+
+  public int RemoveFromInventory(string type, int qty) {
+    int qtyGiven = inventory.RemoveItem(type, qty);
+    if (cbInventoryItemChanged != null) {
+      cbInventoryItemChanged(this);
+    }
+
+    return qtyGiven;
+  }
+
+  
+
+  public int InventoryTotal(string type) {
+    return inventory.HowMany(type);
+  }
 
   public float movementFactor {
     get {
@@ -155,8 +185,8 @@ public class Tile {
       if (installedItem != null) {
         ws *= installedItem.movementFactor;
 
-      } else if (inventoryItem != null) {
-        ws *= 0.8f;
+      } else if (!inventory.IsEmpty()) {
+        ws *= 0.9f;
       }
       return ws;
     }
@@ -177,6 +207,14 @@ public class Tile {
     cbChanged -= cb;
   }
 
+  public void cbRegisterOnItemChanged(Action<Tile> cb) {
+    cbInventoryItemChanged += cb;
+  }
+
+  public void cbUnregisterOnItemChanged(Action<Tile> cb) {
+    cbInventoryItemChanged -= cb;
+  }
+
   public TileType getType() {
     return type;
   }
@@ -195,47 +233,54 @@ public class Tile {
 
   //}
 
-  public void RemoveInventoryItem() {
-    inventoryItem = null;
-  }
 
+  //private void OnInventoryItemPlaced(Tile t) {
+
+  //}
 
   
 
 
 
-  public bool PlaceInventoryItem(InventoryItem inv) {
+  //public bool PlaceInventoryItem(InventoryItem inv) {
 
-    if (inv == null) {
-      inventoryItem = null;
-      return true;
-    }
+  //  if (inv == null) {
+  //    Debug.LogError("cannot place null inventory item");
+      
+  //    return false;
+  //  }
 
-    if (inventoryItem != null) {
-      //something here already... combine?
-      if (inv.type == inventoryItem.type) {
-        if (inventoryItem.currentStack + inv.currentStack > inv.maxStackSize) {
-          inv.currentStack -= inv.maxStackSize - inventoryItem.currentStack;
-          inventoryItem.currentStack = inventoryItem.maxStackSize;
-        } else {
-          inventoryItem.currentStack += inv.currentStack;
-          inv.currentStack = 0;
+  //  if (inventoryItem != null) {
+  //    //something here already... combine?
+  //    if (inv.type == inventoryItem.type) {
+  //      if (inventoryItem.currentStack + inv.currentStack > inv.maxStackSize) {
+  //        inv.currentStack -= inv.maxStackSize - inventoryItem.currentStack;
+  //        inventoryItem.currentStack = inventoryItem.maxStackSize;
+  //      } else {
+  //        inventoryItem.currentStack += inv.currentStack;
+  //        inv.currentStack = 0;
 
-        }
-        return true;
-      } else {
-        Debug.LogError("cannot add " + inv.type + " to a stack of " + inventoryItem.type);
+  //      }
+  //      if (cbInventoryItemChanged != null) {
+  //        cbInventoryItemChanged(this);
+  //      }
+  //      return true;
+  //    } else {
+  //      Debug.LogError("cannot add " + inv.type + " to a stack of " + inventoryItem.type);
 
-      }
-    } else {
-      inventoryItem = inv.Copy();
-      inv.currentStack = 0;
-      inventoryItem.SetTile(this);
-      return true;
-    }
+  //    }
+  //  } else {
+  //    inventoryItem = inv.Copy();
+  //    inv.currentStack = 0;
+  //    inventoryItem.SetTile(this);
+  //    if (cbInventoryItemChanged != null) {
+  //      cbInventoryItemChanged(this);
+  //    }
+  //    return true;
+  //  }
 
-    return false;
-  }
+  //  return false;
+  //}
 
   public bool placeInstalledObject(InstalledItem instobj) {
     if (instobj == null) {
@@ -250,8 +295,28 @@ public class Tile {
     }
   }
 
+  public bool IsInventoryEmpty() {
+    return inventory.IsEmpty();
+  }
+
   public bool IsEmpty() {
-    return (installedItem == null && inventoryItem == null && movementFactor > 0.3 && !HasPendingJob);
+    return (installedItem == null && inventory.IsEmpty() && movementFactor > 0.3 && !HasPendingJob);
+  }
+
+  public string GetContents() {
+    return inventory.ToString();
+  }
+
+  public string GetFirstInventoryItem() {
+    return inventory.GetFirst();
+  }
+
+  public int GetInventoryTotal() {
+    return inventory.TotalQty();
+  }
+
+  public string GetInventorySpriteName() {
+    return inventory.SpriteName();
   }
 
   public void SetNeighbours(bool allowDiagonalNeighbours) {
@@ -260,7 +325,9 @@ public class Tile {
 
     world.GetNeighbours(this, allowDiagonalNeighbours);
     foreach (Tile tile in neighbours.Values) {
-      neighboursList.Add(tile);
+      if (tile != null) {
+        neighboursList.Add(tile);
+      }
     }
     
 
@@ -319,7 +386,7 @@ public class Tile {
   public string JobsToString() {
     string output = " (" + pendingJobs.Count + "): ";
     foreach (Job j in pendingJobs) {
-      output += j.jobType.ToString() ;
+      output += j.jobType.ToString() + " " + j.jobTime;
       if (j.recipe != null) {
         output += j.recipe;
 

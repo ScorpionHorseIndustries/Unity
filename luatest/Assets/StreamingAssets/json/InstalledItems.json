@@ -89,6 +89,22 @@
 	"recipe" : "recipe::installed::door"
     
   },
+  {
+    "id" : 6,
+    "name" : "installed::stockpile",
+	"niceName" : "Stockpile",
+    "sprite" : "installed_stockpile",
+    "sprites" : [],
+    "linked" : false,
+    "movementFactor" : 1,
+    "trash" : false,
+    "build" : true,
+	"neighbourTypes" : [],
+	"enclosesRoom" : false,
+	"recipe" : "recipe::installed::stockpile",
+	"inventorySlots" : 1
+	
+  }
 
 ]
 }

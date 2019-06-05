@@ -6,69 +6,62 @@ using UnityEngine;
 
 public class InventoryItem {
 
-
+  public static readonly string ANY = "inv::any";
   private static Dictionary<string, InventoryItem> prototypes = new Dictionary<string, InventoryItem>();
   //properties
   public string type { get; private set; }
   public string niceName { get; private set; }
-  public bool isPrototype { get; private set; }
-  InventoryItem prototype = null;
-  private int prototypeStackSize = 50;
+  //public bool isPrototype { get; private set; }
+  //InventoryItem prototype = null;
+  //private int prototypeStackSize = 50;
   public string spriteName { get; private set; }
-  public int maxStackSize {
-    get {
-      if (isPrototype) {
-        return prototypeStackSize;
-      } else {
-        return prototype.prototypeStackSize;
-      }
+  public int stackSize { get; private set; }
+   
+  
+  //public int currentStack = 1;
 
-    }
-  }
-  public int currentStack = 1;
+  //public Tile tile { get; private set; }
+  //public Character character { get; private set; }
 
-  public Tile tile { get; private set; }
-  public Character character { get; private set; }
+  ////-----------------GET/SET----------------------
 
-  //-----------------GET/SET----------------------
+  //public void SetTile(Tile tile) {
+  //  character = null;
+  //  this.tile = tile;
 
-  public void SetTile(Tile tile) {
-    character = null;
-    this.tile = tile;
+  //}
 
-  }
-
-  public void SetCharacter(Character character) {
-    this.character = character;
-    this.tile = null;
-  }
+  //public void SetCharacter(Character character) {
+  //  this.character = character;
+  //  this.tile = null;
+  //}
 
   //----------------CONSTRUCTORS--------------------
-  public InventoryItem() {
+  private InventoryItem() {
 
   }
-  public InventoryItem(InventoryItem proto) {
-    this.type = proto.type;
-    this.isPrototype = false;
-    this.niceName = proto.niceName;
-    this.prototype = proto;
-    this.spriteName = proto.spriteName;
+  //private InventoryItem(InventoryItem proto) {
+  //  this.type = proto.type;
+  //  //this.isPrototype = false;
+  //  this.niceName = proto.niceName;
+  //  //this.prototype = proto;
+  //  this.spriteName = proto.spriteName;
 
 
-  }
+  //}
 
-  public InventoryItem Copy() {
-    InventoryItem item = new InventoryItem(this.prototype);
-    item.currentStack = this.currentStack;
+  //private InventoryItem Copy() {
+  //  InventoryItem item = new InventoryItem(this.prototype);
+  //  item.currentStack = this.currentStack;
 
-    return item;
+  //  return item;
 
-  }
+  //}
 
   //-----------------------------------------OVERRIDES-------------------------------
 
   public override string ToString() {
-    return type + " isProto:" + isPrototype;
+    return type + "(" + stackSize + ")" ; //+ " isProto:" + isPrototype;
   }
 
 
@@ -106,15 +99,24 @@ public class InventoryItem {
 
       item.type = type;
       item.niceName = niceName;
-      item.isPrototype = true;
-      item.prototype = null;
-      item.prototypeStackSize = stackSize;
+      //item.isPrototype = true;
+      //item.prototype = null;
+      item.stackSize = stackSize;
       item.spriteName = spriteName;
       prototypes.Add(item.type, item);
 
       Debug.Log(item);
     }
 
+
+  }
+
+  public static int GetStackSize(string type) {
+    if (prototypes.ContainsKey(type)) {
+      return prototypes[type].stackSize;
+    } else {
+      return 0;
+    }
 
   }
 
@@ -136,21 +138,21 @@ public class InventoryItem {
 
   }
 
-  public static InventoryItem CreateInventoyItemInstance(string type) {
+  //public static InventoryItem CreateInventoyItemInstance(string type) {
 
 
-    InventoryItem item = null;
+  //  InventoryItem item = null;
 
-    if (type != null && prototypes.ContainsKey(type)) {
-      item = new InventoryItem(prototypes[type]);
-
-
-    }
+  //  if (type != null && prototypes.ContainsKey(type)) {
+  //    item = new InventoryItem(prototypes[type]);
 
 
+  //  }
 
-    return item;
-  }
+
+
+  //  return item;
+  //}
 
 
 

@@ -37,6 +37,8 @@ public class TileChunk : IXmlSerializable {
         tiles[xx, yy] = t;
         t.cbRegisterOnChanged(OnTileChanged);
         t.cbRegisterOnChanged(world.OnTileChanged);
+        t.cbRegisterOnItemChanged(world.OnInventoryItemChangedOnTile);
+        t.cbRegisterOnItemChanged(OnInventoryItemChangedOnTile);
         //tiles[x, y].room = rooms[0];
         world.outside.AssignTile(t);
 
@@ -69,6 +71,9 @@ public class TileChunk : IXmlSerializable {
     SetNeighbourChunks();
   }
 
+  private void OnInventoryItemChangedOnTile(Tile obj) {
+    
+  }
 
   public TileChunk(World world, int x, int y) {
     //Debug.Log("Chunk created at (" + x + "," + y + ")");

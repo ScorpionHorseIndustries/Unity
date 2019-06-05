@@ -96,7 +96,7 @@ public class InputController : MonoBehaviour {
 
     }
     diff.Set(diff.x + lr, diff.y + ud);
-    
+
     cam.transform.Translate(diff);
 
     float tempzoom = cam.orthographicSize;
@@ -118,12 +118,36 @@ public class InputController : MonoBehaviour {
   public Bounds OrthographicBounds() {
     float screenAspect = (float)Screen.width / (float)Screen.height;
     float cameraHeight = cam.orthographicSize * 2;
-    Bounds bounds = new Bounds( cam.transform.position,new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
+    Bounds bounds = new Bounds(cam.transform.position, new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
     return bounds;
   }
   // Update is called once per frame
+
+  //state
+  bool showingJobs = false;
+  //state
   void Update() {
     if (!initialised) return;
+
+
+    if (Input.GetKeyUp(KeyCode.E)) {
+      showingJobs = !showingJobs;
+
+
+      WorldController.Instance.jobsPanelPrefab.SetActive(showingJobs);
+      if (showingJobs) {
+        WorldController.Instance.gameState = GAME_STATE.PAUSE;
+        WorldController.Instance.CreateJobPanelItems();
+      } else {
+        WorldController.Instance.gameState = GAME_STATE.PLAY;
+        WorldController.Instance.DestroyJobPanelItems();
+      }
+
+
+
+    }
+
+
     if (wcon.eventSystem.IsPointerOverGameObject()) {
       return;
     }

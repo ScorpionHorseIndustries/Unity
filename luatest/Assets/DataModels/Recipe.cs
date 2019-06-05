@@ -55,6 +55,8 @@ public class Recipe {
     this.name = proto.name;
     this.id = proto.id;
     resources = new Dictionary<string, RecipeResource>();
+    this.buildTime = proto.buildTime;
+    
     foreach (RecipeResource rp in proto.resources.Values) {
       resources[rp.name] = new RecipeResource(rp);
     }
@@ -134,7 +136,7 @@ public class Recipe {
       }
 
       recipes[recipe.name] = recipe;
-      Debug.Log("recipe Added: " + recipe);
+      Debug.Log("recipe Added: " + recipe + " " + recipe.buildTime);
 
     }
 

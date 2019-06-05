@@ -7,6 +7,48 @@ using UnityEngine;
 
 public static class InstalledItemActions {
 
+  public static void Stockpile_UpdateActions(InstalledItem item, float deltaTime) {
+    //Debug.Log("hello");
+
+
+    if (item.tile.IsInventoryEmpty() && !item.tile.HasPendingJob) {
+
+      string itemName = InventoryItem.GetRandomPrototype().type;
+
+      Tile nearest = item.tile.world.inventoryManager.GetNearest(item.tile, itemName, false);
+      if (nearest == null) return;
+
+      Job j = new Job(
+          item.tile,
+          WorldController.Instance.world.jobQueue.HaulToTileComplete,
+          WorldController.Instance.world.jobQueue.HaulJobCancelled,
+          itemName,
+          InventoryItem.GetStackSize(itemName)
+          );
+
+      WorldController.Instance.world.jobQueue.Push(j);
+
+    } else if (!item.tile.IsInventoryEmpty() && !item.tile.HasPendingJob) {
+      string itemName = item.tile.GetFirstInventoryItem();
+      int qtyRequired = InventoryItem.GetStackSize(itemName) - item.tile.InventoryTotal(itemName);
+
+      if (qtyRequired > 0) {
+        Job j = new Job(
+          item.tile,
+            WorldController.Instance.world.jobQueue.HaulToTileComplete,
+            WorldController.Instance.world.jobQueue.HaulJobCancelled,
+            itemName,
+            qtyRequired
+
+            );
+
+        WorldController.Instance.world.jobQueue.Push(j);
+      }
+    }
+  }
+
+
+
   public static void Door_UpdateActions(InstalledItem item, float deltaTime) {
 
     float opentime = item.itemParameters.GetFloat("opentime", 0.25f);
@@ -39,8 +81,8 @@ public static class InstalledItemActions {
     }
 
 
-    
-    
+
+
   }
 }
 

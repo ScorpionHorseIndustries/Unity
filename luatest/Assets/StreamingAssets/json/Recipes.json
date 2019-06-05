@@ -39,7 +39,7 @@
     },
     {
       "name": "recipe::installed::door",
-      "id": 3,
+      "id": 4,
       "buildTime" : 1,
       "resources": [
         {
@@ -47,6 +47,12 @@
           "qty": 2
         }
       ]
+    },
+	{
+      "name": "recipe::installed::stockpile",
+      "id": 5,
+      "buildTime" : -1,
+      "resources": []
     }
   ]
 }

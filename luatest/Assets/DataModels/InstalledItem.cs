@@ -28,6 +28,8 @@ public class InstalledItem {
   public bool linksToNeighbour { get; private set; } = false;
   public string spriteName { get; private set; }
   public List<string> randomSprites = new List<string>();
+  List<Job> jobs;
+  public Inventory inventory;
 
   private InstalledItem prototype = null;
 
@@ -44,6 +46,7 @@ public class InstalledItem {
   public bool randomRotation { get; private set; }
   public List<string> neighbourTypes;
   public bool roomEnclosure { get; private set; } = true;
+  public int inventorySlots { get; private set; } = 0;
   //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
   //bool opening = false;
   //float openTime = 0.25f; //time taken to open/close
@@ -60,15 +63,17 @@ public class InstalledItem {
   private InstalledItem() {
     itemParameters = new ItemParameters();
     neighbourTypes = new List<string>();
+
     //updateActions = new List<Action>();
 
   }
 
 
 
-  private InstalledItem(InstalledItem proto) {
-    
+  private InstalledItem(World world, InstalledItem proto) {
+
     //this.updateActions = new List<Action>();
+    this.jobs = new List<Job>();
     this.prototypeId = proto.prototypeId;
     this.type = proto.type; // nice field name, doofus.
     this.niceName = proto.niceName;
@@ -91,6 +96,7 @@ public class InstalledItem {
     this.itemParameters = new ItemParameters(proto.itemParameters);//.GetItems(); 
     this.enterRequested = proto.enterRequested;
     this.neighbourTypes = proto.neighbourTypes;
+    this.inventory = new Inventory(world,proto.inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, this);
 
   }
 
@@ -203,7 +209,7 @@ public class InstalledItem {
   public bool isPositionValid(World world, int x, int y) {
     Tile t = world.GetTileAt(x, y);
     //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
-    if (t == null || !t.type.build || t.installedItem != null || t.inventoryItem != null || t.HasPendingJob) {
+    if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty()  || t.HasPendingJob) {
       return false;
     } else {
       return true;
@@ -230,7 +236,7 @@ public class InstalledItem {
       return null;
     }
     //Debug.Log("InstalledItem.CreateInstance");
-    InstalledItem o = new InstalledItem(proto);
+    InstalledItem o = new InstalledItem(world,proto);
 
 
     o.tile = tile;
@@ -306,13 +312,14 @@ public class InstalledItem {
       bool enclosesRoom = Funcs.jsonGetBool(installedItemJson["enclosesRoom"], false);
       string recipeName = Funcs.jsonGetString(installedItemJson["recipe"], null);
       bool linked = Funcs.jsonGetBool(installedItemJson["linked"], false);
+      int inventorySlots = Funcs.jsonGetInt(installedItemJson["inventorySlots"], 0);
 
       List<string> sprites = new List<string>();
       JArray spritesJsonArray = (JArray)installedItemJson["sprites"];
       foreach (string tempSpriteName in spritesJsonArray) {
         sprites.Add(tempSpriteName);
       }
-      
+
       List<string> neighbourTypeList = new List<string>();
       if (linked) {
 
@@ -352,6 +359,8 @@ public class InstalledItem {
       proto.randomRotation = rotate;
       proto.roomEnclosure = enclosesRoom;
       proto.recipeName = recipeName;
+      proto.inventorySlots = inventorySlots;
+      //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
       Debug.Log(proto.ToString());
 
@@ -376,6 +385,8 @@ public class InstalledItem {
         proto.updateActions += InstalledItemActions.Door_UpdateActions;
 
         proto.enterRequested += InstalledItemActions.Door_EnterRequested;
+      } else if (name == "installed::stockpile") {
+        proto.updateActions += InstalledItemActions.Stockpile_UpdateActions;
       }
       prototypes.Add(proto.type, proto);
       prototypesById.Add(proto.prototypeId, proto.type);

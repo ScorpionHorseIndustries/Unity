@@ -13,7 +13,8 @@ public class JobQueue : IXmlSerializable {
   //protected Queue<Job> jobs = new Queue<Job>();
   protected SimplePriorityQueue<Job> jobs = new SimplePriorityQueue<Job>();
   private Queue<Job> problemJobs = new Queue<Job>();
-
+  public List<Job> publicJobs = new List<Job>();
+  World world;
 
   public int Count {
     get {
@@ -21,25 +22,33 @@ public class JobQueue : IXmlSerializable {
     }
   }
 
-  public JobQueue() {
+  public JobQueue(World world) {
+    this.world = world;
 
   }
 
   public void Push(Job j) {
+    //Debug.Log("adding job: " + j);
+    j.tile.AddJob(j);
 
-    if (j.recipe != null) {
-      foreach (string resourceName in j.recipe.resources.Keys) {
-        //(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name) {
-        Job nj = new Job(j.tile, HaulJobComplete, HaulJobCancelled, JOB_TYPE.HAUL, JOB_TYPE.HAUL.ToString(), j.recipe, resourceName, j);
-        jobs.Enqueue(nj, 1f);
+    if (j.jobTime < 0) {
+      j.Work(0);
+    } else {
+      if (j.recipe != null) {
+        foreach (string resourceName in j.recipe.resources.Keys) {
+          //(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name) {
+          Job nj = new Job(j.tile, HaulJobComplete, HaulJobCancelled, JOB_TYPE.HAUL, JOB_TYPE.HAUL.ToString(), j.recipe, resourceName, j);
+          Add(nj, 1f);
+          //publicJobs.Add(nj);
 
 
-
+        }
       }
-    }
-    jobs.Enqueue(j, 5);
-    if (cbJobCreated != null) {
-      cbJobCreated(j);
+      Add(j, 5);
+      //publicJobs.Add(j);
+      if (cbJobCreated != null) {
+        cbJobCreated(j);
+      }
     }
 
   }
@@ -53,19 +62,24 @@ public class JobQueue : IXmlSerializable {
 
     foreach (Job job in tempJobs) {
       if (job.jobType == JOB_TYPE.HAUL) {
-        jobs.Enqueue(job, 1);
+        Add(job, 1);
       } else if (job.jobType == JOB_TYPE.BUILD) { 
         if (job.IsRecipeFinished()) {
-          jobs.Enqueue(job, 0.5f);
+          Add(job, 0.5f);
         } else {
-          jobs.Enqueue(job, 1.5f);
+          Add(job, 1.5f);
         }
       }
     }
   }
 
+  public void HaulToTileComplete(Job job) {
+    //job.tile.PlaceInventoryItem(job)
+    job.tile.RemoveJob(job);
+  }
+
   public void HaulJobComplete(Job job) {
-    job.recipe.Add(job.recipeResourceName, job.recipe.resources[job.recipeResourceName].qtyRequired);
+    job.recipe.Add(job.recipeResourceName, job.qtyFulfilled);
     job.tile.RemoveJob(job);
 
   }
@@ -81,7 +95,7 @@ public class JobQueue : IXmlSerializable {
   public Job GetNextJob() {
     if (jobs.Count == 0) {
       if (problemJobs.Count > 0) {
-        jobs.Enqueue(problemJobs.Dequeue(), 1);
+        Add(problemJobs.Dequeue(), 1);
 
 
       }
@@ -90,13 +104,14 @@ public class JobQueue : IXmlSerializable {
 
 
       for (int i = 0; i < 3; i += 1) {
+        
         Job j = Pop();
-
+        if (j == null) continue;
         if (j.recipe != null) {
           if (j.jobType == JOB_TYPE.HAUL) {
 
           } else if (!j.IsRecipeFinished()) {
-            jobs.Enqueue(j, 2);
+            Add(j, 2);
             continue;
 
           }
@@ -108,8 +123,39 @@ public class JobQueue : IXmlSerializable {
 
   }
 
+  private int GetCheckSum() {
+    return (jobs.Count * 11) + (publicJobs.Count * 3);
+  }
+
+  private void Add(Job j, float p) {
+    int c = GetCheckSum();
+    jobs.Enqueue(j, p);
+    publicJobs.Add(j);
+    if (c + 14 != GetCheckSum() ) {
+      Debug.LogError("ERROR CHECK SUM DOES NOT MATCH");
+    }
+  }
+
   private Job Pop() {
-    return jobs.Dequeue();
+    Job j = null;
+    while (j == null) {
+      if (jobs.Count == 0) {
+        break;
+      }
+      j = jobs.Dequeue();
+      publicJobs.Remove(j);
+      //Debug.Log(j.jobType + " " + j.description + " " + j.jobTime);
+      if (j.jobTime <= 0) {
+        if (j.cbJobComplete != null) {
+          j.cbJobComplete(j);
+        }
+        j = null;
+      }
+
+
+    }
+    
+    return j;
   }
 
   public void cbRegisterJobCreated(Action<Job> cb) {

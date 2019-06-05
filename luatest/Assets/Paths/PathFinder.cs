@@ -26,9 +26,9 @@ public static class PathFinder {
         v += 10;
       }
 
-      if (tile.inventoryItem != null) {
-        v += 5;
-      }
+      //if (tile.inventoryItem != null) {
+      //  v += 5;
+      //}
       if (tile.movementFactor < 0.3) {
         v += 50;
         

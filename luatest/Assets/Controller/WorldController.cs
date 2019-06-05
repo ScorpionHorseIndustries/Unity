@@ -7,6 +7,12 @@ using System;
 using System.Xml.Serialization;
 using System.IO;
 using UnityEngine.SceneManagement;
+using TMPro;
+
+public enum GAME_STATE {
+  PLAY,
+  PAUSE
+}
 
 public class WorldController : MonoBehaviour {
 
@@ -16,6 +22,15 @@ public class WorldController : MonoBehaviour {
   public GameObject LinePrefab;
   public GameObject TextPrefab;
   public GameObject currentTileText;
+  public GameObject jobsPanelPrefab;
+  public GameObject jobsScrollItemPrefab;
+  public GameObject jobsScrollContent;
+
+  public GameObject debugCharItemPrefab;
+  public GameObject debugCharContent;
+
+  public GAME_STATE gameState = GAME_STATE.PLAY;
+
 
 
   private Dictionary<Tile, GameObject> Tiles_GO_Map;
@@ -23,6 +38,10 @@ public class WorldController : MonoBehaviour {
   private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
   private Dictionary<Character, GameObject> Characters_GO_Map;
   private Dictionary<Job, GameObject> Job_GO_Map;
+  private Dictionary<Job, GameObject> JobScrollItems_GO_Map;
+  private List<GameObject> tempText;
+
+  private Dictionary<Character, GameObject> Characters_ScrollItem_Map;
   //private Dictionary<InventoryItem, GameObject> invItem_GO_Map;
 
   public EventSystem eventSystem;
@@ -100,9 +119,9 @@ public class WorldController : MonoBehaviour {
     world.CBRegisterCharacterChanged(OnCharacterChanged);
     world.CBRegisterCharacterCreated(OnCharacterCreated);
     world.CBRegisterCharacterKilled(OnCharacterKilled);
-    world.CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlacedOnTile);
+    //world.CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlacedOnTile);
     world.CBRegisterInventoryItemChangedOnTile(OnInventoryItemChanged);
-    world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
+    //world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
     world.SetAllNeighbours();
     world.SetInstalledFromArray();
 
@@ -119,6 +138,32 @@ public class WorldController : MonoBehaviour {
     //Debug.Log(writer.ToString());
     //world = new World();
   }
+
+  public void CreateJobPanelItems() {
+
+    Transform contentPanel = jobsScrollContent.transform;//jobsPanelPrefab.transform.Find("ScrollViewContent");
+    foreach (Job j in world.jobQueue.publicJobs) {
+
+      GameObject g = SimplePool.Spawn(jobsScrollItemPrefab, Vector2.zero, Quaternion.identity);
+      g.transform.SetParent(contentPanel);
+      scrJobScrollItem scr = g.GetComponent<scrJobScrollItem>();
+      scr.Setup(j);
+      JobScrollItems_GO_Map.Add(j, g);
+
+    }
+
+  }
+
+  public void DestroyJobPanelItems() {
+    foreach (GameObject go in JobScrollItems_GO_Map.Values) {
+      SimplePool.Despawn(go);
+
+    }
+
+    JobScrollItems_GO_Map.Clear();
+  }
+
+
 
   public void CreateNewWorld() {
 
@@ -142,9 +187,9 @@ public class WorldController : MonoBehaviour {
     world.CBRegisterCharacterChanged(OnCharacterChanged);
     world.CBRegisterCharacterCreated(OnCharacterCreated);
     world.CBRegisterCharacterKilled(OnCharacterKilled);
-    world.CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlacedOnTile);
+    //world.CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlacedOnTile);
     world.CBRegisterInventoryItemChangedOnTile(OnInventoryItemChanged);
-    world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
+    //world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
     world.CBRegisterChunkCreated(OnChunkCreated);
     world.CreateCharacters();
 
@@ -178,8 +223,11 @@ public class WorldController : MonoBehaviour {
     InstalledItems_GO_Map = new Dictionary<InstalledItem, GameObject>();
     Characters_GO_Map = new Dictionary<Character, GameObject>();
     Job_GO_Map = new Dictionary<Job, GameObject>();
+    JobScrollItems_GO_Map = new Dictionary<Job, GameObject>();
     //invItem_GO_Map = new Dictionary<InventoryItem, GameObject>();
     TilesInventoryItems_GO_Map = new Dictionary<Tile, GameObject>();
+    Characters_ScrollItem_Map = new Dictionary<Character, GameObject>();
+    tempText = new List<GameObject>();
 
     eventSystem = EventSystem.current;
 
@@ -264,7 +312,7 @@ public class WorldController : MonoBehaviour {
     Gizmos.color = Color.white;
     if (world != null && world.characters != null) {
       foreach (Character chr in world.characters) {
-
+        
         if (chr.path != null) {
           Vector2 a = chr.pos;
           Vector2 b = new Vector2();
@@ -291,6 +339,7 @@ public class WorldController : MonoBehaviour {
     }
     InitialiseControllers();
     Debug.Log("init done " + this.name);
+    gameState = GAME_STATE.PLAY;
   }
 
   void InstantiateController(GameObject controllerPrefab) {
@@ -350,15 +399,53 @@ public class WorldController : MonoBehaviour {
     //  }
     //}
 
-    countdown -= Time.deltaTime;
-    if (countdown < 0) {
-      //addCurrency(UnityEngine.Random.Range(-1f, 4f));
-      countdown = 2;
+    for (int i = tempText.Count -1; i >= 0; i -= 1) {
+      GameObject go = tempText[i];
+      SetSortingLayer ssl = go.GetComponent<SetSortingLayer>();
+      float a = Mathf.Sin(ssl.lifeTime);
+      go.transform.Translate(0, 0.1f*a, 0);
+      ssl.lifeTime -= Time.deltaTime;
+
+      if (ssl.lifeTime <= 0) {
+        SimplePool.Despawn(go);
+        tempText.RemoveAt(i);
+      }
+    }
+
+    switch (gameState) {
+      case GAME_STATE.PLAY:
+        countdown -= Time.deltaTime;
+        if (countdown < 0) {
+          //addCurrency(UnityEngine.Random.Range(-1f, 4f));
+          countdown = 2;
+        }
+
+
+        //add pause and speed controls
+        world.Update(Time.deltaTime);
+
+        foreach(Character chr in world.characters ) {
+          if (!Characters_ScrollItem_Map.ContainsKey(chr)) {
+            GameObject g = Instantiate(debugCharItemPrefab, Vector2.zero, Quaternion.identity);
+            g.transform.SetParent(debugCharContent.transform);
+            Characters_ScrollItem_Map[chr] = g;  
+
+          }
+
+          GameObject go = Characters_ScrollItem_Map[chr];
+          go.GetComponent<scrollItemDebugCharacters>().Set(chr);
+
+
+        }
+
+        break;
+      case GAME_STATE.PAUSE:
+        break;
+      default:
+        break;
     }
 
 
-    //add pause and speed controls
-    world.Update(Time.deltaTime);
 
 
 
@@ -374,7 +461,7 @@ public class WorldController : MonoBehaviour {
     displayMe += "\nRoom:" + t.room.id;
     displayMe += "\nInstalled:" + (t.installedItem == null ? "" : t.installedItem.niceName);
     displayMe += "\nJobs: " + t.JobsToString();
-    displayMe += "\nItems:" + (t.inventoryItem == null ? "" : t.inventoryItem.niceName + " " + t.inventoryItem.currentStack + "/" + t.inventoryItem.maxStackSize);
+    displayMe += "\nItems:" + t.GetContents();//(t.inventoryItem == null ? "" : t.inventoryItem.niceName + " " + t.inventoryItem.currentStack + "/" + t.inventoryItem.maxStackSize);
     displayMe += "\n" + t.WhoIsHere();
 
 
@@ -412,7 +499,7 @@ public class WorldController : MonoBehaviour {
       foreach (int yc in world.chunks[xc].Keys) {
         //Debug.Log("xc = " + xc + " yc = " + yc);
         TileChunk chunk = world.chunks[xc][yc];
-        
+
         CreateChunkTileGameObjects(chunk);
 
       }
@@ -537,41 +624,60 @@ public class WorldController : MonoBehaviour {
 
   }
 
-  void OnInventoryItemPlacedOnTile(Tile tile) {
-    if (tile.inventoryItem == null) return;
-    if (!TilesInventoryItems_GO_Map.ContainsKey(tile)) {
-      GameObject go = CreateGameObject("inv_" + tile.world_x + "," + tile.world_y + "_" + tile.inventoryItem, tile.world_x, tile.world_y, true);
+  //void OnInventoryItemPlacedOnTile(Tile tile) {
+  //  if (tile.inventoryItem == null) return;
+  //  if (!TilesInventoryItems_GO_Map.ContainsKey(tile)) {
+  //    GameObject go = CreateGameObject("inv_" + tile.world_x + "," + tile.world_y + "_" + tile.inventoryItem, tile.world_x, tile.world_y, true);
+  //    SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+  //    spr.sprite = spriteController.GetSprite(tile.inventoryItem.spriteName);
+  //    spr.sortingLayerName = "Objects";
+  //    GameObject txt = Instantiate(prfInventoryItemText, go.transform.position, Quaternion.identity);
+  //    txt.transform.SetParent(go.transform, true);
+  //    txt.GetComponent<TextMesh>().text = tile.inventoryItem.currentStack.ToString();
+  //    TilesInventoryItems_GO_Map[tile] = go;
+  //  }
+  //}
+
+  void OnInventoryItemChanged(Tile tile) {
+    //Debug.Log("inventory changed: " + tile);
+    if (tile.IsInventoryEmpty()) {
+      if (TilesInventoryItems_GO_Map.ContainsKey(tile)) {
+        GameObject go = TilesInventoryItems_GO_Map[tile];
+        Destroy(go);
+        TilesInventoryItems_GO_Map.Remove(tile);
+        //invItem_GO_Map.Remove(item);
+      }
+    } else if (TilesInventoryItems_GO_Map.ContainsKey(tile)) {
+      GameObject go = TilesInventoryItems_GO_Map[tile];
+      TextMesh txt = go.GetComponentInChildren<TextMesh>();
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
-      spr.sprite = spriteController.GetSprite(tile.inventoryItem.spriteName);
+      spr.sprite = spriteController.GetSprite(tile.GetInventorySpriteName());
+      if (txt != null) {
+        txt.text = tile.GetInventoryTotal().ToString();
+      }
+    } else {
+      GameObject go = CreateGameObject("inv_" + tile.world_x + "," + tile.world_y + "_" + tile.GetContents(), tile.world_x, tile.world_y, true);
+      SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+      spr.sprite = spriteController.GetSprite(tile.GetInventorySpriteName());
       spr.sortingLayerName = "Objects";
       GameObject txt = Instantiate(prfInventoryItemText, go.transform.position, Quaternion.identity);
       txt.transform.SetParent(go.transform, true);
-      txt.GetComponent<TextMesh>().text = tile.inventoryItem.currentStack.ToString();
+      txt.GetComponent<TextMesh>().text = tile.GetInventoryTotal().ToString();
       TilesInventoryItems_GO_Map[tile] = go;
     }
-  }
-
-  void OnInventoryItemChanged(Tile tile) {
-    if (TilesInventoryItems_GO_Map.ContainsKey(tile)) {
-      GameObject go = TilesInventoryItems_GO_Map[tile];
-      TextMesh txt = go.GetComponentInChildren<TextMesh>();
-      if (txt != null) {
-        txt.text = tile.inventoryItem.currentStack.ToString();
-      }
-    }
 
   }
 
-  void OnInventryItemDestoyed(Tile tile) {
+  //void OnInventryItemDestoyed(Tile tile) {
 
-    if (TilesInventoryItems_GO_Map.ContainsKey(tile)) {
-      GameObject go = TilesInventoryItems_GO_Map[tile];
-      Destroy(go);
-      TilesInventoryItems_GO_Map.Remove(tile);
-      //invItem_GO_Map.Remove(item);
-    }
+  //  if (TilesInventoryItems_GO_Map.ContainsKey(tile)) {
+  //    GameObject go = TilesInventoryItems_GO_Map[tile];
+  //    Destroy(go);
+  //    TilesInventoryItems_GO_Map.Remove(tile);
+  //    //invItem_GO_Map.Remove(item);
+  //  }
 
-  }
+  //}
 
   //-------------------SET BUILD TYPES-------------------------
 
@@ -614,6 +720,15 @@ public class WorldController : MonoBehaviour {
     Characters_GO_Map.Add(chr, go);
   }
 
+
+  public void SpawnText(string text, int x, int y) {
+    GameObject go = SimplePool.Spawn(TextPrefab, Vector2.zero, Quaternion.identity);
+    go.transform.Translate(x, y, 0);
+    TextMeshPro tmp = go.GetComponent<TextMeshPro>();
+    go.GetComponent<SetSortingLayer>().lifeTime = 1;
+    tmp.text = text;
+    tempText.Add(go);
+  }
 
 
   void OnCharacterDestroyed(Character c) {
@@ -733,9 +848,11 @@ public class WorldController : MonoBehaviour {
 
   void OnJobEnded(Job j) {
     //delete sprites
-    GameObject go = Job_GO_Map[j];
-    SimplePool.Despawn(go);
-    Job_GO_Map.Remove(j);
+    if (Job_GO_Map.ContainsKey(j)) {
+      GameObject go = Job_GO_Map[j];
+      SimplePool.Despawn(go);
+      Job_GO_Map.Remove(j);
+    }
   }
 
 

@@ -55,8 +55,9 @@ public class BuildController : MonoBehaviour {
                     1,
                     localBuild
                   );
-              wcon.world.jobQueue.Push(j);
               tile.AddJob(j);
+              wcon.world.jobQueue.Push(j);
+              
               //tile.pendingJob = true;
               //Debug.Log("jobs in queue: " +world.jobQueue.Count);
 
@@ -81,7 +82,10 @@ public class BuildController : MonoBehaviour {
   }
 
   private void OnInstalledItemJobComplete(Job job) {
-    job.tile.RemoveJob(job);
+    //Debug.Log("installed item job complete: " + job);
+    if (!job.tile.RemoveJob(job)) {
+      Debug.Log("could not remove job from tile");
+    }
     //job.tile.pendingJob = false;
     wcon.world.PlaceInstalledItem(job.description, job.tile);
 

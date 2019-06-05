@@ -50,6 +50,12 @@ MonoBehaviour:
   TextPrefab: {fileID: 2426644345995441649, guid: f52c837dd8f9cab4ebda5043e823e9f4,
     type: 3}
   currentTileText: {fileID: 0}
+  jobsPanelPrefab: {fileID: 101246068045630342, guid: e0c1d56db06a82f449967b5822862538,
+    type: 3}
+  jobsScrollItemPrefab: {fileID: 6981359446024166218, guid: 9740e108f033d2e4092eac38a9a8e17e,
+    type: 3}
+  jobsScrollContent: {fileID: 0}
+  gameState: 0
   eventSystem: {fileID: 0}
   prfSpriteController: {fileID: 6579583868471155061, guid: bed9557bd8abfe14ca5241551bf1082d,
     type: 3}

@@ -13,7 +13,8 @@ using System.Xml.Serialization;
 using System.Text;
 using System.Xml.Linq;
 
-public class World : IXmlSerializable {
+public class World : IXmlSerializable
+{
 
 
   //statics and enums and stuffs
@@ -35,8 +36,10 @@ public class World : IXmlSerializable {
 
   public static readonly int M_M_MAXIMUM_TRASH = 30;
 
-  public void OnInventoryItemChangedOnTile(Tile tile) {
-    if (cbTileInventoryItemChangedOnTile != null) {
+  public void OnInventoryItemChangedOnTile(Tile tile)
+  {
+    if (cbTileInventoryItemChangedOnTile != null)
+    {
       cbTileInventoryItemChangedOnTile(tile);
     }
   }
@@ -77,12 +80,14 @@ public class World : IXmlSerializable {
   public TileNodeMap nodeMap;
   public Room outside {
     get {
-      if (rooms == null) {
+      if (rooms == null)
+      {
         rooms = new List<Room>();
 
       }
 
-      if (rooms.Count == 0) {
+      if (rooms.Count == 0)
+      {
         rooms.Add(new Room(this));
       }
 
@@ -115,11 +120,14 @@ public class World : IXmlSerializable {
   public static readonly int HALF_SPAWN_CHUNKS = SPAWN_CHUNKS / 2;
 
 
-  public TileChunk GetChunkIfExists(int x, int y) {
+  public TileChunk GetChunkIfExists(int x, int y)
+  {
     TileChunk chunk = null;
 
-    if (chunks.ContainsKey(x)) {
-      if (chunks[x].ContainsKey(y)) {
+    if (chunks.ContainsKey(x))
+    {
+      if (chunks[x].ContainsKey(y))
+      {
         chunk = chunks[x][y];
       }
     }
@@ -129,33 +137,42 @@ public class World : IXmlSerializable {
 
   }
 
-  public TileChunk GetChunk(int x, int y) {
+  public TileChunk GetChunk(int x, int y)
+  {
     TileChunk chunk = null;
 
 
     bool newChunk = false;
-    if (chunks.ContainsKey(x)) {
-      if (chunks[x].ContainsKey(y)) {
+    if (chunks.ContainsKey(x))
+    {
+      if (chunks[x].ContainsKey(y))
+      {
         chunk = chunks[x][y];
-      } else {
+      }
+      else
+      {
         chunk = new TileChunk(this, x, y);
         newChunk = true;
         chunks[x][y] = chunk;
       }
-    } else {
+    }
+    else
+    {
       chunks[x] = new Dictionary<int, TileChunk>();
       chunk = new TileChunk(this, x, y);
       newChunk = true;
       chunks[x][y] = chunk;
     }
 
-    if (newChunk && chunk != null) {
+    if (newChunk && chunk != null)
+    {
       chunkList.Add(chunk);
       chunk.Init();
-      if (cbChunkCreated != null) {
+      if (cbChunkCreated != null)
+      {
         cbChunkCreated(chunk);
       }
-      
+
     }
 
 
@@ -163,11 +180,14 @@ public class World : IXmlSerializable {
     return chunk;
   }
 
-  void CreateEmptyTiles() {
+  void CreateEmptyTiles()
+  {
 
-    for (int x = 0; x < SPAWN_CHUNKS; x += 1) {
+    for (int x = 0; x < SPAWN_CHUNKS; x += 1)
+    {
       chunks[x] = new Dictionary<int, TileChunk>();
-      for (int y = 0; y < SPAWN_CHUNKS; y += 1) {
+      for (int y = 0; y < SPAWN_CHUNKS; y += 1)
+      {
         //int xx = x * TileChunk.CHUNK_WIDTH;
         //int yy = y * TileChunk.CHUNK_HEIGHT;
 
@@ -183,7 +203,8 @@ public class World : IXmlSerializable {
 
   }
 
-  private void SetCollections() {
+  private void SetCollections()
+  {
     //installedItemProtos = new Dictionary<string, InstalledItem>();
     //installedItemProtos_BY_ID = new Dictionary<int, string>();
     characters = new List<Character>();
@@ -202,7 +223,8 @@ public class World : IXmlSerializable {
     //outside = rooms[0];
   }
 
-  void InitNew(int width, int height, int tileSize) {
+  void InitNew(int width, int height, int tileSize)
+  {
 
     xSeed = UnityEngine.Random.Range(-10f, 10f);
     ySeed = UnityEngine.Random.Range(-10f, 10f);
@@ -229,25 +251,30 @@ public class World : IXmlSerializable {
 
   }
 
-  void SetCallbacks() {
+  void SetCallbacks()
+  {
     //CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlaced);
     //CBRegisterInventoryItemRemovedFromTile(OnInventoryItemRemoved);
   }
 
-  public Tile GetRandomEmptyTile() {
+  public Tile GetRandomEmptyTile()
+  {
     Tile t = null;
     int counter = 0;
-    while (t == null && counter < 100) {
+    while (t == null && counter < 100)
+    {
       counter += 1;
       t = GetRandomTileIfChunkExists();
-      if (!t.IsEmpty()) {
+      if (!t.IsEmpty())
+      {
         t = null;
       }
     }
     return t;
   }
 
-  public Tile GetRandomTileIfChunkExists() {
+  public Tile GetRandomTileIfChunkExists()
+  {
     TileChunk chunk = chunkList[UnityEngine.Random.Range(0, chunkList.Count)];
 
     int x = UnityEngine.Random.Range(0, TileChunk.CHUNK_WIDTH);
@@ -257,17 +284,22 @@ public class World : IXmlSerializable {
 
   }
 
-  public Tile GetRandomTile() {
+  public Tile GetRandomTile()
+  {
     return GetRandomTileIfChunkExists();
     //Tile t = GetTileAt(UnityEngine.Random.Range(0, width), UnityEngine.Random.Range(0, height));
     //return t;
   }
 
-  public void SetJoinedSprites() {
-    for (int x = 0; x < width; x += 1) {
-      for (int y = 0; y < height; y += 1) {
+  public void SetJoinedSprites()
+  {
+    for (int x = 0; x < width; x += 1)
+    {
+      for (int y = 0; y < height; y += 1)
+      {
         Tile t = GetTileAt(x, y);
-        if (t != null && t.installedItem != null) {
+        if (t != null && t.installedItem != null)
+        {
           informNeighbours(t.installedItem);
 
         }
@@ -277,18 +309,23 @@ public class World : IXmlSerializable {
   }
 
   //-----------------------------CONSTRUCTORS------------------------------
-  public World() {
+  public World()
+  {
 
   }
-  public World(int width = 50, int height = 50, int tileSize = 32) {
+  public World(int width = 50, int height = 50, int tileSize = 32)
+  {
 
     InitNew(width, height, tileSize);
     //CreateCharacters();
   }
 
-  public void SetAllNeighbours() {
-    foreach (int x in chunks.Keys) {
-      foreach (int y in chunks[x].Keys) {
+  public void SetAllNeighbours()
+  {
+    foreach (int x in chunks.Keys)
+    {
+      foreach (int y in chunks[x].Keys)
+      {
         TileChunk t = chunks[x][y];
 
         t.SetNeighbourChunks();
@@ -308,26 +345,36 @@ public class World : IXmlSerializable {
 
   //-------------------------------ROOOMS--------------------------
 
-  public void AddRoom(Room room) {
-    if (!rooms.Contains(room)) {
+  public void AddRoom(Room room)
+  {
+    if (!rooms.Contains(room))
+    {
       rooms.Add(room);
     }
   }
 
-  public void DeleteAllRooms() {
-    for (int i = rooms.Count - 1; i > 0; i -= 1) {
+  public void DeleteAllRooms()
+  {
+    for (int i = rooms.Count - 1; i > 0; i -= 1)
+    {
       DeleteRoom(rooms[i]);
     }
     outside.RemoveAllTiles();
   }
 
-  public void DeleteRoom(Room r, bool unnassign = false) {
-    if (r == outside) {
-      if (unnassign) {
+  public void DeleteRoom(Room r, bool unnassign = false)
+  {
+    if (r == outside)
+    {
+      if (unnassign)
+      {
         r.RemoveAllTiles();
       }
-    } else {
-      if (unnassign) {
+    }
+    else
+    {
+      if (unnassign)
+      {
         r.RemoveAllTiles();
       }
       rooms.Remove(r);
@@ -336,20 +383,26 @@ public class World : IXmlSerializable {
 
   //---
 
-  public void Update(float deltaTime) {
-    foreach (Character c in characters) {
+  public void Update(float deltaTime)
+  {
+    foreach (Character c in characters)
+    {
       c.Update(deltaTime);
     }
 
-    foreach (InstalledItem item in installedItems) {
+    foreach (InstalledItem item in installedItems)
+    {
       item.Update(deltaTime);
     }
 
-    if (updateJobQueueTimer <= 0) {
+    if (updateJobQueueTimer <= 0)
+    {
       updateJobQueueTimer = 1;
       jobQueue.Update();
 
-    } else {
+    }
+    else
+    {
       updateJobQueueTimer -= deltaTime;
     }
   }
@@ -357,16 +410,20 @@ public class World : IXmlSerializable {
 
   //-------------------------------------CHARACTERS-------------------------------------
 
-  public void OnCharacterChanged(Character c) {
-    if (cbCharacterChanged != null) {
+  public void OnCharacterChanged(Character c)
+  {
+    if (cbCharacterChanged != null)
+    {
       cbCharacterChanged(c);
     }
   }
 
-  public void CreateCharacters() {
+  public void CreateCharacters()
+  {
     int attempts = 0;
     int created = 0;
-    while (created < NUMBER_OF_ROBOTS && attempts < 50) {
+    while (created < NUMBER_OF_ROBOTS && attempts < 50)
+    {
       attempts += 1;
       //int x = UnityEngine.Random.Range(0, width);
       //int y = UnityEngine.Random.Range(0, height);
@@ -374,27 +431,33 @@ public class World : IXmlSerializable {
       Tile t = GetRandomEmptyTile();
       if (t == null) continue;
 
-      if (t.type.movementFactor >= 0.5) {
+      if (t.type.movementFactor >= 0.5)
+      {
 
         Character c = new Character(this, t);
 
-        if (CreateCharacter(c)) {
+        if (CreateCharacter(c))
+        {
           created += 1;
         }
       }
     }
 
-    foreach (Character chr in characters) {
+    foreach (Character chr in characters)
+    {
       Debug.Log("char:" + chr.name);
     }
 
   }
 
-  public bool CreateCharacter(Character c) {
+  public bool CreateCharacter(Character c)
+  {
 
-    if (c != null) {
+    if (c != null)
+    {
       characters.Add(c);
-      if (cbCharacterCreated != null) {
+      if (cbCharacterCreated != null)
+      {
         cbCharacterCreated(c);
       }
       c.CBRegisterOnChanged(OnCharacterChanged);
@@ -410,28 +473,38 @@ public class World : IXmlSerializable {
 
   //-========================================INSTALLED ITEMS---=========================================
 
-  public Dictionary<string, InstalledItem> getProtoList() {
+  public Dictionary<string, InstalledItem> getProtoList()
+  {
     return InstalledItem.prototypes;
   }
 
-  public InstalledItem getInstalledItemProtoById(int id) {
-    if (InstalledItem.prototypesById.ContainsKey(id)) {
+  public InstalledItem getInstalledItemProtoById(int id)
+  {
+    if (InstalledItem.prototypesById.ContainsKey(id))
+    {
       return getInstalledItemProto(InstalledItem.prototypesById[id]);
 
-    } else {
+    }
+    else
+    {
       return null;
     }
   }
 
-  public InstalledItem getInstalledItemProto(string item) {
-    if (InstalledItem.prototypes.ContainsKey(item)) {
+  public InstalledItem getInstalledItemProto(string item)
+  {
+    if (InstalledItem.prototypes.ContainsKey(item))
+    {
       return InstalledItem.prototypes[item];
-    } else {
+    }
+    else
+    {
       return null;
     }
   }
 
-  public Tile GetTileIfChunkExists(int x, int y) {
+  public Tile GetTileIfChunkExists(int x, int y)
+  {
     TileChunk chunk = GetChunkIfExists(x / TileChunk.CHUNK_WIDTH, y / TileChunk.CHUNK_HEIGHT);
     if (chunk == null) return null;
     //Debug.Log("chunk:" + chunk.x + "," + chunk.y);
@@ -439,7 +512,8 @@ public class World : IXmlSerializable {
     return chunk.GetTileAtWorldCoord(x, y);
   }
 
-  public Tile GetTileAt(int x, int y) {
+  public Tile GetTileAt(int x, int y)
+  {
     //if (x < 0 || x > width - 1 || y < 0 || y > height - 1) {
     //  //Debug.LogError("Tile (" + x + "," + y + ") is out of bounds");
     //  return null;
@@ -450,7 +524,8 @@ public class World : IXmlSerializable {
 
   //------------------------------------TILES--------------------------------------
 
-  public void RandomiseTiles() {
+  public void RandomiseTiles()
+  {
     //Debug.Log("Randomise Tiles");
     //float xo = xSeed;// UnityEngine.Random.Range(-10, 10);
     //float yo = ySeed; // UnityEngine.Random.Range(-10, 10);
@@ -481,19 +556,23 @@ public class World : IXmlSerializable {
     //}
   }
 
-  public void PlaceTrash() {
+  public void PlaceTrash()
+  {
     //int countOfTrash = trashInstances.Count;
-    if (trashPrototypes.Count > 0) {
+    if (trashPrototypes.Count > 0)
+    {
       int attempts = 0;
       int countAdd = 0;
-      while (countAdd < M_M_MAXIMUM_TRASH && attempts < 100) {
+      while (countAdd < M_M_MAXIMUM_TRASH && attempts < 100)
+      {
         attempts += 1;
         int x = UnityEngine.Random.Range(0, width);
         int y = UnityEngine.Random.Range(0, height);
 
         Tile tile = GetTileAt(x, y);
         InstalledItem item = trashPrototypes[UnityEngine.Random.Range(0, trashPrototypes.Count)];
-        if (isInstalledItemPositionValid(this, item.type, tile)) {
+        if (isInstalledItemPositionValid(this, item.type, tile))
+        {
           PlaceInstalledItem(item.type, tile);
           countAdd += 1;
 
@@ -512,7 +591,33 @@ public class World : IXmlSerializable {
   //  //inventoryManager.RemoveInventoryItem(tile.inventoryItem);
   //}
 
-  public int PlaceTileInventoryItem(string type, Tile tile, int qty) {
+  public Tile FindEmptyTile(Tile t) {
+    //oh good. recursion. my favourite.
+    if (t.IsEmpty()) {
+      return t;
+    } else {
+      foreach (Tile tn in t.neighboursList) {
+        if (tn.IsEmpty()) {
+          return tn;
+        }
+
+
+      }
+
+      foreach (Tile tn in t.neighboursList) {
+        Tile r = FindEmptyTile(tn);
+        if (r != null) {
+          return r;
+        }
+      }
+    }
+
+    return null;
+
+  }
+
+  public int PlaceTileInventoryItem(string type, Tile tile, int qty)
+  {
 
     return tile.AddToInventory(type, qty);
     //InventoryItem proto = InventoryItem.GetPrototype(type);
@@ -570,71 +675,89 @@ public class World : IXmlSerializable {
   //  return null;
   //}
 
-  public InstalledItem PlaceInstalledItem(string buildItem, Tile tile) {
+  public InstalledItem PlaceInstalledItem(string buildItem, Tile tile)
+  {
     ///TODO: Assumes 1x1 tiles
     ///with no rotation
     ///
     //Debug.Log("World.PlaceInstalledObject [" + buildItem + "] [" + tile + "]");
     InstalledItem proto = getInstalledItemProto(buildItem);
 
-    if (proto == null) {
+    if (proto == null)
+    {
       //Debug.LogError("no prototype for InstalledItem of type \"" + buildItem + "\"");
 
-    } else {
+    }
+    else
+    {
       InstalledItem inst = InstalledItem.CreateInstance(this, proto, tile);
-      if (inst != null) {
-        if (cbInstalledItem != null) {
+      if (inst != null)
+      {
+        if (cbInstalledItem != null)
+        {
           cbInstalledItem(inst);
-          installedItems.Add(inst);
-          if (inst.trash) {
-            //Debug.Log("Added trash:" + inst.type);
-            trashInstances.Add(inst);
-          }
+
+        }
+
+        installedItems.Add(inst);
+        if (inst.trash)
+        {
+          //Debug.Log("Added trash:" + inst.type);
+          trashInstances.Add(inst);
         }
 
         GetNeighbours(inst.tile, true);
 
-        if (inst.roomEnclosure) {
+        if (inst.roomEnclosure)
+        {
           DestroyRoomNodes();
           Room.CalculateRooms(inst);
 
         }
-        if (inst.movementFactor < 1) {
+        if (inst.movementFactor < 1)
+        {
           DestroyPathNodes();
 
         }
 
         return inst;
-      } else {
+      }
+      else
+      {
         //Debug.Log("failed to place item " + buildItem);
       }
     }
     return null;
   }
 
-  private void DestroyRoomNodes() {
+  private void DestroyRoomNodes()
+  {
     //throw new NotImplementedException();
   }
 
 
   //--------------------------REGISTER CALLBACKS-----------------------------
 
-  public void RegisterInstalledItemCB(Action<InstalledItem> cb) {
+  public void RegisterInstalledItemCB(Action<InstalledItem> cb)
+  {
     cbInstalledItem += cb;
 
   }
 
-  public void UnregisterInstalledItemCB(Action<InstalledItem> cb) {
+  public void UnregisterInstalledItemCB(Action<InstalledItem> cb)
+  {
     cbInstalledItem -= cb;
 
   }
 
-  public void CBRegisterTileChanged(Action<Tile> cb) {
+  public void CBRegisterTileChanged(Action<Tile> cb)
+  {
     cbTileChanged += cb;
 
   }
 
-  public void CBUnregisterTileChanged(Action<Tile> cb) {
+  public void CBUnregisterTileChanged(Action<Tile> cb)
+  {
     cbTileChanged -= cb;
 
   }
@@ -649,12 +772,14 @@ public class World : IXmlSerializable {
 
   //}
 
-  public void CBRegisterInventoryItemChangedOnTile(Action<Tile> cb) {
+  public void CBRegisterInventoryItemChangedOnTile(Action<Tile> cb)
+  {
     cbTileInventoryItemChangedOnTile += cb;
 
   }
 
-  public void CBUnregisterInventoryItemChangedOnTile(Action<Tile> cb) {
+  public void CBUnregisterInventoryItemChangedOnTile(Action<Tile> cb)
+  {
     cbTileInventoryItemChangedOnTile -= cb;
 
   }
@@ -669,82 +794,99 @@ public class World : IXmlSerializable {
 
   //}
 
-  public void CBRegisterCharacterChanged(Action<Character> cb) {
+  public void CBRegisterCharacterChanged(Action<Character> cb)
+  {
     cbCharacterChanged += cb;
 
   }
 
-  public void CBUnregisterCharacterChanged(Action<Character> cb) {
+  public void CBUnregisterCharacterChanged(Action<Character> cb)
+  {
     cbCharacterChanged -= cb;
 
   }
 
-  public void CBRegisterCharacterCreated(Action<Character> cb) {
+  public void CBRegisterCharacterCreated(Action<Character> cb)
+  {
     cbCharacterCreated += cb;
 
   }
 
-  public void CBUnregisterCharacterCreated(Action<Character> cb) {
+  public void CBUnregisterCharacterCreated(Action<Character> cb)
+  {
     cbCharacterCreated -= cb;
 
   }
 
 
-  public void CBRegisterCharacterKilled(Action<Character> cb) {
+  public void CBRegisterCharacterKilled(Action<Character> cb)
+  {
     cbCharacterKilled += cb;
 
   }
 
-  public void CBUnregisterCharacterKilled(Action<Character> cb) {
+  public void CBUnregisterCharacterKilled(Action<Character> cb)
+  {
     cbCharacterKilled -= cb;
 
   }
 
-  public void CBRegisterPathNodesDestroyed(Action cb) {
+  public void CBRegisterPathNodesDestroyed(Action cb)
+  {
     cbPathNodesDestroyed += cb;
 
   }
 
-  public void CBUnregisterPathNodesDestroyed(Action cb) {
+  public void CBUnregisterPathNodesDestroyed(Action cb)
+  {
     cbPathNodesDestroyed -= cb;
 
   }
 
-  public void CBRegisterChunkCreated(Action<TileChunk> cb) {
+  public void CBRegisterChunkCreated(Action<TileChunk> cb)
+  {
     cbChunkCreated += cb;
 
   }
 
-  public void CBUnregisterChunkCreated(Action<TileChunk> cb) {
+  public void CBUnregisterChunkCreated(Action<TileChunk> cb)
+  {
     cbChunkCreated -= cb;
 
   }
 
 
 
-  private void DestroyPathNodes() {
+  private void DestroyPathNodes()
+  {
     nodeMap = null;
-    if (cbPathNodesDestroyed != null) {
+    if (cbPathNodesDestroyed != null)
+    {
       cbPathNodesDestroyed();
     }
 
   }
 
-  public void OnTileChanged(Tile t) {
-    if (cbTileChanged != null) {
+  public void OnTileChanged(Tile t)
+  {
+    if (cbTileChanged != null)
+    {
       cbTileChanged(t);
       DestroyPathNodes();
       GetNeighbours(t, true);
     }
-    
+
   }
 
-  public bool isInstalledItemPositionValid(World world, string itemType, Tile t) {
-    if (t == null) {
+  public bool isInstalledItemPositionValid(World world, string itemType, Tile t)
+  {
+    if (t == null)
+    {
       Debug.LogError("isInstalledItemPositionValid: tile cannot be null");
     }
 
-    if (itemType == null) {
+    if (itemType == null)
+    {
       Debug.LogError("isInstalledItemPositionValid: itemType cannot be null");
     }
 
@@ -752,7 +894,8 @@ public class World : IXmlSerializable {
     return InstalledItem.prototypes[itemType].funcPositionValid(world, t.world_x, t.world_y);
   }
 
-  public string GetName() {
+  public string GetName()
+  {
     string name1 = names[UnityEngine.Random.Range(0, names.Length)];
     string name2 = names[UnityEngine.Random.Range(0, names.Length)];
 
@@ -760,7 +903,8 @@ public class World : IXmlSerializable {
 
   }
 
-  private void loadNames() {
+  private void loadNames()
+  {
     names = File.ReadAllLines(Application.streamingAssetsPath + "/csv/surnames.csv");
 
     //foreach (string line in lines)
@@ -769,7 +913,8 @@ public class World : IXmlSerializable {
 
   //utils
 
-  public void informNeighbours(InstalledItem item) {
+  public void informNeighbours(InstalledItem item)
+  {
     //Dictionary<string, Tile> ngbrs = GetNeighbours(item);
     informNeighbour(item, item.tile.GetNeighbour(NORTH));
     informNeighbour(item, item.tile.GetNeighbour(EAST));
@@ -778,8 +923,10 @@ public class World : IXmlSerializable {
 
   }
 
-  private static void informNeighbour(InstalledItem item, Tile t) {
-    if (t != null && t.installedItem != null && t.installedItem.cbOnChanged != null && item.neighbourTypes.Contains(t.installedItem.type)) {
+  private static void informNeighbour(InstalledItem item, Tile t)
+  {
+    if (t != null && t.installedItem != null && t.installedItem.cbOnChanged != null && item.neighbourTypes.Contains(t.installedItem.type))
+    {
       t.installedItem.cbOnChanged(t.installedItem);
     }
   }
@@ -802,15 +949,18 @@ public class World : IXmlSerializable {
   //  return rt;
   //}
 
-  public Dictionary<string, Tile> GetNeighbours(InstalledItem item, bool allowDiag = false) {
+  public Dictionary<string, Tile> GetNeighbours(InstalledItem item, bool allowDiag = false)
+  {
     return GetNeighbours(item.tile, allowDiag);
   }
 
-  private Tile SetMeAndNeighbour(Tile me, string dir, string oppositeDir, int xd, int yd) {
+  private Tile SetMeAndNeighbour(Tile me, string dir, string oppositeDir, int xd, int yd)
+  {
 
     Tile n = GetTileIfChunkExists(xd, yd);
     me.neighbours[dir] = n; //set it, even if n is null
-    if (n != null) {
+    if (n != null)
+    {
 
       n.neighbours[oppositeDir] = me;
       n.edges[me] = GetMovementCost(n, me);
@@ -821,30 +971,38 @@ public class World : IXmlSerializable {
       //if (me.local_x == 0 && me.local_y == 0) {
       //  Debug.Log("me to n= " + me.edges[n] + " n to me=" + n.edges[me]);
       //}
-    } else {
+    }
+    else
+    {
 
     }
 
     return n;
 
   }
-  bool IsClippingCorner(Tile c, Tile n) {
+  bool IsClippingCorner(Tile c, Tile n)
+  {
 
     if (c == null || n == null) return false;
     int td = (int)Funcs.TaxiDistance(c, n);
 
-    if (td == 2) {
+    if (td == 2)
+    {
       int dx = c.world_x - n.world_x;
       int dy = c.world_y - n.world_y;
 
       Tile t = GetTileIfChunkExists(c.world_x - dx, c.world_y);
 
 
-      if (t == null || t.movementFactor <= 0.1) {
+      if (t == null || t.movementFactor <= 0.1)
+      {
         return true;
-      } else {
+      }
+      else
+      {
         Tile tt = GetTileIfChunkExists(c.world_x, c.world_y - dy);
-        if (tt == null || tt.movementFactor <= 0.1) {
+        if (tt == null || tt.movementFactor <= 0.1)
+        {
           return true;
         }
       }
@@ -855,12 +1013,16 @@ public class World : IXmlSerializable {
     return false;
   }
 
-  public float GetMovementCost(Tile A, Tile B) {
+  public float GetMovementCost(Tile A, Tile B)
+  {
 
-    if (A.movementFactor > 0) {
-      if (B != null && B.movementFactor > 0 && !IsClippingCorner(A, B)) {
+    if (A.movementFactor > 0)
+    {
+      if (B != null && B.movementFactor > 0 && !IsClippingCorner(A, B))
+      {
         float mf = 1.0f / Mathf.Pow(B.movementFactor, 2);
-        if (B.HasPendingJob) {
+        if (B.HasPendingJob)
+        {
           mf *= 1.5f;
         }
 
@@ -876,7 +1038,8 @@ public class World : IXmlSerializable {
     return float.PositiveInfinity;
   }
 
-  public Dictionary<string, Tile> GetNeighbours(Tile t, bool allowDiag = false) {
+  public Dictionary<string, Tile> GetNeighbours(Tile t, bool allowDiag = false)
+  {
     Dictionary<string, Tile> dct; // = new Dictionary<string, Tile>();
 
     int x = t.world_x;
@@ -913,10 +1076,14 @@ public class World : IXmlSerializable {
   }
 
 
-  private bool hasMatchingNeighbour(Tile t, InstalledItem item) {
-    if (t == null || t.installedItem == null || !t.installedItem.type.Equals(item.type)) {
+  private bool hasMatchingNeighbour(Tile t, InstalledItem item)
+  {
+    if (t == null || t.installedItem == null || !t.installedItem.type.Equals(item.type))
+    {
       return false;
-    } else {
+    }
+    else
+    {
       return true;
     }
 
@@ -928,11 +1095,13 @@ public class World : IXmlSerializable {
   //LOADING AND SAVING
 
 
-  public XmlSchema GetSchema() {
+  public XmlSchema GetSchema()
+  {
     return null;
   }
 
-  public void WriteXml(XmlWriter writer) {
+  public void WriteXml(XmlWriter writer)
+  {
     writer.WriteElementString("width", width.ToString());
     writer.WriteElementString("height", height.ToString());
     writer.WriteElementString("tileSize", tileSize.ToString());
@@ -942,7 +1111,8 @@ public class World : IXmlSerializable {
 
     writer.WriteStartElement("characters");
 
-    foreach (Character c in characters) {
+    foreach (Character c in characters)
+    {
       c.WriteXml(writer);
 
     }
@@ -952,7 +1122,8 @@ public class World : IXmlSerializable {
 
     Dictionary<string, int> types = new Dictionary<string, int>();
 
-    foreach (string st in TileType.TYPES.Keys) {
+    foreach (string st in TileType.TYPES.Keys)
+    {
       TileType type = TileType.TYPES[st];
       types[st] = type.id;
 
@@ -969,20 +1140,25 @@ public class World : IXmlSerializable {
     StringBuilder str = new StringBuilder();
     StringBuilder str_installed = new StringBuilder();
 
-    for (int x = 0; x < width; x += 1) {
-      for (int y = 0; y < height; y += 1) {
+    for (int x = 0; x < width; x += 1)
+    {
+      for (int y = 0; y < height; y += 1)
+      {
         Tile t = GetTileIfChunkExists(x, y);
         //str.Append(t.x + "_" + t.y + "_" + types[t.type.name] + ";");
         str.Append(types[t.type.name] + ";");
-        if (t.installedItem != null) {
+        if (t.installedItem != null)
+        {
           //str.Append("I" + t.installedItem.prototypeId.ToString());
           str_installed.Append(t.installedItem.prototypeId.ToString() + ":" + t.world_x + ":" + t.world_y);
           StringBuilder installedData = new StringBuilder();
           installedData.Append(":(");
           Dictionary<string, string> items = t.installedItem.itemParameters.GetItems();
           int count = 0;
-          foreach (string k in items.Keys) {
-            if (count > 0) {
+          foreach (string k in items.Keys)
+          {
+            if (count > 0)
+            {
               installedData.Append(',');
 
             }
@@ -1017,7 +1193,8 @@ public class World : IXmlSerializable {
 
   }
 
-  public void ReadXml(XmlReader reader) {
+  public void ReadXml(XmlReader reader)
+  {
     Debug.Log("read xml");
 
 
@@ -1081,17 +1258,21 @@ public class World : IXmlSerializable {
 
 
     //---------CHARACTERS
-    foreach (XElement chrgroup in xe.Elements().Where(e => e.Name.LocalName == "characters")) {
-      foreach (XElement chrxml in chrgroup.Elements().Where(e => e.Name.LocalName == "character")) {
+    foreach (XElement chrgroup in xe.Elements().Where(e => e.Name.LocalName == "characters"))
+    {
+      foreach (XElement chrxml in chrgroup.Elements().Where(e => e.Name.LocalName == "character"))
+      {
         Debug.Log("characters: " + chrxml);
         int x = int.Parse(chrxml.Elements().Where(e => e.Name.LocalName == "xPos").Single().Value);
         int y = int.Parse(chrxml.Elements().Where(e => e.Name.LocalName == "yPos").Single().Value);
         string state = chrxml.Elements().Where(e => e.Name.LocalName == "state").Single().Value;
         string name = chrxml.Elements().Where(e => e.Name.LocalName == "name").Single().Value;
         Tile t = GetTileAt(x, y);
-        if (t != null) {
+        if (t != null)
+        {
           Character chr = new Character(this, t, name, state);
-          if (chr != null) {
+          if (chr != null)
+          {
             CreateCharacter(chr);
           }
 
@@ -1109,10 +1290,13 @@ public class World : IXmlSerializable {
     //Init(width, height, 32, true, tilesArray);
   }
 
-  public void SetInstalledFromArray() {
+  public void SetInstalledFromArray()
+  {
 
-    if (savedInstalledItems != null) {
-      foreach (string s in savedInstalledItems) {
+    if (savedInstalledItems != null)
+    {
+      foreach (string s in savedInstalledItems)
+      {
         string[] ss = s.Split(':');
         //Debug.Log(String.Format("0:\"{0}\" 1:\"{1}\" 2:\"{2}\"", ss[0], ss[1], ss[2]));
         int installedItemId = int.Parse(ss[0]);
@@ -1120,10 +1304,12 @@ public class World : IXmlSerializable {
         int y = int.Parse(ss[2]);
         string prms = ss[3];
         Tile t = GetTileAt(x, y);
-        if (installedItemId > 0 && x >= 0 && y >= 0 && t != null) {
+        if (installedItemId > 0 && x >= 0 && y >= 0 && t != null)
+        {
           InstalledItem item = PlaceInstalledItem(getInstalledItemProtoById(installedItemId).type, t);//InstalledItem.CreateInstance(this, getInstalledItemProtoById(installedItemId), t);
           installedItems.Add(item);
-          if (prms != null) {
+          if (prms != null)
+          {
             item.SetParameters(prms);
           }
         }
@@ -1133,7 +1319,8 @@ public class World : IXmlSerializable {
 
   }
 
-  private void SetTilesFromArray(string[] tilesArray) {
+  private void SetTilesFromArray(string[] tilesArray)
+  {
     //if (tilesArray != null) {
     //  for (int x = 0; x < width; x += 1) {
     //    for (int y = 0; y < height; y += 1) {
@@ -1159,7 +1346,8 @@ public class World : IXmlSerializable {
 
   //END LOADING
 
-  public void Kill() {
+  public void Kill()
+  {
     jobQueue = null;
     //installedItemProtos = null;
     //installedItemProtos_BY_ID = null;
@@ -1169,9 +1357,11 @@ public class World : IXmlSerializable {
     nodeMap = null;
     chunks = null;
 
-    foreach (Character c in characters) {
+    foreach (Character c in characters)
+    {
       c.Kill();
-      if (cbCharacterKilled != null) {
+      if (cbCharacterKilled != null)
+      {
         cbCharacterKilled(c);
       }
     }

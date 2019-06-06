@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: -4857857115544581168
     second: plates_2
+  - first:
+      213: 4474246011224520987
+    second: plates_3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -118,7 +121,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2b308b9b021bc0844800ad41b7e7c312
+      spriteID: 8754a7e53d86d814c94d9b5adf596e24
       internalID: -999261438495639840
       vertices: []
       indices: 
@@ -139,7 +142,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ff14a55bba57031458308379ed10391e
+      spriteID: e1dee377b97dee2419026afa256ed1a6
       internalID: -880185274743168209
       vertices: []
       indices: 
@@ -160,8 +163,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 35a27e3bc2e36614b82fabb7a88a2b79
+      spriteID: c01883c03e926a64486d3bd73f8161d2
       internalID: -4857857115544581168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plates_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e29c6d90e84850745b9380a4f06cecc7
+      internalID: 4474246011224520987
       vertices: []
       indices: 
       edges: []

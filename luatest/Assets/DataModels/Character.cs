@@ -21,7 +21,8 @@ public class Character : IXmlSerializable {
     DROP_OFF_AT_TILE,
     DROP_OFF_AT_JOB,
     FIND_EMPTY,
-    FIND_RESOURCE
+    FIND_RESOURCE,
+    FINISH_JOB
   }
   private static Dictionary<string, STATE> static_STATES = null;
 
@@ -206,7 +207,7 @@ public class Character : IXmlSerializable {
   private void StateIdle(float deltaTime) {
     if (PosTile.movementFactor == 0) {
       Debug.Log(name + ": I CAN'T MOVE!");
-      Tile t = FindEmpty(PosTile);
+      Tile t = world.FindEmptyTile(PosTile);
       changed = true;
       if (t != null) {
         PosTile.Leave(this);
@@ -244,7 +245,7 @@ public class Character : IXmlSerializable {
 
   private void StateFindEmpty(float deltaTime) {
     //Debug.Log(name + " Finding a place to sit...");
-    target = FindEmpty(PosTile);
+    target = world.FindEmptyTile(PosTile);
     if (target != null) {
       state = STATE.FIND_PATH;
 
@@ -277,11 +278,11 @@ public class Character : IXmlSerializable {
               state = STATE.FIND_PATH;
               newStateWhenMoveComplete = STATE.DROP_OFF_AT_TILE;
             } else {
-              int a = myJob.tile.InventoryTotal(myJob.recipeResourceName);//myJob.tile.inventoryItem != null ? myJob.tile.inventoryItem.currentStack : 0;
+              //int a = myJob.tile.InventoryTotal(myJob.recipeResourceName);//myJob.tile.inventoryItem != null ? myJob.tile.inventoryItem.currentStack : 0;
 
-              int b = InventoryItem.GetStackSize(myJob.recipeResourceName); //GetPrototype(target.inventoryItem.type).maxStackSize;
-              int c = inventory.HowMany(myJob.recipeResourceName);
-              myJob.recipeResouceQty = b - a - c;
+              //int b = InventoryItem.GetStackSize(myJob.recipeResourceName); //GetPrototype(target.inventoryItem.type).maxStackSize;
+              //int c = inventory.HowMany(myJob.recipeResourceName);
+              //myJob.recipeResouceQty = b - a - c;
             }
           } else {
 
@@ -339,6 +340,21 @@ public class Character : IXmlSerializable {
     } else {
       state = STATE.RESET;
     }
+
+  }
+
+  private void StateFinishJob(float deltaTime)
+  {
+
+    if (myJob != null && myJob.jobTime < 0)
+    {
+      myJob = null;
+    } else
+    {
+      
+    }
+
+    state = STATE.RESET;
 
   }
 
@@ -449,7 +465,7 @@ public class Character : IXmlSerializable {
   private void DropAll() {
 
     while (!inventory.IsEmpty()) {
-      Tile t = FindEmpty(PosTile);
+      Tile t = world.FindEmptyTile(PosTile);
       if (t != null) {
         string itemName = inventory.GetFirst();
         int qtyToPlace = inventory.HowMany(itemName);
@@ -516,7 +532,10 @@ public class Character : IXmlSerializable {
 
 
           myJob.Work(deltaTime);
-
+          if (myJob == null || myJob.jobTime <= 0)
+          {
+            state = STATE.FINISH_JOB;
+          }
 
         } else {
           coolDown = UnityEngine.Random.Range(0.5f, 1.5f);
@@ -569,6 +588,7 @@ public class Character : IXmlSerializable {
     DropItem();
 
     myJob.Work(myJob.jobTime);
+    state = STATE.FINISH_JOB;
 
   }
 
@@ -580,6 +600,7 @@ public class Character : IXmlSerializable {
       int qtyGiven = myJob.inventory.AddItem(carrying, qty);
       inventory.RemoveItem(carrying, qtyGiven);
       myJob.Work(myJob.jobTime);
+      state = STATE.FINISH_JOB;
     } else {
       state = STATE.RESET;
     }
@@ -589,6 +610,7 @@ public class Character : IXmlSerializable {
     if (myJob != null) {
       DropItem(myJob.tile);
       myJob.Work(myJob.jobTime);
+      state = STATE.FINISH_JOB;
     } else {
       state = STATE.RESET;
     }
@@ -640,7 +662,9 @@ public class Character : IXmlSerializable {
       case STATE.DROP_OFF_AT_JOB:
         StateDropOffAtJob(deltaTime);
         break;
-
+      case STATE.FINISH_JOB:
+        StateFinishJob(deltaTime);
+        break;
       case STATE.FIND_EMPTY:
         StateFindEmpty(deltaTime);
         break;
@@ -688,7 +712,7 @@ public class Character : IXmlSerializable {
     } else {
       if (!myJob.finished) ReturnJob();
       myJob = null;
-      target = FindEmpty(PosTile);
+      target = world.FindEmptyTile(PosTile);
       if (target != null) {
         state = STATE.FIND_PATH;
         //path = new PathAStar(world, PosTile, temp);
@@ -727,29 +751,7 @@ public class Character : IXmlSerializable {
 
   }
 
-  public Tile FindEmpty(Tile t) {
-    if (IsEmpty(t)) {
-      return t;
-    } else {
-      foreach (Tile tn in t.neighboursList) {
-        if (IsEmpty(tn)) {
-          return tn;
-        }
 
-
-      }
-
-      foreach (Tile tn in t.neighboursList) {
-        Tile r = FindEmpty(tn);
-        if (r != null) {
-          return r;
-        }
-      }
-    }
-
-    return null;
-
-  }
 
   public void Kill() {
     if (cbCharacterKilled != null) {

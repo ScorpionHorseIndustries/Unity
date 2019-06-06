@@ -15,7 +15,7 @@ public class Tile {
   Action<Tile> cbChanged;
   Action<Tile> cbInventoryItemChanged;
   //Action<Tile> cbInventoryItemRemoved;
-  
+
 
   public TileChunk chunk { get; protected set; }
   public Room room;
@@ -34,9 +34,11 @@ public class Tile {
 
   public int local_x { get; private set; }
   public int local_y { get; private set; }
-  public int world_x { get {
+  public int world_x {
+    get {
       return local_x + (chunk.world_x);
-    } }
+    }
+  }
 
   public int world_y {
     get {
@@ -62,7 +64,7 @@ public class Tile {
     this.local_y = y;
     this.world = world;
     this.chunk = chunk;
-    this.inventory = new Inventory(world,1, INVENTORY_TYPE.TILE, this);
+    this.inventory = new Inventory(world, 1, INVENTORY_TYPE.TILE, this);
     //world.GetNeighbours(this, true);
     //foreach(Tile t in neighbours.Values) {
     //  neighboursList.Add(t);
@@ -156,7 +158,7 @@ public class Tile {
 
     int acceptedQty = inventory.AddItem(type, qty);
 
-    if (cbInventoryItemChanged != null ) {
+    if (cbInventoryItemChanged != null) {
       cbInventoryItemChanged(this);
     }
     return acceptedQty;
@@ -172,7 +174,7 @@ public class Tile {
     return qtyGiven;
   }
 
-  
+
 
   public int InventoryTotal(string type) {
     return inventory.HowMany(type);
@@ -238,7 +240,7 @@ public class Tile {
 
   //}
 
-  
+
 
 
 
@@ -246,7 +248,7 @@ public class Tile {
 
   //  if (inv == null) {
   //    Debug.LogError("cannot place null inventory item");
-      
+
   //    return false;
   //  }
 
@@ -282,6 +284,10 @@ public class Tile {
   //  return false;
   //}
 
+  public void ForceInstalledItem(InstalledItem item) {
+    this.installedItem = item;
+  }
+
   public bool placeInstalledObject(InstalledItem instobj) {
     if (instobj == null) {
       this.installedItem = null;
@@ -289,6 +295,14 @@ public class Tile {
     }
     if (this.installedItem == null) {
       this.installedItem = instobj;
+      for (int xx = world_x; xx < world_x + instobj.width; xx += 1) {
+        for (int yy = world_y; yy < world_y + instobj.height; yy += 1) {
+          Tile t = world.GetTileAt(xx, yy);
+          t.ForceInstalledItem(instobj);
+        }
+      }
+
+
       return true;
     } else {
       return false;
@@ -329,7 +343,7 @@ public class Tile {
         neighboursList.Add(tile);
       }
     }
-    
+
 
   }
 

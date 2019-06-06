@@ -20,6 +20,13 @@
 "niceName" : "Stone Slabs",
 "stackSize" : 32,
 "spriteName" : "plates_2"
+},
+{
+"id" : 4,
+"type" : "inv::wood_planks",
+"niceName" : "Wood Planks",
+"stackSize" : 32,
+"spriteName" : "plates_3"
 }
 ]
 }

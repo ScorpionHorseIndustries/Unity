@@ -24,6 +24,9 @@ public class InventoryManager {
   public void UnregisterInventory(Inventory inventory) {
     if (inventories.Contains(inventory)) {
       inventories.Remove(inventory);
+      if (inventory.TotalQty() > 0) {
+        inventory.Explode();
+      }
     }
   }
 

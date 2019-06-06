@@ -200,12 +200,12 @@ public class WorldController : MonoBehaviour {
 
     for (int i = 0; i < 10; i += 1) {
       Tile a = world.GetRandomEmptyTile();
-      //Tile b = world.GetRandomEmptyTile();
+      Tile b = world.GetRandomEmptyTile();
       Tile c = world.GetRandomEmptyTile();
       if (a != null)
         world.PlaceTileInventoryItem("inv::steel_plates", a, UnityEngine.Random.Range(16, 32));
-      //if (b != null)
-      //  world.PlaceTileInventoryItem("inv::copper_plates", b, UnityEngine.Random.Range(16, 32));
+      if (b != null)
+        world.PlaceTileInventoryItem("inv::wood_planks", b, UnityEngine.Random.Range(16, 32));
       if (c != null)
         world.PlaceTileInventoryItem("inv::stone_slabs", c, UnityEngine.Random.Range(16, 32));
     }
@@ -347,6 +347,16 @@ public class WorldController : MonoBehaviour {
     g.transform.SetParent(this.transform, true);
     controllers.Add(g);
 
+  }
+
+  public void WriteLog()
+  {
+    string s = "";
+    foreach (Job j in world.jobQueue.allJobs)
+    {
+      s += "\n" + j.GetLog();
+    }
+    File.WriteAllText(Application.streamingAssetsPath + "/logs/joblog.txt", s);
   }
 
   private void DestroyControllers() {
@@ -573,7 +583,15 @@ public class WorldController : MonoBehaviour {
 
     InstalledItems_GO_Map.Add(inst, go);
     SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
+    float xt = 0, yt = 0;
+    if (inst.width > 1) {
+      xt = ((float)(inst.width) / 2.0f) - 0.5f;
+    }
 
+    if (inst.height > 1) {
+      yt = ((float)(inst.height) / 2.0f) - 0.5f;
+    }
+    spr.transform.Translate(xt, yt, 0);
 
     SpriteHolder sh = spriteController.GetSprite(inst);
     if (inst.type == "installed::door") {

@@ -60,7 +60,7 @@ public static class PathFinder {
     }
 
     foreach (KeyValuePair<Tile, float> kvp in dct.OrderBy(key => key.Value)) {
-      Debug.Log("kvp:" + kvp.Key + ":" + kvp.Value);
+      //Debug.Log("kvp:" + kvp.Key + ":" + kvp.Value);
       TilePathAStar pp = new TilePathAStar(world, start, kvp.Key);
       if (pp.foundPath) {
         return pp;

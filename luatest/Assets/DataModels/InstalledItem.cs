@@ -207,13 +207,24 @@ public class InstalledItem {
   //-------------------------------POSITION METHODS----------------------------------
 
   public bool isPositionValid(World world, int x, int y) {
-    Tile t = world.GetTileAt(x, y);
-    //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
-    if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty()  || t.HasPendingJob) {
-      return false;
-    } else {
-      return true;
+
+    for (int xx = x; xx < x + this.width; xx += 1)
+    {
+      for (int yy = y; yy < y + this.height; yy += 1)
+      {
+        Tile t = world.GetTileIfChunkExists(xx, yy);
+        //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
+        if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty() || t.HasPendingJob)
+        {
+          return false;
+        }
+        
+      }
     }
+
+    return true;
+
+ 
   }
 
   public bool isPositionValid_Door(int x, int y) {
@@ -224,7 +235,7 @@ public class InstalledItem {
   //---------------------------------OVERRIDES---------------------------
 
   public override string ToString() {
-    return "installed item: " + this.type + " l:" + this.linksToNeighbour + " nl: " + neighbourTypes.ToString();
+    return "installed item: " + type + " (" + width + "," + height + ") inventory:" + this.inventorySlots + " links:" + this.linksToNeighbour;
   }
 
 

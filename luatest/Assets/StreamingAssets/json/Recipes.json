@@ -53,6 +53,17 @@
       "id": 5,
       "buildTime" : -1,
       "resources": []
+    },
+	    {
+      "name": "recipe::installed::crate",
+      "id": 6,
+      "buildTime" : 1,
+      "resources": [
+        {
+          "name": "inv::wood_planks",
+          "qty": 4
+        }
+      ]
     }
   ]
 }

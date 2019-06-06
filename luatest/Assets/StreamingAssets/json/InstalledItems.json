@@ -104,6 +104,24 @@
 	"recipe" : "recipe::installed::stockpile",
 	"inventorySlots" : 1
 	
+  },
+    {
+    "id" : 7,
+    "name" : "installed::crate",
+	"niceName" : "Crate",
+    "sprite" : "installed_crate_0",
+    "sprites" : ["installed_crate_0","installed_crate_1","installed_crate_2","installed_crate_3"],
+    "linked" : false,
+    "movementFactor" : 0.1,
+    "trash" : false,
+    "build" : true,
+	"neighbourTypes" : [],
+	"enclosesRoom" : false,
+	"recipe" : "recipe::installed::crate",
+	"inventorySlots" : 0,
+	"width" : 2,
+	"height" : 2
+	
   }
 
 ]

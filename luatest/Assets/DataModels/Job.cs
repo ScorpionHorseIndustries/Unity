@@ -310,12 +310,12 @@ public class Job : IXmlSerializable {
   public void AddToLog(string logString, Character chr = null) {
 
 
-    if (chr != null) {
-      logString = DateTime.Now.ToString() + "\t" + chr.name + "\t" + logString;
-    } else {
-      logString = DateTime.Now.ToString() + "\t\t" + logString;
-    }
-    log.Add(logString);
+    //if (chr != null) {
+    //  logString = DateTime.Now.ToString() + "\t" + chr.name + "\t" + logString;
+    //} else {
+    //  logString = DateTime.Now.ToString() + "\t\t" + logString;
+    //}
+    //log.Add(logString);
   }
 
   public string GetLog() {

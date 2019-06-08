@@ -68,14 +68,16 @@ public static class InstalledItemActions {
   }
 
   public static void MiningController_JobComplete(Job job) {
-    Tile tile = WorldController.Instance.world.FindEmptyTile(job.tile);
+    Recipe.RecipeProduct rp = job.recipe.GetProduct();
+    int qty = UnityEngine.Random.Range(rp.qtyMin, rp.qtyMax + 1);
+    Tile tile = WorldController.Instance.world.FindTileForInventoryItem(job.tile, rp.name, qty);
 
     if (tile != null) {
-      Recipe.RecipeProduct rp = job.recipe.GetProduct();
+      
 
       if (rp != null) {
         Inventory inv = new Inventory(WorldController.Instance.world, 1, INVENTORY_TYPE.NONE, tile);
-        inv.AddItem(rp.name, UnityEngine.Random.Range(rp.qtyMin, rp.qtyMax + 1));
+        inv.AddItem(rp.name, qty);
         inv.Explode();
         inv.ClearAll();
       }

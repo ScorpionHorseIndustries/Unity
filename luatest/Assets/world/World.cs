@@ -515,13 +515,13 @@ public class World : IXmlSerializable {
 
   public Tile FindTileForInventoryItem(Tile t, string itemName, int qty) {
     if (t.IsEmptyApartFromInventory()) {
-      if (t.InventoryHashSpaceFor(itemName, qty)) {
+      if (t.InventoryHasSpaceFor(itemName, qty)) {
         return t;
       }
     } else {
       foreach (Tile tn in t.neighboursList) {
         if (tn.IsEmptyApartFromInventory()) {
-          if (tn.InventoryHashSpaceFor(itemName, qty)) {
+          if (tn.InventoryHasSpaceFor(itemName, qty)) {
             return tn;
           }
         }

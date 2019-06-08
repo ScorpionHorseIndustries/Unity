@@ -324,7 +324,7 @@ public class Tile {
     return true;
   }
 
-  public bool InventoryHashSpaceFor(string type, int qty) {
+  public bool InventoryHasSpaceFor(string type, int qty) {
     return inventory.HasSpaceFor(type, qty);
   }
 

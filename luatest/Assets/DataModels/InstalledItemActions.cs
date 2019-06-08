@@ -47,6 +47,48 @@ public static class InstalledItemActions {
     }
   }
 
+  public static void MiningController_UpdateActions(InstalledItem item, float deltaTime) {
+    Tile tile = item.GetWorkSpot();
+
+
+    if (!tile.HasPendingJob) {
+      Job j = new Job(
+        tile,
+        MiningController_JobComplete,
+        MiningController_JobCancelled,
+        JOB_TYPE.WORK_AT_STATION,
+        1,
+        "recipe::installed::mining_controller::work"
+
+        );
+
+      WorldController.Instance.world.jobQueue.Push(j);
+    }
+      
+  }
+
+  public static void MiningController_JobComplete(Job job) {
+    Tile tile = WorldController.Instance.world.FindEmptyTile(job.tile);
+
+    if (tile != null) {
+      Recipe.RecipeProduct rp = job.recipe.GetProduct();
+
+      if (rp != null) {
+        Inventory inv = new Inventory(WorldController.Instance.world, 1, INVENTORY_TYPE.NONE, tile);
+        inv.AddItem(rp.name, UnityEngine.Random.Range(rp.qtyMin, rp.qtyMax + 1));
+        inv.Explode();
+        inv.ClearAll();
+      }
+
+      job.tile.RemoveJob(job);
+    }
+
+
+  }
+  public static void MiningController_JobCancelled(Job job) {
+
+  }
+
 
 
   public static void Door_UpdateActions(InstalledItem item, float deltaTime) {

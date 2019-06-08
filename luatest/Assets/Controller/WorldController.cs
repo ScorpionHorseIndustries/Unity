@@ -25,6 +25,7 @@ public class WorldController : MonoBehaviour {
   public GameObject jobsPanelPrefab;
   public GameObject jobsScrollItemPrefab;
   public GameObject jobsScrollContent;
+  public GameObject genericSpritePrefab;
 
   public GameObject debugCharItemPrefab;
   public GameObject debugCharContent;
@@ -198,16 +199,19 @@ public class WorldController : MonoBehaviour {
 
     world.PlaceTrash();
 
-    for (int i = 0; i < 10; i += 1) {
+    for (int i = 0; i < 5; i += 1) {
       Tile a = world.GetRandomEmptyTile();
       Tile b = world.GetRandomEmptyTile();
       Tile c = world.GetRandomEmptyTile();
+      Tile d = world.GetRandomEmptyTile();
       if (a != null)
         world.PlaceTileInventoryItem("inv::steel_plates", a, UnityEngine.Random.Range(16, 32));
       if (b != null)
         world.PlaceTileInventoryItem("inv::wood_planks", b, UnityEngine.Random.Range(16, 32));
       if (c != null)
         world.PlaceTileInventoryItem("inv::stone_slabs", c, UnityEngine.Random.Range(16, 32));
+      if (d != null)
+        world.PlaceTileInventoryItem("inv::copper_plates", d, UnityEngine.Random.Range(16, 32));
     }
     //world.nodeMap = new TileNodeMap(world);
 
@@ -699,16 +703,24 @@ public class WorldController : MonoBehaviour {
 
   //-------------------SET BUILD TYPES-------------------------
 
+  public void SetBuildType_Clear() {
+    buildController.SetBuildMode(BuildController.BUILD_MODE.NONE, "");
+  }
+
   public void SetBuildType_Zone(string zone) {
-    buildController.SetBuild(BuildController.BUILDTYPE.ZONE, zone);
+    buildController.SetBuildMode(BuildController.BUILD_MODE.ZONE, zone);
   }
 
-  public void setBuildType_InstalledItem(string item) {
-    buildController.SetBuild(BuildController.BUILDTYPE.INSTALLEDITEM, item);
+  public void SetBuildType_InstalledItem(string item) {
+    buildController.SetBuildMode(BuildController.BUILD_MODE.INSTALLEDITEM, item);
   }
 
-  public void setBuildType_Tile(string tile) {
-    buildController.SetBuild(BuildController.BUILDTYPE.TILE, tile);
+  public void SetBuildType_Tile(string tile) {
+    buildController.SetBuildMode(BuildController.BUILD_MODE.TILE, tile);
+  }
+
+  public void SetBuildType_Deconstruct() {
+    buildController.SetBuildMode(BuildController.BUILD_MODE.DECONSTRUCT, "");
   }
 
   void OnCharacterKilled(Character c) {
@@ -849,6 +861,18 @@ public class WorldController : MonoBehaviour {
 
       GameObject g = SimplePool.Spawn(buildProgressSprite, new Vector2(j.tile.world_x, j.tile.world_y), Quaternion.identity);
       g.transform.SetParent(this.transform, true);
+      
+      SpriteRenderer spr = g.GetComponent<SpriteRenderer>();
+      if (j.jobType == JOB_TYPE.BUILD) {
+        spr.sprite = spriteController.GetSprite(j.installedItemPrototype.spriteName);
+      } else {
+        spr.sprite = spriteController.GetSprite("build_in_progress");
+      }
+      spr.color = new Color(1, 1, 1, 0.4f);
+      if (j.jobType == JOB_TYPE.BUILD) {
+        spr.transform.Translate(Funcs.GetInstalledItemSpriteOffset(j.installedItemPrototype.width, j.installedItemPrototype.height), Space.Self);
+      }
+      
       Job_GO_Map.Add(j, g);
     }
     /*

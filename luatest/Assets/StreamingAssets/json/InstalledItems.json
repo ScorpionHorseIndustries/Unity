@@ -51,7 +51,8 @@
       "build" : true,
       "randomRotation" : false,
 	  "enclosesRoom" : false,
-	  "recipe" : "recipe::installed::atm"
+	  "recipe" : "recipe::installed::atm",
+	  "updateActionCountDown" : 1
       
   },
       {
@@ -66,7 +67,8 @@
       "build" : true,
       "randomRotation" : false,
 	  "enclosesRoom" : false,
-	  "recipe" : "recipe::installed::recycler"
+	  "recipe" : "recipe::installed::recycler",
+	  "updateActionCountDown" : 1
       
   },
     {
@@ -102,7 +104,8 @@
 	"neighbourTypes" : [],
 	"enclosesRoom" : false,
 	"recipe" : "recipe::installed::stockpile",
-	"inventorySlots" : 1
+	"inventorySlots" : 1,
+	"updateActionCountDown" : 2
 	
   },
     {
@@ -121,6 +124,38 @@
 	"inventorySlots" : 0,
 	"width" : 2,
 	"height" : 2
+	
+  },
+    {
+    "id" : 8,
+    "name" : "installed::mining_controller",
+	"niceName" : "Mining Controller",
+    "sprite" : "installed_mining_controller_0",
+    "sprites" : [],
+    "linked" : false,
+    "movementFactor" : 0.8,
+    "trash" : false,
+    "build" : true,
+	"neighbourTypes" : [],
+	"enclosesRoom" : false,
+	"recipe" : "recipe::installed::mining_controller",
+	"inventorySlots" : 0,
+	"width" : 3,
+	"height" : 3,
+	"workTileOffsetX" : 1,
+	"updateActionCountDown" : 3,
+	"productOfWork" : [
+		{ "name" : "inv::steel_plates",
+		"minQty": 1,
+		"maxQty" : 4,
+		"chance" : 0.7
+		},
+		{ "name" : "inv::copper_plates",
+		"minQty": 1,
+		"maxQty" : 4,
+		"chance" : 0.3
+		}
+	]
 	
   }
 

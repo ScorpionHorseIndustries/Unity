@@ -7,8 +7,9 @@ public class SpriteController : MonoBehaviour {
 
   private Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
 
-
-
+  private Color whiteTransparent = new Color(1, 1, 1, 0.4f);
+  private Color redTransparent = new Color(1, 0, 0, 0.4f);
+  public GameObject goBuildTemplate;
 
   public WorldController wcon;
   //public World world;
@@ -28,15 +29,42 @@ public class SpriteController : MonoBehaviour {
 
   // Update is called once per frame
   void Update() {
+    if (WorldController.Instance.buildController.buildMode == BuildController.BUILD_MODE.INSTALLEDITEM) {
+      string installedItemName = WorldController.Instance.buildController.build;
+      if (goBuildTemplate == null) {
 
+
+        goBuildTemplate = Instantiate(WorldController.Instance.genericSpritePrefab, Vector2.zero, Quaternion.identity);
+        goBuildTemplate.SetActive(false);
+        SpriteRenderer spr = goBuildTemplate.GetComponent<SpriteRenderer>();
+        spr.color = whiteTransparent;
+
+      }
+
+      Tile t = WorldController.Instance.inputController.mouseOverTile;
+      if (t != null) {
+
+        InstalledItem proto = InstalledItem.prototypes[installedItemName];
+
+        goBuildTemplate.SetActive(true);
+        SpriteRenderer spr = goBuildTemplate.GetComponent<SpriteRenderer>();
+        spr.sprite = WorldController.Instance.spriteController.GetSprite(proto.spriteName);
+        spr.transform.position = Vector2.zero;
+        spr.color = whiteTransparent;
+        if (!proto.funcPositionValid(WorldController.Instance.world, t.world_x, t.world_y)) {
+          spr.color = redTransparent;
+        }
+
+        goBuildTemplate.transform.position = Vector2.zero;
+        goBuildTemplate.transform.Translate(t.world_x, t.world_y, 0);
+        spr.transform.Translate(Funcs.GetInstalledItemSpriteOffset(proto.width, proto.height));
+      }
+
+    } else if (goBuildTemplate != null) {
+      goBuildTemplate.SetActive(false);
+    }
 
   }
-
-
-
-
-
-
   private void LoadSprites() {
     Sprite[] loaded = Resources.LoadAll<Sprite>("sprites");
     foreach (Sprite s in loaded) {
@@ -65,7 +93,7 @@ public class SpriteController : MonoBehaviour {
     if (t.zone == null) {
       sr.color = Color.white;
     } else {
-      sr.color = new Color(1, 0, 0,0.1f);
+      sr.color = new Color(1, 0, 0, 0.1f);
     }
 
   }
@@ -97,7 +125,7 @@ public class SpriteController : MonoBehaviour {
   public SpriteHolder GetDoorSprite(InstalledItem door, SpriteHolder sh) {
     float openness = door.itemParameters.GetFloat("openness");
 
-    int index = (int) (openness / (1.0f / 7.0f));
+    int index = (int)(openness / (1.0f / 7.0f));
     sh.s = GetSprite("installed_door_" + index);
     //if (openness > 0.75) {
     //  sh.s = GetSprite("installed_door_25");
@@ -106,7 +134,7 @@ public class SpriteController : MonoBehaviour {
     //} else if (openness > 0.1 && openness <= 0.5) {
     //  sh.s = GetSprite("installed_door_75");
     //} else {
-      
+
     //}
 
 

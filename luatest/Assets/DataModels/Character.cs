@@ -254,6 +254,18 @@ public class Character : IXmlSerializable {
     }
   }
 
+  private void Allocate(string name, Tile tile) {
+    if (tile != null && myJob != null) {
+      int qtyAtTile = tile.InventoryTotal(myJob.recipeResourceName);
+      int qtyRequiredForJob = myJob.recipeResouceQty;
+      int qtyInInventory = inventory.HowMany(name);
+      int qtyReq = qtyRequiredForJob - qtyInInventory;
+      int qtyToAllocate = Mathf.Min(qtyAtTile, qtyReq);
+      tile.InventoryAllocate(name,qtyToAllocate);
+    }
+
+  }
+
   private void StateFindResource(float deltaTime) {
     if (myJob != null) {
       if (!inventory.IsEmpty()) {
@@ -278,6 +290,11 @@ public class Character : IXmlSerializable {
               state = STATE.FIND_PATH;
               newStateWhenMoveComplete = STATE.DROP_OFF_AT_TILE;
             } else {
+              Allocate(myJob.recipeResourceName, target);
+              
+              haulFrom = target;
+              state = STATE.FIND_PATH;
+              newStateWhenMoveComplete = STATE.PICK_UP;
               //int a = myJob.tile.InventoryTotal(myJob.recipeResourceName);//myJob.tile.inventoryItem != null ? myJob.tile.inventoryItem.currentStack : 0;
 
               //int b = InventoryItem.GetStackSize(myJob.recipeResourceName); //GetPrototype(target.inventoryItem.type).maxStackSize;
@@ -287,10 +304,12 @@ public class Character : IXmlSerializable {
           } else {
 
             target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName);
+            Allocate(myJob.recipeResourceName, target);
+            haulFrom = target;
+            state = STATE.FIND_PATH;
+            newStateWhenMoveComplete = STATE.PICK_UP;
           }
-          haulFrom = target;
-          state = STATE.FIND_PATH;
-          newStateWhenMoveComplete = STATE.PICK_UP;
+
         }
 
       } else {
@@ -303,6 +322,7 @@ public class Character : IXmlSerializable {
         } else {
           target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName);
         }
+        Allocate(myJob.recipeResourceName, target);
 
         haulFrom = target;
         state = STATE.FIND_PATH;
@@ -364,7 +384,7 @@ public class Character : IXmlSerializable {
     //Debug.Log(name + " Finding a path...");
     //pathAttempts = 0;
     if (target != null) {
-      if (myJob != null) {
+      if (myJob != null && myJob.jobType != JOB_TYPE.WORK_AT_STATION) {
         path = PathFinder.FindPath(world, PosTile, target, true, true);
       } else {
         path = new TilePathAStar(world, PosTile, target);
@@ -551,7 +571,7 @@ public class Character : IXmlSerializable {
   private void StatePickUp(float deltaTime) {
 
     string itemName = myJob.recipeResourceName;
-    int qty = inventory.HowMany(name);
+    int qty = inventory.HowMany(itemName);
 
 
     int qtyNeeded = myJob.recipeResouceQty - myJob.qtyFulfilled - qty;

@@ -77,24 +77,25 @@ public class JobQueue : IXmlSerializable
 
     foreach (Job job in publicJobs)
     {
+      job.age += 1;
+      job.SetPriority();
+      //if (job.jobType == JOB_TYPE.HAUL)
+      //{
+      //  job.priority = 1;
 
-      if (job.jobType == JOB_TYPE.HAUL)
-      {
-        job.priority = 1;
-
-        //Add(job, 1);
-      }
-      else if (job.jobType == JOB_TYPE.BUILD)
-      {
-        if (job.IsRecipeFinished())
-        {
-          job.priority = 0.5f;
-        }
-        else
-        {
-          job.priority = 1.5f;
-        }
-      }
+      //  //Add(job, 1);
+      //}
+      //else if (job.jobType == JOB_TYPE.BUILD)
+      //{
+      //  if (job.IsRecipeFinished())
+      //  {
+      //    job.priority = 0.5f;
+      //  }
+      //  else
+      //  {
+      //    job.priority = 1.5f;
+      //  }
+      //}
       jobs.UpdatePriority(job, job.priority);
     }
   }

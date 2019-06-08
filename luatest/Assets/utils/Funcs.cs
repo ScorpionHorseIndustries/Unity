@@ -118,6 +118,15 @@ public static class Funcs {
     }
   }
 
+  public static Vector2 GetInstalledItemSpriteOffset(int w, int h) {
+
+    Vector2 vec = new Vector2(((float)(w) / 2.0f) - 0.5f, ((float)(h) / 2.0f) - 0.5f);
+
+
+    return vec;
+
+  }
+
 
 
   public static string Base64Encode(byte[] bytes) {

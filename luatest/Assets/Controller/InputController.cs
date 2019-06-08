@@ -43,7 +43,7 @@ public class InputController : MonoBehaviour {
   Tile tileTR = null;
   Tile tileBL = null;
   Tile tileBR = null;
-  Tile mouseOverTile = null;
+  public Tile mouseOverTile { get; private set; } = null;
   private float tileSize = 0;
   private float HALF_tileSize;
   private bool tilesFound = false;
@@ -74,6 +74,7 @@ public class InputController : MonoBehaviour {
     cam.transform.position = new Vector3(wcon.world.width / 2, wcon.world.height / 2, cam.transform.position.z);
     cursorPrefab = Instantiate(cursorPrefab, this.transform.position, Quaternion.identity);
     cursorPrefab.transform.SetParent(this.transform, true);
+    cursorPrefab.SetActive(false);
 
   }
   void Start() {
@@ -147,9 +148,14 @@ public class InputController : MonoBehaviour {
 
     }
 
-
     if (wcon.eventSystem.IsPointerOverGameObject()) {
       return;
+    }
+
+    if (Input.GetKeyUp(KeyCode.Escape) || Input.GetMouseButtonUp(1)) {
+      WorldController.Instance.SetBuildType_Clear();
+      destroyCursors();
+
     }
 
     mouseOverTile = null;
@@ -206,7 +212,9 @@ public class InputController : MonoBehaviour {
       //display drag area
       setDragArea();
       drawCursors();
-      bCon.CreateBuildJobs(dragArea);
+      if (bCon.CreateBuildJobs(dragArea)) {
+        destroyCursors();
+      }
     }
   }
 
@@ -235,6 +243,7 @@ public class InputController : MonoBehaviour {
 
   }
   private void destroyCursors() {
+    cursorPrefab.SetActive(false);
     /*
 		while(dragPreviewList.Count > 0)
 		{

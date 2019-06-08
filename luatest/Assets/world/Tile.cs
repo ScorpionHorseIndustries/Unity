@@ -174,6 +174,16 @@ public class Tile {
     return qtyGiven;
   }
 
+  public int InventoryAllocate(string type, int qty) {
+    return inventory.Allocate(type, qty);
+  }
+
+  public int InventoryDeAllocate(string type, int qty) {
+    return inventory.DeAllocate(type, qty);
+  }
+
+
+
 
 
   public int InventoryTotal(string type) {
@@ -288,7 +298,7 @@ public class Tile {
     this.installedItem = item;
   }
 
-  public bool placeInstalledObject(InstalledItem instobj) {
+  public bool placeInstalledItem(InstalledItem instobj) {
     if (instobj == null) {
       this.installedItem = null;
       return true;
@@ -309,12 +319,25 @@ public class Tile {
     }
   }
 
+  public bool RemoveInstalledItem() {
+    installedItem = null;
+    return true;
+  }
+
+  public bool InventoryHashSpaceFor(string type, int qty) {
+    return inventory.HasSpaceFor(type, qty);
+  }
+
   public bool IsInventoryEmpty() {
     return inventory.IsEmpty();
   }
 
   public bool IsEmpty() {
     return (installedItem == null && inventory.IsEmpty() && movementFactor > 0.3 && !HasPendingJob);
+  }
+
+  public bool IsEmptyApartFromInventory() {
+    return (installedItem == null && movementFactor > 0.3 && !HasPendingJob);
   }
 
   public string GetContents() {

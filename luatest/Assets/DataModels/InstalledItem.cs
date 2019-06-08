@@ -6,8 +6,13 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 
 public class InstalledItem {
-  
 
+  public struct ProductOfWork {
+    string inv_name;
+    int minQty;
+    int maxQty;
+    float chance;
+  }
 
   //-----------------------------------PROPERTIES-----------------------------------
 
@@ -15,6 +20,7 @@ public class InstalledItem {
   public Action<InstalledItem, float> updateActions;
 
   public Func<InstalledItem, Tile.CAN_ENTER> enterRequested;
+  public ProductOfWork[] products;
 
   public string niceName { get; private set; }
   public int prototypeId { get; private set; }
@@ -30,9 +36,10 @@ public class InstalledItem {
   public List<string> randomSprites = new List<string>();
   List<Job> jobs;
   public Inventory inventory;
+  public Recipe recipe { get; private set; }
 
   private InstalledItem prototype = null;
-
+  public Vector2 workTileOffset { get; protected set; } = Vector2.zero; //relative to bottom left tile
 
 
   public string sprite_ns { get; private set; }
@@ -47,6 +54,8 @@ public class InstalledItem {
   public List<string> neighbourTypes;
   public bool roomEnclosure { get; private set; } = true;
   public int inventorySlots { get; private set; } = 0;
+  public float updateActionCountDown = 0;
+  public float updateActionCountDownMax { get; private set; }
   //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
   //bool opening = false;
   //float openTime = 0.25f; //time taken to open/close
@@ -96,7 +105,11 @@ public class InstalledItem {
     this.itemParameters = new ItemParameters(proto.itemParameters);//.GetItems(); 
     this.enterRequested = proto.enterRequested;
     this.neighbourTypes = proto.neighbourTypes;
-    this.inventory = new Inventory(world,proto.inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, this);
+    this.inventory = new Inventory(world, proto.inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, this);
+    this.workTileOffset = new Vector2(proto.workTileOffset.x, proto.workTileOffset.y);
+    //set the countdown timer
+    this.updateActionCountDownMax = proto.updateActionCountDownMax;
+    this.updateActionCountDown = proto.updateActionCountDownMax;
 
   }
 
@@ -130,15 +143,15 @@ public class InstalledItem {
   public void SetParameters(string prms) {
     string[] paramArray = prms.Split(',');
     foreach (string paramPair in paramArray) {
-      string[] paramPairArray= paramPair.Split('=');
+      string[] paramPairArray = paramPair.Split('=');
       if (paramPairArray.Length == 2) {
         string prop = paramPairArray[0].Replace('{', ' ').Replace('}', ' ').Replace('(', ' ').Replace(')', ' ').Trim();
         string val = paramPairArray[1].Replace('{', ' ').Replace('}', ' ').Replace('(', ' ').Replace(')', ' ').Trim();
         itemParameters.Set(prop, val);
-        
+
       }
 
-      
+
     }
 
   }
@@ -168,11 +181,23 @@ public class InstalledItem {
 
   public void Update(float deltaTime) {
     if (updateActions != null) {
-      updateActions(this,deltaTime);
+      if (updateActionCountDown > 0) {
+        updateActionCountDown -= deltaTime;
+        //Debug.Log(updateActionCountDown + " " + updateActionCountDownMax);
+      } else {
+        updateActionCountDown = updateActionCountDownMax;
+        updateActions(this, deltaTime);
+      }
+
+      
     }
-    
+
   }
 
+  //=-=-=-=-=-=-=-=-=-=- HELPERS =-=-=-=-=-=-=-=-=-=-=-=-=-
+  public Tile GetWorkSpot() {
+    return tile.world.GetTileAt((int) (tile.world_x + workTileOffset.x), (int) (tile.world_y + workTileOffset.y));
+  }
 
 
 
@@ -208,34 +233,57 @@ public class InstalledItem {
 
   public bool isPositionValid(World world, int x, int y) {
 
-    for (int xx = x; xx < x + this.width; xx += 1)
-    {
-      for (int yy = y; yy < y + this.height; yy += 1)
-      {
+    for (int xx = x; xx < x + this.width; xx += 1) {
+      for (int yy = y; yy < y + this.height; yy += 1) {
         Tile t = world.GetTileIfChunkExists(xx, yy);
         //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
-        if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty() || t.HasPendingJob)
-        {
+        if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty() || t.HasPendingJob) {
           return false;
         }
-        
+
       }
     }
 
     return true;
 
- 
+
   }
 
   public bool isPositionValid_Door(int x, int y) {
     return false;
   }
 
+  //---
+  public void Deconstruct() {
+    Inventory inventory = new Inventory(WorldController.Instance.world, 99, INVENTORY_TYPE.NONE, this.tile);
+
+    Recipe recipe = GetRecipe(this.type);
+
+    foreach (Recipe.RecipeResource rr in recipe.resources.Values) {
+      int qty = Mathf.CeilToInt((float)rr.qtyRequired / 2.0f);
+
+
+
+      inventory.AddItem(rr.name, qty);
+    }
+
+    for (int xx = tile.world_x; xx < tile.world_x + width; xx += 1) {
+      for (int yy = tile.world_y; yy < tile.world_y + height; yy += 1) {
+        tile.RemoveInstalledItem();
+      }
+    }
+
+    Destroy();
+    inventory.Explode();
+    inventory.ClearAll();
+
+  }
+
 
   //---------------------------------OVERRIDES---------------------------
 
   public override string ToString() {
-    return "installed item: " + type + " (" + width + "," + height + ") inventory:" + this.inventorySlots + " links:" + this.linksToNeighbour;
+    return "installed item: " + type + " (" + width + "," + height + ") off(" + workTileOffset.x + "," + workTileOffset.y +") inventory:" + this.inventorySlots + " links:" + this.linksToNeighbour;
   }
 
 
@@ -247,12 +295,12 @@ public class InstalledItem {
       return null;
     }
     //Debug.Log("InstalledItem.CreateInstance");
-    InstalledItem o = new InstalledItem(world,proto);
+    InstalledItem o = new InstalledItem(world, proto);
 
 
     o.tile = tile;
 
-    if (!o.tile.placeInstalledObject(o)) {
+    if (!o.tile.placeInstalledItem(o)) {
       return null;
 
     }
@@ -269,11 +317,12 @@ public class InstalledItem {
   }
 
 
-//-----------=----------------------STATIC PROPERTIES--------------------------------
+  //-----------=----------------------STATIC PROPERTIES--------------------------------
   public static Dictionary<string, InstalledItem> prototypes;
   public static Dictionary<int, string> prototypesById;
   public static List<InstalledItem> trashPrototypes;
   public static Dictionary<string, string> prototypeRecipes;
+  public static readonly string DECONSTRUCT = "installeditem::action::deconstruct";
 
   public static string GetRecipeName(string name) {
 
@@ -283,6 +332,15 @@ public class InstalledItem {
       return null;
     }
 
+  }
+
+  public static Recipe GetRecipe(string installedItemType) {
+    string recipeName = GetRecipeName(installedItemType);
+    if (recipeName != null) {
+      return Recipe.GetRecipe(recipeName);
+    }
+
+    return null;
   }
 
   public static bool PrototypeExists(string name) {
@@ -324,6 +382,10 @@ public class InstalledItem {
       string recipeName = Funcs.jsonGetString(installedItemJson["recipe"], null);
       bool linked = Funcs.jsonGetBool(installedItemJson["linked"], false);
       int inventorySlots = Funcs.jsonGetInt(installedItemJson["inventorySlots"], 0);
+      int workTileOffsetX = Funcs.jsonGetInt(installedItemJson["workTileOffsetX"], 0);
+      int workTileOffsetY = Funcs.jsonGetInt(installedItemJson["workTileOffsetY"], 0);
+      float updateActionCD = Funcs.jsonGetFloat(installedItemJson["updateActionCountDown"], 0);
+
 
       List<string> sprites = new List<string>();
       JArray spritesJsonArray = (JArray)installedItemJson["sprites"];
@@ -371,9 +433,11 @@ public class InstalledItem {
       proto.roomEnclosure = enclosesRoom;
       proto.recipeName = recipeName;
       proto.inventorySlots = inventorySlots;
+      proto.workTileOffset = new Vector2(workTileOffsetX, workTileOffsetY);
+      proto.updateActionCountDownMax = updateActionCD;
       //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
-      Debug.Log(proto.ToString());
+      Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);
 
       if (linked) {
         string n_s = Funcs.jsonGetString(installedItemJson["neighbour_s"], "");
@@ -398,10 +462,13 @@ public class InstalledItem {
         proto.enterRequested += InstalledItemActions.Door_EnterRequested;
       } else if (name == "installed::stockpile") {
         proto.updateActions += InstalledItemActions.Stockpile_UpdateActions;
+      } else if (name == "installed::mining_controller") {
+        proto.updateActions += InstalledItemActions.MiningController_UpdateActions;
       }
       prototypes.Add(proto.type, proto);
       prototypesById.Add(proto.prototypeId, proto.type);
       prototypeRecipes.Add(proto.type, proto.recipeName);
+      proto.recipe = GetRecipe(proto.type);
 
     }
     //InstalledItem proto = InstalledItemProto("installed::wall", "walls_none", 0, 1, 1,true);

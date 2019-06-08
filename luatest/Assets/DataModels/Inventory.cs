@@ -77,7 +77,7 @@ public class Inventory {
       if (c > 0) {
         output += ",";
       }
-      output += slot.type + "(" + slot.qty + ")";
+      output += slot.type + "(" + slot.qtyAllocated + "/" + slot.qty + ")";
       c += 1;
     }
 
@@ -108,7 +108,7 @@ public class Inventory {
       for (int i = slots.Count - 1; i >= 0; i -= 1) {
         InventorySlot slot = slots[i];
         if (slot.qty > 0) {
-          Tile tn = world.FindEmptyTile(t);
+          Tile tn = world.FindTileForInventoryItem(t,slot.type,slot.qty);
           if (tn != null) {
             RemoveItem(slot.type, tn.AddToInventory(slot.type, slot.qty));
           }
@@ -178,11 +178,51 @@ public class Inventory {
 
   }
 
+  public int Allocate(string type, int qtyToAllocted) {
+    int qtyAccepted = 0;
+    int qtyRemaining = qtyToAllocted;
+    foreach (InventorySlot slot in slots.Where(e => e.type == type)) {
+      if (qtyRemaining == 0) break;
+      int tempQ = slot.Allocate(type, qtyRemaining);
+      qtyRemaining -= tempQ;
+
+    }
+
+    while (qtyRemaining > 0 && slots.Count < numSlots) {
+      int tempQ;
+      slots.Add(InventorySlot.NewSlot(this, type, qtyRemaining, out tempQ));
+      qtyRemaining -= tempQ;
+
+
+
+    }
+    qtyAccepted = qtyToAllocted - qtyRemaining;
+
+    return qtyAccepted;
+
+  }
+
+  public int DeAllocate(string type, int qtyRequested) {
+    int qtyDeallocated = 0;
+    int qtyRemaining = qtyRequested;
+    foreach (InventorySlot slot in slots.Where(e => e.type == type)) {
+      if (qtyRemaining == 0) break;
+      int tempQ = slot.DeAllocate(type, qtyRemaining);
+      qtyRemaining -= tempQ;
+    }
+
+    qtyDeallocated = qtyRequested - qtyRemaining;
+
+    return qtyDeallocated;
+
+
+  }
+
 
   public int TotalQty() {
     int total = 0;
     foreach (InventorySlot slot in slots) {
-      total += slot.qty;
+      total += slot.qtyFree;
     }
 
     return total;
@@ -194,10 +234,26 @@ public class Inventory {
     return slots.Count == 0;
   }
 
+  public bool HasSpaceFor(string type, int qty) {
+
+    int spaceFor = 0;
+    foreach (InventorySlot slot in slots.Where(e => e.type == type)) {
+      spaceFor += slot.qtyCap - slot.qty;
+    }
+
+    if (slots.Count < this.numSlots) {
+      spaceFor += (this.numSlots - slots.Count) * InventoryItem.GetStackSize(type);
+    }
+
+
+    return spaceFor >= qty;
+
+  }
+
   public int HowMany(string type) {
     int qty = 0;
     foreach (InventorySlot slot in slots.Where(e => e.type == type)) {
-      qty += slot.qty;
+      qty += slot.qtyFree;
     }
 
     return qty;
@@ -210,6 +266,8 @@ public class Inventory {
       return null;
     }
   }
+
+
 
   public int RemoveItem(string type, int qtyRequested) {
     int qtyGiven = 0;
@@ -251,6 +309,11 @@ class InventorySlot {
   public int qty { get; private set; }
   public int qtyCap { get; private set; }
   private Inventory parent;
+  public int qtyAllocated { get; private set; }
+
+  public int qtyFree { get {
+      return qty - qtyAllocated;
+    } }
 
   private InventorySlot(Inventory parent) {
     this.parent = parent;
@@ -258,6 +321,27 @@ class InventorySlot {
   }
 
   
+  public int Allocate(string type,int qtyToAllocate) {
+    if (this.type != type) return 0;
+
+    int qtyAllocatedTemp = Mathf.Min(qtyFree, qtyToAllocate);
+
+    qtyAllocated += qtyAllocatedTemp;
+
+    return qtyAllocatedTemp;
+  }
+
+  public int DeAllocate(string type, int qtyToDeAllocate) {
+    if(this.type != type) return 0;
+
+    int rqty = Mathf.Max(qtyAllocated - qtyToDeAllocate, 0);
+    qtyAllocated -= rqty;
+
+    return rqty;
+
+
+  }
+
 
   public int Add(string type, int qtyOffered) {
     if (this.type != type) return 0;
@@ -277,7 +361,7 @@ class InventorySlot {
       qtyGiven = qtyRequested;
       qty -= qtyRequested;
     }
-
+    qtyAllocated = Mathf.Max(0, qtyAllocated - qtyGiven);
 
     return qtyGiven;
   }

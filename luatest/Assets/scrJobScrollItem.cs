@@ -15,7 +15,7 @@ public class scrJobScrollItem : MonoBehaviour {
   }
   public void Setup(Job job) {
     this.job = job;
-    nameText.text = job.jobType.ToString();
+    nameText.text = job.jobType.ToString() + " " + job.age + " p:" + job.priority + "(" + job.minPriority + "," + job.maxPriority + ")";
     switch (job.jobType) {
       case JOB_TYPE.NONE:
         break;

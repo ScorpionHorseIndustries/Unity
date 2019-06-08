@@ -62,33 +62,35 @@ public class Room {
 
   //-------------------------STATIC FUNCTIONS-----------------
   public static void CalculateRooms(InstalledItem source) {
-    Tile tile = source.tile;
-    World world = tile.world;
-    Room oldRoom = tile.room;
 
-    closedSet.Clear();
-    tileQu.Clear();
+    return;
+    //Tile tile = source.tile;
+    //World world = tile.world;
+    //Room oldRoom = tile.room;
 
-    ActualFloodFill(world, tile, tile.North, oldRoom);
-    ActualFloodFill(world, tile, tile.East, oldRoom);
-    ActualFloodFill(world, tile, tile.South, oldRoom);
-    ActualFloodFill(world, tile, tile.West, oldRoom);
+    //closedSet.Clear();
+    //tileQu.Clear();
 
-    if (oldRoom != world.outside) {
-      tile.room = world.outside;
-      oldRoom.tiles.Remove(tile);
-    }
+    //ActualFloodFill(world, tile, tile.North, oldRoom);
+    //ActualFloodFill(world, tile, tile.East, oldRoom);
+    //ActualFloodFill(world, tile, tile.South, oldRoom);
+    //ActualFloodFill(world, tile, tile.West, oldRoom);
 
-
-
-
-    if (oldRoom != world.outside) {
-      if (oldRoom.tiles.Count == 0) {
-        world.DeleteRoom(tile.room);
-      }
+    //if (oldRoom != world.outside) {
+    //  tile.room = world.outside;
+    //  oldRoom.tiles.Remove(tile);
+    //}
 
 
-    }
+
+
+    //if (oldRoom != world.outside) {
+    //  if (oldRoom.tiles.Count == 0) {
+    //    world.DeleteRoom(tile.room);
+    //  }
+
+
+    //}
 
 
   }

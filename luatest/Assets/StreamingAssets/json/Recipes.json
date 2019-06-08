@@ -64,6 +64,41 @@
           "qty": 4
         }
       ]
+    },
+	    {
+      "name": "recipe::installed::mining_controller",
+      "id": 7,
+      "buildTime" : 1,
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 8
+        },
+		 {
+          "name": "inv::copper_plates",
+          "qty": 2
+        }
+      ]
+    },
+	    {
+      "name": "recipe::installed::mining_controller::work",
+      "id": 8,
+      "buildTime" : 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+		  "qtyMax" : 3,
+		  "chance" : 0.7
+		  
+        },
+		 {
+          "name": "inv::copper_plates",
+          "qtyMin": 1,
+		  "qtyMax" : 3,
+		  "chance" : 0.3
+        }
+      ]
     }
   ]
 }

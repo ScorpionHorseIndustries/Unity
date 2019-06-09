@@ -27,13 +27,15 @@ public class World : IXmlSerializable {
   public static readonly string SOUTHWEST = "southwest";
   public static readonly string SOUTHEAST = "southeast";
 
+
+
   //testing
   public static readonly int NUMBER_OF_ROBOTS = 5;
 
   public static readonly int TEST_WIDTH = 30;
   public static readonly int TEST_HEIGHT = 30;
 
-  public static readonly int M_M_MAXIMUM_TRASH = 30;
+  public static readonly int M_M_MAXIMUM_TRASH = 10;
 
   public void OnInventoryItemChangedOnTile(Tile tile) {
     if (cbTileInventoryItemChangedOnTile != null) {
@@ -60,7 +62,9 @@ public class World : IXmlSerializable {
 
   //public List<InventoryItem> inventoryItems;
   //properties
-  private float xSeed, ySeed, noiseFactor;
+  public float xSeed { get; private set; }
+  public float ySeed { get; private set; }
+  public float noiseFactor { get; private set; }
 
 
   public int width { get; private set; }
@@ -108,6 +112,7 @@ public class World : IXmlSerializable {
 
   //collections
   string[] savedInstalledItems;
+  public bool chunksInitialised { get; private set; } = false;
 
 
 
@@ -163,7 +168,10 @@ public class World : IXmlSerializable {
     return chunk;
   }
 
-  void CreateEmptyTiles() {
+  public void CreateEmptyTiles() {
+
+    if (chunksInitialised) return;
+    chunksInitialised = true;
 
     for (int x = 0; x < SPAWN_CHUNKS; x += 1) {
       chunks[x] = new Dictionary<int, TileChunk>();
@@ -204,6 +212,9 @@ public class World : IXmlSerializable {
 
   void InitNew(int width, int height, int tileSize) {
 
+
+    seed = DateTime.Now.ToLongDateString() + "_" + DateTime.Now.ToLongTimeString() + "_" + DateTime.Now.ToUniversalTime();
+    UnityEngine.Random.InitState(seed.GetHashCode());
     xSeed = UnityEngine.Random.Range(-10f, 10f);
     ySeed = UnityEngine.Random.Range(-10f, 10f);
     noiseFactor = UnityEngine.Random.Range(0.01f, 0.1f);
@@ -221,14 +232,18 @@ public class World : IXmlSerializable {
     InstalledItem.LoadFromFile();
     InventoryItem.LoadFromFile();
 
-
-    CreateEmptyTiles();
+    this.trashPrototypes = InstalledItem.trashPrototypes;
 
     loadNames();
 
 
 
+
+    //CreateEmptyTiles();
+
   }
+
+
 
   void SetCallbacks() {
     //CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlaced);
@@ -518,21 +533,22 @@ public class World : IXmlSerializable {
       if (t.InventoryHasSpaceFor(itemName, qty)) {
         return t;
       }
-    } else {
-      foreach (Tile tn in t.neighboursList) {
-        if (tn.IsEmptyApartFromInventory()) {
-          if (tn.InventoryHasSpaceFor(itemName, qty)) {
-            return tn;
-          }
-        }
-      }
-      foreach (Tile tn in t.neighboursList) {
-        Tile r = FindTileForInventoryItem(tn, itemName, qty);
-        if (r != null) {
-          return r;
+    }
+
+    foreach (Tile tn in t.neighboursList) {
+      if (tn.IsEmptyApartFromInventory()) {
+        if (tn.InventoryHasSpaceFor(itemName, qty)) {
+          return tn;
         }
       }
     }
+    foreach (Tile tn in t.neighboursList) {
+      Tile r = FindTileForInventoryItem(tn, itemName, qty);
+      if (r != null) {
+        return r;
+      }
+    }
+
 
     return null;
   }

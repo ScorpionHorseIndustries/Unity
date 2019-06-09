@@ -111,6 +111,7 @@ public class Inventory {
           Tile tn = world.FindTileForInventoryItem(t,slot.type,slot.qty);
           if (tn != null) {
             RemoveItem(slot.type, tn.AddToInventory(slot.type, slot.qty));
+            //Debug.Log("exploded: " + slot.type + " " + slot.qty);
           }
         }
       }

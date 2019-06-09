@@ -176,22 +176,27 @@ public class Job : IXmlSerializable {
       inventory = new Inventory(tile.world, 99, INVENTORY_TYPE.JOB, this);
       installedItemPrototype = InstalledItem.prototypes[description];//.spriteName;
       string recipeName = InstalledItem.prototypeRecipes[description];
-      if (recipeName != null) {
-        recipe = Recipe.GetRecipe(recipeName);
-        this.jobTime = recipe.buildTime;
-
-
-        foreach (Recipe.RecipeResource rr in recipe.resources.Values) {
-          inventory.AddRestriction(rr.name, rr.qtyRequired);
-        }
-        //Debug.Log("new job time is" + this.jobTime);
-      }
+      CreateJobRecipe(recipeName);
     } else if (jobType == JOB_TYPE.WORK_AT_STATION) {
       inventory = new Inventory(tile.world, 99, INVENTORY_TYPE.JOB, this);
       recipe = Recipe.GetRecipe(description);
+      CreateJobRecipe(description);
       this.jobTime = recipe.buildTime;
     }
 
+  }
+
+  private void CreateJobRecipe(string recipeName) {
+    if (recipeName != null) {
+      recipe = Recipe.GetRecipe(recipeName);
+      this.jobTime = recipe.buildTime;
+
+
+      foreach (Recipe.RecipeResource rr in recipe.resources.Values) {
+        inventory.AddRestriction(rr.name, rr.qtyRequired);
+      }
+      //Debug.Log("new job time is" + this.jobTime);
+    }
   }
 
   public void OnItemAdded(string item, int qty) {
@@ -242,8 +247,10 @@ public class Job : IXmlSerializable {
         cbJobComplete(this);
       }
       if (parent == null) {
-        inventory.ClearAll();
-        WorldController.Instance.world.inventoryManager.UnregisterInventory(inventory);
+        if (inventory != null) {
+          inventory.ClearAll();
+          WorldController.Instance.world.inventoryManager.UnregisterInventory(inventory);
+        }
       }
 
     }

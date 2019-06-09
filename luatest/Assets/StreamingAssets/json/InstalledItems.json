@@ -36,7 +36,8 @@
       "trash" : true,
       "build" : false,
       "randomRotation" : true,
-	  "enclosesRoom" : false
+	  "enclosesRoom" : false,
+	  "recipe" : "recipe::installed::organic_trash"
       
   },
     {
@@ -52,7 +53,11 @@
       "randomRotation" : false,
 	  "enclosesRoom" : false,
 	  "recipe" : "recipe::installed::atm",
-	  "updateActionCountDown" : 1
+	  "updateActionCountDown" : 1,
+	  "width" : 1,
+	  "height" : 2,
+	  "workRecipe" : "recipe::installed::atm::work",
+	  "workstation" : true
       
   },
       {
@@ -68,7 +73,11 @@
       "randomRotation" : false,
 	  "enclosesRoom" : false,
 	  "recipe" : "recipe::installed::recycler",
-	  "updateActionCountDown" : 1
+	  "updateActionCountDown" : 1,
+	  "width" : 1,
+	  "height" : 2,
+	  "workRecipe" : "recipe::installed::recycler::work",
+	  "workstation" : true
       
   },
     {
@@ -89,6 +98,7 @@
     "neighbour_nesw" : "installed_door_0",
 	"enclosesRoom" : true,
 	"recipe" : "recipe::installed::door"
+	
     
   },
   {
@@ -144,18 +154,8 @@
 	"height" : 3,
 	"workTileOffsetX" : 1,
 	"updateActionCountDown" : 3,
-	"productOfWork" : [
-		{ "name" : "inv::steel_plates",
-		"minQty": 1,
-		"maxQty" : 4,
-		"chance" : 0.7
-		},
-		{ "name" : "inv::copper_plates",
-		"minQty": 1,
-		"maxQty" : 4,
-		"chance" : 0.3
-		}
-	]
+	"workRecipe" : "recipe::installed::mining_controller::work",
+	"workstation" : true
 	
   }
 

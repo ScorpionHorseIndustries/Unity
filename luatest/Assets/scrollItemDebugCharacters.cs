@@ -19,7 +19,7 @@ public class scrollItemDebugCharacters : MonoBehaviour {
     txtName.text = chr.name + " " + chr.state.ToString();
     txtJob.text = "";
     if (chr.myJob != null) {
-      txtJob.text = chr.myJob.description + " " + chr.myJob.inventory.ToString() + "\n" + chr.myJob.ToString();
+      txtJob.text = chr.myJob.description + " " + (chr.myJob.inventory != null ? chr.myJob.inventory.ToString() : "") + "\n" + chr.myJob.ToString();
 
     }
 

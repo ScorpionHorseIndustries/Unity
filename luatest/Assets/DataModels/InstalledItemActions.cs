@@ -47,47 +47,76 @@ public static class InstalledItemActions {
     }
   }
 
-  public static void MiningController_UpdateActions(InstalledItem item, float deltaTime) {
+  //public static void MiningController_UpdateActions(InstalledItem item, float deltaTime) {
+  //  Tile tile = item.GetWorkSpot();
+
+
+  //  if (!tile.HasPendingJob) {
+  //    Job j = new Job(
+  //      tile,
+  //      MiningController_JobComplete,
+  //      MiningController_JobCancelled,
+  //      JOB_TYPE.WORK_AT_STATION,
+  //      1,
+  //      "recipe::installed::mining_controller::work"
+
+  //      );
+
+  //    WorldController.Instance.world.jobQueue.Push(j);
+  //  }
+      
+  //}
+
+  public static void Workstation_UpdateActions(InstalledItem item, float deltaTime) {
     Tile tile = item.GetWorkSpot();
 
 
     if (!tile.HasPendingJob) {
       Job j = new Job(
         tile,
-        MiningController_JobComplete,
-        MiningController_JobCancelled,
+        Workstation_JobComplete,
+        Workstation_JobCancelled,
         JOB_TYPE.WORK_AT_STATION,
         1,
-        "recipe::installed::mining_controller::work"
+        item.workRecipeName
 
         );
 
       WorldController.Instance.world.jobQueue.Push(j);
     }
-      
+
   }
 
-  public static void MiningController_JobComplete(Job job) {
+  public static void Workstation_JobComplete(Job job) {
     Recipe.RecipeProduct rp = job.recipe.GetProduct();
-    int qty = UnityEngine.Random.Range(rp.qtyMin, rp.qtyMax + 1);
-    Tile tile = WorldController.Instance.world.FindTileForInventoryItem(job.tile, rp.name, qty);
+    if (rp != null) {
+      int qty = UnityEngine.Random.Range(rp.qtyMin, rp.qtyMax + 1);
+      Tile tile = WorldController.Instance.world.FindTileForInventoryItem(job.tile, rp.name, qty);
 
-    if (tile != null) {
-      
+      if (tile != null) {
 
-      if (rp != null) {
-        Inventory inv = new Inventory(WorldController.Instance.world, 1, INVENTORY_TYPE.NONE, tile);
-        inv.AddItem(rp.name, qty);
-        inv.Explode();
-        inv.ClearAll();
+
+        if (rp != null) {
+          Inventory inv = new Inventory(WorldController.Instance.world, 1, INVENTORY_TYPE.NONE, tile);
+          inv.AddItem(rp.name, qty);
+          inv.Explode();
+          inv.ClearAll();
+        }
+
+        
       }
+    }
 
-      job.tile.RemoveJob(job);
+    if (job.recipe.isCash) {
+      WorldController.Instance.addCurrency(UnityEngine.Random.Range(job.recipe.minCash, job.recipe.maxCash));
     }
 
 
+    job.tile.RemoveJob(job);
+
+
   }
-  public static void MiningController_JobCancelled(Job job) {
+  public static void Workstation_JobCancelled(Job job) {
 
   }
 

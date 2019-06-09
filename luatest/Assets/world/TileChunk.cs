@@ -29,6 +29,7 @@ public class TileChunk : IXmlSerializable {
   }
 
   Dictionary<string, TileChunk> neighbours;
+  
 
   public void Init() {
     for (int xx = 0; xx < CHUNK_WIDTH; xx += 1) {
@@ -42,8 +43,8 @@ public class TileChunk : IXmlSerializable {
         //tiles[x, y].room = rooms[0];
         world.outside.AssignTile(t);
 
-        float xf = ((float)t.world_x) * 0.05f;
-        float yf = ((float)t.world_y) * 0.05f;
+        float xf = ((float)t.world_x + world.xSeed) * world.noiseFactor;
+        float yf = ((float)t.world_y + world.ySeed) * world.noiseFactor;
         int j = (int)((Mathf.PerlinNoise(xf, yf)) * (float)TileType.countNatural);
 
         foreach (string k in TileType.TYPES.Keys) {
@@ -52,6 +53,19 @@ public class TileChunk : IXmlSerializable {
           if (tempT.name != "empty") {
             if (j == tempT.height) {
               t.SetType(tempT);
+
+              if (Funcs.Chance(1)) {
+                if (InstalledItem.trashPrototypes.Count > 0) {
+                  string trashItemName = InstalledItem.trashPrototypes[UnityEngine.Random.Range(0, world.trashPrototypes.Count)].type;
+                  world.PlaceInstalledItem(trashItemName, t);
+                  
+                }
+              } else if (Funcs.Chance(1)) {
+                string type = InventoryItem.GetRandomPrototype().type;
+                int qty = UnityEngine.Random.Range(1, InventoryItem.GetStackSize(type) + 1);
+                world.PlaceTileInventoryItem(type, t, qty);
+              }
+
               break;
             }
           }

@@ -56,6 +56,9 @@ public class InstalledItem {
   public int inventorySlots { get; private set; } = 0;
   public float updateActionCountDown = 0;
   public float updateActionCountDownMax { get; private set; }
+  public string workRecipeName { get; private set; }
+  public bool isWorkstation { get; private set; } = false;
+
   //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
   //bool opening = false;
   //float openTime = 0.25f; //time taken to open/close
@@ -110,6 +113,8 @@ public class InstalledItem {
     //set the countdown timer
     this.updateActionCountDownMax = proto.updateActionCountDownMax;
     this.updateActionCountDown = proto.updateActionCountDownMax;
+    this.workRecipeName = proto.workRecipeName;
+    this.isWorkstation = proto.isWorkstation;
 
   }
 
@@ -264,7 +269,7 @@ public class InstalledItem {
 
 
 
-      inventory.AddItem(rr.name, qty);
+      Debug.Log("Added: " + inventory.AddItem(rr.name, qty) + " of " + rr.name);
     }
 
     for (int xx = tile.world_x; xx < tile.world_x + width; xx += 1) {
@@ -385,6 +390,8 @@ public class InstalledItem {
       int workTileOffsetX = Funcs.jsonGetInt(installedItemJson["workTileOffsetX"], 0);
       int workTileOffsetY = Funcs.jsonGetInt(installedItemJson["workTileOffsetY"], 0);
       float updateActionCD = Funcs.jsonGetFloat(installedItemJson["updateActionCountDown"], 0);
+      bool IsWorkstation = Funcs.jsonGetBool(installedItemJson["workstation"], false);
+      string workRecipeName = Funcs.jsonGetString(installedItemJson["workRecipe"], "");
 
 
       List<string> sprites = new List<string>();
@@ -435,6 +442,8 @@ public class InstalledItem {
       proto.inventorySlots = inventorySlots;
       proto.workTileOffset = new Vector2(workTileOffsetX, workTileOffsetY);
       proto.updateActionCountDownMax = updateActionCD;
+      proto.isWorkstation = IsWorkstation;
+      proto.workRecipeName = workRecipeName;
       //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
       Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);
@@ -462,8 +471,8 @@ public class InstalledItem {
         proto.enterRequested += InstalledItemActions.Door_EnterRequested;
       } else if (name == "installed::stockpile") {
         proto.updateActions += InstalledItemActions.Stockpile_UpdateActions;
-      } else if (name == "installed::mining_controller") {
-        proto.updateActions += InstalledItemActions.MiningController_UpdateActions;
+      } else if (IsWorkstation) {
+        proto.updateActions += InstalledItemActions.Workstation_UpdateActions;
       }
       prototypes.Add(proto.type, proto);
       prototypesById.Add(proto.prototypeId, proto.type);

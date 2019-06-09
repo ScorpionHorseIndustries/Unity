@@ -173,7 +173,7 @@ public class WorldController : MonoBehaviour {
 
     world = new World(World.TEST_WIDTH, World.TEST_HEIGHT);
 
-    CreateTileGameObjects();
+    
     //world.RandomiseTiles();
     //MapGenerator.MakeNewMap(world, world.height, world.width);
     //create game objects for tiles
@@ -192,27 +192,27 @@ public class WorldController : MonoBehaviour {
     world.CBRegisterInventoryItemChangedOnTile(OnInventoryItemChanged);
     //world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
     world.CBRegisterChunkCreated(OnChunkCreated);
-    world.CreateCharacters();
+
 
 
     //world.SetAllNeighbours();
 
-    world.PlaceTrash();
+    //world.PlaceTrash();
 
-    for (int i = 0; i < 5; i += 1) {
-      Tile a = world.GetRandomEmptyTile();
-      Tile b = world.GetRandomEmptyTile();
-      Tile c = world.GetRandomEmptyTile();
-      Tile d = world.GetRandomEmptyTile();
-      if (a != null)
-        world.PlaceTileInventoryItem("inv::steel_plates", a, UnityEngine.Random.Range(16, 32));
-      if (b != null)
-        world.PlaceTileInventoryItem("inv::wood_planks", b, UnityEngine.Random.Range(16, 32));
-      if (c != null)
-        world.PlaceTileInventoryItem("inv::stone_slabs", c, UnityEngine.Random.Range(16, 32));
-      if (d != null)
-        world.PlaceTileInventoryItem("inv::copper_plates", d, UnityEngine.Random.Range(16, 32));
-    }
+    //for (int i = 0; i < 5; i += 1) {
+    //  Tile a = world.GetRandomEmptyTile();
+    //  Tile b = world.GetRandomEmptyTile();
+    //  Tile c = world.GetRandomEmptyTile();
+    //  Tile d = world.GetRandomEmptyTile();
+    //  if (a != null)
+    //    world.PlaceTileInventoryItem("inv::steel_plates", a, UnityEngine.Random.Range(16, 32));
+    //  if (b != null)
+    //    world.PlaceTileInventoryItem("inv::wood_planks", b, UnityEngine.Random.Range(16, 32));
+    //  if (c != null)
+    //    world.PlaceTileInventoryItem("inv::stone_slabs", c, UnityEngine.Random.Range(16, 32));
+    //  if (d != null)
+    //    world.PlaceTileInventoryItem("inv::copper_plates", d, UnityEngine.Random.Range(16, 32));
+    //}
     //world.nodeMap = new TileNodeMap(world);
 
     //initDone = false;
@@ -270,6 +270,14 @@ public class WorldController : MonoBehaviour {
     Init();
     CreateNewWorld();
     InitialiseControllers();
+    InitWorld();
+
+  }
+
+  private void InitWorld() {
+    world.CreateEmptyTiles(); 
+    CreateTileGameObjects();
+    world.CreateCharacters();
 
   }
 
@@ -338,10 +346,13 @@ public class WorldController : MonoBehaviour {
     if (loadWorld) {
       loadWorld = false;
       CreateWorldFromSave();
+      InitialiseControllers();
     } else {
       CreateNewWorld();
+      InitialiseControllers();
+      InitWorld();
     }
-    InitialiseControllers();
+    
     Debug.Log("init done " + this.name);
     gameState = GAME_STATE.PLAY;
   }
@@ -394,7 +405,7 @@ public class WorldController : MonoBehaviour {
     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
   }
 
-  private void addCurrency(float amt) {
+  public void addCurrency(float amt) {
     money += amt;
     cashText.GetComponent<Text>().text = string.Format("{0:00.00}", money);
 

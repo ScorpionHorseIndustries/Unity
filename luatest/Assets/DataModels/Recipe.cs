@@ -85,14 +85,23 @@ public class Recipe {
 
 
   public Dictionary<string, RecipeResource> resources;
+
+  public bool isCash { get; private set; }
+  public float minCash { get; private set; }
+  public float maxCash { get; private set; }
+
   public Dictionary<string, RecipeProduct> products;
 
 
   private Recipe(Recipe proto) {
+    
     this.name = proto.name;
     this.id = proto.id;
     resources = new Dictionary<string, RecipeResource>();
     products = new Dictionary<string, RecipeProduct>();
+    this.isCash = proto.isCash;
+    this.minCash = proto.minCash;
+    this.maxCash = proto.maxCash;
     this.buildTime = proto.buildTime;
     
     foreach (RecipeResource rp in proto.resources.Values) {
@@ -187,6 +196,9 @@ public class Recipe {
 
       recipe.products = new Dictionary<string, RecipeProduct>();
       recipe.resources = new Dictionary<string, RecipeResource>();
+      recipe.isCash = Funcs.jsonGetBool(jRecipe["cash"], false);
+      recipe.minCash = Funcs.jsonGetFloat(jRecipe["minCash"], 0);
+      recipe.maxCash = Funcs.jsonGetFloat(jRecipe["maxCash"], 0);
 
       JArray jaResources = Funcs.jsonGetArray(jRecipe, "resources");
 

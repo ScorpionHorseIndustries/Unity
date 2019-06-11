@@ -30,6 +30,8 @@ public class WorldController : MonoBehaviour {
   public GameObject debugCharItemPrefab;
   public GameObject debugCharContent;
 
+  public GameObject uConsoleObject;
+
   public GAME_STATE gameState = GAME_STATE.PLAY;
 
 

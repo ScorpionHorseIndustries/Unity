@@ -127,6 +127,33 @@ public static class Funcs {
 
   }
 
+  public static Vector2 Spiral(float n) {
+    
+
+
+    float k = Mathf.Ceil((Mathf.Sqrt(n) - 1) / 2);
+    float t = 2 * k + 1;
+    float m = t * t;
+    t = t - 1;
+    if (n >= m - t) {
+      return new Vector2(k - (m - n), -k);
+    } else {
+      m = m - t;
+    }
+
+    if (n >= m - t) {
+      return new Vector2(-k, -k + (m - n));
+    } else {
+      m = m - t;
+    }
+
+    if (n >= m - t) {
+      return new Vector2(-k + (m - n), k);
+    } else {
+      return new Vector2(k, k - (m - n - t));
+    }
+  }
+
 
 
   public static string Base64Encode(byte[] bytes) {

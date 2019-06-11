@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using CardboardKeep;
 
 
 public class InputController : MonoBehaviour {
@@ -50,6 +51,7 @@ public class InputController : MonoBehaviour {
 
 
 
+
   private void Awake() {
 
   }
@@ -75,6 +77,8 @@ public class InputController : MonoBehaviour {
     cursorPrefab = Instantiate(cursorPrefab, this.transform.position, Quaternion.identity);
     cursorPrefab.transform.SetParent(this.transform, true);
     cursorPrefab.SetActive(false);
+
+    WorldController.Instance.uConsoleObject.SetActive(false);
 
   }
   void Start() {
@@ -129,6 +133,24 @@ public class InputController : MonoBehaviour {
   //state
   void Update() {
     if (!initialised) return;
+
+
+    if (Input.GetKeyDown(KeyCode.BackQuote)) {
+      GameObject go = WorldController.Instance.uConsoleObject;
+      CardboardKeep.UConsole uc = WorldController.Instance.uConsoleObject.GetComponent<CardboardKeep.UConsole>();
+      if (go.activeSelf) {
+        
+        
+        uc.Deactivate();
+        go.SetActive(false);
+      } else {
+        go.SetActive(true);
+        uc.Activate();
+        
+      }
+
+
+    }
 
 
     if (Input.GetKeyUp(KeyCode.E)) {

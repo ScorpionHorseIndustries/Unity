@@ -17,7 +17,10 @@ public class LuaActions {
   public static void LuaString(string code) {
     System.Object[] result = lua.DoString(code);
 
-    Debug.Log(result.ToString());
+    
+    foreach (System.Object o in result) {
+      Debug.Log(o.ToString());
+    }
   }
 
 

@@ -297,11 +297,13 @@ public class World : IXmlSerializable {
   //-----------------------------CONSTRUCTORS------------------------------
   public World() {
     current = this;
+    LuaActions.Init();
   }
   public World(int width = 50, int height = 50, int tileSize = 32) {
     current = this;
     InitNew(width, height, tileSize);
     //CreateCharacters();
+    LuaActions.Init();
     LuaActions.LuaString("return 123");
   }
 
@@ -536,30 +538,77 @@ public class World : IXmlSerializable {
   //private void OnInventoryItemRemoved(Tile tile) {
   //  //inventoryManager.RemoveInventoryItem(tile.inventoryItem);
   //}
+  public Tile FindEmptyTile(Tile t) {
 
+    if (t.IsEmpty()) return t;
+
+    int n = 0;
+    while (n < 1000) {
+      Vector2 vec = Funcs.Spiral(n);
+
+      int x = t.world_x + (int)vec.x;
+      int y = t.world_y + (int)vec.y;
+      if (x >= 0 && y >= 0) {
+        Tile tn = GetTileIfChunkExists(x, y);
+        if (tn != null && tn.IsEmpty()) {
+          return tn;
+
+        }
+      }
+
+      n += 1;
+    }
+
+    return null;
+
+
+  }
   public Tile FindTileForInventoryItem(Tile t, string itemName, int qty) {
+
     if (t.IsEmptyApartFromInventory()) {
       if (t.InventoryHasSpaceFor(itemName, qty)) {
         return t;
       }
     }
 
-    foreach (Tile tn in t.neighboursList) {
-      if (tn.IsEmptyApartFromInventory()) {
-        if (tn.InventoryHasSpaceFor(itemName, qty)) {
-          return tn;
+    int n = 0;
+    while (n < 1000) {
+      Vector2 vec = Funcs.Spiral(n);
+
+      int x = t.world_x + (int)vec.x;
+      int y = t.world_y + (int)vec.y;
+      if (x >= 0 && y >= 0) {
+        Tile tn = GetTileIfChunkExists(x, y);
+        if (tn != null) {
+          if (tn.IsEmptyApartFromInventory()) {
+            if (tn.InventoryHasSpaceFor(itemName, qty)) {
+              return tn;
+            }
+          }
         }
       }
-    }
-    foreach (Tile tn in t.neighboursList) {
-      Tile r = FindTileForInventoryItem(tn, itemName, qty);
-      if (r != null) {
-        return r;
-      }
-    }
 
+      n += 1;
+    }
 
     return null;
+
+
+
+    
+
+    //foreach (Tile tn in t.neighboursList) {
+      
+    //}
+    //foreach (Tile tn in t.neighboursList) {
+    //  Tile r = FindTileForInventoryItem(tn, itemName, qty);
+    //  if (r != null) {
+    //    return r;
+    //  }
+    //}
+
+
+    //return null;
   }
 
 
@@ -592,30 +641,7 @@ public class World : IXmlSerializable {
     return t;
   }
 
-  public Tile FindEmptyTile(Tile t) {
-    //oh good. recursion. my favourite.
-    if (t.IsEmpty()) {
-      return t;
-    } else {
-      foreach (Tile tn in t.neighboursList) {
-        if (tn.IsEmpty()) {
-          return tn;
-        }
 
-
-      }
-
-      foreach (Tile tn in t.neighboursList) {
-        Tile r = FindEmptyTile(tn);
-        if (r != null) {
-          return r;
-        }
-      }
-    }
-
-    return null;
-
-  }
 
   public int PlaceTileInventoryItem(string type, Tile tile, int qty) {
 

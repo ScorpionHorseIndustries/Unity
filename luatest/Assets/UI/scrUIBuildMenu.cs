@@ -24,7 +24,7 @@ public class scrUIBuildMenu : MonoBehaviour {
       btn.name = "btnBuild::" + proto.type;
       btn.onClick.AddListener(delegate { WorldController.Instance.SetBuildType_InstalledItem(proto.type); });
       btn.transform.localScale = Vector2.one;
-      
+       
     }
 
   }

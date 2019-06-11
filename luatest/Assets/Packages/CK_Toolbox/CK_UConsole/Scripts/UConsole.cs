@@ -17,7 +17,7 @@ namespace CardboardKeep
     public class UConsole : MonoBehaviour
     {
         // Static instance
-        static UConsole instance;
+        public static UConsole instance;
 
         // Components
         UConsoleCommands commands;
@@ -41,9 +41,9 @@ namespace CardboardKeep
 
             commands = GetComponent<UConsoleCommands>();
             canvas = GetComponent<CanvasGroup>();
-            inputField = transform.FindChild("InputField").GetComponent<InputField>();
-			suggestions = transform.FindChild("ConsoleSuggestions").GetComponent<Text>();
-            eventLog = transform.FindChild("EventLog").GetComponent<Text>();
+            inputField = transform.Find("InputField").GetComponent<InputField>();
+			suggestions = transform.Find("ConsoleSuggestions").GetComponent<Text>();
+            eventLog = transform.Find("EventLog").GetComponent<Text>();
 
             methods.AddRange(commands.GetType().GetMethods(flags));
             methods.Sort((x, y) => string.Compare(x.Name, y.Name)); // Order alphabetically
@@ -99,7 +99,7 @@ namespace CardboardKeep
             }
         }
 
-        void Activate()
+        public void Activate()
         {
             on = true;
             inputField.enabled = true;
@@ -110,7 +110,7 @@ namespace CardboardKeep
 			commands.Invoke("GameSpecificActivate", 0);
         }
 
-        void Deactivate()
+        public void Deactivate()
         {
             on = false;
             inputField.DeactivateInputField();

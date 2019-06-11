@@ -78,7 +78,7 @@ public class BuildController : MonoBehaviour {
     foreach (Tile tile in tiles) {
       //tile.placeInstalledObject();
       string localRecipe = InstalledItem.GetRecipeName(localBuild);
-      if (wcon.world.isInstalledItemPositionValid(wcon.world, build, tile)) {
+      if (World.current.isInstalledItemPositionValid(World.current, build, tile)) {
         Job j = new Job(
               tile,
               OnInstalledItemJobComplete, //(theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
@@ -88,7 +88,7 @@ public class BuildController : MonoBehaviour {
               localBuild
             );
         tile.AddJob(j);
-        wcon.world.jobQueue.Push(j);
+        World.current.jobQueue.Push(j);
 
         //tile.pendingJob = true;
         //Debug.Log("jobs in queue: " +world.jobQueue.Count);
@@ -110,7 +110,7 @@ public class BuildController : MonoBehaviour {
               InstalledItem.DECONSTRUCT
             );
         tile.AddJob(j);
-        wcon.world.jobQueue.Push(j);
+        World.current.jobQueue.Push(j);
 
         //tile.pendingJob = true;
         //Debug.Log("jobs in queue: " +world.jobQueue.Count);
@@ -136,7 +136,7 @@ public class BuildController : MonoBehaviour {
       Debug.Log("could not remove job from tile");
     }
     //job.tile.pendingJob = false;
-    if (wcon.world.PlaceInstalledItem(job.description, job.tile) == null) {
+    if (World.current.PlaceInstalledItem(job.description, job.tile) == null) {
       job.inventory.Explode();
     }
 

@@ -27,6 +27,8 @@ public class World : IXmlSerializable {
   public static readonly string SOUTHWEST = "southwest";
   public static readonly string SOUTHEAST = "southeast";
 
+  public static World current { get; private set; }
+
 
 
   //testing
@@ -294,12 +296,13 @@ public class World : IXmlSerializable {
 
   //-----------------------------CONSTRUCTORS------------------------------
   public World() {
-
+    current = this;
   }
   public World(int width = 50, int height = 50, int tileSize = 32) {
-
+    current = this;
     InitNew(width, height, tileSize);
     //CreateCharacters();
+    LuaActions.LuaString("return 123");
   }
 
   public void SetAllNeighbours() {
@@ -357,7 +360,13 @@ public class World : IXmlSerializable {
       c.Update(deltaTime);
     }
 
-    foreach (InstalledItem item in installedItems) {
+    foreach (InstalledItem item in installedItems.Where(e => e.type == "installed::stockpile" && !e.inventory.IsEmpty())) {
+      item.Update(deltaTime);
+    }
+    foreach (InstalledItem item in installedItems.Where(e => e.type == "installed::stockpile" && e.inventory.IsEmpty())) {
+      item.Update(deltaTime);
+    }
+    foreach (InstalledItem item in installedItems.Where(e => e.type != "installed::stockpile")) {
       item.Update(deltaTime);
     }
 
@@ -553,6 +562,36 @@ public class World : IXmlSerializable {
     return null;
   }
 
+
+  public Tile FindEmptyStockPile() {
+    Tile t = null;
+
+    foreach (InstalledItem item in installedItems.Where(e => e.type == "installed::stockpile")) {
+      int space = item.tile.GetInventorySpace();
+      string itemName = null;
+      int qtyToFetch = 0;
+      switch (space) {
+        case 0:
+          //do nothing
+          break;
+        case -1:
+          //completely empty
+          Tile fetchFromTile = inventoryManager.GetNearest(item.tile, InventoryItem.ANY, false);
+          if (fetchFromTile != null) {
+            itemName = fetchFromTile.GetFirstInventoryItem();
+            qtyToFetch = fetchFromTile.InventoryTotal(itemName);
+          }
+          break;
+        default:
+
+          break;
+      }
+    }
+
+
+    return t;
+  }
+
   public Tile FindEmptyTile(Tile t) {
     //oh good. recursion. my favourite.
     if (t.IsEmpty()) {
@@ -635,6 +674,17 @@ public class World : IXmlSerializable {
 
   //  return null;
   //}
+
+  public void RemoveInstalledItem(InstalledItem item) {
+    if (installedItems.Contains(item)) {
+      installedItems.Remove(item);
+    }
+
+    if (trashInstances.Contains(item)) {
+      trashInstances.Remove(item);
+    }
+
+  }
 
   public InstalledItem PlaceInstalledItem(string buildItem, Tile tile) {
     ///TODO: Assumes 1x1 tiles

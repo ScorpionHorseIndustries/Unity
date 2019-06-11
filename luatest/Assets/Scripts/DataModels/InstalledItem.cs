@@ -201,7 +201,7 @@ public class InstalledItem {
 
   //=-=-=-=-=-=-=-=-=-=- HELPERS =-=-=-=-=-=-=-=-=-=-=-=-=-
   public Tile GetWorkSpot() {
-    return tile.world.GetTileAt((int) (tile.world_x + workTileOffset.x), (int) (tile.world_y + workTileOffset.y));
+    return World.current.GetTileAt((int) (tile.world_x + workTileOffset.x), (int) (tile.world_y + workTileOffset.y));
   }
 
 
@@ -260,7 +260,7 @@ public class InstalledItem {
 
   //---
   public void Deconstruct() {
-    Inventory inventory = new Inventory(WorldController.Instance.world, 99, INVENTORY_TYPE.NONE, this.tile);
+    Inventory inventory = new Inventory(World.current, 99, INVENTORY_TYPE.NONE, this.tile);
 
     Recipe recipe = GetRecipe(this.type);
 
@@ -277,11 +277,12 @@ public class InstalledItem {
         tile.RemoveInstalledItem();
       }
     }
+    
 
     Destroy();
     inventory.Explode();
     inventory.ClearAll();
-
+    World.current.RemoveInstalledItem(this);
   }
 
 

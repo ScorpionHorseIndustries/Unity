@@ -51,7 +51,7 @@ public class Room {
     for (int i = tiles.Count - 1; i >= 0; i -= 1) {
       Tile t = tiles[i];
 
-      WorldController.Instance.world.outside.AssignTile(t);
+      World.current.outside.AssignTile(t);
       tiles.RemoveAt(i);
 
 

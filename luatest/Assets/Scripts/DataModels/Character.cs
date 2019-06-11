@@ -274,7 +274,20 @@ public class Character : IXmlSerializable {
           myJob.qtyFulfilled = inventory.HowMany(myJob.recipeResourceName);
           target = haulTo;
           state = STATE.FIND_PATH;
-          newStateWhenMoveComplete = (myJob.subType == JOB_SUBTYPE.HAUL_TO_TILE) ? STATE.DROP_OFF_AT_TILE : STATE.DROP_OFF_AT_JOB;
+          switch (myJob.subType) {
+            case JOB_SUBTYPE.NONE:
+              newStateWhenMoveComplete = STATE.DROP_OFF_AT_JOB;
+              break;
+            case JOB_SUBTYPE.HAUL_TO_TILE:
+            case JOB_SUBTYPE.HAUL_FROM_TILE_TO_TILE:
+              newStateWhenMoveComplete = STATE.DROP_OFF_AT_TILE;
+              break;
+            default:
+              break;
+          }
+
+
+          //newStateWhenMoveComplete = (myJob.subType == JOB_SUBTYPE.HAUL_TO_TILE) ? STATE.DROP_OFF_AT_TILE : STATE.DROP_OFF_AT_JOB;
           //if (myJob.subType == JOB_SUBTYPE.HAUL_TO_TILE) {
           //  newStateWhenMoveComplete = STATE.DROP_OFF_AT_TILE;
 
@@ -319,10 +332,15 @@ public class Character : IXmlSerializable {
         haulTo = myJob.tile;
         if (myJob.subType == JOB_SUBTYPE.HAUL_TO_TILE) {
           target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName, false);
+        } else if (myJob.subType == JOB_SUBTYPE.HAUL_FROM_TILE_TO_TILE) {
+          target = myJob.fromTile;
         } else {
           target = world.inventoryManager.GetNearest(PosTile, myJob.recipeResourceName);
         }
-        Allocate(myJob.recipeResourceName, target);
+        if (!myJob.preAllocated) {
+          Allocate(myJob.recipeResourceName, target);
+
+        }
 
         haulFrom = target;
         state = STATE.FIND_PATH;

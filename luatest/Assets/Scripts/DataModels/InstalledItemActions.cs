@@ -15,34 +15,43 @@ public static class InstalledItemActions {
 
       string itemName = InventoryItem.GetRandomPrototype().type;
 
-      Tile nearest = item.tile.world.inventoryManager.GetNearest(item.tile, itemName, false);
+      Tile nearest = World.current.inventoryManager.GetNearest(item.tile, itemName, false);
       if (nearest == null) return;
 
       Job j = new Job(
+        nearest,
           item.tile,
-          WorldController.Instance.world.jobQueue.HaulToTileComplete,
-          WorldController.Instance.world.jobQueue.HaulJobCancelled,
+
+          World.current.jobQueue.HaulToTileComplete,
+          World.current.jobQueue.HaulJobCancelled,
           itemName,
           InventoryItem.GetStackSize(itemName)
           );
+      j.cancelIfReturned = true;
 
-      WorldController.Instance.world.jobQueue.Push(j);
+      World.current.jobQueue.Push(j);
 
     } else if (!item.tile.IsInventoryEmpty() && !item.tile.HasPendingJob) {
       string itemName = item.tile.GetFirstInventoryItem();
       int qtyRequired = InventoryItem.GetStackSize(itemName) - item.tile.InventoryTotal(itemName);
+      Tile nearest = World.current.inventoryManager.GetNearest(item.tile, itemName, false);
+      if (nearest != null) {
+        qtyRequired = Mathf.Min(qtyRequired, nearest.InventoryTotal(itemName));
 
-      if (qtyRequired > 0) {
-        Job j = new Job(
-          item.tile,
-            WorldController.Instance.world.jobQueue.HaulToTileComplete,
-            WorldController.Instance.world.jobQueue.HaulJobCancelled,
+        if (qtyRequired > 0) {
+          Job j = new Job(
+            nearest,
+            item.tile,
+            World.current.jobQueue.HaulToTileComplete,
+            World.current.jobQueue.HaulJobCancelled,
             itemName,
             qtyRequired
 
-            );
+              );
+          j.cancelIfReturned = true;
 
-        WorldController.Instance.world.jobQueue.Push(j);
+          World.current.jobQueue.Push(j);
+        }
       }
     }
   }
@@ -64,7 +73,7 @@ public static class InstalledItemActions {
 
   //    WorldController.Instance.world.jobQueue.Push(j);
   //  }
-      
+
   //}
 
   public static void Workstation_UpdateActions(InstalledItem item, float deltaTime) {
@@ -82,7 +91,7 @@ public static class InstalledItemActions {
 
         );
 
-      WorldController.Instance.world.jobQueue.Push(j);
+      World.current.jobQueue.Push(j);
     }
 
   }
@@ -91,23 +100,23 @@ public static class InstalledItemActions {
     Recipe.RecipeProduct rp = job.recipe.GetProduct();
     if (rp != null) {
       int qty = UnityEngine.Random.Range(rp.qtyMin, rp.qtyMax + 1);
-      Tile tile = WorldController.Instance.world.FindTileForInventoryItem(job.tile, rp.name, qty);
+      Tile tile = World.current.FindTileForInventoryItem(job.tile, rp.name, qty);
 
       if (tile != null) {
 
 
         if (rp != null) {
-          Inventory inv = new Inventory(WorldController.Instance.world, 1, INVENTORY_TYPE.NONE, tile);
+          Inventory inv = new Inventory(World.current, 1, INVENTORY_TYPE.NONE, tile);
           inv.AddItem(rp.name, qty);
           inv.Explode();
           inv.ClearAll();
         }
 
-        
+
       }
     }
 
-    if (job.recipe.isCash) {
+    if (job.recipe.givesCash) {
       WorldController.Instance.addCurrency(UnityEngine.Random.Range(job.recipe.minCash, job.recipe.maxCash));
     }
 

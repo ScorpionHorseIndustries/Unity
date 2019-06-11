@@ -124,7 +124,11 @@ public class JobQueue : IXmlSerializable
   public void ReturnJob(Job job)
   {
     job.AddToLog("job returned");
-    problemJobs.Enqueue(job);
+    if (job.cancelIfReturned) {
+      job.Cancel();
+    } else {
+      problemJobs.Enqueue(job);
+    }
   }
 
   public Job GetNextJob()
@@ -150,7 +154,7 @@ public class JobQueue : IXmlSerializable
         else if (!j.IsRecipeFinished())
         {
           j.AddToLog("recipe not finished returned to queue");
-          Add(j, 2);
+          Add(j, j.priority+10);
           continue;
 
         }

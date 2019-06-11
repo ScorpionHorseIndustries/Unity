@@ -51,7 +51,7 @@ public class SpriteController : MonoBehaviour {
         spr.sprite = WorldController.Instance.spriteController.GetSprite(proto.spriteName);
         spr.transform.position = Vector2.zero;
         spr.color = whiteTransparent;
-        if (!proto.funcPositionValid(WorldController.Instance.world, t.world_x, t.world_y)) {
+        if (!proto.funcPositionValid(World.current, t.world_x, t.world_y)) {
           spr.color = redTransparent;
         }
 

@@ -20,21 +20,17 @@ public class Inventory {
   private World world;
   //-------------------------------CALLBACKS------------------------------
   Action<string, int> cbItemAdded;
-  public void CBRegisterOnItemAdded(Action<string, int> cb)
-  {
+  public void CBRegisterOnItemAdded(Action<string, int> cb) {
     cbItemAdded += cb;
   }
-  public void CBUnregisterOnItemAdded(Action<string, int> cb)
-  {
+  public void CBUnregisterOnItemAdded(Action<string, int> cb) {
     cbItemAdded -= cb;
   }
   Action<string, int> cbItemRemoved;
-  public void CBRegisterOnItemRemoved(Action<string, int> cb)
-  {
+  public void CBRegisterOnItemRemoved(Action<string, int> cb) {
     cbItemRemoved += cb;
   }
-  public void CBUnregisterOnItemRemoved(Action<string, int> cb)
-  {
+  public void CBUnregisterOnItemRemoved(Action<string, int> cb) {
     cbItemRemoved -= cb;
   }
   //-------------------------------END CALLBACKS------------------------------
@@ -52,12 +48,12 @@ public class Inventory {
     restrictions = new Dictionary<string, int>();
     this.parent = parent;
 
-    if (parent.GetType() ==  typeof(Job)) {
+    if (parent.GetType() == typeof(Job)) {
       this.job = (Job)parent;
     } else if (parent.GetType() == typeof(Tile)) {
       this.tile = (Tile)parent;
     } else if (parent.GetType() == typeof(Character)) {
-      this.character= (Character)parent;
+      this.character = (Character)parent;
     }
     world.inventoryManager.RegisterInventory(this);
 
@@ -86,8 +82,7 @@ public class Inventory {
 
   public void AddRestriction(string type, int qty) {
     restrictions[type] = qty;
-    if (job != null)
-    {
+    if (job != null) {
       job.AddToLog("restriction added: " + type + ":" + qty);
     }
   }
@@ -108,7 +103,7 @@ public class Inventory {
       for (int i = slots.Count - 1; i >= 0; i -= 1) {
         InventorySlot slot = slots[i];
         if (slot.qty > 0) {
-          Tile tn = world.FindTileForInventoryItem(t,slot.type,slot.qty);
+          Tile tn = world.FindTileForInventoryItem(t, slot.type, slot.qty);
           if (tn != null) {
             RemoveItem(slot.type, tn.AddToInventory(slot.type, slot.qty));
             //Debug.Log("exploded: " + slot.type + " " + slot.qty);
@@ -146,7 +141,7 @@ public class Inventory {
 
     while (qtyRemaining > 0 && slots.Count < numSlots) {
       int tempQ;
-      slots.Add(InventorySlot.NewSlot(this,type, qtyRemaining, out tempQ));
+      slots.Add(InventorySlot.NewSlot(this, type, qtyRemaining, out tempQ));
       qtyRemaining -= tempQ;
 
 
@@ -154,13 +149,11 @@ public class Inventory {
     }
     qtyAccepted = qtyOffered - qtyRemaining;
 
-    if (job != null)
-    {
+    if (job != null) {
       job.AddToLog("item added: " + type + " offered:" + qtyOffered + " accepted:" + qtyAccepted);
     }
 
-    if (cbItemAdded != null)
-    {
+    if (cbItemAdded != null) {
       cbItemAdded(type, qtyAccepted);
     }
 
@@ -235,6 +228,18 @@ public class Inventory {
     return slots.Count == 0;
   }
 
+  public bool HasAnySpace() {
+    int spaceFor = 0;
+    foreach (InventorySlot slot in slots) {
+      spaceFor += slot.qtyCap - slot.qty;
+    }
+
+    if (slots.Count < this.numSlots) {
+      spaceFor += 1;
+    }
+    return spaceFor > 0;
+  }
+
   public bool HasSpaceFor(string type, int qty) {
 
     int spaceFor = 0;
@@ -251,10 +256,17 @@ public class Inventory {
 
   }
 
-  public int HowMany(string type) {
+
+
+  public int HowMany(string type, bool freeQty = true) {
     int qty = 0;
     foreach (InventorySlot slot in slots.Where(e => e.type == type)) {
-      qty += slot.qtyFree;
+      if (freeQty) {
+        qty += slot.qtyFree;
+
+      } else {
+        qty += slot.qty;
+      }
     }
 
     return qty;
@@ -283,25 +295,23 @@ public class Inventory {
 
     qtyGiven = qtyRequested - qtyRemaining;
 
-    if (job != null)
-    {
+    if (job != null) {
       job.AddToLog("item removed: " + type + " requested:" + qtyRequested + " given:" + qtyGiven);
     }
 
 
-    if (cbItemRemoved != null)
-    {
+    if (cbItemRemoved != null) {
       cbItemRemoved(type, qtyGiven);
     }
     return qtyGiven;
   }
 
   public void ClearAll() {
-    foreach(InventorySlot slot in slots) {
+    foreach (InventorySlot slot in slots) {
       slot.Remove(slot.type, slot.qty);
     }
     ClearEmpty();
-    
+
   }
 }
 
@@ -312,17 +322,19 @@ class InventorySlot {
   private Inventory parent;
   public int qtyAllocated { get; private set; }
 
-  public int qtyFree { get {
+  public int qtyFree {
+    get {
       return qty - qtyAllocated;
-    } }
+    }
+  }
 
   private InventorySlot(Inventory parent) {
     this.parent = parent;
 
   }
 
-  
-  public int Allocate(string type,int qtyToAllocate) {
+
+  public int Allocate(string type, int qtyToAllocate) {
     if (this.type != type) return 0;
 
     int qtyAllocatedTemp = Mathf.Min(qtyFree, qtyToAllocate);
@@ -333,7 +345,7 @@ class InventorySlot {
   }
 
   public int DeAllocate(string type, int qtyToDeAllocate) {
-    if(this.type != type) return 0;
+    if (this.type != type) return 0;
 
     int rqty = Mathf.Max(qtyAllocated - qtyToDeAllocate, 0);
     qtyAllocated -= rqty;

@@ -67,7 +67,7 @@ public class WorldController : MonoBehaviour {
   private float money = 0;
   //public Sprite dirtSprite;
   //public Sprite grassSprite;
-  public World world { get; private set; }
+  private World world; 
   public static bool loadWorld { get; private set; }
 
   // Start is called before the first frame update
@@ -682,20 +682,29 @@ public class WorldController : MonoBehaviour {
       }
     } else if (TilesInventoryItems_GO_Map.ContainsKey(tile)) {
       GameObject go = TilesInventoryItems_GO_Map[tile];
-      TextMesh txt = go.GetComponentInChildren<TextMesh>();
+
+      if (InventoryItem.GetStackSize(tile.GetFirstInventoryItem()) > 1) {
+        TextMesh txt = go.GetComponentInChildren<TextMesh>();
+
+        if (txt != null) {
+          txt.text = tile.GetInventoryTotal().ToString();
+        }
+      }
+
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
       spr.sprite = spriteController.GetSprite(tile.GetInventorySpriteName());
-      if (txt != null) {
-        txt.text = tile.GetInventoryTotal().ToString();
-      }
     } else {
       GameObject go = CreateGameObject("inv_" + tile.world_x + "," + tile.world_y + "_" + tile.GetContents(), tile.world_x, tile.world_y, true);
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
       spr.sprite = spriteController.GetSprite(tile.GetInventorySpriteName());
       spr.sortingLayerName = "Objects";
-      GameObject txt = Instantiate(prfInventoryItemText, go.transform.position, Quaternion.identity);
-      txt.transform.SetParent(go.transform, true);
-      txt.GetComponent<TextMesh>().text = tile.GetInventoryTotal().ToString();
+      if (InventoryItem.GetStackSize(tile.GetFirstInventoryItem()) > 1) {
+        GameObject txt = Instantiate(prfInventoryItemText, go.transform.position, Quaternion.identity);
+        txt.transform.SetParent(go.transform, true);
+      
+        txt.GetComponent<TextMesh>().text = tile.GetInventoryTotal().ToString();
+      }
+
       TilesInventoryItems_GO_Map[tile] = go;
     }
 
@@ -830,6 +839,8 @@ public class WorldController : MonoBehaviour {
         case Character.STATE.FIND_PATH:
         case Character.STATE.FIND_JOB:
         case Character.STATE.IDLE:
+        case Character.STATE.FIND_RESOURCE:
+        case Character.STATE.FIND_EMPTY:
           spr.sprite = spriteController.GetSprite(c.spriteName_IDLE);
           break;
         //  break;

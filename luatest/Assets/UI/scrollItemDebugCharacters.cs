@@ -24,7 +24,7 @@ public class scrollItemDebugCharacters : MonoBehaviour {
     }
 
     txtInventory.text = chr.inventory.ToString();
-    txtPos.text = chr.X + "," + chr.Y;
+    txtPos.text = (int)chr.X + "," + (int)chr.Y;
     
   }
 }

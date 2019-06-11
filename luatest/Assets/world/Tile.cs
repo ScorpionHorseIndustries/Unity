@@ -45,7 +45,7 @@ public class Tile {
       return local_y + (chunk.world_y);
     }
   }
-  public World world { get; private set; }
+  private World world;
 
   private List<Character> occupiedBy = new List<Character>();
   public int countOfOccupied { get { return occupiedBy.Count; } }
@@ -354,6 +354,16 @@ public class Tile {
 
   public string GetInventorySpriteName() {
     return inventory.SpriteName();
+  }
+
+  public int GetInventorySpace() {
+    string itemName = inventory.GetFirst();
+    if (itemName != null) {
+      int current = inventory.HowMany(itemName,false);
+      int space = InventoryItem.GetStackSize(itemName) - current;
+      return space;
+    }
+    return -1;
   }
 
   public void SetNeighbours(bool allowDiagonalNeighbours) {

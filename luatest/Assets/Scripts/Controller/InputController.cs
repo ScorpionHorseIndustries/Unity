@@ -67,11 +67,11 @@ public class InputController : MonoBehaviour {
     initialised = true;
     wcon = WorldController.Instance;
     cam = Camera.main;
-    tileSize = wcon.world.tileSize;
+    tileSize = World.current.tileSize;
     HALF_tileSize = tileSize / 2;
     bCon = WorldController.Instance.buildController;
     bCon.inputCon = this;
-    cam.transform.position = new Vector3(wcon.world.width / 2, wcon.world.height / 2, cam.transform.position.z);
+    cam.transform.position = new Vector3(World.current.width / 2, World.current.height / 2, cam.transform.position.z);
     cursorPrefab = Instantiate(cursorPrefab, this.transform.position, Quaternion.identity);
     cursorPrefab.transform.SetParent(this.transform, true);
     cursorPrefab.SetActive(false);
@@ -169,7 +169,7 @@ public class InputController : MonoBehaviour {
     cx = mx - lastX;
     cy = my - lastY;
     if (mx >= 0 && my >= 0) {
-      mouseOverTile = WorldController.Instance.world.GetTileAt(mx, my);
+      mouseOverTile = World.current.GetTileAt(mx, my);
       if (mouseOverTile != null) {
         WorldController.Instance.UpdateCurrentTile(mouseOverTile);
       }
@@ -280,7 +280,7 @@ public class InputController : MonoBehaviour {
 
     for (int xx = start_x; xx <= end_x; xx += 1) {
       for (int yy = start_y; yy <= end_y; yy += 1) {
-        Tile tile = WorldController.Instance.world.GetTileIfChunkExists(xx, yy);
+        Tile tile = World.current.GetTileIfChunkExists(xx, yy);
         //Debug.Log(String.Format("x,y: {0},{1}", xx, yy));
         if (tile != null) {
           dragArea.Add(tile);

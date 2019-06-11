@@ -20,8 +20,8 @@ public class SoundController : MonoBehaviour {
     Debug.Log("init " + this.name);
     worldController = WorldController.Instance;
 
-    worldController.world.RegisterInstalledItemCB(OnInstalledItemCreated);
-    worldController.world.CBRegisterTileChanged(OnTileTypeChanged);
+    World.current.RegisterInstalledItemCB(OnInstalledItemCreated);
+    World.current.CBRegisterTileChanged(OnTileTypeChanged);
   }
   // Start is called before the first frame update
   void Start() {

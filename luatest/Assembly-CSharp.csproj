@@ -138,6 +138,7 @@
     <Compile Include="Assets\Scripts\DataModels\InventoryManager.cs" />
     <Compile Include="Assets\Scripts\DataModels\Job.cs" />
     <Compile Include="Assets\Scripts\DataModels\LuaActions.cs" />
+    <Compile Include="Assets\Scripts\DataModels\NYDITimer.cs" />
     <Compile Include="Assets\Scripts\DataModels\Recipe.cs" />
     <Compile Include="Assets\Scripts\DataModels\Room.cs" />
     <Compile Include="Assets\Scripts\DataModels\TileZone.cs" />
@@ -150,8 +151,6 @@
     <Compile Include="Assets\Scripts\Paths\TilePathAStar.cs" />
     <Compile Include="Assets\Scripts\Scriptables\scroItems.cs" />
     <Compile Include="Assets\scrRobot.cs" />
-    <Compile Include="Assets\UI\AutomaticResize.cs" />
-    <Compile Include="Assets\UI\AutomaticVerticalSizeEditor.cs" />
     <Compile Include="Assets\UI\scrJobScrollItem.cs" />
     <Compile Include="Assets\UI\scrollItemDebugCharacters.cs" />
     <Compile Include="Assets\UI\scrUIBuildMenu.cs" />

@@ -45,9 +45,13 @@ public class InputController : MonoBehaviour {
   Tile tileBL = null;
   Tile tileBR = null;
   public Tile mouseOverTile { get; private set; } = null;
+  public bool first { get; private set; } = true;
+
   private float tileSize = 0;
   private float HALF_tileSize;
   private bool tilesFound = false;
+  GameObject uConsoleGO;
+  CardboardKeep.UConsole UConsoleObj;
 
 
 
@@ -77,8 +81,9 @@ public class InputController : MonoBehaviour {
     cursorPrefab = Instantiate(cursorPrefab, this.transform.position, Quaternion.identity);
     cursorPrefab.transform.SetParent(this.transform, true);
     cursorPrefab.SetActive(false);
-
-    WorldController.Instance.uConsoleObject.SetActive(false);
+    uConsoleGO =  WorldController.Instance.uConsoleObject;
+    UConsoleObj = uConsoleGO.GetComponent<UConsole>();
+    //WorldController.Instance.uConsoleObject.SetActive(false);
 
   }
   void Start() {
@@ -134,23 +139,37 @@ public class InputController : MonoBehaviour {
   void Update() {
     if (!initialised) return;
 
+    if (first) {
+      UConsoleObj.Deactivate();
+      uConsoleGO.SetActive(false);
+      first = false;
+    }
+
 
     if (Input.GetKeyDown(KeyCode.BackQuote)) {
-      GameObject go = WorldController.Instance.uConsoleObject;
-      CardboardKeep.UConsole uc = WorldController.Instance.uConsoleObject.GetComponent<CardboardKeep.UConsole>();
-      if (go.activeSelf) {
-        
-        
-        uc.Deactivate();
-        go.SetActive(false);
+      //GameObject go = WorldController.Instance.uConsoleObject;
+      //CardboardKeep.UConsole uc = WorldController.Instance.uConsoleObject.GetComponent<CardboardKeep.UConsole>();
+      if (uConsoleGO.activeSelf) {
+
+
+        UConsoleObj.Deactivate();
+        uConsoleGO.SetActive(false);
+        WorldController.Instance.gameState = GAME_STATE.PLAY;
       } else {
-        go.SetActive(true);
-        uc.Activate();
-        
+        uConsoleGO.SetActive(true);
+        UConsoleObj.Activate();
+        WorldController.Instance.gameState = GAME_STATE.PAUSE;
+
       }
 
 
     }
+
+    if (uConsoleGO.activeSelf) {
+      return;
+    }
+
+    
 
 
     if (Input.GetKeyUp(KeyCode.E)) {

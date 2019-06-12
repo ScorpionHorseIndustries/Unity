@@ -8,6 +8,7 @@ public class Recipe {
   public string name { get; private set; }
   public int id { get; private set; }
   public float buildTime { get; private set; }
+  public float cost { get; private set; }
 
   private List<string> productChanceList;
 
@@ -26,6 +27,7 @@ public class Recipe {
       this.name = o.name;
       this.qtyRequired = o.qtyRequired;
       this.qtyRemaining = o.qtyRequired;
+      
     }
 
     public void Add(int qty) {
@@ -66,7 +68,7 @@ public class Recipe {
     foreach (RecipeResource rr in resources.Values) {
       items += string.Format("[{0}:{1}/{2}]", rr.name, rr.qtyRemaining, rr.qtyRequired);
     }
-    return "recipe: \"" + name + "\": " + items;
+    return "recipe: [" + name + "], " + cost + ": " + items;
     
   }
 
@@ -103,7 +105,8 @@ public class Recipe {
     this.minCash = proto.minCash;
     this.maxCash = proto.maxCash;
     this.buildTime = proto.buildTime;
-    
+    this.cost = proto.cost;
+
     foreach (RecipeResource rp in proto.resources.Values) {
       resources[rp.name] = new RecipeResource(rp);
     }
@@ -199,6 +202,7 @@ public class Recipe {
       recipe.givesCash = Funcs.jsonGetBool(jRecipe["cash"], false);
       recipe.minCash = Funcs.jsonGetFloat(jRecipe["minCash"], 0);
       recipe.maxCash = Funcs.jsonGetFloat(jRecipe["maxCash"], 0);
+      recipe.cost = Funcs.jsonGetFloat(jRecipe["cost"], 0);
 
       JArray jaResources = Funcs.jsonGetArray(jRecipe, "resources");
 

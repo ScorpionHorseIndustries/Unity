@@ -56,6 +56,7 @@ public class Job : IXmlSerializable {
   public float maxPriority { get; private set; }
   public bool cancelIfReturned { get; set; }
   public bool preAllocated { get; private set; }
+  public float cost { get; private set; } = 0f;
 
 
   public InstalledItem installedItemPrototype { get; private set; }
@@ -90,7 +91,7 @@ public class Job : IXmlSerializable {
 
         break;
     }
-    float x = Mathf.Deg2Rad * age;
+    float x = Mathf.Deg2Rad * (age/10f);
     float radius = maxPriority - minPriority;
     float mid = minPriority + radius;
     priority = variation + mid + (radius * Mathf.Sin(x));
@@ -210,7 +211,7 @@ public class Job : IXmlSerializable {
     if (recipeName != null) {
       recipe = Recipe.GetRecipe(recipeName);
       this.jobTime = recipe.buildTime;
-
+      this.cost = recipe.cost;
 
       foreach (Recipe.RecipeResource rr in recipe.resources.Values) {
         inventory.AddRestriction(rr.name, rr.qtyRequired);

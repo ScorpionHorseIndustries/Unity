@@ -14,13 +14,16 @@ public class LuaActions {
     
   }
 
-  public static void LuaString(string code) {
+  public static string LuaString(string code) {
+    Debug.Log("lua code: " + code);
     System.Object[] result = lua.DoString(code);
 
     
     foreach (System.Object o in result) {
       Debug.Log(o.ToString());
     }
+
+    return result[0].ToString();
   }
 
 

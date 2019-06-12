@@ -40,6 +40,17 @@
 		/// 	3C. USE console.inputArgument IN THE PRIVATE FUNCTION TO UTILIZE THE INFORMATION
 		/// 	3D. SEE argumentfunction BELOW AS AN EXAMPLE
 		/// ====================================================================================
+    /// 
+    public void lua() {
+      string code = "";
+      foreach(string s in console.args) {
+        Debug.Log(s);
+        code += s + " ";
+      }
+      UConsole.NewEvent(LuaActions.LuaString(code));
+    }
+
+    private void lua(string s) { }
 
 		public void testfunction()
 		{

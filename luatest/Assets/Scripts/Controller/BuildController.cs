@@ -132,6 +132,9 @@ public class BuildController : MonoBehaviour {
 
   private void OnInstalledItemJobComplete(Job job) {
     //Debug.Log("installed item job complete: " + job);
+    WorldController.Instance.DeductMoney(job.cost);
+      
+    
     if (!job.tile.RemoveJob(job)) {
       Debug.Log("could not remove job from tile");
     }

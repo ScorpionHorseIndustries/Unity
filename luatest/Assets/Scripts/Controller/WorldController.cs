@@ -15,8 +15,10 @@ public enum GAME_STATE {
 }
 
 public class WorldController : MonoBehaviour {
-
+  private const float interestRate = 0.01f;
   [SerializeField]
+  public Color positiveBalanceColour;
+  public Color negativeBalanceColour;
   public GameObject buildProgressSprite;
   public GameObject cashText;
   public GameObject LinePrefab;
@@ -43,6 +45,7 @@ public class WorldController : MonoBehaviour {
   private Dictionary<Job, GameObject> Job_GO_Map;
   private Dictionary<Job, GameObject> JobScrollItems_GO_Map;
   private List<GameObject> tempText;
+  private List<NYDITimer> timers;
 
   private Dictionary<Character, GameObject> Characters_ScrollItem_Map;
   //private Dictionary<InventoryItem, GameObject> invItem_GO_Map;
@@ -66,10 +69,10 @@ public class WorldController : MonoBehaviour {
   private List<GameObject> controllers = new List<GameObject>();
 
   private float countdown = 2f;
-  private float money = 0;
+  public float money { get; private set; } = 0;
   //public Sprite dirtSprite;
   //public Sprite grassSprite;
-  private World world; 
+  private World world;
   public static bool loadWorld { get; private set; }
 
   // Start is called before the first frame update
@@ -175,7 +178,7 @@ public class WorldController : MonoBehaviour {
 
     world = new World(World.TEST_WIDTH, World.TEST_HEIGHT);
 
-    
+
     //world.RandomiseTiles();
     //MapGenerator.MakeNewMap(world, world.height, world.width);
     //create game objects for tiles
@@ -236,6 +239,9 @@ public class WorldController : MonoBehaviour {
     tempText = new List<GameObject>();
 
     eventSystem = EventSystem.current;
+    timers = new List<NYDITimer>();
+
+    timers.Add(new NYDITimer("updateMoney", 1, UpdateMoney));
 
   }
 
@@ -277,7 +283,7 @@ public class WorldController : MonoBehaviour {
   }
 
   private void InitWorld() {
-    world.CreateEmptyTiles(); 
+    world.CreateEmptyTiles();
     CreateTileGameObjects();
     world.CreateCharacters();
 
@@ -318,24 +324,26 @@ public class WorldController : MonoBehaviour {
     //    Gizmos.DrawLine()
     //  }
     //}
-    Gizmos.color = Color.red;
+    
+      Gizmos.color = Color.red;
 
-    Gizmos.DrawLine((Vector2)inputController.camBounds.min, (Vector2)inputController.camBounds.max);
-    //Gizmos.DrawCube(inputController.camBounds.center, Vector3.one);
+      Gizmos.DrawLine((Vector2)inputController.camBounds.min, (Vector2)inputController.camBounds.max);
+      //Gizmos.DrawCube(inputController.camBounds.center, Vector3.one);
 
-    Gizmos.color = Color.white;
-    if (world != null && world.characters != null) {
-      foreach (Character chr in world.characters) {
-        
-        if (chr.path != null) {
-          Vector2 a = chr.pos;
-          Vector2 b = new Vector2();
-          foreach (Tile pnt in chr.path.path) {
-            b.Set(pnt.world_x, pnt.world_y);
-            Gizmos.DrawLine(a, b);
-            a = b;
-          }
+      Gizmos.color = Color.white;
+      if (world != null && world.characters != null) {
+        foreach (Character chr in world.characters) {
 
+          if (chr.path != null) {
+            Vector2 a = chr.pos;
+            Vector2 b = new Vector2();
+            foreach (Tile pnt in chr.path.path) {
+              b.Set(pnt.world_x, pnt.world_y);
+              Gizmos.DrawLine(a, b);
+              a = b;
+            }
+
+          
         }
       }
     }
@@ -354,7 +362,7 @@ public class WorldController : MonoBehaviour {
       InitialiseControllers();
       InitWorld();
     }
-    
+
     Debug.Log("init done " + this.name);
     gameState = GAME_STATE.PLAY;
   }
@@ -366,11 +374,9 @@ public class WorldController : MonoBehaviour {
 
   }
 
-  public void WriteLog()
-  {
+  public void WriteLog() {
     string s = "";
-    foreach (Job j in world.jobQueue.allJobs)
-    {
+    foreach (Job j in world.jobQueue.allJobs) {
       s += "\n" + j.GetLog();
     }
     File.WriteAllText(Application.streamingAssetsPath + "/logs/joblog.txt", s);
@@ -409,13 +415,36 @@ public class WorldController : MonoBehaviour {
 
   public void addCurrency(float amt) {
     money += amt;
-    cashText.GetComponent<Text>().text = string.Format("{0:00.00}", money);
+    
 
+  }
+
+  public void DeductMoney(float amt) {
+    Debug.Log("money = " + money + " - " + amt);
+    money -= amt;
+    
+  }
+
+  private void UpdateMoney() {
+    Text t = cashText.GetComponent<Text>();
+    t.text = string.Format("{0:00.00}", money);
+    if (money < 0) {
+      t.color = negativeBalanceColour;
+    } else {
+      t.color = positiveBalanceColour;
+    }
   }
 
   // Update is called once per frame
   void Update() {
 
+    for (int i = 0; i < timers.Count; i += 1) {
+      timers[i].update(Time.deltaTime);
+    }
+
+    if (money < 0) {
+      money = money + (money * interestRate * Time.deltaTime);
+    }
     //if (actualReady < EXPECTED) {
     //  Debug.Log("Ready: " + actualReady);
     //  return;
@@ -426,11 +455,11 @@ public class WorldController : MonoBehaviour {
     //  }
     //}
 
-    for (int i = tempText.Count -1; i >= 0; i -= 1) {
+    for (int i = tempText.Count - 1; i >= 0; i -= 1) {
       GameObject go = tempText[i];
       SetSortingLayer ssl = go.GetComponent<SetSortingLayer>();
       float a = Mathf.Sin(ssl.lifeTime);
-      go.transform.Translate(0, 0.1f*a, 0);
+      go.transform.Translate(0, 0.1f * a, 0);
       ssl.lifeTime -= Time.deltaTime;
 
       if (ssl.lifeTime <= 0) {
@@ -451,11 +480,11 @@ public class WorldController : MonoBehaviour {
         //add pause and speed controls
         world.Update(Time.deltaTime);
 
-        foreach(Character chr in world.characters ) {
+        foreach (Character chr in world.characters) {
           if (!Characters_ScrollItem_Map.ContainsKey(chr)) {
             GameObject g = Instantiate(debugCharItemPrefab, Vector2.zero, Quaternion.identity);
             g.transform.SetParent(debugCharContent.transform);
-            Characters_ScrollItem_Map[chr] = g;  
+            Characters_ScrollItem_Map[chr] = g;
 
           }
 
@@ -673,6 +702,10 @@ public class WorldController : MonoBehaviour {
   //  }
   //}
 
+  public void CloseGame() {
+    Application.Quit();
+  }
+
   void OnInventoryItemChanged(Tile tile) {
     //Debug.Log("inventory changed: " + tile);
     if (tile.IsInventoryEmpty()) {
@@ -703,7 +736,7 @@ public class WorldController : MonoBehaviour {
       if (InventoryItem.GetStackSize(tile.GetFirstInventoryItem()) > 1) {
         GameObject txt = Instantiate(prfInventoryItemText, go.transform.position, Quaternion.identity);
         txt.transform.SetParent(go.transform, true);
-      
+
         txt.GetComponent<TextMesh>().text = tile.GetInventoryTotal().ToString();
       }
 
@@ -885,7 +918,7 @@ public class WorldController : MonoBehaviour {
 
       GameObject g = SimplePool.Spawn(buildProgressSprite, new Vector2(j.tile.world_x, j.tile.world_y), Quaternion.identity);
       g.transform.SetParent(this.transform, true);
-      
+
       SpriteRenderer spr = g.GetComponent<SpriteRenderer>();
       if (j.jobType == JOB_TYPE.BUILD) {
         spr.sprite = spriteController.GetSprite(j.installedItemPrototype.spriteName);
@@ -896,7 +929,7 @@ public class WorldController : MonoBehaviour {
       if (j.jobType == JOB_TYPE.BUILD) {
         spr.transform.Translate(Funcs.GetInstalledItemSpriteOffset(j.installedItemPrototype.width, j.installedItemPrototype.height), Space.Self);
       }
-      
+
       Job_GO_Map.Add(j, g);
     }
     /*

@@ -47,7 +47,7 @@
         Debug.Log(s);
         code += s + " ";
       }
-      UConsole.NewEvent(LuaActions.LuaString(code));
+      UConsole.NewEvent(World.current.LuaString(code));
     }
 
     private void lua(string s) { }

@@ -35,7 +35,10 @@ public class JobQueue : IXmlSerializable
   {
     //Debug.Log("adding job: " + j);
     j.tile.AddJob(j);
-
+    
+    j.cbJobComplete -= OnJobComplete;
+    j.cbJobComplete += OnJobComplete;
+    
     if (j.jobTime < 0)
     {
       j.Work(0);
@@ -47,7 +50,7 @@ public class JobQueue : IXmlSerializable
         foreach (string resourceName in j.recipe.resources.Keys)
         {
           //(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name) {
-          Job nj = new Job(j.tile, HaulJobComplete, HaulJobCancelled, JOB_TYPE.HAUL, JOB_TYPE.HAUL.ToString(), j.recipe, resourceName, j);
+          Job nj = Job.MakeRecipeJob(j.tile, HaulJobComplete, HaulJobCancelled, JOB_TYPE.HAUL, JOB_TYPE.HAUL.ToString(), j.recipe, resourceName, j);
           Add(nj, 1f);
           //publicJobs.Add(nj);
 
@@ -225,7 +228,9 @@ public class JobQueue : IXmlSerializable
 
   public void OnJobComplete(Job j)
   {
-    j.AddToLog("onJobComplete");
+    //j.AddToLog("onJobComplete");
+    WorldController.Instance.DeductMoney(j.cost);
+    
   }
 
   public XmlSchema GetSchema()

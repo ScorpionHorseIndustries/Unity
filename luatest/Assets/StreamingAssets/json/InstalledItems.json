@@ -1,163 +1,194 @@
 {
-  "InstalledItems" : [ 
-  {
-    "id" : 1,
-    "name" : "installed::wall",
-	"niceName" : "Wall",
-    "sprite" : "walls_none",
-    "sprites" : [],
-    "linked" : true,
-    "neighbour_s" : "walls_s",
-    "neighbour_ns" : "walls_ns",
-    "neighbour_nsw" : "walls_nsw",
-    "neighbour_sw" : "walls_sw",
-    "neighbour_nesw" : "walls_nesw",
-	"neighbourTypes" : ["installed::door", "installed::wall"],
-    "movementFactor" : 0.00,
-    "trash" : false,
-    "build" : true,
-	"enclosesRoom" : true,
-	"recipe" : "recipe::installed::wall"
-    
-  },
-  {
-    "id" : 2,
-    "name" : "installed::organic_trash",
-	"niceName" : "Organic Trash",
-    "sprite" : "corpse_0",
-    "sprites" : [
-      "corpse_0",
-      "corpse_1",
-      "corpse_2",
-      "corpse_3"
-      ],
-      "movementFactor" : 0.8,
-      "linked" : false,
-      "trash" : true,
-      "build" : false,
-      "randomRotation" : true,
-	  "enclosesRoom" : false,
-	  "recipe" : "recipe::installed::organic_trash"
-      
-  },
+  "InstalledItems": [
     {
-    "id" : 3,
-    "name" : "installed::atm",
-	"niceName" : "ATM",
-    "sprite" : "installed_atm_0",
-    "sprites" : ["installed_atm_0", "installed_atm_1", "installed_atm_2", "installed_atm_3"],
-      "movementFactor" : 0.5,
-      "linked" : false,
-      "trash" : false,
-      "build" : true,
-      "randomRotation" : false,
-	  "enclosesRoom" : false,
-	  "recipe" : "recipe::installed::atm",
-	  "updateActionCountDown" : 1,
-	  "width" : 1,
-	  "height" : 2,
-	  "workRecipe" : "recipe::installed::atm::work",
-	  "workstation" : true
-      
-  },
-      {
-    "id" : 4,
-    "name" : "installed::recycler",
-	"niceName" : "Recycler",
-    "sprite" : "installed_recycler_0",
-    "sprites" : [],
-      "movementFactor" : 0.5,
-      "linked" : false,
-      "trash" : false,
-      "build" : true,
-      "randomRotation" : false,
-	  "enclosesRoom" : false,
-	  "recipe" : "recipe::installed::recycler",
-	  "updateActionCountDown" : 1,
-	  "width" : 1,
-	  "height" : 2,
-	  "workRecipe" : "recipe::installed::recycler::work",
-	  "workstation" : true
-      
-  },
-    {
-    "id" : 5,
-    "name" : "installed::door",
-	"niceName" : "Door",
-    "sprite" : "installed_door_0",
-    "sprites" : [],
-    "linked" : true,
-    "movementFactor" : 0.9,
-    "trash" : false,
-    "build" : true,
-	"neighbourTypes" : ["installed::wall"],
-	 "neighbour_s" : "installed_door_0",
-    "neighbour_ns" : "installed_door_0",
-    "neighbour_nsw" : "installed_door_0",
-    "neighbour_sw" : "installed_door_0",
-    "neighbour_nesw" : "installed_door_0",
-	"enclosesRoom" : true,
-	"recipe" : "recipe::installed::door"
-	
-    
-  },
-  {
-    "id" : 6,
-    "name" : "installed::stockpile",
-	"niceName" : "Stockpile",
-    "sprite" : "installed_stockpile",
-    "sprites" : [],
-    "linked" : false,
-    "movementFactor" : 1,
-    "trash" : false,
-    "build" : true,
-	"neighbourTypes" : [],
-	"enclosesRoom" : false,
-	"recipe" : "recipe::installed::stockpile",
-	"inventorySlots" : 1,
-	"updateActionCountDown" : 2
-	
-  },
-    {
-    "id" : 7,
-    "name" : "installed::crate",
-	"niceName" : "Crate",
-    "sprite" : "installed_crate_0",
-    "sprites" : ["installed_crate_0","installed_crate_1","installed_crate_2","installed_crate_3"],
-    "linked" : false,
-    "movementFactor" : 0.1,
-    "trash" : false,
-    "build" : true,
-	"neighbourTypes" : [],
-	"enclosesRoom" : false,
-	"recipe" : "recipe::installed::crate",
-	"inventorySlots" : 0,
-	"width" : 2,
-	"height" : 2
-	
-  },
-    {
-    "id" : 8,
-    "name" : "installed::mining_controller",
-	"niceName" : "Mining Controller",
-    "sprite" : "installed_mining_controller_0",
-    "sprites" : [],
-    "linked" : false,
-    "movementFactor" : 0.8,
-    "trash" : false,
-    "build" : true,
-	"neighbourTypes" : [],
-	"enclosesRoom" : false,
-	"recipe" : "recipe::installed::mining_controller",
-	"inventorySlots" : 0,
-	"width" : 3,
-	"height" : 3,
-	"workTileOffsetX" : 1,
-	"updateActionCountDown" : 3,
-	"workRecipe" : "recipe::installed::mining_controller::work",
-	"workstation" : true
-	
-  }
+      "id": 1,
+      "name": "installed::wall",
+      "niceName": "Wall",
+      "sprite": "walls_none",
+      "sprites": [],
+      "linked": true,
+      "neighbour_s": "walls_s",
+      "neighbour_ns": "walls_ns",
+      "neighbour_nsw": "walls_nsw",
+      "neighbour_sw": "walls_sw",
+      "neighbour_nesw": "walls_nesw",
+      "neighbourTypes": [ "installed::door", "installed::wall" ],
+      "movementFactor": 0.00,
+      "trash": false,
+      "build": true,
+      "enclosesRoom": true,
+      "recipe": "recipe::installed::wall::build"
 
-]
+    },
+    {
+      "id": 2,
+      "name": "installed::organic_trash",
+      "niceName": "Organic Trash",
+      "sprite": "corpse_0",
+      "sprites": [
+        "corpse_0",
+        "corpse_1",
+        "corpse_2",
+        "corpse_3"
+      ],
+      "movementFactor": 0.8,
+      "linked": false,
+      "trash": true,
+      "build": false,
+      "randomRotation": true,
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::organic_trash::build"
+
+    },
+    {
+      "id": 3,
+      "name": "installed::atm",
+      "niceName": "ATM",
+      "sprite": "installed_atm_0",
+      "sprites": [ "installed_atm_0", "installed_atm_1", "installed_atm_2", "installed_atm_3" ],
+      "movementFactor": 0.5,
+      "linked": false,
+      "trash": false,
+      "build": true,
+      "randomRotation": false,
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::atm::build",
+      "updateActionCountDown": 1,
+      "width": 1,
+      "height": 2,
+      "workRecipe": "recipe::installed::atm::work",
+      "workstation": true,
+	  "updateAction" : "Workstation_UpdateActions"
+
+    },
+    {
+      "id": 4,
+      "name": "installed::recycler",
+      "niceName": "Recycler",
+      "sprite": "installed_recycler_0",
+      "sprites": [],
+      "movementFactor": 0.5,
+      "linked": false,
+      "trash": false,
+      "build": true,
+      "randomRotation": false,
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::recycler::build",
+      "updateActionCountDown": 1,
+      "width": 1,
+      "height": 2,
+      "workRecipe": "recipe::installed::recycler::work",
+      "workstation": true,
+	  "updateAction" : "Workstation_UpdateActions"
+
+    },
+    {
+      "id": 5,
+      "name": "installed::door",
+      "niceName": "Door",
+      "sprite": "installed_door_0",
+      "sprites": [],
+      "linked": true,
+      "movementFactor": 0.9,
+      "trash": false,
+      "build": true,
+      "neighbourTypes": [ "installed::wall" ],
+      "neighbour_s": "installed_door_0",
+      "neighbour_ns": "installed_door_0",
+      "neighbour_nsw": "installed_door_0",
+      "neighbour_sw": "installed_door_0",
+      "neighbour_nesw": "installed_door_0",
+      "enclosesRoom": true,
+      "recipe": "recipe::installed::door::build",
+	  "updateAction" : "Door_UpdateActions",
+	  "parameters" : [
+		{"name" : "openness","value":0,"type":"float"},
+		{"name" : "opentime","value":0.25,"type":"float"}
+	  ]
+
+
+    },
+    {
+      "id": 6,
+      "name": "installed::stockpile",
+      "niceName": "Stockpile",
+      "sprite": "installed_stockpile",
+      "sprites": [],
+      "linked": false,
+      "movementFactor": 1,
+      "trash": false,
+      "build": true,
+      "neighbourTypes": [],
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::stockpile::build",
+      "inventorySlots": 1,
+      "updateActionCountDown": 2,
+	  "updateAction" : "Stockpile_UpdateActions"
+
+    },
+    {
+      "id": 7,
+      "name": "installed::crate",
+      "niceName": "Crate",
+      "sprite": "installed_crate_0",
+      "sprites": [ "installed_crate_0", "installed_crate_1", "installed_crate_2", "installed_crate_3" ],
+      "linked": false,
+      "movementFactor": 0.1,
+      "trash": false,
+      "build": true,
+      "neighbourTypes": [],
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::crate::build",
+      "inventorySlots": 0,
+      "width": 2,
+      "height": 2
+
+    },
+    {
+      "id": 8,
+      "name": "installed::mining_controller",
+      "niceName": "Mining Controller",
+      "sprite": "installed_mining_controller_0",
+      "sprites": [],
+      "linked": false,
+      "movementFactor": 0.8,
+      "trash": false,
+      "build": true,
+      "neighbourTypes": [],
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::mining_controller::build",
+      "inventorySlots": 0,
+      "width": 3,
+      "height": 3,
+      "workTileOffsetX": 1,
+      "updateActionCountDown": 3,
+      "workRecipe": "recipe::installed::mining_controller::work",
+      "workstation": true,
+	  "updateAction" : "Workstation_UpdateActions"
+
+    },
+    {
+      "id": 9,
+      "name": "installed::robo_pod",
+      "niceName": "Robo Pod",
+      "sprite": "installed_robo_pod_0",
+      "sprites": [],
+      "linked": false,
+      "movementFactor": 0.8,
+      "trash": false,
+      "build": true,
+      "neighbourTypes": [],
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::robo_pod::build",
+      "inventorySlots": 0,
+      "width": 2,
+      "height": 2,
+      "updateActionCountDown": 3,
+      "workRecipe": "recipe::installed::robo_pod::work"
+	  
+      
+
+    }
+
+  ]
 }

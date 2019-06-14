@@ -56,7 +56,7 @@ public class Job : IXmlSerializable {
   public float maxPriority { get; private set; }
   public bool cancelIfReturned { get; set; }
   public bool preAllocated { get; private set; }
-  public float cost { get; private set; } = 0f;
+  public float cost { get; set; } = 0f;
 
 
   public InstalledItem installedItemPrototype { get; private set; }
@@ -91,7 +91,7 @@ public class Job : IXmlSerializable {
 
         break;
     }
-    float x = Mathf.Deg2Rad * (age/10f);
+    float x = Mathf.Deg2Rad * (age / 10f);
     float radius = maxPriority - minPriority;
     float mid = minPriority + radius;
     priority = variation + mid + (radius * Mathf.Sin(x));
@@ -99,7 +99,12 @@ public class Job : IXmlSerializable {
 
   }
 
-  public Job(Tile fromTile, Tile toTile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
+  public static Job MakeTileToTileJob(Tile fromTile, Tile toTile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
+    return new Job(fromTile, toTile, cbJobComplete, cbJobCancelled, resourceName, qty);
+
+  }
+
+  private Job(Tile fromTile, Tile toTile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
     this.tile = toTile;
     this.fromTile = fromTile;
     this.cbJobComplete += cbJobComplete;
@@ -116,8 +121,10 @@ public class Job : IXmlSerializable {
     this.jobTime = 0.1f;
   }
 
-
-  public Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
+  public static Job MakeHaulToTileJob(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
+    return new Job(tile, cbJobComplete, cbJobCancelled, resourceName, qty);
+  }
+  private Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
     inventory = new Inventory(World.current, 99, INVENTORY_TYPE.JOB, this);
     this.tile = tile;
     this.jobTime = 0.1f;
@@ -141,10 +148,12 @@ public class Job : IXmlSerializable {
 
 
 
-    Debug.Log("created new haul " + this.ToString());
+    //Debug.Log("created new haul " + this.ToString());
   }
-
-  public Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name, Job parent) {
+  public static Job MakeRecipeJob(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name, Job parent) {
+    return new Job(tile, cbJobComplete, cbJobCancelled, type, description, recipe, name, parent);
+  }
+  private Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name, Job parent) {
 
     priority = 1;
     this.tile = tile;
@@ -180,8 +189,10 @@ public class Job : IXmlSerializable {
   }
 
 
-
-  public Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, float jobTime, string description) {
+  public static Job MakeStandardJob(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, float jobTime, string description) {
+    return new Job(tile, cbJobComplete, cbJobCancelled, type, jobTime, description);
+  }
+  private Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, float jobTime, string description) {
     priority = 2;
     this.tile = tile;
     this.jobTime = jobTime;
@@ -285,7 +296,7 @@ public class Job : IXmlSerializable {
       cbJobCancelled(this);
     }
     if (parent == null && inventory != null) {
-      
+
       inventory.ClearAll();
       World.current.inventoryManager.UnregisterInventory(inventory);
     }

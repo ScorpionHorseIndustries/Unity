@@ -79,7 +79,7 @@ public class BuildController : MonoBehaviour {
       //tile.placeInstalledObject();
       string localRecipe = InstalledItem.GetRecipeName(localBuild);
       if (World.current.isInstalledItemPositionValid(World.current, build, tile)) {
-        Job j = new Job(
+        Job j = Job.MakeStandardJob(
               tile,
               OnInstalledItemJobComplete, //(theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
               OnInstalledItemJobCancelled,
@@ -101,7 +101,7 @@ public class BuildController : MonoBehaviour {
       //tile.placeInstalledObject();
       //string localRecipe = InstalledItem.GetRecipeName(localBuild);
       if (tile.installedItem != null && tile.installedItem.tile == tile) { //if the tile has an installed item and that tile is the primary tile for that installed item
-        Job j = new Job(
+        Job j = Job.MakeStandardJob(
               tile,
               OnRemoveInstalledItemJobComplete, //(theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
               OnRemoveInstalledItemJobCancelled,
@@ -132,7 +132,7 @@ public class BuildController : MonoBehaviour {
 
   private void OnInstalledItemJobComplete(Job job) {
     //Debug.Log("installed item job complete: " + job);
-    WorldController.Instance.DeductMoney(job.cost);
+    
       
     
     if (!job.tile.RemoveJob(job)) {

@@ -1,7 +1,7 @@
 {
   "Recipes": [
     {
-      "name": "recipe::installed::wall",
+      "name": "recipe::installed::wall::build",
       "id": 1,
       "buildTime": 1,
       "resources": [
@@ -16,10 +16,10 @@
       ]
     },
     {
-      "name": "recipe::installed::atm",
+      "name": "recipe::installed::atm::build",
       "id": 2,
       "buildTime": 1,
-      "cost" :  50,
+      "cost": 50,
       "resources": [
         {
           "name": "inv::steel_plates",
@@ -28,10 +28,10 @@
       ]
     },
     {
-      "name": "recipe::installed::recycler",
+      "name": "recipe::installed::recycler::build",
       "id": 3,
       "buildTime": 1,
-      "cost" :  30,
+      "cost": 30,
       "resources": [
         {
           "name": "inv::steel_plates",
@@ -40,7 +40,7 @@
       ]
     },
     {
-      "name": "recipe::installed::door",
+      "name": "recipe::installed::door::build",
       "id": 4,
       "buildTime": 1,
       "resources": [
@@ -51,13 +51,13 @@
       ]
     },
     {
-      "name": "recipe::installed::stockpile",
+      "name": "recipe::installed::stockpile::build",
       "id": 5,
       "buildTime": -1,
       "resources": []
     },
     {
-      "name": "recipe::installed::crate",
+      "name": "recipe::installed::crate::build",
       "id": 6,
       "buildTime": 1,
       "resources": [
@@ -68,7 +68,7 @@
       ]
     },
     {
-      "name": "recipe::installed::mining_controller",
+      "name": "recipe::installed::mining_controller::build",
       "id": 7,
       "buildTime": 1,
       "cost": 100,
@@ -104,7 +104,7 @@
       ]
     },
     {
-      "name": "recipe::installed::organic_trash",
+      "name": "recipe::installed::organic_trash::build",
       "id": 9,
       "buildTime": 1,
       "resources": [
@@ -119,7 +119,7 @@
       ],
       "cash": true,
       "minCash": 0.00,
-      "maxCash" : 5.00
+      "maxCash": 5.00
     },
     {
       "name": "recipe::installed::recycler::work",
@@ -148,6 +148,51 @@
       "cash": true,
       "minCash": 1.0,
       "maxCash": 10.00
+
+    },
+    {
+      "name": "recipe::installed::robo_pod::build",
+      "id": 12,
+      "buildTime": 4,
+      "cost": 100,
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 8
+        },
+        {
+          "name": "inv::copper_plates",
+          "qty": 2
+        }
+      ]
+
+    },
+    {
+      "name": "recipe::installed::robo_pod::work",
+      "id": 13,
+      "buildTime": 3,
+      "cost": 150,
+      "onDemand": true,
+      "btnText" :  "Build Robot",
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 2
+        },
+        {
+          "name": "inv::copper_plates",
+          "qty": 2
+        }
+      ],
+      "products": [
+        {
+          "name": "character::robot",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+
+        }
+      ]
 
     }
   ]

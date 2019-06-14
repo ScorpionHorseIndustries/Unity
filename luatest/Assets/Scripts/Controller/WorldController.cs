@@ -15,7 +15,8 @@ public enum GAME_STATE {
 }
 
 public class WorldController : MonoBehaviour {
-  private const float interestRate = 0.01f;
+  public float interestRate { get; private set; } = 0.001f;
+  MarketSim interestRateMarket;
   [SerializeField]
   public Color positiveBalanceColour;
   public Color negativeBalanceColour;
@@ -225,7 +226,7 @@ public class WorldController : MonoBehaviour {
 
   public void Init() {
     CreateControllers();
-
+    interestRateMarket = new MarketSim(10, 0.001f, 0.1f);
     TileType.LoadFromFile();
 
     Tiles_GO_Map = new Dictionary<Tile, GameObject>();
@@ -324,26 +325,26 @@ public class WorldController : MonoBehaviour {
     //    Gizmos.DrawLine()
     //  }
     //}
-    
-      Gizmos.color = Color.red;
 
-      Gizmos.DrawLine((Vector2)inputController.camBounds.min, (Vector2)inputController.camBounds.max);
-      //Gizmos.DrawCube(inputController.camBounds.center, Vector3.one);
+    Gizmos.color = Color.red;
 
-      Gizmos.color = Color.white;
-      if (world != null && world.characters != null) {
-        foreach (Character chr in world.characters) {
+    Gizmos.DrawLine((Vector2)inputController.camBounds.min, (Vector2)inputController.camBounds.max);
+    //Gizmos.DrawCube(inputController.camBounds.center, Vector3.one);
 
-          if (chr.path != null) {
-            Vector2 a = chr.pos;
-            Vector2 b = new Vector2();
-            foreach (Tile pnt in chr.path.path) {
-              b.Set(pnt.world_x, pnt.world_y);
-              Gizmos.DrawLine(a, b);
-              a = b;
-            }
+    Gizmos.color = Color.white;
+    if (world != null && world.characters != null) {
+      foreach (Character chr in world.characters) {
 
-          
+        if (chr.path != null) {
+          Vector2 a = chr.pos;
+          Vector2 b = new Vector2();
+          foreach (Tile pnt in chr.path.path) {
+            b.Set(pnt.world_x, pnt.world_y);
+            Gizmos.DrawLine(a, b);
+            a = b;
+          }
+
+
         }
       }
     }
@@ -415,26 +416,33 @@ public class WorldController : MonoBehaviour {
 
   public void addCurrency(float amt) {
     money += amt;
-    
+
 
   }
 
   public void DeductMoney(float amt) {
-    Debug.Log("money = " + money + " - " + amt);
+    //Debug.Log("money = " + money + " - " + amt);
     money -= amt;
-    
+
   }
 
   private void UpdateMoney() {
+
+    interestRate = interestRateMarket.GetValue();
+
+    money = money + (money * (interestRate / 100f));//Mathf.Pow((1f + (((interestRate) / 100f) / SECONDS_PER_DAY)), SECONDS_PER_DAY);
+                                                    //+ (money * interestRate * Time.deltaTime);
+
+
     Text t = cashText.GetComponent<Text>();
-    t.text = string.Format("{0:00.00}", money);
+    t.text = string.Format("{0:00.00} {1:0.00000}", money, interestRate);
     if (money < 0) {
       t.color = negativeBalanceColour;
     } else {
       t.color = positiveBalanceColour;
     }
   }
-
+  public static readonly float SECONDS_PER_DAY = 60 * 60 * 24;
   // Update is called once per frame
   void Update() {
 
@@ -442,9 +450,7 @@ public class WorldController : MonoBehaviour {
       timers[i].update(Time.deltaTime);
     }
 
-    if (money < 0) {
-      money = money + (money * interestRate * Time.deltaTime);
-    }
+
     //if (actualReady < EXPECTED) {
     //  Debug.Log("Ready: " + actualReady);
     //  return;

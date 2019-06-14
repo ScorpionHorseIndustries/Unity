@@ -17,7 +17,8 @@ public class InstalledItem {
   //-----------------------------------PROPERTIES-----------------------------------
 
   public ItemParameters itemParameters;
-  public Action<InstalledItem, float> updateActions;
+  //public Action<InstalledItem, float> updateActions;
+  protected List<string> updateActions;
 
   public Func<InstalledItem, Tile.CAN_ENTER> enterRequested;
   public ProductOfWork[] products;
@@ -191,7 +192,8 @@ public class InstalledItem {
         //Debug.Log(updateActionCountDown + " " + updateActionCountDownMax);
       } else {
         updateActionCountDown = updateActionCountDownMax;
-        updateActions(this, deltaTime);
+        //updateActions(this, deltaTime);
+        InstalledItemActions.CallFunctions(this.updateActions.ToArray(), this, deltaTime);
       }
 
       
@@ -354,9 +356,21 @@ public class InstalledItem {
   }
 
 
+  protected static void LoadLua() {
+    string path = Application.streamingAssetsPath;
+    path = System.IO.Path.Combine(path, "lua");
+    path = System.IO.Path.Combine(path, "InstalledItems.lua");
+
+    string lua = File.ReadAllText(path);
+    World.current.lua.DoString(lua);
+    Debug.Log("lua: " + lua);
+
+
+  }
 
 
   public static void LoadFromFile() {
+    LoadLua();
     prototypes = new Dictionary<string, InstalledItem>();
     trashPrototypes = new List<InstalledItem>();
     prototypesById = new Dictionary<int, string>();
@@ -447,7 +461,7 @@ public class InstalledItem {
       proto.workRecipeName = workRecipeName;
       //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
-      Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);
+      //Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);
 
       if (linked) {
         string n_s = Funcs.jsonGetString(installedItemJson["neighbour_s"], "");
@@ -464,17 +478,51 @@ public class InstalledItem {
 
       }
 
-      if (name == "installed::door") {
-        proto.itemParameters.SetFloat("openness", 0f);
-        proto.itemParameters.SetFloat("opentime", 0.25f);
-        proto.updateActions += InstalledItemActions.Door_UpdateActions;
+      JArray parameters = Funcs.jsonGetArray(installedItemJson, "parameters");
+      if (parameters != null) {
+        foreach(JObject prm in parameters) {
+          string prmName = Funcs.jsonGetString(prm["name"], null);
+          string prmType = Funcs.jsonGetString(prm["type"], null);
 
-        proto.enterRequested += InstalledItemActions.Door_EnterRequested;
-      } else if (name == "installed::stockpile") {
-        proto.updateActions += InstalledItemActions.Stockpile_UpdateActions;
-      } else if (IsWorkstation) {
-        proto.updateActions += InstalledItemActions.Workstation_UpdateActions;
+          if (prmName != null && prmType != null) {
+            switch (prmType) {
+              case "float":
+                float prmValueFloat = Funcs.jsonGetFloat(prm["value"], 0);
+                proto.itemParameters.SetFloat(prmName, prmValueFloat);
+                break;
+              case "int":
+                int prmValueInt = Funcs.jsonGetInt(prm["value"], 0);
+                proto.itemParameters.SetInt(prmName, prmValueInt);
+                break;
+              case "string":
+                string prmValueString = Funcs.jsonGetString(prm["value"], "");
+                proto.itemParameters.Set(prmName, prmValueString);
+                break;
+              case "bool":
+                bool prmValueBool = Funcs.jsonGetBool(prm["value"], false);
+                proto.itemParameters.SetBool(prmName, prmValueBool);
+                break;
+            }
+          }
+        }
       }
+
+      string updateActionName = Funcs.jsonGetString(installedItemJson["updateAction"], null);
+      if (updateActionName != null) {
+        proto.updateActions = new List<string>();
+        proto.updateActions.Add(updateActionName);
+      }
+
+      //if (name == "installed::door") {
+
+      //  proto.updateActions += InstalledItemActions.Door_UpdateActions;
+
+      //  proto.enterRequested += InstalledItemActions.Door_EnterRequested;
+      //} else if (name == "installed::stockpile") {
+      //  proto.updateActions += InstalledItemActions.Stockpile_UpdateActions;
+      //} else if (IsWorkstation) {
+      //  proto.updateActions += InstalledItemActions.Workstation_UpdateActions;
+      //}
       prototypes.Add(proto.type, proto);
       prototypesById.Add(proto.prototypeId, proto.type);
       prototypeRecipes.Add(proto.type, proto.recipeName);

@@ -9,6 +9,8 @@ public class Recipe {
   public int id { get; private set; }
   public float buildTime { get; private set; }
   public float cost { get; private set; }
+  public bool onDemand { get; private set; }
+  public string btnText { get; private set; }
 
   private List<string> productChanceList;
 
@@ -40,18 +42,33 @@ public class Recipe {
 
     }
   }
+
+  public enum RECIPE_PRODUCT_TYPE {
+    INVENTORY_ITEM,
+    CHARACTER
+  }
   public class RecipeProduct{
     public string name { get; private set; }
     public int qtyMin { get; private set; }
     public int qtyMax{ get; private set; }
     public float chance { get; private set; }
+    public RECIPE_PRODUCT_TYPE type { get; private set; }
 
     public RecipeProduct(string name, int qtyMin, int qtyMax, float chance) {
       this.name = name;
       this.qtyMin = qtyMin;
       this.qtyMax = qtyMax;
       this.chance = chance;
-      
+      if (name.Substring(0,5) == "inv::") {
+        this.type = RECIPE_PRODUCT_TYPE.INVENTORY_ITEM;
+      } else if (name.Substring(0,11) == "character::") {
+        this.type = RECIPE_PRODUCT_TYPE.CHARACTER;
+      }
+      Debug.Log("product added: " + this.ToString()); 
+    }
+
+    public override string ToString() {
+      return string.Format("{0}:t{1}:q{2}-{3}@{4}%", name, type.ToString(), qtyMin, qtyMax, chance*100);
     }
 
     public RecipeProduct(RecipeProduct o) {
@@ -59,9 +76,12 @@ public class Recipe {
       this.qtyMin = o.qtyMin;
       this.qtyMax = o.qtyMax;
       this.chance = o.chance;
+      this.type = o.type;
     }
 
   }
+
+  
 
   public override string ToString() {
     string items = "";
@@ -106,6 +126,8 @@ public class Recipe {
     this.maxCash = proto.maxCash;
     this.buildTime = proto.buildTime;
     this.cost = proto.cost;
+    this.onDemand = proto.onDemand;
+    this.btnText = proto.btnText;
 
     foreach (RecipeResource rp in proto.resources.Values) {
       resources[rp.name] = new RecipeResource(rp);
@@ -159,6 +181,10 @@ public class Recipe {
   }
 
   //----------------------------STATIC ---------------------------------
+  public static IEnumerable<string> GetRecipeNames() {
+    return recipes.Keys;
+  }
+
 
   public static Recipe GetRecipe(string name) {
     if (recipes.ContainsKey(name)) {
@@ -203,6 +229,8 @@ public class Recipe {
       recipe.minCash = Funcs.jsonGetFloat(jRecipe["minCash"], 0);
       recipe.maxCash = Funcs.jsonGetFloat(jRecipe["maxCash"], 0);
       recipe.cost = Funcs.jsonGetFloat(jRecipe["cost"], 0);
+      recipe.onDemand = Funcs.jsonGetBool(jRecipe["onDemand"], false);
+      recipe.btnText = Funcs.jsonGetString(jRecipe["btnText"], "");
 
       JArray jaResources = Funcs.jsonGetArray(jRecipe, "resources");
 

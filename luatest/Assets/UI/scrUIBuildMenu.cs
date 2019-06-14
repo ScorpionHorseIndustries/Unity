@@ -24,9 +24,32 @@ public class scrUIBuildMenu : MonoBehaviour {
       btn.name = "btnBuild::" + proto.type;
       btn.onClick.AddListener(delegate { WorldController.Instance.SetBuildType_InstalledItem(proto.type); });
       btn.transform.localScale = Vector2.one;
+
+      Recipe r = Recipe.GetRecipe(proto.workRecipeName);
+      if (r != null && r.onDemand) {
+        btn = Instantiate(btnBuildPrefab, Vector2.zero, Quaternion.identity);
+        btn.transform.SetParent(this.transform);
+
+        btn.GetComponentInChildren<Text>().text = r.btnText;
+        btn.name = "btnBuild::" + r.name + "::ondemand";
+        btn.onClick.AddListener(delegate { World.current.InstalledItems_AssignOnDemandJobs(proto.type); });
+        btn.transform.localScale = Vector2.one;
+
+      }
        
     }
 
+    //foreach (string recipeName in Recipe.GetRecipeNames()) {
+    //  Recipe recipe = Recipe.GetRecipe(recipeName);
+
+    //  if (recipe != null) {
+    //    if (recipe.onDemand) {
+
+    //    }
+    //  }
+
+    //}
+ 
   }
 
 

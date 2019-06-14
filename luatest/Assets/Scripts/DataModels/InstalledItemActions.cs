@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLua;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,26 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 public static class InstalledItemActions {
+
+
+  public static void RunLua(string function) {
+    Debug.Log("run lua function:" + function);
+    //World.current.lua.CallFunction(function,)
+    //LuaActions.
+  }
+
+  public static void CallFunctions(string[] functions, InstalledItem item, float deltaTime) {
+
+    foreach(string func in functions) {
+      LuaFunction luaFunc = World.current.lua[func] as LuaFunction;
+      if (luaFunc != null) {
+        luaFunc.Call(item, deltaTime);
+      }
+
+      //World.current.lua.       CallFunction( (func, new[] { item, deltaTime });
+    }
+
+  }
 
   public static void Stockpile_UpdateActions(InstalledItem item, float deltaTime) {
     //Debug.Log("hello");
@@ -18,7 +39,7 @@ public static class InstalledItemActions {
       Tile nearest = World.current.inventoryManager.GetNearest(item.tile, itemName, false);
       if (nearest == null) return;
 
-      Job j = new Job(
+      Job j = Job.MakeTileToTileJob(
         nearest,
           item.tile,
 
@@ -39,7 +60,7 @@ public static class InstalledItemActions {
         qtyRequired = Mathf.Min(qtyRequired, nearest.InventoryTotal(itemName));
 
         if (qtyRequired > 0) {
-          Job j = new Job(
+          Job j = Job.MakeTileToTileJob(
             nearest,
             item.tile,
             World.current.jobQueue.HaulToTileComplete,
@@ -76,12 +97,19 @@ public static class InstalledItemActions {
 
   //}
 
+  
+
+  public static void Workstation_OnDemand(InstalledItem item) {
+    Workstation_UpdateActions(item, 1);
+
+  }
+
   public static void Workstation_UpdateActions(InstalledItem item, float deltaTime) {
     Tile tile = item.GetWorkSpot();
 
 
     if (!tile.HasPendingJob) {
-      Job j = new Job(
+      Job j = Job.MakeStandardJob(
         tile,
         Workstation_JobComplete,
         Workstation_JobCancelled,
@@ -99,20 +127,28 @@ public static class InstalledItemActions {
   public static void Workstation_JobComplete(Job job) {
     Recipe.RecipeProduct rp = job.recipe.GetProduct();
     if (rp != null) {
-      int qty = UnityEngine.Random.Range(rp.qtyMin, rp.qtyMax + 1);
-      Tile tile = World.current.FindTileForInventoryItem(job.tile, rp.name, qty);
+      //Debug.Log("job finished. recipe type: " + rp.ToString());
+      if (rp.type == Recipe.RECIPE_PRODUCT_TYPE.INVENTORY_ITEM) {
+        int qty = UnityEngine.Random.Range(rp.qtyMin, rp.qtyMax + 1);
+        Tile tile = World.current.FindTileForInventoryItem(job.tile, rp.name, qty);
 
-      if (tile != null) {
+        if (tile != null) {
 
 
-        if (rp != null) {
-          Inventory inv = new Inventory(World.current, 1, INVENTORY_TYPE.NONE, tile);
-          inv.AddItem(rp.name, qty);
-          inv.Explode();
-          inv.ClearAll();
+          if (rp != null) {
+            Inventory inv = new Inventory(World.current, 1, INVENTORY_TYPE.NONE, tile);
+            inv.AddItem(rp.name, qty);
+            inv.Explode();
+            inv.ClearAll();
+          }
+
+
         }
-
-
+      } else if (rp.type == Recipe.RECIPE_PRODUCT_TYPE.CHARACTER) {
+        Tile tile = World.current.FindEmptyTile(job.tile);
+        if (tile != null) {
+          World.current.CreateCharacter(tile);
+        }
       }
     }
 

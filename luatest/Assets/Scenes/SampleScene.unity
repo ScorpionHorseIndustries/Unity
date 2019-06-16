@@ -2802,8 +2802,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 79673845}
   m_HandleRect: {fileID: 79673844}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4037,17 +4037,17 @@ PrefabInstance:
     - target: {fileID: 7929475688632211538, guid: a25330d912c4c29459fb4b1418ef9673,
         type: 3}
       propertyPath: positiveBalanceColour.r
-      value: 0.95024645
-      objectReference: {fileID: 0}
-    - target: {fileID: 7929475688632211538, guid: a25330d912c4c29459fb4b1418ef9673,
-        type: 3}
-      propertyPath: positiveBalanceColour.g
       value: 0.99215686
       objectReference: {fileID: 0}
     - target: {fileID: 7929475688632211538, guid: a25330d912c4c29459fb4b1418ef9673,
         type: 3}
+      propertyPath: positiveBalanceColour.g
+      value: 0.97901005
+      objectReference: {fileID: 0}
+    - target: {fileID: 7929475688632211538, guid: a25330d912c4c29459fb4b1418ef9673,
+        type: 3}
       propertyPath: positiveBalanceColour.b
-      value: 0.825
+      value: 0.8235294
       objectReference: {fileID: 0}
     - target: {fileID: 7929475688632211538, guid: a25330d912c4c29459fb4b1418ef9673,
         type: 3}

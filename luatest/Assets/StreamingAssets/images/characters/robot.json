@@ -1,0 +1,41 @@
+{
+	"ppu" : 32,
+	"width" : 32,
+	"height" : 32,
+	"sprites" : [
+		{
+		"name" : "robot_idle",
+			"x" : 1,
+			"y" : 1
+		},
+		{
+			"name" : "robot_south",
+			"x" : 1,
+			"y" : 1
+		},
+		{
+			"name" : "robot_sitting",
+			"x" : 0,
+			"y" : 3
+		},
+		{
+			"name" : "robot_north",
+			"x" : 3,
+			"y" : 1
+		},
+		{
+			"name" : "robot_east",
+			"x" : 2,
+			"y" : 1,
+			"flipX" : true
+		},
+		{
+			"name" : "robot_west",
+			"x" : 2,
+			"y" : 1
+			
+		}
+		
+	]
+}
+

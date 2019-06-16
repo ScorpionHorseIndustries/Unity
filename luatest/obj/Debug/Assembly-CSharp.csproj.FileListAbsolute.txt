@@ -281,5 +281,3 @@ S:\unity\luatest\Temp\bin\Debug\Priority Queue.dll
 S:\unity\luatest\Temp\bin\Debug\Priority Queue.pdb
 S:\unity\luatest\Temp\bin\Debug\Priority Queue.xml
 S:\unity\luatest\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
-S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.dll
-S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.xml

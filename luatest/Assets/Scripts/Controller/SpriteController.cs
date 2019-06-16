@@ -10,13 +10,14 @@ public class SpriteController : MonoBehaviour {
   private Color whiteTransparent = new Color(1, 1, 1, 0.4f);
   private Color redTransparent = new Color(1, 0, 0, 0.4f);
   public GameObject goBuildTemplate;
+  
 
   public WorldController wcon;
   //public World world;
 
 
   private void Awake() {
-
+    SpriteManager.Instance.ToString();
     LoadSprites();
   }
 

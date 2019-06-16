@@ -384,8 +384,9 @@ public class Tile {
     if (movementFactor == 0) return CAN_ENTER.NEVER;
 
 
-    if (installedItem != null && installedItem.enterRequested != null) {
-      return installedItem.enterRequested(installedItem);
+    if (installedItem != null && installedItem.enterRequestedFunc != null) {
+      return InstalledItemActions.CallEnterRequested(installedItem.enterRequestedFunc, installedItem);
+        //installedItem.enterRequested(installedItem);
     }
     //else if (!IsItMe(c) && countOfOccupied > 0) {
     //    return CAN_ENTER.SOON;

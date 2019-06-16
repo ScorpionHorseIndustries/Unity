@@ -360,8 +360,8 @@ public class Character : IXmlSerializable {
     if (myJob != null) {
       //do something
       myJob.worker = this;
-      myJob.cbRegisterJobComplete(OnJobEnded);
-      myJob.cbUnregisterJobCancelled(OnJobEnded);
+      //myJob.cbRegisterJobComplete(OnJobEnded);
+      //myJob.cbUnregisterJobCancelled(OnJobEnded);
 
       if (myJob.jobType == JOB_TYPE.HAUL) {
         state = STATE.FIND_RESOURCE;
@@ -386,6 +386,7 @@ public class Character : IXmlSerializable {
 
     if (myJob != null && myJob.jobTime < 0)
     {
+      OnJobEnded(myJob);
       myJob = null;
     } else
     {
@@ -735,8 +736,8 @@ public class Character : IXmlSerializable {
     if (myJob != null) {
 
       world.jobQueue.ReturnJob(myJob);
-      myJob.cbUnregisterJobComplete(OnJobEnded);
-      myJob.cbUnregisterJobCancelled(OnJobEnded);
+      //myJob.cbUnregisterJobComplete(OnJobEnded);
+      //myJob.cbUnregisterJobCancelled(OnJobEnded);
       myJob = null;
     }
 

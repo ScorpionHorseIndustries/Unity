@@ -58,7 +58,7 @@
       "height": 2,
       "workRecipe": "recipe::installed::atm::work",
       "workstation": true,
-	  "updateAction" : "Workstation_UpdateActions"
+      "updateAction": "OnUpdate_Workstation"
 
     },
     {
@@ -79,7 +79,7 @@
       "height": 2,
       "workRecipe": "recipe::installed::recycler::work",
       "workstation": true,
-	  "updateAction" : "Workstation_UpdateActions"
+      "updateAction": "OnUpdate_Workstation"
 
     },
     {
@@ -100,11 +100,20 @@
       "neighbour_nesw": "installed_door_0",
       "enclosesRoom": true,
       "recipe": "recipe::installed::door::build",
-	  "updateAction" : "Door_UpdateActions",
-	  "parameters" : [
-		{"name" : "openness","value":0,"type":"float"},
-		{"name" : "opentime","value":0.25,"type":"float"}
-	  ]
+      "updateAction": "OnUpdate_Door",
+      "onEnterRequested" :  "OnEnterRequested_Door",
+      "parameters": [
+        {
+          "name": "openness",
+          "value": 0,
+          "type": "float"
+        },
+        {
+          "name": "opentime",
+          "value": 0.25,
+          "type": "float"
+        }
+      ]
 
 
     },
@@ -123,7 +132,7 @@
       "recipe": "recipe::installed::stockpile::build",
       "inventorySlots": 1,
       "updateActionCountDown": 2,
-	  "updateAction" : "Stockpile_UpdateActions"
+      "updateAction": "OnUpdate_Stockpile"
 
     },
     {
@@ -164,7 +173,7 @@
       "updateActionCountDown": 3,
       "workRecipe": "recipe::installed::mining_controller::work",
       "workstation": true,
-	  "updateAction" : "Workstation_UpdateActions"
+      "updateAction": "OnUpdate_Workstation"
 
     },
     {
@@ -185,8 +194,8 @@
       "height": 2,
       "updateActionCountDown": 3,
       "workRecipe": "recipe::installed::robo_pod::work"
-	  
-      
+
+
 
     }
 

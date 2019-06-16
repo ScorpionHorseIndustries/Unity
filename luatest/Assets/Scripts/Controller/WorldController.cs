@@ -376,11 +376,11 @@ public class WorldController : MonoBehaviour {
   }
 
   public void WriteLog() {
-    string s = "";
-    foreach (Job j in world.jobQueue.allJobs) {
-      s += "\n" + j.GetLog();
-    }
-    File.WriteAllText(Application.streamingAssetsPath + "/logs/joblog.txt", s);
+    //string s = "";
+    //foreach (Job j in world.jobQueue.allJobs) {
+    //  s += "\n" + j.GetLog();
+    //}
+    //File.WriteAllText(Application.streamingAssetsPath + "/logs/joblog.txt", s);
   }
 
   private void DestroyControllers() {
@@ -919,8 +919,8 @@ public class WorldController : MonoBehaviour {
 
     if (!Job_GO_Map.ContainsKey(j)) {
       spriteController.JobCreated(j);
-      j.cbRegisterJobComplete(OnJobEnded);
-      j.cbRegisterJobCancelled(OnJobEnded);
+      //j.cbRegisterJobComplete(OnJobEnded);
+      //j.cbRegisterJobCancelled(OnJobEnded);
 
       GameObject g = SimplePool.Spawn(buildProgressSprite, new Vector2(j.tile.world_x, j.tile.world_y), Quaternion.identity);
       g.transform.SetParent(this.transform, true);
@@ -951,7 +951,7 @@ public class WorldController : MonoBehaviour {
 
 
 
-  void OnJobEnded(Job j) {
+  public void OnJobEnded(Job j) {
     //delete sprites
     if (Job_GO_Map.ContainsKey(j)) {
       GameObject go = Job_GO_Map[j];

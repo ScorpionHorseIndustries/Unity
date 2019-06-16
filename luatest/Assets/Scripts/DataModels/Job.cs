@@ -38,9 +38,14 @@ public class Job : IXmlSerializable {
   public Tile tile { get; private set; }
   public Tile fromTile { get; private set; }
   public float jobTime { get; private set; }
-  public Action<Job> cbJobComplete;
-  public Action<string> cbCarryComplete;
-  public Action<Job> cbJobCancelled;
+
+  public List<string> cbLuaJobComplete;
+  public List<string> cbLuaCarryJobComplete;
+  public List<string> cbLuaJobCancelled;
+
+  //public Action<Job> cbJobComplete;
+  //public Action<string> cbCarryComplete;
+  //public Action<Job> cbJobCancelled;
   public JOB_TYPE jobType { get; protected set; }
   public JOB_SUBTYPE subType { get; protected set; } = JOB_SUBTYPE.NONE;
   public string recipeResourceName { get; private set; }
@@ -62,7 +67,7 @@ public class Job : IXmlSerializable {
   public InstalledItem installedItemPrototype { get; private set; }
 
   public void SetPriority() {
-
+    age += 1;
     float variation = 0;
     switch (jobType) {
 
@@ -99,17 +104,15 @@ public class Job : IXmlSerializable {
 
   }
 
-  public static Job MakeTileToTileJob(Tile fromTile, Tile toTile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
-    return new Job(fromTile, toTile, cbJobComplete, cbJobCancelled, resourceName, qty);
+  public static Job MakeTileToTileJob(Tile fromTile, Tile toTile, string resourceName, int qty) {
+    return new Job(fromTile, toTile, resourceName, qty);
 
   }
 
-  private Job(Tile fromTile, Tile toTile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
+  private Job(Tile fromTile, Tile toTile, string resourceName, int qty) {
     this.tile = toTile;
     this.fromTile = fromTile;
-    this.cbJobComplete += cbJobComplete;
-    this.cbJobCancelled += cbJobCancelled;
-
+  
     this.description = "HAUL " + qty + " " + resourceName;
     this.jobType = JOB_TYPE.HAUL;
     this.subType = JOB_SUBTYPE.HAUL_FROM_TILE_TO_TILE;
@@ -121,10 +124,10 @@ public class Job : IXmlSerializable {
     this.jobTime = 0.1f;
   }
 
-  public static Job MakeHaulToTileJob(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
-    return new Job(tile, cbJobComplete, cbJobCancelled, resourceName, qty);
+  public static Job MakeHaulToTileJob(Tile tile, string resourceName, int qty) {
+    return new Job(tile, resourceName, qty);
   }
-  private Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, string resourceName, int qty) {
+  private Job(Tile tile, string resourceName, int qty) {
     inventory = new Inventory(World.current, 99, INVENTORY_TYPE.JOB, this);
     this.tile = tile;
     this.jobTime = 0.1f;
@@ -133,9 +136,7 @@ public class Job : IXmlSerializable {
 
     this.recipeResourceName = resourceName;
     this.recipeResouceQty = qty; // tile.InventoryAllocate(resourceName, qty);
-    this.cbJobComplete += cbJobComplete;
-    this.cbJobCancelled += cbJobCancelled;
-    this.description = "HAUL " + qty + " " + resourceName;
+     this.description = "HAUL " + qty + " " + resourceName;
 
     if (recipeResourceName == InventoryItem.ANY) {
 
@@ -150,10 +151,10 @@ public class Job : IXmlSerializable {
 
     //Debug.Log("created new haul " + this.ToString());
   }
-  public static Job MakeRecipeJob(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name, Job parent) {
-    return new Job(tile, cbJobComplete, cbJobCancelled, type, description, recipe, name, parent);
+  public static Job MakeRecipeJob(Tile tile,JOB_TYPE type, string description, Recipe recipe, string name, Job parent) {
+    return new Job(tile, type, description, recipe, name, parent);
   }
-  private Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name, Job parent) {
+  private Job(Tile tile, JOB_TYPE type, string description, Recipe recipe, string name, Job parent) {
 
     priority = 1;
     this.tile = tile;
@@ -165,11 +166,6 @@ public class Job : IXmlSerializable {
 
     this.parent = parent;
 
-    this.cbJobComplete += cbJobComplete;
-    if (cbJobCancelled != null) {
-      this.cbJobCancelled += cbJobCancelled;
-
-    }
     //this.cbJobCancelled += cbJobCancelled;
     this.jobType = type;
     this.description = description;
@@ -189,15 +185,13 @@ public class Job : IXmlSerializable {
   }
 
 
-  public static Job MakeStandardJob(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, float jobTime, string description) {
-    return new Job(tile, cbJobComplete, cbJobCancelled, type, jobTime, description);
+  public static Job MakeStandardJob(Tile tile, JOB_TYPE type, float jobTime, string description) {
+    return new Job(tile, type, jobTime, description);
   }
-  private Job(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, float jobTime, string description) {
+  private Job(Tile tile, JOB_TYPE type, float jobTime, string description) {
     priority = 2;
     this.tile = tile;
     this.jobTime = jobTime;
-    this.cbJobComplete += cbJobComplete;
-    this.cbJobCancelled += cbJobCancelled;
     this.description = description;
     this.jobType = type;
 
@@ -272,50 +266,99 @@ public class Job : IXmlSerializable {
     jobTime -= time;
 
     if (jobTime <= 0) {
-      finished = true;
-      AddToLog("work finished by worker", worker);
-
-      if (cbJobComplete != null) {
-        cbJobComplete(this);
-      }
-      if (parent == null) {
-        if (inventory != null) {
-          inventory.ClearAll();
-          World.current.inventoryManager.UnregisterInventory(inventory);
-        }
-      }
+      CompleteJob();
 
     }
   }
 
-  public void Cancel() {
-    AddToLog("cancelled", worker);
+  public void CompleteJob() {
+    finished = true;
+    //AddToLog("work finished by worker", worker);
+
+
+    if (cbLuaJobComplete != null && cbLuaJobComplete.Count > 0) {
+      World.CallLuaFunctions(cbLuaJobComplete.ToArray(), this);
+    } 
+
+    //if (cbJobComplete != null) {
+    //  cbJobComplete(this);
+    //}
+    if (parent == null) {
+      if (inventory != null) {
+        inventory.ClearAll();
+        World.current.inventoryManager.UnregisterInventory(inventory);
+      }
+    }
+    World.current.jobQueue.OnJobEnded(this);
+  }
+
+  public void CancelJob() {
+    //AddToLog("cancelled", worker);
     finished = true;
     cancelled = true;
-    if (cbJobCancelled != null) {
-      cbJobCancelled(this);
+    if (cbLuaJobCancelled != null && cbLuaJobCancelled.Count > 0) {
+      World.CallLuaFunctions(cbLuaJobCancelled.ToArray(), this);
     }
     if (parent == null && inventory != null) {
 
       inventory.ClearAll();
       World.current.inventoryManager.UnregisterInventory(inventory);
     }
+    World.current.jobQueue.OnJobEnded(this);
   }
-  public void cbRegisterJobComplete(Action<Job> cb) {
-    this.cbJobComplete += cb;
+  //public void cbRegisterJobComplete(Action<Job> cb) {
+  //  this.cbJobComplete += cb;
+  //}
+
+  //public void cbUnregisterJobComplete(Action<Job> cb) {
+  //  this.cbJobComplete -= cb;
+  //}
+
+  public void cbLuaRegisterJobComplete(string cb) {
+    if (cbLuaJobComplete == null) {
+      cbLuaJobComplete = new List<string>();
+    }
+    if (!cbLuaJobComplete.Contains(cb)) {
+      cbLuaJobComplete.Add(cb);
+    }
   }
 
-  public void cbUnregisterJobComplete(Action<Job> cb) {
-    this.cbJobComplete -= cb;
+  public void cbLuaUnregisterJobComplete(string cb) {
+    if (cbLuaJobComplete == null) {
+      cbLuaJobComplete = new List<string>();
+    }
+
+    if (cbLuaJobComplete.Contains(cb)) {
+      cbLuaJobComplete.Remove(cb);
+    }
   }
 
-  public void cbRegisterJobCancelled(Action<Job> cb) {
-    this.cbJobCancelled += cb;
+  public void cbLuaRegisterJobCancelled(string cb) {
+    if (cbLuaJobCancelled== null) {
+      cbLuaJobCancelled = new List<string>();
+    }
+    if (!cbLuaJobCancelled.Contains(cb)) {
+      cbLuaJobCancelled.Add(cb);
+    }
   }
 
-  public void cbUnregisterJobCancelled(Action<Job> cb) {
-    this.cbJobCancelled -= cb;
+  public void cbLuaUnregisterJobCancelled(string cb) {
+    if (cbLuaJobCancelled== null) {
+      cbLuaJobCancelled = new List<string>();
+    }
+
+    if (cbLuaJobCancelled.Contains(cb)) {
+      cbLuaJobCancelled.Remove(cb);
+    }
   }
+
+  //public void cbRegisterJobCancelled(Action<Job> cb) {
+  //  this.cbJobCancelled += cb;
+  //}
+
+  //public void cbUnregisterJobCancelled(Action<Job> cb) {
+  //  this.cbJobCancelled -= cb;
+  //}
 
   public XmlSchema GetSchema() {
     return null;
@@ -332,8 +375,8 @@ public class Job : IXmlSerializable {
     writer.WriteElementString("jobType", j.jobType.ToString());
     writer.WriteElementString("description", j.description);
     writer.WriteElementString("id", j.jobId);
-    writer.WriteElementString("onComplete", cbJobComplete.ToString());
-    writer.WriteElementString("onCancelled", cbJobCancelled.ToString());
+    //writer.WriteElementString("onComplete", cbJobComplete.ToString());
+    //writer.WriteElementString("onCancelled", cbJobCancelled.ToString());
     writer.WriteElementString("time", j.jobTime.ToString());
     writer.WriteStartElement("tile");
     writer.WriteElementString("x", j.tile.world_x.ToString());
@@ -347,7 +390,7 @@ public class Job : IXmlSerializable {
 
   //------------------------------------------LOGGING------------------------------------------
   public List<string> log = new List<string>();
-  public void AddToLog(string logString, Character chr = null) {
+  //public void AddToLog(string logString, Character chr = null) {
 
 
     //if (chr != null) {
@@ -356,7 +399,7 @@ public class Job : IXmlSerializable {
     //  logString = DateTime.Now.ToString() + "\t\t" + logString;
     //}
     //log.Add(logString);
-  }
+  //}
 
   public string GetLog() {
     string output = "\nLog for " + this.ToString();
@@ -367,6 +410,9 @@ public class Job : IXmlSerializable {
     return output;
   }
   //------------------------------------------END LOGGING------------------------------------------
+
+
+
 }
 
 class JobTask {

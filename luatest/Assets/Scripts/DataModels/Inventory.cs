@@ -83,7 +83,7 @@ public class Inventory {
   public void AddRestriction(string type, int qty) {
     restrictions[type] = qty;
     if (job != null) {
-      job.AddToLog("restriction added: " + type + ":" + qty);
+      //job.AddToLog("restriction added: " + type + ":" + qty);
     }
   }
 
@@ -150,7 +150,7 @@ public class Inventory {
     qtyAccepted = qtyOffered - qtyRemaining;
 
     if (job != null) {
-      job.AddToLog("item added: " + type + " offered:" + qtyOffered + " accepted:" + qtyAccepted);
+      //job.AddToLog("item added: " + type + " offered:" + qtyOffered + " accepted:" + qtyAccepted);
     }
 
     if (cbItemAdded != null) {
@@ -296,7 +296,7 @@ public class Inventory {
     qtyGiven = qtyRequested - qtyRemaining;
 
     if (job != null) {
-      job.AddToLog("item removed: " + type + " requested:" + qtyRequested + " given:" + qtyGiven);
+      //job.AddToLog("item removed: " + type + " requested:" + qtyRequested + " given:" + qtyGiven);
     }
 
 

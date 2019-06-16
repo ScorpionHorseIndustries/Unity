@@ -20,7 +20,8 @@ public class InstalledItem {
   //public Action<InstalledItem, float> updateActions;
   protected List<string> updateActions;
 
-  public Func<InstalledItem, Tile.CAN_ENTER> enterRequested;
+  //public Func<InstalledItem, Tile.CAN_ENTER> enterRequested;
+  public string enterRequestedFunc;
   public ProductOfWork[] products;
 
   public string niceName { get; private set; }
@@ -107,7 +108,7 @@ public class InstalledItem {
       this.updateActions = proto.updateActions;
     }
     this.itemParameters = new ItemParameters(proto.itemParameters);//.GetItems(); 
-    this.enterRequested = proto.enterRequested;
+    this.enterRequestedFunc = proto.enterRequestedFunc;
     this.neighbourTypes = proto.neighbourTypes;
     this.inventory = new Inventory(world, proto.inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, this);
     this.workTileOffset = new Vector2(proto.workTileOffset.x, proto.workTileOffset.y);
@@ -356,21 +357,11 @@ public class InstalledItem {
   }
 
 
-  protected static void LoadLua() {
-    string path = Application.streamingAssetsPath;
-    path = System.IO.Path.Combine(path, "lua");
-    path = System.IO.Path.Combine(path, "InstalledItems.lua");
 
-    string lua = File.ReadAllText(path);
-    World.current.lua.DoString(lua);
-    Debug.Log("lua: " + lua);
-
-
-  }
 
 
   public static void LoadFromFile() {
-    LoadLua();
+    //LoadLua();
     prototypes = new Dictionary<string, InstalledItem>();
     trashPrototypes = new List<InstalledItem>();
     prototypesById = new Dictionary<int, string>();
@@ -513,11 +504,18 @@ public class InstalledItem {
         proto.updateActions.Add(updateActionName);
       }
 
-      //if (name == "installed::door") {
+      string enterRequestionName = Funcs.jsonGetString(installedItemJson["onEnterRequested"], null);
 
+      if (enterRequestionName != null) {
+        proto.enterRequestedFunc = enterRequestionName;
+      }
+
+      //if (name == "installed::door") {
+      //  proto.enterRequested += InstalledItemActions.Door_EnterRequested;
+      //}
       //  proto.updateActions += InstalledItemActions.Door_UpdateActions;
 
-      //  proto.enterRequested += InstalledItemActions.Door_EnterRequested;
+
       //} else if (name == "installed::stockpile") {
       //  proto.updateActions += InstalledItemActions.Stockpile_UpdateActions;
       //} else if (IsWorkstation) {

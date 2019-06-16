@@ -343,6 +343,12 @@ public class World : IXmlSerializable {
 import 'UnityEngine'
 import 'Assembly-CSharp'");
     lua["world"] = this;
+    LoadLuaFile("World");
+    LoadLuaFile("WorldController");
+    LoadLuaFile("InstalledItems");
+    LoadLuaFile("Jobs");
+
+    
     
   }
 
@@ -374,6 +380,31 @@ import 'Assembly-CSharp'");
     //    tiles[x, y].SetNeighbours(allowDiagonalNeighbours);
     //  }
     //}
+  }
+
+  //-------------------------------LUA-------------------------------
+  public static void CallLuaFunction(string functionName, params System.Object[] args) {
+    LuaFunction luaFunc = World.current.lua[functionName] as LuaFunction;
+    luaFunc.Call(args);
+  }
+
+  public static void CallLuaFunctions(string[] functionList, params System.Object[] args) {
+    foreach (string fname in functionList) {
+      LuaFunction luaFunc = World.current.lua[fname] as LuaFunction;
+      luaFunc.Call(args);
+    }
+  }
+
+  protected static void LoadLuaFile(string name) {
+    string path = Application.streamingAssetsPath;
+    path = System.IO.Path.Combine(path, "lua");
+    path = System.IO.Path.Combine(path, name+".lua");
+
+    string lua = File.ReadAllText(path);
+    World.current.lua.DoString(lua);
+    Debug.Log("lua: " + lua);
+
+
   }
 
 

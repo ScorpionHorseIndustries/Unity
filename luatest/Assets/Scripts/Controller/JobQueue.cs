@@ -10,7 +10,7 @@ using Priority_Queue;
 public class JobQueue : IXmlSerializable
 {
 
-  public List<Job> allJobs;
+  //public List<Job> allJobs;
   Action<Job> cbJobCreated;
   //protected Queue<Job> jobs = new Queue<Job>();
   protected SimplePriorityQueue<Job> jobs = new SimplePriorityQueue<Job>();
@@ -27,7 +27,7 @@ public class JobQueue : IXmlSerializable
   public JobQueue(World world)
   {
     this.world = world;
-    allJobs = new List<Job>();
+    //allJobs = new List<Job>();
 
   }
 
@@ -35,9 +35,11 @@ public class JobQueue : IXmlSerializable
   {
     //Debug.Log("adding job: " + j);
     j.tile.AddJob(j);
-    
-    j.cbJobComplete -= OnJobComplete;
-    j.cbJobComplete += OnJobComplete;
+
+    j.cbLuaUnregisterJobComplete("JobQueue_JobComplete");
+    j.cbLuaRegisterJobComplete("JobQueue_JobComplete");
+    //j.cbJobComplete -= OnJobComplete;
+    //j.cbJobComplete += OnJobComplete;
     
     if (j.jobTime < 0)
     {
@@ -50,14 +52,16 @@ public class JobQueue : IXmlSerializable
         foreach (string resourceName in j.recipe.resources.Keys)
         {
           //(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name) {
-          Job nj = Job.MakeRecipeJob(j.tile, HaulJobComplete, HaulJobCancelled, JOB_TYPE.HAUL, JOB_TYPE.HAUL.ToString(), j.recipe, resourceName, j);
-          Add(nj, 1f);
+          Job nj = Job.MakeRecipeJob(j.tile, JOB_TYPE.HAUL, JOB_TYPE.HAUL.ToString(), j.recipe, resourceName, j);
+          nj.cbLuaRegisterJobComplete("JobQueue_HaulJobComplete");
+          nj.cbLuaRegisterJobCancelled("JobQueue_HaulJobCancelled");
+          Add(nj, nj.priority);
           //publicJobs.Add(nj);
 
 
         }
       }
-      Add(j, 5);
+      Add(j, j.priority);
       //publicJobs.Add(j);
 
       if (cbJobCreated != null)
@@ -103,32 +107,32 @@ public class JobQueue : IXmlSerializable
     }
   }
 
-  public void HaulToTileComplete(Job job)
-  {
-    //job.tile.PlaceInventoryItem(job)
-    job.AddToLog("haul to tile complete");
-    job.tile.RemoveJob(job);
-  }
+  //public void HaulToTileComplete(Job job)
+  //{
+  //  //job.tile.PlaceInventoryItem(job)
+  //  job.AddToLog("haul to tile complete");
+  //  job.tile.RemoveJob(job);
+  //}
 
-  public void HaulJobComplete(Job job)
-  {
-    job.AddToLog("haul complete");
-    job.recipe.Add(job.recipeResourceName, job.qtyFulfilled);
-    job.tile.RemoveJob(job);
+  //public void HaulJobComplete(Job job)
+  //{
+  //  job.AddToLog("haul complete");
+  //  job.recipe.Add(job.recipeResourceName, job.qtyFulfilled);
+  //  job.tile.RemoveJob(job);
 
-  }
+  //}
 
-  public void HaulJobCancelled(Job job)
-  {
-    job.AddToLog("haul cancelled");
-    job.tile.RemoveJob(job);
-  }
+  //public void HaulJobCancelled(Job job)
+  //{
+  //  job.AddToLog("haul cancelled");
+  //  job.tile.RemoveJob(job);
+  //}
 
   public void ReturnJob(Job job)
   {
-    job.AddToLog("job returned");
+    //job.AddToLog("job returned");
     if (job.cancelIfReturned) {
-      job.Cancel();
+      job.CancelJob();
     } else {
       problemJobs.Enqueue(job);
     }
@@ -156,13 +160,13 @@ public class JobQueue : IXmlSerializable
         }
         else if (!j.IsRecipeFinished())
         {
-          j.AddToLog("recipe not finished returned to queue");
+          //j.AddToLog("recipe not finished returned to queue");
           Add(j, j.priority+10);
           continue;
 
         }
       }
-      j.AddToLog("given to requester");
+      //j.AddToLog("given to requester");
       return j;
     }
     return null;
@@ -170,21 +174,21 @@ public class JobQueue : IXmlSerializable
 
   }
 
-  private int GetCheckSum()
-  {
-    return (jobs.Count * 11) + (publicJobs.Count * 3);
-  }
+  //private int GetCheckSum()
+  //{
+  //  return (jobs.Count * 11) + (publicJobs.Count * 3);
+  //}
 
   private void Add(Job j, float p)
   {
-    int c = GetCheckSum();
+    //int c = GetCheckSum();
     jobs.Enqueue(j, p);
     publicJobs.Add(j);
-    if (c + 14 != GetCheckSum())
-    {
-      Debug.LogError("ERROR CHECK SUM DOES NOT MATCH");
-    }
-    allJobs.Add(j);
+    //if (c + 14 != GetCheckSum())
+    //{
+    //  Debug.LogError("ERROR CHECK SUM DOES NOT MATCH");
+    //}
+    //allJobs.Add(j);
   }
 
   private Job Pop()
@@ -197,15 +201,16 @@ public class JobQueue : IXmlSerializable
         break;
       }
       j = jobs.Dequeue();
-      j.AddToLog("popped from jobs");
+      //j.AddToLog("popped from jobs");
       publicJobs.Remove(j);
       //Debug.Log(j.jobType + " " + j.description + " " + j.jobTime);
       if (j.jobTime <= 0)
       {
-        if (j.cbJobComplete != null)
-        {
-          j.cbJobComplete(j);
-        }
+        j.CompleteJob();
+        //if (j.cbJobComplete != null)
+        //{
+        //  j.cbJobComplete(j);
+        //}
         j = null;
       }
 
@@ -226,10 +231,11 @@ public class JobQueue : IXmlSerializable
 
   }
 
-  public void OnJobComplete(Job j)
+  public void OnJobEnded(Job j)
   {
     //j.AddToLog("onJobComplete");
     WorldController.Instance.DeductMoney(j.cost);
+    WorldController.Instance.OnJobEnded(j);
     
   }
 

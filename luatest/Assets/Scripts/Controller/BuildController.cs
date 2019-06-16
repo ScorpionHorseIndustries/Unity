@@ -81,13 +81,15 @@ public class BuildController : MonoBehaviour {
       if (World.current.isInstalledItemPositionValid(World.current, build, tile)) {
         Job j = Job.MakeStandardJob(
               tile,
-              OnInstalledItemJobComplete, //(theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
-              OnInstalledItemJobCancelled,
+              //OnInstalledItemJobComplete, //(theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
+              //OnInstalledItemJobCancelled,
               JOB_TYPE.BUILD,
               1,
               localBuild
             );
         tile.AddJob(j);
+        j.cbLuaRegisterJobComplete("OnInstalledItemJobComplete");
+        j.cbLuaRegisterJobCancelled("OnInstalledItemJobCancelled");
         World.current.jobQueue.Push(j);
 
         //tile.pendingJob = true;
@@ -103,13 +105,15 @@ public class BuildController : MonoBehaviour {
       if (tile.installedItem != null && tile.installedItem.tile == tile) { //if the tile has an installed item and that tile is the primary tile for that installed item
         Job j = Job.MakeStandardJob(
               tile,
-              OnRemoveInstalledItemJobComplete, //(theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
-              OnRemoveInstalledItemJobCancelled,
+              //OnRemoveInstalledItemJobComplete, //(theJob) => { OnInstalledItemJobComplete(localBuild, theJob.tile); },
+              //OnRemoveInstalledItemJobCancelled,
               JOB_TYPE.DECONSTRUCT,
               1,
               InstalledItem.DECONSTRUCT
             );
         tile.AddJob(j);
+        j.cbLuaRegisterJobComplete("OnRemoveInstalledItemJobComplete");
+        j.cbLuaRegisterJobCancelled("OnRemoveInstalledItemJobCancelled");
         World.current.jobQueue.Push(j);
 
         //tile.pendingJob = true;
@@ -130,20 +134,20 @@ public class BuildController : MonoBehaviour {
     job.tile.RemoveJob(job);
   }
 
-  private void OnInstalledItemJobComplete(Job job) {
-    //Debug.Log("installed item job complete: " + job);
+  //private void OnInstalledItemJobComplete(Job job) {
+  //  //Debug.Log("installed item job complete: " + job);
     
       
     
-    if (!job.tile.RemoveJob(job)) {
-      Debug.Log("could not remove job from tile");
-    }
-    //job.tile.pendingJob = false;
-    if (World.current.PlaceInstalledItem(job.description, job.tile) == null) {
-      job.inventory.Explode();
-    }
+  //  if (!job.tile.RemoveJob(job)) {
+  //    Debug.Log("could not remove job from tile");
+  //  }
+  //  //job.tile.pendingJob = false;
+  //  if (World.current.PlaceInstalledItem(job.description, job.tile) == null) {
+  //    job.inventory.Explode();
+  //  }
 
-  }
+  //}
 
   //private void OnInstalledItemJobComplete(string itemToBuild, Tile tile) {
     

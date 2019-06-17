@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpriteController : MonoBehaviour {
 
 
-  private Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+  //private Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
 
   private Color whiteTransparent = new Color(1, 1, 1, 0.4f);
   private Color redTransparent = new Color(1, 0, 0, 0.4f);
@@ -17,8 +17,8 @@ public class SpriteController : MonoBehaviour {
 
 
   private void Awake() {
-    SpriteManager.Instance.ToString();
-    LoadSprites();
+    NYDISpriteManager.Instance.ToString();
+    //LoadSprites();
   }
 
   void Start() {
@@ -66,25 +66,25 @@ public class SpriteController : MonoBehaviour {
     }
 
   }
-  private void LoadSprites() {
-    Sprite[] loaded = Resources.LoadAll<Sprite>("sprites");
-    foreach (Sprite s in loaded) {
-      //Debug.Log(s);
-      string sn = s.name;
-      int counter = 1;
-      while (true) {
-        if (!sprites.ContainsKey(sn)) {
-          sprites.Add(sn, s);
-          break;
+  //private void LoadSprites() {
+  //  Sprite[] loaded = Resources.LoadAll<Sprite>("sprites");
+  //  foreach (Sprite s in loaded) {
+  //    //Debug.Log(s);
+  //    string sn = s.name;
+  //    int counter = 1;
+  //    while (true) {
+  //      if (!sprites.ContainsKey(sn)) {
+  //        sprites.Add(sn, s);
+  //        break;
 
-        } else {
-          sn = s.name + "_" + counter;
-          counter += 1;
-        }
-      }
+  //      } else {
+  //        sn = s.name + "_" + counter;
+  //        counter += 1;
+  //      }
+  //    }
 
-    }
-  }
+  //  }
+  //}
 
   public void SetTileSprite(Tile t) {
     SpriteRenderer sr = WorldController.Instance.GetGameObjectFromTile(t).GetComponent<SpriteRenderer>();
@@ -104,12 +104,14 @@ public class SpriteController : MonoBehaviour {
   }
 
   public Sprite GetSprite(string name) {
-    if (sprites.ContainsKey(name)) {
-      return sprites[name];
-    } else {
-      Debug.Log("could not locate sprite [" + name + "]");
-      return sprites["sprite_error"];
-    }
+    return NYDISpriteManager.Instance.GetSprite(name);
+
+    //if (sprites.ContainsKey(name)) {
+    //  return sprites[name];
+    //} else {
+    //  Debug.Log("could not locate sprite [" + name + "]");
+    //  return sprites["sprite_error"];
+    //}
   }
 
   public void JobCreated(Job j) {
@@ -127,7 +129,7 @@ public class SpriteController : MonoBehaviour {
     float openness = door.itemParameters.GetFloat("openness");
 
     int index = (int)(openness / (1.0f / 7.0f));
-    sh.s = GetSprite("installed_door_" + index);
+    sh.s = GetSprite("installed_items::door_" + index);
     //if (openness > 0.75) {
     //  sh.s = GetSprite("installed_door_25");
     //} else if (openness > 0.5 && openness <= 0.75) {

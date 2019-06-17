@@ -81,6 +81,7 @@ public class InputController : MonoBehaviour {
     cursorPrefab = Instantiate(cursorPrefab, this.transform.position, Quaternion.identity);
     cursorPrefab.transform.SetParent(this.transform, true);
     cursorPrefab.SetActive(false);
+    //cursorPrefab.GetComponent<SpriteRenderer>().sprite = NYDISpriteManager.Instance.GetSprite("other::cursor_slice_2");
     uConsoleGO =  WorldController.Instance.uConsoleObject;
     UConsoleObj = uConsoleGO.GetComponent<UConsole>();
     //WorldController.Instance.uConsoleObject.SetActive(false);

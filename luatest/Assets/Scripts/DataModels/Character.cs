@@ -114,12 +114,12 @@ public class Character : IXmlSerializable {
   public string name { get; private set; }
 
   public bool CanMoveDiagonally { get; private set; } = true;
-  public string spriteName { get; private set; } = "robot_front";
-  public string spriteName_IDLE { get; private set; } = "robot_sitting";
-  public string spriteNameNorth { get; private set; } = "robot_back";
-  public string spriteNameEast { get; private set; } = "robot_side";
-  public string spriteNameSouth { get; private set; } = "robot_front";
-  public string spriteNameWest { get; private set; } = "robot_side";
+  public string spriteName { get; private set; } = "characters::robot_idle";
+  public string spriteName_IDLE { get; private set; } = "characters::robot_idle";
+  public string spriteNameNorth { get; private set; } = "characters::robot_north";
+  public string spriteNameEast { get; private set; } = "characters::robot_east";
+  public string spriteNameSouth { get; private set; } = "characters::robot_south";
+  public string spriteNameWest { get; private set; } = "characters::robot_west";
 
   float movementSpeed = 5; //tiles per second
   //float avgMoveSpd = 0;

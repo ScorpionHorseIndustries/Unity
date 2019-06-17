@@ -126,9 +126,9 @@
     <Compile Include="Assets\Scripts\Controller\InputController.cs" />
     <Compile Include="Assets\Scripts\Controller\JobController.cs" />
     <Compile Include="Assets\Scripts\Controller\JobQueue.cs" />
+    <Compile Include="Assets\Scripts\Controller\NYDISpriteManager.cs" />
     <Compile Include="Assets\Scripts\Controller\SoundController.cs" />
     <Compile Include="Assets\Scripts\Controller\SpriteController.cs" />
-    <Compile Include="Assets\Scripts\Controller\SpriteManager.cs" />
     <Compile Include="Assets\Scripts\Controller\TrashController.cs" />
     <Compile Include="Assets\Scripts\Controller\WorldController.cs" />
     <Compile Include="Assets\Scripts\DataModels\Character.cs" />

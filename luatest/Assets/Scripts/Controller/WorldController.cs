@@ -291,6 +291,7 @@ public class WorldController : MonoBehaviour {
   }
 
   private void CreateControllers() {
+    Debug.Log("loading sprites..." + NYDISpriteManager.Instance);
     InstantiateController(prfSpriteController);
     InstantiateController(prfInputController);
     InstantiateController(prfBuildController);
@@ -904,7 +905,7 @@ public class WorldController : MonoBehaviour {
             spr.sprite = spriteController.GetSprite(c.spriteNameNorth);
           } else if (e) {
             spr.sprite = spriteController.GetSprite(c.spriteNameEast);
-            spr.flipX = true;
+            //spr.flipX = true;
           } else if (w) {
             spr.sprite = spriteController.GetSprite(c.spriteNameWest);
 
@@ -929,7 +930,7 @@ public class WorldController : MonoBehaviour {
       if (j.jobType == JOB_TYPE.BUILD) {
         spr.sprite = spriteController.GetSprite(j.installedItemPrototype.spriteName);
       } else {
-        spr.sprite = spriteController.GetSprite("build_in_progress");
+        spr.sprite = spriteController.GetSprite("other::build_in_progress");
       }
       spr.color = new Color(1, 1, 1, 0.4f);
       if (j.jobType == JOB_TYPE.BUILD) {

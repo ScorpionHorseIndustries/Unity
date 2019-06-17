@@ -59,22 +59,22 @@ public class TileType {
 		JArray ja = (JArray)job["tileTypes"];
 		foreach (JObject j in ja) {
 			string n = (string)j["name"];
-      string prefix = Funcs.jsonGetString(j["spritePrefix"], "");
-      int num = Funcs.jsonGetInt(j["sprites"], 0);
+      //string prefix = Funcs.jsonGetString(j["spritePrefix"], "");
+      //int num = Funcs.jsonGetInt(j["sprites"], 0);
 
-      int offset = Funcs.jsonGetInt(j["spritesOffset"], 0);
+      //int offset = Funcs.jsonGetInt(j["spritesOffset"], 0);
       
 
 
       int id = Funcs.jsonGetInt(j["id"], 0);
 			List<string> sprites = new List<string>();
 
-      for (int i = offset; i < offset + num; i += 1) {
-        sprites.Add(prefix + i);
+      for (int i = 0; i < 8; i += 1) {
+        sprites.Add("tiles::" + n + "_" + i);
       }
 
-			//Debug.Log(n + " " + sprites[0] + " " + sprites.Count);
-			TileType t = new TileType(n, sprites.ToArray<string>());
+      //Debug.Log(n + " " + sprites[0] + " " + sprites.Count);
+      TileType t = new TileType(n, sprites.ToArray<string>());
       t.id = id;
 			t.rangeLow = (float)j["rangeLow"];
 			t.rangeHigh = (float)j["rangeHigh"];

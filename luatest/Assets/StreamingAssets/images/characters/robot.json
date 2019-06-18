@@ -5,8 +5,8 @@
 	"sprites" : [
 		{
 		"name" : "robot_idle",
-			"x" : 1,
-			"y" : 1
+			"x" : 0,
+			"y" : 0
 		},
 		{
 			"name" : "robot_south",
@@ -16,23 +16,23 @@
 		{
 			"name" : "robot_sitting",
 			"x" : 0,
-			"y" : 3
+			"y" : 0
 		},
 		{
 			"name" : "robot_north",
 			"x" : 3,
-			"y" : 1
+			"y" : 2
 		},
 		{
 			"name" : "robot_east",
 			"x" : 2,
-			"y" : 1,
+			"y" : 2,
 			"flipX" : true
 		},
 		{
 			"name" : "robot_west",
 			"x" : 2,
-			"y" : 1
+			"y" : 2
 			
 		}
 		

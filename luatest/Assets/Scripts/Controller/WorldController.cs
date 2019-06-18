@@ -899,7 +899,7 @@ public class WorldController : MonoBehaviour {
         //case Character.STATE.FIND_EMPTY:
         //  break;
         default:
-          spr.sprite = spriteController.GetSprite(c.spriteName);
+          
 
           if (n) {
             spr.sprite = spriteController.GetSprite(c.spriteNameNorth);
@@ -909,6 +909,10 @@ public class WorldController : MonoBehaviour {
           } else if (w) {
             spr.sprite = spriteController.GetSprite(c.spriteNameWest);
 
+          } else if (s) {
+            spr.sprite = spriteController.GetSprite(c.spriteNameSouth);
+          } else {
+            spr.sprite = spriteController.GetSprite(c.spriteName);
           }
           break;
       }

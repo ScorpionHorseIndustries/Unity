@@ -119,7 +119,7 @@ public static class InstalledItemActions {
 
   public static void Workstation_OnDemand(InstalledItem item) {
     //Workstation_UpdateActions(item, 1);
-    World.CallLuaFunction("Workstation_UpdateActions", item, 1);
+    World.CallLuaFunction("OnUpdate_Workstation", item, 1);
 
   }
 

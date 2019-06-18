@@ -24,20 +24,15 @@
       "id": 2,
       "name": "installed::organic_trash",
       "niceName": "Organic Trash",
-      "sprite": "installed_items::corpse_0",
-      "sprites": [
-        "installed_items::corpse_0",
-        "installed_items::corpse_1",
-        "installed_items::corpse_2",
-        "installed_items::corpse_3"
-      ],
+      "sprite": "installed_items::corpse",
       "movementFactor": 0.8,
       "linked": false,
       "trash": true,
       "build": false,
       "randomRotation": true,
       "enclosesRoom": false,
-      "recipe": "recipe::installed::organic_trash::build"
+      "recipe": "recipe::installed::organic_trash::build",
+	  "paletteSwap" : true
 
     },
     {

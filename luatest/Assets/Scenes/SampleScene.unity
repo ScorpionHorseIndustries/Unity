@@ -1601,7 +1601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.400387, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3731,12 +3731,12 @@ PrefabInstance:
     - target: {fileID: 1316520723928746609, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 189.58
+      value: 181.64
       objectReference: {fileID: 0}
     - target: {fileID: 1316520723928746609, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 21.756842
+      value: 16.47
       objectReference: {fileID: 0}
     - target: {fileID: 1316520723928746609, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}
@@ -3787,21 +3787,36 @@ PrefabInstance:
     - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}
       propertyPath: m_FontData.m_MinSize
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}
       propertyPath: m_Color.g
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.019385815
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}
       propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: e4a548480a2793e48ab4b6bb4f4aef50, type: 3}
+    - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
+        type: 3}
+      propertyPath: m_FontData.m_RichText
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

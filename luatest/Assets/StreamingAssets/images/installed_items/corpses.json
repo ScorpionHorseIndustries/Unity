@@ -2,6 +2,24 @@
 	"ppu" : 32,
 	"width" : 32,
 	"height" : 32,
+	"paletteSwaps" :  [
+		{
+		"input" : 0 ,
+		"output" : ["0x000000"]
+		},
+		{
+		"input" : 102,
+		"output" : ["0x8d5524","0xc68642","0xe0ac69","0xf1c27d","0xffdbac"]
+		},
+		{
+		"input" : 153,
+		"output" : [ "0xfff05a", "0xffd25a","0xffaa5a","0xff785a", "0x191919"]
+		},
+		{
+		"input" : 204,
+		"output" : [ "0xfff05a", "0xffd25a","0xffaa5a","0xff785a", "0x191919"]
+		}
+	],	
 	"sprites" : [
 		{
 		"name" : "corpse_0",

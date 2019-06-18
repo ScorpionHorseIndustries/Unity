@@ -105,7 +105,7 @@ public class InventoryItem {
       item.spriteName = spriteName;
       prototypes.Add(item.type, item);
 
-      Debug.Log(item);
+      //Debug.Log(item);
     }
 
 

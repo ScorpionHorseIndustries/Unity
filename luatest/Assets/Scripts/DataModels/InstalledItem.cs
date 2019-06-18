@@ -39,6 +39,7 @@ public class InstalledItem {
   List<Job> jobs;
   public Inventory inventory;
   public Recipe recipe { get; private set; }
+  public bool paletteSwap { get; private set; }
 
   private InstalledItem prototype = null;
   public Vector2 workTileOffset { get; protected set; } = Vector2.zero; //relative to bottom left tile
@@ -398,12 +399,15 @@ public class InstalledItem {
       float updateActionCD = Funcs.jsonGetFloat(installedItemJson["updateActionCountDown"], 0);
       bool IsWorkstation = Funcs.jsonGetBool(installedItemJson["workstation"], false);
       string workRecipeName = Funcs.jsonGetString(installedItemJson["workRecipe"], "");
+      bool paletteSwap = Funcs.jsonGetBool(installedItemJson["paletteSwap"], false);
 
 
       List<string> sprites = new List<string>();
-      JArray spritesJsonArray = (JArray)installedItemJson["sprites"];
-      foreach (string tempSpriteName in spritesJsonArray) {
-        sprites.Add(tempSpriteName);
+      JArray spritesJsonArray = Funcs.jsonGetArray(installedItemJson,"sprites");
+      if (spritesJsonArray != null) {
+        foreach (string tempSpriteName in spritesJsonArray) {
+          sprites.Add(tempSpriteName);
+        }
       }
 
       List<string> neighbourTypeList = new List<string>();
@@ -450,6 +454,7 @@ public class InstalledItem {
       proto.updateActionCountDownMax = updateActionCD;
       proto.isWorkstation = IsWorkstation;
       proto.workRecipeName = workRecipeName;
+      proto.paletteSwap = paletteSwap;
       //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
       //Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);
@@ -463,7 +468,13 @@ public class InstalledItem {
         proto.setLinkedSpriteNames(n_ns, n_nsw, n_s, n_sw, n_nesw);
       }
 
-      if (sprites.Count > 0) {
+      if (proto.paletteSwap) {
+        List<string> randoSprites = NYDISpriteManager.Instance.GetSpritesStarting(proto.spriteName);
+        foreach(string s in randoSprites) {
+          Debug.Log(s);
+        }
+        proto.setRandomSprites(randoSprites);
+      } else if (sprites.Count > 0) {
         proto.setRandomSprites(sprites);
         //Debug.Log("proto " + proto.type + " has " + proto.randomSprites.Count + " random sprites");
 

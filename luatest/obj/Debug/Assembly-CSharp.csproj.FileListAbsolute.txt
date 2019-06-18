@@ -5,7 +5,9 @@ S:\unity\luatest\Temp\bin\Debug\Microsoft.CSharp.dll
 S:\unity\luatest\Temp\bin\Debug\Microsoft.Win32.Primitives.dll
 S:\unity\luatest\Temp\bin\Debug\mscorlib.dll
 S:\unity\luatest\Temp\bin\Debug\netstandard.dll
+S:\unity\luatest\Temp\bin\Debug\Newtonsoft.Json.dll
 S:\unity\luatest\Temp\bin\Debug\nunit.framework.dll
+S:\unity\luatest\Temp\bin\Debug\Priority Queue.dll
 S:\unity\luatest\Temp\bin\Debug\System.AppContext.dll
 S:\unity\luatest\Temp\bin\Debug\System.Collections.Concurrent.dll
 S:\unity\luatest\Temp\bin\Debug\System.Collections.dll
@@ -117,11 +119,15 @@ S:\unity\luatest\Temp\bin\Debug\System.Xml.XmlDocument.dll
 S:\unity\luatest\Temp\bin\Debug\System.Xml.XmlSerializer.dll
 S:\unity\luatest\Temp\bin\Debug\System.Xml.XPath.dll
 S:\unity\luatest\Temp\bin\Debug\System.Xml.XPath.XDocument.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.DataPrivacy.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.StandardEvents.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.Tracker.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.CollabProxy.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Locator.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.PackageManagerUI.Editor.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Timeline.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Timeline.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEditor.dll
@@ -198,6 +204,8 @@ S:\unity\luatest\Temp\bin\Debug\Boo.Lang.PatternMatching.dll
 S:\unity\luatest\Temp\bin\Debug\Boo.Lang.Parser.dll
 S:\unity\luatest\Temp\bin\Debug\Boo.Lang.Useful.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.CecilTools.dll
+S:\unity\luatest\Temp\bin\Debug\UnityEngine.xml
+S:\unity\luatest\Temp\bin\Debug\UnityEditor.xml
 S:\unity\luatest\Temp\bin\Debug\Unity.Timeline.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.PackageManagerUI.Editor.pdb
@@ -205,19 +213,6 @@ S:\unity\luatest\Temp\bin\Debug\Unity.Timeline.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.CollabProxy.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.DataPrivacy.pdb
-S:\unity\luatest\Temp\bin\Debug\nunit.framework.xml
-S:\unity\luatest\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
-S:\unity\luatest\obj\Debug\Assembly-CSharp.csproj.CopyComplete
-S:\unity\luatest\obj\Debug\Assembly-CSharp.dll
-S:\unity\luatest\obj\Debug\Assembly-CSharp.pdb
-S:\unity\luatest\Temp\bin\Debug\Newtonsoft.Json.dll
-S:\unity\luatest\Temp\bin\Debug\Newtonsoft.Json.xml
-S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.DataPrivacy.dll
-S:\unity\luatest\Temp\bin\Debug\Unity.CollabProxy.Editor.dll
-S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.dll
-S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.Editor.dll
-S:\unity\luatest\Temp\bin\Debug\UnityEngine.xml
-S:\unity\luatest\Temp\bin\Debug\UnityEditor.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.AIModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.ARModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.AccessibilityModule.xml
@@ -277,9 +272,15 @@ S:\unity\luatest\Temp\bin\Debug\UnityEngine.WindModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.XRModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.UI.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TestRunner.xml
-S:\unity\luatest\Temp\bin\Debug\Priority Queue.dll
+S:\unity\luatest\Temp\bin\Debug\nunit.framework.xml
+S:\unity\luatest\Temp\bin\Debug\Newtonsoft.Json.xml
 S:\unity\luatest\Temp\bin\Debug\Priority Queue.pdb
 S:\unity\luatest\Temp\bin\Debug\Priority Queue.xml
+S:\unity\luatest\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+S:\unity\luatest\obj\Debug\Assembly-CSharp.csproj.CopyComplete
+S:\unity\luatest\obj\Debug\Assembly-CSharp.dll
+S:\unity\luatest\obj\Debug\Assembly-CSharp.pdb
+S:\unity\luatest\Temp\bin\Debug\System.Drawing.dll
 S:\unity\luatest\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
 S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.xml

@@ -277,7 +277,7 @@ public class Recipe {
       }
 
       recipes[recipe.name] = recipe;
-      Debug.Log("recipe Added: " + recipe.ToString(true) + " " + recipe.buildTime);
+      //Debug.Log("recipe Added: " + recipe.ToString(true) + " " + recipe.buildTime);
 
     }
 

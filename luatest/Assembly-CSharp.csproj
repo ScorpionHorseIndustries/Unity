@@ -120,6 +120,7 @@
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Example\UConsoleExamplePlayerScript.cs" />
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Scripts\UConsole.cs" />
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Scripts\UConsoleCommands.cs" />
+    <Compile Include="Assets\scrBtnBuildRecipeData.cs" />
     <Compile Include="Assets\scrChest.cs" />
     <Compile Include="Assets\scrInventory.cs" />
     <Compile Include="Assets\Scripts\Controller\BuildController.cs" />
@@ -130,8 +131,11 @@
     <Compile Include="Assets\Scripts\Controller\SoundController.cs" />
     <Compile Include="Assets\Scripts\Controller\SpriteController.cs" />
     <Compile Include="Assets\Scripts\Controller\TrashController.cs" />
+    <Compile Include="Assets\Scripts\Controller\WorkItemManager.cs" />
     <Compile Include="Assets\Scripts\Controller\WorldController.cs" />
     <Compile Include="Assets\Scripts\DataModels\Character.cs" />
+    <Compile Include="Assets\Scripts\DataModels\CharacterJob.cs" />
+    <Compile Include="Assets\Scripts\DataModels\CharacterJobTask.cs" />
     <Compile Include="Assets\Scripts\DataModels\InstalledItem.cs" />
     <Compile Include="Assets\Scripts\DataModels\InstalledItemActions.cs" />
     <Compile Include="Assets\Scripts\DataModels\Inventory.cs" />
@@ -141,8 +145,11 @@
     <Compile Include="Assets\Scripts\DataModels\LuaActions.cs" />
     <Compile Include="Assets\Scripts\DataModels\NYDITimer.cs" />
     <Compile Include="Assets\Scripts\DataModels\Recipe.cs" />
+    <Compile Include="Assets\Scripts\DataModels\Robot.cs" />
+    <Compile Include="Assets\Scripts\DataModels\RobotType.cs" />
     <Compile Include="Assets\Scripts\DataModels\Room.cs" />
     <Compile Include="Assets\Scripts\DataModels\TileZone.cs" />
+    <Compile Include="Assets\Scripts\DataModels\WorkItem.cs" />
     <Compile Include="Assets\Scripts\Paths\ChunkNodeMap.cs" />
     <Compile Include="Assets\Scripts\Paths\PathAStar.cs" />
     <Compile Include="Assets\Scripts\Paths\PathEdge.cs" />
@@ -155,6 +162,7 @@
     <Compile Include="Assets\Scripts\utils\FastNoise.cs" />
     <Compile Include="Assets\Scripts\utils\Funcs.cs" />
     <Compile Include="Assets\Scripts\utils\ItemParameters.cs" />
+    <Compile Include="Assets\Scripts\utils\LuaFunctionList.cs" />
     <Compile Include="Assets\Scripts\utils\MapGenerator.cs" />
     <Compile Include="Assets\Scripts\utils\MarketSim.cs" />
     <Compile Include="Assets\Scripts\utils\NoiseWave.cs" />

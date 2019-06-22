@@ -1,0 +1,39 @@
+{
+	"ppu" : 32,
+	"width" : 32,
+	"height" : 32,
+	"sprites" : [
+	
+	
+	{
+		"name" : "walls_none",
+		"x" : 0,
+		"y" : 3
+	},
+	{
+		"name" : "walls_s",
+		"x" : 0,
+		"y" : 2
+	},
+	{
+		"name" : "walls_ns",
+		"x" : 1,
+		"y" : 3
+	},
+	{
+		"name" : "walls_nsw",
+		"x" : 1,
+		"y" : 2
+	},
+	{
+		"name" : "walls_sw",
+		"x" : 2,
+		"y" : 2
+	},
+	{
+		"name" : "walls_nesw",
+		"x" : 2,
+		"y" : 3
+	}
+	]
+}

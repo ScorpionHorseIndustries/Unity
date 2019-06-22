@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using NoYouDoIt.Scripts;
 public class scrInventory : MonoBehaviour
 {
 

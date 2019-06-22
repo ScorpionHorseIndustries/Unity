@@ -1,0 +1,7 @@
+S:\unity\renderboy\renderboy\bin\Debug\renderboy.exe.config
+S:\unity\renderboy\renderboy\bin\Debug\renderboy.exe
+S:\unity\renderboy\renderboy\bin\Debug\renderboy.pdb
+S:\unity\renderboy\renderboy\obj\Debug\renderboy.csprojAssemblyReference.cache
+S:\unity\renderboy\renderboy\obj\Debug\renderboy.csproj.CoreCompileInputs.cache
+S:\unity\renderboy\renderboy\obj\Debug\renderboy.exe
+S:\unity\renderboy\renderboy\obj\Debug\renderboy.pdb

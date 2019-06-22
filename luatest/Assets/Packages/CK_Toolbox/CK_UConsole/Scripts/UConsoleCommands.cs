@@ -1,7 +1,10 @@
-﻿namespace CardboardKeep
+﻿
+
+namespace CardboardKeep
 {
 	using UnityEngine;
 	using System.Collections;
+  using NoYouDoIt.TheWorld;
 	/// <summary>
 	/// UConsole - A Valve-style in-game runtime command console for Unity games
 	/// Author: Calum Spring

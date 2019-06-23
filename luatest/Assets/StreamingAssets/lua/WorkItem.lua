@@ -21,7 +21,7 @@
 
 			newItem = WorkItem.MakeWorkItem(work.workTile,"SetPrereq",work,rName,rQty)
 
-			
+			work:AddPrereq(newItem)
 
 		end
 		work.OnWork:Add("OnWork_InstalledItemWork")
@@ -53,6 +53,7 @@ function SetPrereq(work,parent,invItemName,qty)
 	work.inventoryItemQtyRemaining = qty
 	work.parent = parent;
 	work.inventory = parent.inventory
+	work.inventorySearchStockpiles = true
 
 	work.OnWork:Add("OnWork_PreReq")
 	work.OnComplete:Add("OnComplete_PreReq")
@@ -62,6 +63,16 @@ function SetPrereq(work,parent,invItemName,qty)
 end
 
 function OnWork_PreReq(work)
+
+	robot = work.assignedRobot
+
+	if (robot:PlaceItemAtJob()) then
+		if (work.inventoryItemQtyRemaining == 0) then
+			work:DoOnComplete()
+		end
+	end
+--[[
+	World.dbug("OnWork_PreReq: " .. work:ToString())
 	invItemName = work.inventoryItemName;
 	robot = work.assignedRobot
 	qtyNeeded = work.inventoryItemQtyRemaining
@@ -74,9 +85,11 @@ function OnWork_PreReq(work)
 	if (work.inventoryItemQtyRemaining == 0) then
 		work:DoOnComplete()
 	end
+	]]
 end
 
 function IsComplete_PreReq(work) 
+	World.dbug("IsComplete_PreReq: " .. work:ToString())
 	if (work.inventoryItemQtyRemaining == 0) then
 		return true
 	else	
@@ -86,15 +99,17 @@ function IsComplete_PreReq(work)
 end
 
 function OnComplete_PreReq(work) 
-	work.parent.prereq:Remove(work)
+	World.dbug("OnComplete_PreReq: " .. work:ToString())
+	work.parent:RemovePrereq(work)
 	
 
 end
 function IsReady_PreReq(work) 
 	return true
 end
-
+-- ------------------------------------------------InstalledItem---------------
 function OnWork_InstalledItemWork (work, deltaTime)
+	World.dbug("OnWork_InstalledItemWork: " .. work:ToString())
 	if work.workTime > 0 then
 		work.workTime = work.workTime - deltaTime
 
@@ -106,13 +121,15 @@ function OnWork_InstalledItemWork (work, deltaTime)
 end
 
 
--- ------------------------------------------------InstalledItem---------------
+
 function OnComplete_InstalledItemWork(work)
+	World.dbug("OnComplete_InstalledItemWork: " .. work:ToString())
 	World.current:PlaceInstalledItem(work.installedItemProto.type, work.workTile)
 
 end
 
 function IsComplete_InstalledItemWork(work)
+	World.dbug("IsComplete_InstalledItemWork: " .. work:ToString())
 	if work.workTime <= 0 then
 		return true
 	else
@@ -122,8 +139,9 @@ function IsComplete_InstalledItemWork(work)
 
 end
 
-function IsReady_InstalledItemWork(work) 
-	if work.prereq.Count > 0 then
+function IsReady_InstalledItemWork(work)	
+	World.dbug("IsReady_InstalledItemWork: " .. work:ToString())
+	if (work:GetCountOfPrereqs() > 0) then
 		return false
 	else
 		return true

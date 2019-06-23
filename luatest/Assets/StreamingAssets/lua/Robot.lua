@@ -1,7 +1,7 @@
 ﻿function OnUpdate_Robot(robot, deltaTime) 
 	
 
-	state = robot.info:GetString("state")
+	state = robot.state
 	if (state == nil) then
 		state = "idle"
 		
@@ -9,9 +9,44 @@
 	end
 
 	if (state == "idle") then
-		state = "find_path"
+		findWorkTimer = robot.info:GetFloat("findWorkTimer");
+		if (findWorkTimer <= 0) then
+			state = "find_job"
+			findWorkTimer = 1
+		else	
+			findWorkTimer = findWorkTimer - deltaTime
+		end
+		robot.info:SetFloat("findWorkTimer", findWorkTimer)
 
-	elseif (state == "find_path") then
+		wanderTimer = robot.info:GetFloat("wanderTimer", 5)
+		if (wanderTimer <= 0) then
+			wanderTimer = 5
+			state = "wander"
+			robot.info:SetString("stateWhenMoved", "idle")
+		else 
+			wanderTimer = wanderTimer - deltaTime
+			
+		end
+		robot.info:GetFloat("wanderTimer", wanderTimer)
+
+	elseif  (state == "find_job") then
+		robot:GetWork()
+		if (robot.work ~= nil) then
+			state = "init_work"
+		else	
+			state = "idle"
+		end
+	elseif (state == "init_work") then
+		if (robot.work ~= nil) then
+			if (robot.work.inventoryItemName ~= nil) then
+				state = "find_item"
+			else
+				--go to work tile
+				state = "find_path_work.tile"
+				robot.info:SetString("stateWhenMoved", "work")
+			end
+		end
+	elseif (state == "wander") then
 		target = World.current:GetRandomEmptyTile()
 		if (target ~= nil) then
 			if (robot:FindPath(target,false)) then
@@ -19,14 +54,53 @@
 			
 			end
 		end
+	elseif (state == "find_item") then
+		--find some of that then
+		target = World.current.inventoryManager:GetNearest(robot.pos, robot.work.inventoryItemName,robot.work.inventorySearchStockpiles)
+		--World.dbug("target:" + target.ToString() + "\nitem:" + work.inventoryItemName)
+		if (target ~= nil) then
+			robot.info:SetInt("goto_x", target.world_x);		
+			robot.info:SetInt("goto_y", target.world_y);		
+			state = "find_path_x_y"
+			robot.info:SetString("stateWhenMoved", "pickup")
+		end		
+	elseif (state == "pickup") then
+		fx = robot.info:GetInt("goto_x")
+		fy = robot.info:GetInt("goto_y")
+		tile = World.current:GetTileAt(fx, fy)
 
+
+		if (robot:Pickup(tile, robot.work.inventoryItemName, robot.work.inventoryItemQtyRemaining)) then
+			if (robot.inventory:HowMany(robot.work.inventoryItemName) >= robot.work.inventoryItemQtyRequired) then
+				state = "find_path_work.tile"
+				robot.info:SetString("stateWhenMoved", "work")
+			else
+				state = "find_item"
+			end
+		else
+			state = "find_item"
+		end
+	elseif (state == "work") then
+		robot.work:Work(deltaTime)
+
+	elseif (state == "find_path_x_y") then
+		fx = robot.info:GetInt("goto_x")
+		fy = robot.info:GetInt("goto_y")
+
+		if (robot:FindPath(fx, fy, true)) then
+			state = "move"
+		end
+	elseif (state == "find_path_work.tile") then
+		if (robot:FindPath(robot.work.workTile,true)) then
+			state = "move"
+		end
 	elseif (state == "move") then
 		if (robot.pos == robot.dst) then
 
 			dst = robot.path:GetNextTile()
 			if (dst == nil) then
 				robot.path = nil
-				state = "idle"
+				state = "finished_moving"
 			else	
 				robot:SetDst(dst)
 
@@ -35,10 +109,17 @@
 			robot:Move(deltaTime)
 			
 		end
-
+	elseif (state == "finished_moving") then
+		stateWhenMoved = robot.info:GetString("stateWhenMoved")
+		if (stateWhenMoved == nil or stateWhenMoved == "") then
+			state = "idle"
+		else		
+			state = stateWhenMoved
+		end
+		robot.info:SetString("stateWhenMoved", "idle")
 	end
 
-	robot.info:SetString("state", state);
+	robot.state = state
 	
 	
 	sayTimer = robot.info:GetFloat("sayTimer")

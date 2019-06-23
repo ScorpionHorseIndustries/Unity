@@ -16,6 +16,7 @@ namespace NoYouDoIt.Controller {
 
 
     private List<WorkItem> workItems = new List<WorkItem>();
+    private List<WorkItem> assignedWork= new List<WorkItem>();
 
     public WorkItemManager() {
 
@@ -33,11 +34,16 @@ namespace NoYouDoIt.Controller {
 
     }
 
+    
+
     public WorkItem GetNearestWork(Tile posTile) {
       WorkItem item = null;
       float shortestDist = 0;
       for (int i = workItems.Count-1; i >= 0; i -= 1) {
         WorkItem w = workItems[i];
+
+        if (!w.IsItReadyYet()) continue;
+
         float dist = Funcs.TaxiDistance(w.workTile, posTile);
         if (item == null || dist < shortestDist) {
           item = w;
@@ -46,6 +52,11 @@ namespace NoYouDoIt.Controller {
         }
 
 
+      }
+
+      if (item != null) {
+        assignedWork.Add(item);
+        workItems.Remove(item);
       }
 
       return item;

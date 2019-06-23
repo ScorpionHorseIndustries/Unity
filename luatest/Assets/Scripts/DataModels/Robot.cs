@@ -16,7 +16,7 @@ namespace NoYouDoIt.DataModels {
 
 
 
-
+    public string state;
     public string typeName { get; private set; }
     public RobotType proto { get; private set; }
 
@@ -30,6 +30,13 @@ namespace NoYouDoIt.DataModels {
     private Vector2 vPos = new Vector2();
     private Vector2 vDst = new Vector2();
     private Vector2 vJob = new Vector2();
+
+    PathAStar currentPath;
+    string currentInstruction;
+    public WorkItem work;
+    public Inventory inventory;
+    public string spriteName { get; private set; }
+    string OnUpdate = "OnUpdate_Robot";
 
     public int Xint {
       get {
@@ -69,11 +76,7 @@ namespace NoYouDoIt.DataModels {
       throw new NotImplementedException();
     }
 
-    PathAStar currentPath;
-    string currentInstruction;
-    public Inventory inventory;
-    public string spriteName { get; private set; }
-    string OnUpdate = "OnUpdate_Robot";
+
     private Robot() {
       throw new Exception("invalid constructor used");
     }
@@ -137,14 +140,39 @@ namespace NoYouDoIt.DataModels {
 
     }
 
-    private bool Pickup(Tile t, string itemName, int qty) {
+    public void Work(float deltaTime) {
+      
+    }
+
+    public bool PlaceItemAtJob() {
+      if (work != null) {
+        string holding = work.inventoryItemName;
+        int holdingQty = inventory.HowMany(holding);
+        int placed = work.inventory.AddItem(holding, holdingQty);
+        inventory.RemoveItem(holding, placed);
+        work.inventoryItemQtyRemaining -= placed;
+        return true;
+      }
+      return false;
+    }
+
+    public bool PlaceItem(Inventory inventory, string itemName, int qty) {
+
+
+
+      return false;
+    }
+
+    public bool Pickup(Tile t, string itemName, int qty) {
 
       if (t == pos || t.IsNeighbour(pos, false)) {
         int qtyTaken = t.RemoveFromInventory(itemName, qty);
         int qtyAdded = inventory.AddItem(itemName, qty);
         if (qtyAdded < qtyTaken) {
           t.AddToInventory(itemName, qtyTaken - qtyAdded);
+
         }
+        return true;
 
       }
 
@@ -152,6 +180,16 @@ namespace NoYouDoIt.DataModels {
 
 
 
+    }
+
+    public void GetWork() {
+      if (work == null) {
+        work = World.current.workManager.GetNearestWork(pos);
+        if (work != null) {
+          work.Assign(this);
+          
+        }
+      }
     }
 
     public void Move(float deltaTime) {
@@ -202,6 +240,19 @@ namespace NoYouDoIt.DataModels {
       }
       return false;
 
+    }
+
+    public bool FindPath(int x, int y, bool neighboursOk) {
+      Tile end = World.current.GetTileAt(x, y);
+      if (end == null) return false;
+
+      path = PathFinder.FindPath(World.current, pos, end, neighboursOk, neighboursOk);
+      if (path != null && path.foundPath) {
+        return true;
+      } else {
+        path = null;
+        return false;
+      }
     }
 
     public Tile target { get; private set; } = null;

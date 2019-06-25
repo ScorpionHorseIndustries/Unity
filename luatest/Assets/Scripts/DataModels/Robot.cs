@@ -17,6 +17,7 @@ namespace NoYouDoIt.DataModels {
 
 
     public string state;
+    public string NewState = null;
     public string typeName { get; private set; }
     public RobotType proto { get; private set; }
 
@@ -73,7 +74,9 @@ namespace NoYouDoIt.DataModels {
 
 
     public void PleaseMove(Robot asker) {
-      throw new NotImplementedException();
+      if (state == "idle") {
+        state = "wander";
+      }  
     }
 
 
@@ -84,7 +87,7 @@ namespace NoYouDoIt.DataModels {
       inventory = new Inventory(World.current, 1, INVENTORY_TYPE.ROBOT, this);
       name = World.current.GetName();
       info = new ItemParameters();
-      info.SetFloat("movement_speed", 3);
+      info.SetFloat("movement_speed", 5);
       this.typeName = proto.typeName;
       this.spriteName = proto.spriteName;
       this.proto = proto;
@@ -171,6 +174,7 @@ namespace NoYouDoIt.DataModels {
         int placed = work.inventory.AddItem(holding, holdingQty);
         inventory.RemoveItem(holding, placed);
         work.inventoryItemQtyRemaining -= placed;
+        Debug.Log("robot.PlaceItemAtJob: " + work);
         return true;
       }
       return false;
@@ -187,7 +191,10 @@ namespace NoYouDoIt.DataModels {
 
       if (t == pos || t.IsNeighbour(pos, false)) {
         int qtyTaken = t.RemoveFromInventory(itemName, qty);
-        int qtyAdded = inventory.AddItem(itemName, qty);
+        Debug.Log("qty actually removed:" + qtyTaken);
+        if (qtyTaken == 0) return false;
+
+        int qtyAdded = inventory.AddItem(itemName, qtyTaken);
         if (qtyAdded < qtyTaken) {
           t.AddToInventory(itemName, qtyTaken - qtyAdded);
 
@@ -215,6 +222,22 @@ namespace NoYouDoIt.DataModels {
     public void Move(float deltaTime) {
       if (pos != dst) {
         float distToTravel = Funcs.Distance(pos, dst);
+        bool never = false, soon = false;
+        switch (dst.CanEnter(this)) {
+          case Tile.CAN_ENTER.YES:
+            break;
+          case Tile.CAN_ENTER.NEVER:
+            never = true;
+            break;
+          case Tile.CAN_ENTER.SOON:
+            soon = true;
+            break;
+          default:
+            break;
+        }
+
+
+
         float speed = info.GetFloat("movement_speed");
 
         speed *= Mathf.Clamp(dst.movementFactor, 0.2f, 1.5f);

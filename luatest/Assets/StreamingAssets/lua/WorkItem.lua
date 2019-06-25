@@ -21,6 +21,7 @@
 			--World.dbug("k=" .. resource.Key .. ", v=" .. resource.Value:ToString())
 
 			newItem = WorkItem.MakeWorkItem(work.workTile,"SetPrereq",work,rName,rQty)
+			newItem.description = "description (" .. rName  .. ":" .. rQty .. ")"
 
 			work:AddPrereq(newItem)
 
@@ -30,6 +31,7 @@
 		work.OnComplete:Add("OnComplete_Any")
 		work.IsComplete = "IsComplete_InstalledItem"
 		work.IsReady = "IsReady_InstalledItem"
+		work.description = "InstalledItem " .. proto.type
 
 		--[[
 		for (string resourceName in j.recipe.resources.Keys) {
@@ -67,13 +69,9 @@ end
 
 function OnWork_PreReq(work)
 
-	robot = work.assignedRobot
+	work.assignedRobot:PlaceItemAtJob()
 
-	if (robot:PlaceItemAtJob()) then
-		if (work.inventoryItemQtyRemaining == 0) then
-			work:DoOnComplete()
-		end
-	end
+	
 --[[
 	World.dbug("OnWork_PreReq: " .. work:ToString())
 	invItemName = work.inventoryItemName;
@@ -92,6 +90,7 @@ function OnWork_PreReq(work)
 end
 
 function OnComplete_Any (work) 
+	World.dbug("OnComplete_Any: " .. work:ToString())
 	World.current.workManager:WorkItemComplete(work);
 end
 
@@ -116,29 +115,51 @@ function IsReady_PreReq(work)
 end
 -- ------------------------------------------------InstalledItem---------------
 function OnWork_InstalledItem (work, deltaTime)
-	World.dbug("OnWork_InstalledItemWork: " .. work:ToString())
-	if (work.workTime > 0) then
-		work.workTime = work.workTime - deltaTime
+	--World.dbug("OnWork_InstalledItemWork: " .. work:ToString())
+	coolDown = work.assignedRobot.info:GetFloat("PleaseMoveCoolDown",0)
 
-		if (work.workTime <= 0) then
+	if (coolDown <= 0) then
 
-			work:DoOnComplete()
+		if (work.workTile.countOfOccupied == 0 or (work.workTile.countOfOccupied == 1 and work.workTile:IsItMe(this))) then
+			if (work.workTime > 0) then
+				work.workTime = work.workTime - deltaTime
+
+				if (work.workTime <= 0) then
+					work:DoOnComplete()
+				end
+			else	
+				work:DoOnComplete()
+			end		
+            
+
+		else 
+			coolDown = math.random(1,2)
+
+			work.workTile:PleaseMove(work.assignedRobot);
 		end
-	else	
-		work:DoOnComplete()
+	else
+		coolDown = coolDown - deltaTime
 	end
+	if (work.assignedRobot ~= nil) then
+		work.assignedRobot.info:SetFloat("PleaseMoveCoolDown",coolDown)
+	end
+
+
+
+
+	
 end
 
 
 
 function OnComplete_InstalledItem(work)
-	World.dbug("OnComplete_InstalledItemWork: " .. work:ToString())
+	--World.dbug("OnComplete_InstalledItemWork: " .. work:ToString())
 	World.current:PlaceInstalledItem(work.installedItemProto.type, work.workTile)
 
 end
 
 function IsComplete_InstalledItem(work)
-	World.dbug("IsComplete_InstalledItemWork: " .. work:ToString())
+	--World.dbug("IsComplete_InstalledItemWork: " .. work:ToString())
 	if work.workTime <= 0 then
 		return true
 	else

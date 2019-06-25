@@ -63,7 +63,7 @@ namespace NoYouDoIt.TheWorld {
                     world.PlaceInstalledItem(trashItemName, t);
 
                   }
-                } else if (Funcs.Chance(1)) {
+                } else if (Funcs.Chance(2)) {
                   string type = InventoryItem.GetRandomPrototype().type;
                   int qty = UnityEngine.Random.Range(1, InventoryItem.GetStackSize(type) + 1);
                   world.PlaceTileInventoryItem(type, t, qty);

@@ -398,10 +398,9 @@ namespace NoYouDoIt.TheWorld {
       if (installedItem != null && installedItem.enterRequestedFunc != null) {
         return InstalledItemActions.CallEnterRequested(installedItem.enterRequestedFunc, installedItem);
         //installedItem.enterRequested(installedItem);
+      } else if (!IsItMe(c) && countOfOccupied > 0) {
+        return CAN_ENTER.SOON;
       }
-      //else if (!IsItMe(c) && countOfOccupied > 0) {
-      //    return CAN_ENTER.SOON;
-
 
 
 

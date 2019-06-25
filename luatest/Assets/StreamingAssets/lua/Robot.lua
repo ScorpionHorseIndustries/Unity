@@ -2,6 +2,8 @@
 	
 
 	state = robot.state
+	saveState = state
+
 	if (state == nil) then
 		state = "idle"
 		
@@ -66,7 +68,7 @@
 			state = "idle"
 		end
 	elseif (state == "wander") then
-		target = World.current:GetRandomEmptyTile()
+		target = World.current:FindEmptyTile_NotThisOne(robot.pos)
 		if (target ~= nil) then
 			if (robot:FindPath(target,false)) then
 				state = "move"	
@@ -93,8 +95,11 @@
 		fx = robot.info:GetInt("goto_x")
 		fy = robot.info:GetInt("goto_y")
 		tile = World.current:GetTileAt(fx, fy)
-		qtyToTake = robot.work.inventoryItemQtyRemaining - robot.inventory:HowMany(robot.work.inventoryItemName)
 
+		
+
+		qtyToTake = robot.work.inventoryItemQtyRequired - robot.inventory:HowMany(robot.work.inventoryItemName)
+		World.dbug("qty to pick up : " .. qtyToTake)
 
 		if (robot:Pickup(tile, robot.work.inventoryItemName, qtyToTake)) then
 			if (robot.inventory:HowMany(robot.work.inventoryItemName) >= robot.work.inventoryItemQtyRequired) then
@@ -146,19 +151,27 @@
 		end
 		robot.info:SetString("stateWhenMoved", "idle")
 	end
-
-	robot.state = state
+	if (robot.NewState ~= nil) then
+		robot.state = robot.NewState
+		robot.NewState = nil
+	else
+		robot.state = state
+	end
+	
+	
 	
 	
 	sayTimer = robot.info:GetFloat("sayTimer")
 	if (sayTimer <= 0) then
-		robot:Say(state)
+		if (saveState ~= state) then
+			robot:Say(state)
+		end
 		sayTimer = 2
 	else 
 		sayTimer = sayTimer - deltaTime
 	end
 	robot.info:SetFloat("sayTimer", sayTimer)
-
+	
 
 	
 	--[[

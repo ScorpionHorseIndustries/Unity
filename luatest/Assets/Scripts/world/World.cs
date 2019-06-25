@@ -41,12 +41,12 @@ namespace NoYouDoIt.TheWorld {
     private FastNoise noise;
 
     //testing
-    public static readonly int NUMBER_OF_ROBOTS = 1;
+    public static readonly int NUMBER_OF_ROBOTS = 6;
 
     public static readonly int TEST_WIDTH = 30;
     public static readonly int TEST_HEIGHT = 30;
 
-    public static readonly int M_M_MAXIMUM_TRASH = 10;
+    public static readonly int M_M_MAXIMUM_TRASH = 11;
 
     public void OnInventoryItemChangedOnTile(Tile tile) {
       if (cbTileInventoryItemChangedOnTile != null) {
@@ -381,7 +381,7 @@ import 'NoYouDoIt.DataModels'
 
 
     public static void dbug(System.Object o) {
-      Debug.Log("debug="+o.ToString());
+      Debug.Log("debug=" + o.ToString());
     }
 
     public World() {
@@ -393,7 +393,7 @@ import 'NoYouDoIt.DataModels'
       InitLua();
       InitNew(width, height, tileSize);
       //CreateCharacters();
-      
+
 
     }
 
@@ -430,7 +430,7 @@ import 'NoYouDoIt.DataModels'
       foreach (string fname in functionList) {
         LuaFunction luaFunc = World.current.lua[fname] as LuaFunction;
         luaFunc.Call(args);
-        
+
       }
     }
 
@@ -483,9 +483,9 @@ import 'NoYouDoIt.DataModels'
       //  Character c = characters[i];
       //  c.Update(deltaTime);
       //}
-      
 
-      for(int i = robots.Count-1; i >= 0; i -= 1) {
+
+      for (int i = robots.Count - 1; i >= 0; i -= 1) {
         Robot robot = robots[i];
         robot.Update(deltaTime);
       }
@@ -560,11 +560,11 @@ import 'NoYouDoIt.DataModels'
     public bool CreateRobot(Robot r) {
       if (r != null) {
         robots.Add(r);
-        if (CBRobotCreated!= null) {
+        if (CBRobotCreated != null) {
           CBRobotCreated(r);
         }
-        r. CBRegisterOnChanged(OnRobotChanged);
-        
+        r.CBRegisterOnChanged(OnRobotChanged);
+
         //CBRegisterPathNodesDestroyed(c.PathNodesDestroyed);
         return true;
       }
@@ -730,6 +730,27 @@ import 'NoYouDoIt.DataModels'
     //private void OnInventoryItemRemoved(Tile tile) {
     //  //inventoryManager.RemoveInventoryItem(tile.inventoryItem);
     //}
+
+    public Tile FindEmptyTile_NotThisOne(Tile t) {
+      int n = 0;
+      while (n < 1000) {
+        Vector2 vec = Funcs.Spiral(n);
+
+        int x = t.world_x + (int)vec.x;
+        int y = t.world_y + (int)vec.y;
+        if (x >= 0 && y >= 0) {
+          Tile tn = GetTileIfChunkExists(x, y);
+          if (tn != null && tn.IsEmpty()) {
+            return tn;
+
+          }
+        }
+
+        n += 1;
+      }
+
+      return null;
+    }
     public Tile FindEmptyTile(Tile t) {
 
       if (t.IsEmpty()) return t;
@@ -1023,7 +1044,7 @@ import 'NoYouDoIt.DataModels'
     }
 
     public void CBRegisterRobotRemoved(Action<Robot> cb) {
-      CBRobotRemoved+= cb;
+      CBRobotRemoved += cb;
     }
 
     public void CBUnregisterRobotRemoved(Action<Robot> cb) {
@@ -1522,7 +1543,7 @@ import 'NoYouDoIt.DataModels'
     //END LOADING
 
     public void Kill() {
-      workManager= null;
+      workManager = null;
       //installedItemProtos = null;
       //installedItemProtos_BY_ID = null;
       trashPrototypes = null;

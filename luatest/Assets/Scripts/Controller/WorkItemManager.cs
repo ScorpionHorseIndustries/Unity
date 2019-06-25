@@ -63,10 +63,6 @@ namespace NoYouDoIt.Controller {
       for (int i = workItems.Count - 1; i >= 0; i -= 1) {
         WorkItem w = workItems[i];
 
-        if (w.IsReadyCoolDown > 0) {
-          w.IsReadyCoolDown -= deltaTime;
-        }
-
         if (!w.IsItReadyYet()) continue;
         Robot worker = null;
         float dist = 0;
@@ -86,6 +82,7 @@ namespace NoYouDoIt.Controller {
           w.Assign(worker);
           assignedWork.Add(w);
           workItems.Remove(w);
+          Debug.Log("gave work " + w.ToString()+ " to " + worker.name);
         }
       }
        

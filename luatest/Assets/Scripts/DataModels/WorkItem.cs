@@ -25,6 +25,7 @@ namespace NoYouDoIt.DataModels {
     public float workTime = 1;
     private List<WorkItem> prereq;
     public float IsReadyCoolDown = 0;
+    public string description = "work";
   
 
 
@@ -34,8 +35,11 @@ namespace NoYouDoIt.DataModels {
 
     public void Unassign() {
       if (this.assignedRobot != null) {
-        this.assignedRobot.state = "idle";
+        Debug.Log("Unassigning assigned worker");
+        this.assignedRobot.NewState = "idle";
         this.assignedRobot = null;
+      } else {
+        Debug.Log("Could not Unassign worker");
       }
 
     }
@@ -85,15 +89,22 @@ namespace NoYouDoIt.DataModels {
     }
 
     public override string ToString() {
-      return "workItem " + "" +
-        "onWork(" + OnWork.ToString() + ")" +
-        "onComplete(" + OnComplete.ToString() + ")" +
-        "onCancel(" + OnCancel.ToString() + ")" +
-        "IsReady(" + IsReady + ")" +
-        "IsComplete(" + IsComplete + ")" +
-        "worktime(" + workTime + ")" +
-        "Tile(" + workTile + ")" +
-        "prereqs(" + GetCountOfPrereqs()+ ")";
+      return "workItem (" + description + ") " +
+        "\nonWork(" + OnWork.ToString() + ")" +
+        "\nonComplete(" + OnComplete.ToString() + ")" +
+        "\nonCancel(" + OnCancel.ToString() + ")" +
+        "\nIsReady(" + IsReady + ")" +
+        "\nIsComplete(" + IsComplete + ")" +
+        "\nworktime(" + workTime + ")" +
+        "\nTile(" + workTile + ")" +
+        "\nprereqs(" + GetCountOfPrereqs() + ")" +
+        "\ninventoryItem: " +
+        (inventoryItemName != null ?
+          inventoryItemName + ":remain:" + inventoryItemQtyRemaining + "/rqrd:" + inventoryItemQtyRequired : "none") +
+          "\nAssigned: " + (assignedRobot != null ? assignedRobot.name : "none");
+
+        
+        ;
     }
 
     
@@ -165,20 +176,15 @@ namespace NoYouDoIt.DataModels {
         if (results != null && results.Length > 0) {
           bool isComplete = false;
           if (bool.TryParse(results[0].ToString(), out isComplete)) {
-            World.CallLuaFunctions(OnComplete.ToArray(), this);
-            complete = true;
+            if (isComplete) {
+              World.CallLuaFunctions(OnComplete.ToArray(), this);
+              complete = true;
+            }
 
           }
         }
       }
 
     }
-
-
-
-
-
-
-
   }
 }

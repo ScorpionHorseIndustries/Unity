@@ -8,11 +8,18 @@
 
 	end
 
-	if (state == "idle") then
+	if (state == "reset") then
+		robot:DropAll()
+		state = "idle"
+		robot:ReturnWork()
+		
+
+	elseif (state == "idle") then
 		findWorkTimer = robot.info:GetFloat("findWorkTimer");
 		if (findWorkTimer <= 0) then
-			state = "find_job"
+			state = "find_work"
 			findWorkTimer = 1
+			robot.info:SetFloat("waitForWorkTimer", 2)
 		else	
 			findWorkTimer = findWorkTimer - deltaTime
 		end
@@ -27,15 +34,25 @@
 			wanderTimer = wanderTimer - deltaTime
 			
 		end
-		robot.info:GetFloat("wanderTimer", wanderTimer)
+		robot.info:SetFloat("wanderTimer", wanderTimer)
 
-	elseif  (state == "find_job") then
+	elseif  (state == "find_work") then
+		waitForWorkTimer = robot.info:GetFloat("waitForWorkTimer")
+		
+		if (waitForWorkTimer <= 0) then
+			state = "idle"
+		else
+			waitForWorkTimer = waitForWorkTimer - deltaTime
+		end
+		robot.info:SetFloat("waitForWorkTimer", waitForWorkTimer)
+	--[[
 		robot:GetWork()
 		if (robot.work ~= nil) then
 			state = "init_work"
 		else	
 			state = "idle"
 		end
+		]]
 	elseif (state == "init_work") then
 		if (robot.work ~= nil) then
 			if (robot.work.inventoryItemName ~= nil) then
@@ -45,6 +62,8 @@
 				state = "find_path_work.tile"
 				robot.info:SetString("stateWhenMoved", "work")
 			end
+		else
+			state = "idle"
 		end
 	elseif (state == "wander") then
 		target = World.current:GetRandomEmptyTile()
@@ -53,6 +72,8 @@
 				state = "move"	
 			
 			end
+		else
+			state = "idle"
 		end
 	elseif (state == "find_item") then
 		--find some of that then
@@ -63,14 +84,19 @@
 			robot.info:SetInt("goto_y", target.world_y);		
 			state = "find_path_x_y"
 			robot.info:SetString("stateWhenMoved", "pickup")
+			qtyToAllocate = robot.work.inventoryItemQtyRemaining - robot.inventory:HowMany(robot.work.inventoryItemName)
+			target:InventoryAllocate(robot.work.inventoryItemName, qtyToAllocate)
+
+
 		end		
 	elseif (state == "pickup") then
 		fx = robot.info:GetInt("goto_x")
 		fy = robot.info:GetInt("goto_y")
 		tile = World.current:GetTileAt(fx, fy)
+		qtyToTake = robot.work.inventoryItemQtyRemaining - robot.inventory:HowMany(robot.work.inventoryItemName)
 
 
-		if (robot:Pickup(tile, robot.work.inventoryItemName, robot.work.inventoryItemQtyRemaining)) then
+		if (robot:Pickup(tile, robot.work.inventoryItemName, qtyToTake)) then
 			if (robot.inventory:HowMany(robot.work.inventoryItemName) >= robot.work.inventoryItemQtyRequired) then
 				state = "find_path_work.tile"
 				robot.info:SetString("stateWhenMoved", "work")
@@ -93,6 +119,8 @@
 	elseif (state == "find_path_work.tile") then
 		if (robot:FindPath(robot.work.workTile,true)) then
 			state = "move"
+		else	
+			state = "reset"
 		end
 	elseif (state == "move") then
 		if (robot.pos == robot.dst) then

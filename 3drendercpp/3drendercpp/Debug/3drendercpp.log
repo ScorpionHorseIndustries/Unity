@@ -1,5 +1,6 @@
 ﻿  3drendercpp.cpp
-s:\unity\3drendercpp\3drendercpp\3drendercpp.cpp(318): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-s:\unity\3drendercpp\3drendercpp\3drendercpp.cpp(317): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-s:\unity\3drendercpp\3drendercpp\3drendercpp.cpp(316): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+s:\unity\3drendercpp\3drendercpp\3drendercpp.cpp(461): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
+s:\unity\3drendercpp\3drendercpp\3drendercpp.cpp(522): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
+s:\unity\3drendercpp\3drendercpp\3drendercpp.cpp(521): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
+s:\unity\3drendercpp\3drendercpp\3drendercpp.cpp(520): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
   3drendercpp.vcxproj -> S:\unity\3drendercpp\Debug\3drendercpp.exe

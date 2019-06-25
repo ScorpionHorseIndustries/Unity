@@ -6,6 +6,7 @@
 	if (proto ~= nil) then
 		work.installedItemProto = proto
 		work.recipe = proto.recipe
+		work.workTime = proto.recipe.buildTime
 
 		for kvp in luanet.each(work.recipe.resources) do
 			resource = kvp.Value
@@ -24,10 +25,11 @@
 			work:AddPrereq(newItem)
 
 		end
-		work.OnWork:Add("OnWork_InstalledItemWork")
-		work.OnComplete:Add("OnComplete_InstalledItemWork")
-		work.IsComplete = "IsComplete_InstalledItemWork"
-		work.IsReady = "IsReady_InstalledItemWork"
+		work.OnWork:Add("OnWork_InstalledItem")
+		work.OnComplete:Add("OnComplete_InstalledItem")
+		work.OnComplete:Add("OnComplete_Any")
+		work.IsComplete = "IsComplete_InstalledItem"
+		work.IsReady = "IsReady_InstalledItem"
 
 		--[[
 		for (string resourceName in j.recipe.resources.Keys) {
@@ -57,6 +59,7 @@ function SetPrereq(work,parent,invItemName,qty)
 
 	work.OnWork:Add("OnWork_PreReq")
 	work.OnComplete:Add("OnComplete_PreReq")
+	work.OnComplete:Add("OnComplete_Any")
 	work.IsComplete = "IsComplete_PreReq"
 	work.IsReady = "IsReady_PreReq"
 	   	 
@@ -88,6 +91,10 @@ function OnWork_PreReq(work)
 	]]
 end
 
+function OnComplete_Any (work) 
+	World.current.workManager:WorkItemComplete(work);
+end
+
 function IsComplete_PreReq(work) 
 	World.dbug("IsComplete_PreReq: " .. work:ToString())
 	if (work.inventoryItemQtyRemaining == 0) then
@@ -108,27 +115,29 @@ function IsReady_PreReq(work)
 	return true
 end
 -- ------------------------------------------------InstalledItem---------------
-function OnWork_InstalledItemWork (work, deltaTime)
+function OnWork_InstalledItem (work, deltaTime)
 	World.dbug("OnWork_InstalledItemWork: " .. work:ToString())
-	if work.workTime > 0 then
+	if (work.workTime > 0) then
 		work.workTime = work.workTime - deltaTime
 
 		if (work.workTime <= 0) then
 
 			work:DoOnComplete()
 		end
+	else	
+		work:DoOnComplete()
 	end
 end
 
 
 
-function OnComplete_InstalledItemWork(work)
+function OnComplete_InstalledItem(work)
 	World.dbug("OnComplete_InstalledItemWork: " .. work:ToString())
 	World.current:PlaceInstalledItem(work.installedItemProto.type, work.workTile)
 
 end
 
-function IsComplete_InstalledItemWork(work)
+function IsComplete_InstalledItem(work)
 	World.dbug("IsComplete_InstalledItemWork: " .. work:ToString())
 	if work.workTime <= 0 then
 		return true
@@ -139,7 +148,7 @@ function IsComplete_InstalledItemWork(work)
 
 end
 
-function IsReady_InstalledItemWork(work)	
+function IsReady_InstalledItem(work)	
 	World.dbug("IsReady_InstalledItemWork: " .. work:ToString())
 	if (work:GetCountOfPrereqs() > 0) then
 		return false

@@ -24,11 +24,20 @@ namespace NoYouDoIt.DataModels {
     public WorkItem parent;
     public float workTime = 1;
     private List<WorkItem> prereq;
+    public float IsReadyCoolDown = 0;
   
 
 
     public void Assign(Robot robot) {
       this.assignedRobot = robot;
+    }
+
+    public void Unassign() {
+      if (this.assignedRobot != null) {
+        this.assignedRobot.state = "idle";
+        this.assignedRobot = null;
+      }
+
     }
 
     public int GetCountOfPrereqs() {
@@ -66,6 +75,10 @@ namespace NoYouDoIt.DataModels {
           
 
         }
+      }
+
+      if (!loc_isReady) {
+        IsReadyCoolDown = UnityEngine.Random.Range(1, 5);
       }
 
       return loc_isReady;

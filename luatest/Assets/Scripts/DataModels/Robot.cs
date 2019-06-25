@@ -93,6 +93,26 @@ namespace NoYouDoIt.DataModels {
 
 
     }
+
+    public void ReturnWork() {
+      World.current.workManager.ReturnWork(work);
+    }
+
+    private void DropAll() {
+
+      while (!inventory.IsEmpty()) {
+        Tile t = World.current.FindEmptyTile(pos);
+        if (t != null) {
+          string itemName = inventory.GetFirst();
+          int qtyToPlace = inventory.HowMany(itemName);
+          int qtyPlaced = t.AddToInventory(itemName, qtyToPlace);
+          inventory.RemoveItem(itemName, qtyPlaced);
+        } else {
+          break;
+        }
+      }
+    }
+
     public static Robot MakeRobot(Tile t, string typeName) {
 
 
@@ -141,7 +161,7 @@ namespace NoYouDoIt.DataModels {
     }
 
     public void Work(float deltaTime) {
-      
+      World.CallLuaFunctions(work.OnWork.ToArray(), this, deltaTime);
     }
 
     public bool PlaceItemAtJob() {
@@ -182,15 +202,15 @@ namespace NoYouDoIt.DataModels {
 
     }
 
-    public void GetWork() {
-      if (work == null) {
-        work = World.current.workManager.GetNearestWork(pos);
-        if (work != null) {
-          work.Assign(this);
+    //public void GetWork() {
+    //  if (work == null) {
+    //    work = World.current.workManager.GetNearestWork(pos);
+    //    if (work != null) {
+    //      work.Assign(this);
           
-        }
-      }
-    }
+    //    }
+    //  }
+    //}
 
     public void Move(float deltaTime) {
       if (pos != dst) {

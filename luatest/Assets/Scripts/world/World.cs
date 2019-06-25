@@ -41,7 +41,7 @@ namespace NoYouDoIt.TheWorld {
     private FastNoise noise;
 
     //testing
-    public static readonly int NUMBER_OF_ROBOTS = 5;
+    public static readonly int NUMBER_OF_ROBOTS = 1;
 
     public static readonly int TEST_WIDTH = 30;
     public static readonly int TEST_HEIGHT = 30;
@@ -483,6 +483,7 @@ import 'NoYouDoIt.DataModels'
       //  Character c = characters[i];
       //  c.Update(deltaTime);
       //}
+      
 
       for(int i = robots.Count-1; i >= 0; i -= 1) {
         Robot robot = robots[i];
@@ -502,7 +503,7 @@ import 'NoYouDoIt.DataModels'
 
       if (updateJobQueueTimer <= 0) {
         updateJobQueueTimer = 1;
-        workManager.Update();
+        workManager.Update(deltaTime);
 
       } else {
         updateJobQueueTimer -= deltaTime;

@@ -71,14 +71,14 @@ end
 
 function OnUpdate_Stockpile(item, deltaTime) 
 
--- ----------------------------------c#
+	
 
-
-    if (item.tile:IsInventoryEmpty() and not item.tile.HasPendingJob) then
-
+    if (item.tile:IsInventoryEmpty() and not item.tile.HasPendingWork) then
+		
       randomItem = InventoryItem.GetRandomPrototype()
 	  itemName = randomItem.type
-
+	  World.dbug("hello " .. itemName)
+	  --[[
       nearest = World.current.inventoryManager:GetNearest(item.tile, itemName, false)
       if (nearest == nil) then return end
 
@@ -93,12 +93,13 @@ function OnUpdate_Stockpile(item, deltaTime)
       j.cancelIfReturned = true
 
       World.current.jobQueue:Push(j)
-
-    elseif (not item.tile:IsInventoryEmpty() and not item.tile.HasPendingJob) then
+	  ]]
+    elseif (not item.tile:IsInventoryEmpty() and not item.tile.HasPendingWork) then
 
       itemName = item.tile:GetFirstInventoryItem()
       qtyRequired = InventoryItem.GetStackSize(itemName) - item.tile:InventoryTotal(itemName)
       nearest = World.current.inventoryManager:GetNearest(item.tile, itemName, false)
+	  --[[
       if (nearest ~= nil) then
         qtyRequired = math.min(qtyRequired, nearest:InventoryTotal(itemName))
 
@@ -117,10 +118,9 @@ function OnUpdate_Stockpile(item, deltaTime)
           World.current.jobQueue:Push(j)
         end
       end
+	  ]]
     end
--- ----------------------------------c#
 
-	
 end
 
 function OnEnterRequested_Door(item) 

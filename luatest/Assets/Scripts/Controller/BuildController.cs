@@ -39,6 +39,7 @@ namespace NoYouDoIt.Controller {
     public void SetBuildMode(BUILD_MODE bt, string b) {
       buildMode = bt;
       build = b;
+      WorldController.Instance.inputController.mouseMode = MOUSE_MODE.BUILD;
     }
 
     public bool CreateBuildJobs(List<Tile> tiles) {
@@ -70,10 +71,17 @@ namespace NoYouDoIt.Controller {
       } else {
         didSomething = false;
       }
-      build = "";
-      buildMode = BUILD_MODE.NONE;
+      if (!Input.GetKey(KeyCode.LeftShift)) {
+        ClearBuildMode();
+      }
 
       return didSomething;
+    }
+
+    private void ClearBuildMode() {
+      build = "";
+      buildMode = BUILD_MODE.NONE;
+      WorldController.Instance.inputController.mouseMode = MOUSE_MODE.SELECT;
     }
 
     private void CreateInstalledItemWork(List<Tile> tiles, string localBuild) {
@@ -82,7 +90,7 @@ namespace NoYouDoIt.Controller {
         //tile.placeInstalledObject();
         string localRecipe = InstalledItem.GetRecipeName(localBuild);
         if (World.current.isInstalledItemPositionValid(World.current, build, tile)) {
-          WorkItem work = WorkItem.MakeWorkItem(tile, "SetInstalledItem",localBuild);
+          WorkItem work = WorkItem.MakeWorkItem(tile, "SetInstalledItem", localBuild);
 
         }
         //  Job j = Job.MakeStandardJob(
@@ -106,8 +114,13 @@ namespace NoYouDoIt.Controller {
     }
 
     private void CreateRemoveInstalledItemWork(List<Tile> tiles) {
-      throw new NotImplementedException();
+      foreach (Tile tile in tiles) {
+        if (tile.installedItem != null && tile.installedItem.tile == tile) {
+          WorkItem.MakeWorkItem(tile, "SetRemoveInstalledItem");
+        }
+      }
     }
+
 
     private void OnRemoveInstalledItemJobComplete(WorkItem work) {
       throw new NotImplementedException();

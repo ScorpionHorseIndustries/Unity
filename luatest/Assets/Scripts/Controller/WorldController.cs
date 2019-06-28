@@ -51,7 +51,7 @@ namespace NoYouDoIt.Controller {
     private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
     //private Dictionary<Character, GameObject> Characters_GO_Map;
     private Dictionary<Robot, GameObject> Robot_GO_Map;
-    
+
     //private Dictionary<Job, GameObject> Job_GO_Map;
     //private Dictionary<Job, GameObject> JobScrollIt
     private Dictionary<WorkItem, GameObject> Work_GO_Map;
@@ -129,7 +129,7 @@ namespace NoYouDoIt.Controller {
 
       //}
 
-      foreach(Robot r in world.robots) {
+      foreach (Robot r in world.robots) {
         OnRobotCreated(r);
       }
 
@@ -548,16 +548,33 @@ namespace NoYouDoIt.Controller {
 
 
 
-    public void UpdateCurrentTile(Tile t) {
+    public void UpdateCurrentTile(SelectionInfo info) {
       Text txt = currentTileText.GetComponent<Text>();
-      string displayMe = t.type.name;
-      displayMe += "\nPos: chunk: (" + t.chunk.x + "," + t.chunk.y + ") world:(" + t.world_x + "," + t.world_y + ")";
-      displayMe += "\nNeighbours:" + t.neighbours.Count + ", " + t.edges.Count;
-      displayMe += "\nRoom:" + t.room.id;
-      displayMe += "\nInstalled:" + (t.installedItem == null ? "" : t.installedItem.niceName);
-      displayMe += "\nJobs: " + t.JobsToString();
-      displayMe += "\nItems:" + t.GetContents();//(t.inventoryItem == null ? "" : t.inventoryItem.niceName + " " + t.inventoryItem.currentStack + "/" + t.inventoryItem.maxStackSize);
-      displayMe += "\n" + t.WhoIsHere();
+      Tile t = info.tile;
+      object o = info.contents[info.subSelect];
+
+
+      string displayMe = "";
+
+
+      displayMe += "Chunk: (" + t.chunk.x + "," + t.chunk.y + ")\nworld:(" + t.world_x + "," + t.world_y + ")";
+      displayMe += "\n";
+      if (o.GetType() == typeof(Tile)) {
+        displayMe += "Tile Type: " + ((Tile)o).type;
+      } else if (o.GetType() == typeof(Robot)) {
+        displayMe += "Robot: " + ((Robot)o).name;
+      } else if (o.GetType() == typeof(InstalledItem)) {
+        displayMe += "Installed Item: " + ((InstalledItem)o).niceName;
+      } else if (o.GetType() == typeof(string)) {
+        displayMe += InventoryItem.GetPrototype(t.GetFirstInventoryItem()).niceName + ": " + t.InventoryTotal(((string)o));
+
+      }
+      //displayMe += "\nNeighbours:" + t.neighbours.Count + ", " + t.edges.Count;
+      //displayMe += "\nRoom:" + t.room.id;
+      //displayMe += "\nInstalled:" + (t.installedItem == null ? "" : t.installedItem.niceName);
+      //displayMe += "\nJobs: " + t.JobsToString();
+      //displayMe += "\nItems:" + t.GetContents();//(t.inventoryItem == null ? "" : t.inventoryItem.niceName + " " + t.inventoryItem.currentStack + "/" + t.inventoryItem.maxStackSize);
+      //displayMe += "\n" + t.WhoIsHere();
 
 
 
@@ -798,22 +815,27 @@ namespace NoYouDoIt.Controller {
     //-------------------SET BUILD TYPES-------------------------
 
     public void SetBuildType_Clear() {
+      inputController.mouseMode = MOUSE_MODE.SELECT;
       buildController.SetBuildMode(BuildController.BUILD_MODE.NONE, "");
     }
 
     public void SetBuildType_Zone(string zone) {
+      inputController.mouseMode = MOUSE_MODE.BUILD;
       buildController.SetBuildMode(BuildController.BUILD_MODE.ZONE, zone);
     }
 
     public void SetBuildType_InstalledItem(string item) {
+      inputController.mouseMode = MOUSE_MODE.BUILD;
       buildController.SetBuildMode(BuildController.BUILD_MODE.INSTALLEDITEM, item);
     }
 
     public void SetBuildType_Tile(string tile) {
+      inputController.mouseMode = MOUSE_MODE.BUILD;
       buildController.SetBuildMode(BuildController.BUILD_MODE.TILE, tile);
     }
 
     public void SetBuildType_Deconstruct() {
+      inputController.mouseMode = MOUSE_MODE.BUILD;
       buildController.SetBuildMode(BuildController.BUILD_MODE.DECONSTRUCT, "");
     }
 
@@ -845,7 +867,7 @@ namespace NoYouDoIt.Controller {
       spr.sprite = spriteController.GetSprite(r);
       spr.sortingLayerName = "Characters";
       r.CBRegisterOnChanged(OnRobotChanged);
-      
+
 
       //GameObject gln = Instantiate(LinePrefab, new Vector3(0, 0, 0), Quaternion.identity);
       //gln.transform.SetParent(go.transform, true);
@@ -896,7 +918,7 @@ namespace NoYouDoIt.Controller {
         go.transform.position = r.position;
       }
     }
-  
+
     /*
     void OnCharacterChanged(Character c) {
       bool n, e, s, w;
@@ -995,7 +1017,8 @@ namespace NoYouDoIt.Controller {
     void OnWorkCreated(WorkItem work) {
       if (!Work_GO_Map.ContainsKey(work)) {
         //spriteController.JobCreated(work);
-        //j.cbRegisterJobComplete(OnJobEnded);
+        World.current.workManager.CBRegisterOnCompleted(OnWorkEnded);
+        //work.cbRegisterJobComplete(OnJobEnded);
         //j.cbRegisterJobCancelled(OnJobEnded);
 
         GameObject g = SimplePool.Spawn(buildProgressSprite, new Vector2(work.workTile.world_x, work.workTile.world_y), Quaternion.identity);
@@ -1017,7 +1040,7 @@ namespace NoYouDoIt.Controller {
 
     }
 
-  
+
 
     //void OnJobCreated(Job j) {
 

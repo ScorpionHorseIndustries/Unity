@@ -276,14 +276,17 @@ namespace NoYouDoIt.DataModels {
       foreach (RecipeResource rr in recipe.resources.Values) {
         int qty = Mathf.CeilToInt((float)rr.qtyRequired / 2.0f);
 
+        inventory.AddItem(rr.name, qty);
 
-
-        Debug.Log("Added: " + inventory.AddItem(rr.name, qty) + " of " + rr.name);
+        //Debug.Log("Added: " +  + " of " + rr.name);
       }
 
       for (int xx = tile.world_x; xx < tile.world_x + width; xx += 1) {
         for (int yy = tile.world_y; yy < tile.world_y + height; yy += 1) {
-          tile.RemoveInstalledItem();
+          Tile nt = World.current.GetTileIfChunkExists(xx, yy);
+          if (nt != null) {
+            nt.RemoveInstalledItem();
+          }
         }
       }
 

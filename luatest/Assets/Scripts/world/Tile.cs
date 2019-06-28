@@ -49,6 +49,13 @@ namespace NoYouDoIt.TheWorld {
 
     //private List<Character> occupiedBy = new List<Character>();
     private List<Robot> occupiedBy = new List<Robot>();
+    public Robot GetOccupant(int i) {
+      if (i >= 0 && i <= occupiedBy.Count - 1) {
+        return occupiedBy[i];
+      }
+
+      return null;
+    }
     public int countOfOccupied { get { return occupiedBy.Count; } }
 
     public Tile North { get { return GetNeighbour(World.NORTH); } }
@@ -114,9 +121,9 @@ namespace NoYouDoIt.TheWorld {
     //  }
     //}
 
-    public bool RemoveJob(WorkItem job) {
-      if (pendingWork.Contains(job)) {
-        pendingWork.Remove(job);
+    public bool RemoveWork(WorkItem work) {
+      if (pendingWork.Contains(work)) {
+        pendingWork.Remove(work);
 
 
         return true;
@@ -347,6 +354,8 @@ namespace NoYouDoIt.TheWorld {
       return (installedItem == null && inventory.IsEmpty() && movementFactor > 0.3 && !HasPendingWork);
     }
 
+    
+
     public bool IsEmptyApartFromInventory() {
       return (installedItem == null && movementFactor > 0.3 && !HasPendingWork);
     }
@@ -398,9 +407,10 @@ namespace NoYouDoIt.TheWorld {
       if (installedItem != null && installedItem.enterRequestedFunc != null) {
         return InstalledItemActions.CallEnterRequested(installedItem.enterRequestedFunc, installedItem);
         //installedItem.enterRequested(installedItem);
-      } else if (!IsItMe(c) && countOfOccupied > 0) {
-        return CAN_ENTER.SOON;
-      }
+      } 
+      //else if (!IsItMe(c) && countOfOccupied > 0) {
+      //  return CAN_ENTER.SOON;
+      //}
 
 
 
@@ -446,13 +456,10 @@ namespace NoYouDoIt.TheWorld {
 
     public string JobsToString() {
       string output = " (" + pendingWork.Count + "): ";
-      //foreach (WorkItem work in pendingWork) {
-      //  output += work.jobType.ToString() + " " + work.jobTime;
-      //  if (work.recipe != null) {
-      //    output += work.recipe;
+      foreach (WorkItem work in pendingWork) {
+        output += work.description + "(" + work.workTime + ")";
 
-      //  }
-      //}
+      }
 
       return output;
     }

@@ -15,7 +15,7 @@ namespace NoYouDoIt.DataModels {
     Action<Robot> CBOnChanged;
 
 
-
+    private float waitTimer;
     public string state;
     public string NewState = null;
     public string typeName { get; private set; }
@@ -75,6 +75,7 @@ namespace NoYouDoIt.DataModels {
 
     public void PleaseMove(Robot asker) {
       if (state == "idle") {
+        NewState = "wander";
         state = "wander";
       }  
     }
@@ -220,6 +221,14 @@ namespace NoYouDoIt.DataModels {
     //}
 
     public void Move(float deltaTime) {
+      if (pos.movementFactor == 0 || dst.movementFactor == 0) {
+        NewState = "find_new_path";
+        SetPos(World.current.FindEmptyTile_NotThisOne(pos));
+        SetDst(pos);
+        
+      }
+
+
       if (pos != dst) {
         float distToTravel = Funcs.Distance(pos, dst);
         bool never = false, soon = false;
@@ -236,19 +245,33 @@ namespace NoYouDoIt.DataModels {
             break;
         }
 
+        if (never) {
+          NewState = "find_new_path";
+        } else if (soon) {
+          //wait
+          dst.PleaseMove(this);
+          waitTimer += deltaTime;
+
+          if (waitTimer > 3) {
+            NewState = "find_new_path";
+            waitTimer = 0;
+          }
+
+        } else {
 
 
-        float speed = info.GetFloat("movement_speed");
+          float speed = info.GetFloat("movement_speed");
 
-        speed *= Mathf.Clamp(dst.movementFactor, 0.2f, 1.5f);
+          speed *= Mathf.Clamp(dst.movementFactor, 0.2f, 1.5f);
 
-        float distThisFrame = speed * deltaTime;
+          float distThisFrame = speed * deltaTime;
 
-        moveProgress += (distThisFrame / distToTravel);
+          moveProgress += (distThisFrame / distToTravel);
 
-        if (moveProgress >= 1) {
-          SetPos(dst);
-          moveProgress = 0;
+          if (moveProgress >= 1) {
+            SetPos(dst);
+            moveProgress = 0;
+          }
         }
       } else {
         moveProgress = 0;

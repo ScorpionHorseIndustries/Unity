@@ -416,6 +416,9 @@ namespace NoYouDoIt.Controller {
     }
 
     public Sprite GetSprite(string name) {
+      if (name == null) return null;
+
+
       if (!sprites.ContainsKey(name)) {
         Debug.LogError("sprite name " + name + " could not be found");
         return null;

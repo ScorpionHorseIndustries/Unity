@@ -20,16 +20,16 @@
 		findWorkTimer = robot.info:GetFloat("findWorkTimer");
 		if (findWorkTimer <= 0) then
 			state = "find_work"
-			findWorkTimer = 1
-			robot.info:SetFloat("waitForWorkTimer", 2)
+			findWorkTimer = math.random(1,2)
+			robot.info:SetFloat("waitForWorkTimer", math.random(1,3))
 		else	
 			findWorkTimer = findWorkTimer - deltaTime
 		end
 		robot.info:SetFloat("findWorkTimer", findWorkTimer)
 
-		wanderTimer = robot.info:GetFloat("wanderTimer", 5)
+		wanderTimer = robot.info:GetFloat("wanderTimer", math.random(1,5))
 		if (wanderTimer <= 0) then
-			wanderTimer = 5
+			wanderTimer = math.random(1,5)
 			state = "wander"
 			robot.info:SetString("stateWhenMoved", "idle")
 		else 
@@ -68,7 +68,7 @@
 			state = "idle"
 		end
 	elseif (state == "wander") then
-		target = World.current:FindEmptyTile_NotThisOne(robot.pos)
+		target = World.current:FindNearByEmptyTile(robot.pos)
 		if (target ~= nil) then
 			if (robot:FindPath(target,false)) then
 				state = "move"	
@@ -86,6 +86,7 @@
 			robot.info:SetInt("goto_y", target.world_y);		
 			state = "find_path_x_y"
 			robot.info:SetString("stateWhenMoved", "pickup")
+			robot.info:SetString("pathType", "xy");
 			qtyToAllocate = robot.work.inventoryItemQtyRemaining - robot.inventory:HowMany(robot.work.inventoryItemName)
 			target:InventoryAllocate(robot.work.inventoryItemName, qtyToAllocate)
 
@@ -105,11 +106,20 @@
 			if (robot.inventory:HowMany(robot.work.inventoryItemName) >= robot.work.inventoryItemQtyRequired) then
 				state = "find_path_work.tile"
 				robot.info:SetString("stateWhenMoved", "work")
+				robot.info:SetString("pathType", "tile");
 			else
 				state = "find_item"
 			end
 		else
 			state = "find_item"
+		end
+	elseif (state == "find_new_path") then
+		pathType = robot.info:GetString("pathType")
+
+		if (pathType == "xy") then
+			state = "find_path_x_y"
+		else
+			state = "find_path_work.tile"
 		end
 	elseif (state == "work") then
 		robot.work:Work(deltaTime)

@@ -13,6 +13,7 @@ namespace NoYouDoIt.Controller {
   public class WorkItemManager {
 
     Action<WorkItem> CBWorkCreated;
+    Action<WorkItem> CBWorkCompleted;
 
 
     private List<WorkItem> workItems = new List<WorkItem>();
@@ -48,6 +49,9 @@ namespace NoYouDoIt.Controller {
     public void AddWorkItem(WorkItem item) {
       //Debug.Log(item);
       workItems.Add(item);
+      if (CBWorkCreated != null) {
+        CBWorkCreated(item);
+      }
 
     }
 
@@ -56,6 +60,9 @@ namespace NoYouDoIt.Controller {
         assignedWork.Remove(work);
       }
       work.Unassign();
+      if (CBWorkCompleted != null) {
+        CBWorkCompleted(work);
+      }
     }
 
 
@@ -125,6 +132,15 @@ namespace NoYouDoIt.Controller {
 
     public void CBUnregisterOnCreated(Action<WorkItem> cb) {
       CBWorkCreated -= cb;
+    }
+
+    public void CBRegisterOnCompleted(Action<WorkItem> cb) {
+      CBWorkCompleted -= cb;
+      CBWorkCompleted += cb;
+    }
+
+    public void CBUnregisterOnCompleted(Action<WorkItem> cb) {
+      CBWorkCompleted -= cb;
     }
 
 

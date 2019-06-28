@@ -48,6 +48,26 @@
 		"name" : "corpse_3",
 		"x":1,
 		"y":2
+		},
+		{
+		"name" : "corpse_4",
+		"x":2,
+		"y":3
+		},
+		{
+		"name" : "corpse_5",
+		"x":2,
+		"y":3
+		},
+		{
+		"name" : "corpse_6",
+		"x":3,
+		"y":2
+		},
+		{
+		"name" : "corpse_7",
+		"x":3,
+		"y":2
 		}
 		
 	

@@ -731,6 +731,27 @@ import 'NoYouDoIt.DataModels'
     //  //inventoryManager.RemoveInventoryItem(tile.inventoryItem);
     //}
 
+    public Tile FindNearByEmptyTile(Tile t) {
+      int n = UnityEngine.Random.Range(5, 10);
+      while (n < 1000) {
+        Vector2 vec = Funcs.Spiral(n);
+
+        int x = t.world_x + (int)vec.x;
+        int y = t.world_y + (int)vec.y;
+        if (x >= 0 && y >= 0) {
+          Tile tn = GetTileIfChunkExists(x, y);
+          if (tn != null && tn.IsEmpty() && tn.countOfOccupied == 0) {
+            return tn;
+
+          }
+        }
+
+        n += 1;
+      }
+
+      return null;
+    }
+
     public Tile FindEmptyTile_NotThisOne(Tile t) {
       int n = 0;
       while (n < 1000) {
@@ -1244,7 +1265,11 @@ import 'NoYouDoIt.DataModels'
         if (B != null && B.movementFactor > 0 && !IsClippingCorner(A, B)) {
           float mf = 1.0f / Mathf.Pow(B.movementFactor, 2);
           if (B.HasPendingWork) {
-            mf *= 1.5f;
+            mf = Mathf.Pow(mf, 2);
+          }
+
+          if (B.countOfOccupied > 0) {
+            mf = Mathf.Pow(mf, 2);
           }
 
           return mf;

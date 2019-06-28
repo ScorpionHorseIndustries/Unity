@@ -6,12 +6,17 @@ using CardboardKeep;
 using NoYouDoIt.TheWorld;
 
 namespace NoYouDoIt.Controller {
+
+  public enum MOUSE_MODE {
+    SELECT,BUILD
+  }
+
   public class InputController : MonoBehaviour {
     public const int MOUSE_LEFT = 0;
     public const int MOUSE_RIGHT = 1;
     public const int MOUSE_MIDDLE = 2;
 
-
+    public MOUSE_MODE mouseMode = MOUSE_MODE.SELECT;
 
     WorldController wcon;
     BuildController bCon;
@@ -46,6 +51,7 @@ namespace NoYouDoIt.Controller {
     Tile tileBL = null;
     Tile tileBR = null;
     public Tile mouseOverTile { get; private set; } = null;
+    public SelectionInfo selectionInfo;
     public bool first { get; private set; } = true;
 
     private float tileSize = 0;
@@ -95,7 +101,7 @@ namespace NoYouDoIt.Controller {
 
 
 
-    void updateCamera() {
+    void UpdateCamera() {
 
       float lr = Input.GetAxis("Horizontal");
       float ud = Input.GetAxis("Vertical");
@@ -198,6 +204,7 @@ namespace NoYouDoIt.Controller {
       if (Input.GetKeyUp(KeyCode.Escape) || Input.GetMouseButtonUp(1)) {
         WorldController.Instance.SetBuildType_Clear();
         destroyCursors();
+        selectionInfo = null;
 
       }
 
@@ -213,8 +220,8 @@ namespace NoYouDoIt.Controller {
       cy = my - lastY;
       if (mx >= 0 && my >= 0) {
         mouseOverTile = World.current.GetTileAt(mx, my);
-        if (mouseOverTile != null) {
-          WorldController.Instance.UpdateCurrentTile(mouseOverTile);
+        if (selectionInfo != null) {
+          WorldController.Instance.UpdateCurrentTile(selectionInfo);
         }
       }
       //if (mouseOverTile != null) {
@@ -223,10 +230,12 @@ namespace NoYouDoIt.Controller {
       //  Debug.Log("move over nothing");
       //}
 
-      updateDrag();
+      UpdateSelected();
+
+      UpdateDrag();
 
 
-      updateCamera();
+      UpdateCamera();
 
 
       //transform.Translate(cx, cy, 0);
@@ -236,10 +245,43 @@ namespace NoYouDoIt.Controller {
     }
 
     private void UpdateSelected() {
+      if (mouseOverTile != null) {
+        if (Input.GetKeyUp(KeyCode.Escape)) {
+          selectionInfo = null;
+        }
 
+        if (mouseMode != MOUSE_MODE.SELECT) {
+          return;
+        }
+
+        if (Input.GetMouseButtonUp(0)) {
+          if (selectionInfo == null || selectionInfo.tile != mouseOverTile) {
+            selectionInfo = new SelectionInfo();
+            selectionInfo.tile = mouseOverTile;
+            SetSelectionContents();
+
+            for (int i = 0; i < selectionInfo.contents.Length; i += 1) {
+              if (selectionInfo.contents[i] != null) {
+                selectionInfo.subSelect = i;
+                break;
+              }
+            }
+          } else {
+
+            SetSelectionContents();
+            do {
+              selectionInfo.subSelect = (selectionInfo.subSelect + 1) % selectionInfo.contents.Length;
+
+            } while (selectionInfo.contents[selectionInfo.subSelect] == null);
+
+          }
+        }
+      }
     }
 
-    private void updateDrag() {
+    private void UpdateDrag() {
+      if (mouseMode == MOUSE_MODE.SELECT) return;
+
       if (Input.GetMouseButtonDown(0)) {
         dragStart = mouseOverTile;
         dragStartPos.Set(mx, my);
@@ -299,6 +341,20 @@ namespace NoYouDoIt.Controller {
         SimplePool.Despawn(g);
       }
       */
+    }
+
+    public void SetSelectionContents() {
+      selectionInfo.contents = new object[selectionInfo.tile.countOfOccupied + 3];
+
+      // Copy the character references
+      for (int i = 0; i < selectionInfo.tile.countOfOccupied; i += 1) {
+        selectionInfo.contents[i] = selectionInfo.tile.GetOccupant(i);
+      }
+
+      // Now assign references to the other three sub-selections available
+      selectionInfo.contents[selectionInfo.contents.Length - 3] = selectionInfo.tile.installedItem;
+      selectionInfo.contents[selectionInfo.contents.Length - 2] = selectionInfo.tile.GetFirstInventoryItem();
+      selectionInfo.contents[selectionInfo.contents.Length - 1] = selectionInfo.tile;
     }
 
     private void setDragArea() {
@@ -371,5 +427,13 @@ namespace NoYouDoIt.Controller {
         return a;
       }
     }
+  }
+
+
+  public class SelectionInfo {
+    public Tile tile;
+    public string info;
+    public int subSelect = 0;
+    public System.Object[] contents;
   }
 }

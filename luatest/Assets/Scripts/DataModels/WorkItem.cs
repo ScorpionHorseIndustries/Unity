@@ -26,6 +26,8 @@ namespace NoYouDoIt.DataModels {
     private List<WorkItem> prereq;
     public float IsReadyCoolDown = 0;
     public string description = "work";
+
+    public List<Tile> relatedTiles = new List<Tile>();
   
 
 
@@ -36,7 +38,7 @@ namespace NoYouDoIt.DataModels {
     public void Unassign() {
       if (this.assignedRobot != null) {
         Debug.Log("Unassigning assigned worker");
-        this.assignedRobot.NewState = "idle";
+        this.assignedRobot.NewState = "wander";
         this.assignedRobot = null;
       } else {
         Debug.Log("Could not Unassign worker");
@@ -87,6 +89,8 @@ namespace NoYouDoIt.DataModels {
 
       return loc_isReady;
     }
+
+
 
     public override string ToString() {
       return "workItem (" + description + ") " +
@@ -157,6 +161,7 @@ namespace NoYouDoIt.DataModels {
 
 
       World.current.workManager.AddWorkItem(w);
+      tile.AddWork(w);
 
 
 
@@ -165,6 +170,7 @@ namespace NoYouDoIt.DataModels {
 
     private void Cancel() {
       World.CallLuaFunctions(OnCancel.ToArray(), this);
+      this.workTile.RemoveWork(this);
     }
 
     public void Work(float deltaTime) {
@@ -179,6 +185,7 @@ namespace NoYouDoIt.DataModels {
             if (isComplete) {
               World.CallLuaFunctions(OnComplete.ToArray(), this);
               complete = true;
+              this.workTile.RemoveWork(this);
             }
 
           }

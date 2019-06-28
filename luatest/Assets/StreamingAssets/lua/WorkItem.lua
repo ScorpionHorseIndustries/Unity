@@ -1,7 +1,58 @@
-﻿function SetInstalledItem(work,itemName) 
+﻿
+
+
+--------------------------------RemoveInstalledItem------------------------------------
+
+function SetRemoveInstalledItem(work) 
+	work.OnWork:Add("OnWork_InstalledItem")
+	work.OnComplete:Add("OnComplete_AnyPre")
+	work.OnComplete:Add("OnComplete_RemoveInstalledItem")
+	work.OnComplete:Add("OnComplete_AnyPost")
+	work.IsComplete = "IsComplete_RemoveInstalledItem"
+	work.IsReady = "IsReady_RemoveInstalledItem"
+	work.description = "RemoveInstalledItem " 
+
+
+	
+
+end
+
+function IsReady_RemoveInstalledItem(work)	
+	return true
+end
+
+function OnComplete_RemoveInstalledItem(work)
+	--World.dbug("OnComplete_InstalledItemWork: " .. work:ToString())
+	work.workTile.installedItem:Deconstruct()
+
+end
+
+function IsComplete_RemoveInstalledItem(work)
+	--World.dbug("IsComplete_InstalledItemWork: " .. work:ToString())
+	if work.workTime <= 0 then
+		return true
+	else
+		return false
+	end
+
+
+end
+
+--------------------------------InstalledItem------------------------------------
+function SetInstalledItem(work,itemName) 
 	
 
 	proto = InstalledItem.GetPrototype(itemName)
+
+	for x = work.workTile.world_x, proto.width, 1 do
+		for y = work.workTile.world_y, proto.height, 1 do
+			tile = World.current:GetTileAt(x,y)
+			if (tile ~= nil) then
+				work.relatedTiles:Add(tile)
+				tile:AddWork(work)
+			end
+		end
+	end
 
 	if (proto ~= nil) then
 		work.installedItemProto = proto
@@ -27,8 +78,9 @@
 
 		end
 		work.OnWork:Add("OnWork_InstalledItem")
+		work.OnComplete:Add("OnComplete_AnyPre")
 		work.OnComplete:Add("OnComplete_InstalledItem")
-		work.OnComplete:Add("OnComplete_Any")
+		work.OnComplete:Add("OnComplete_AnyPost")
 		work.IsComplete = "IsComplete_InstalledItem"
 		work.IsReady = "IsReady_InstalledItem"
 		work.description = "InstalledItem " .. proto.type
@@ -60,8 +112,9 @@ function SetPrereq(work,parent,invItemName,qty)
 	work.inventorySearchStockpiles = true
 
 	work.OnWork:Add("OnWork_PreReq")
+	work.OnComplete:Add("OnComplete_AnyPre")
 	work.OnComplete:Add("OnComplete_PreReq")
-	work.OnComplete:Add("OnComplete_Any")
+	work.OnComplete:Add("OnComplete_AnyPost")
 	work.IsComplete = "IsComplete_PreReq"
 	work.IsReady = "IsReady_PreReq"
 	   	 
@@ -71,26 +124,15 @@ function OnWork_PreReq(work)
 
 	work.assignedRobot:PlaceItemAtJob()
 
-	
---[[
-	World.dbug("OnWork_PreReq: " .. work:ToString())
-	invItemName = work.inventoryItemName;
-	robot = work.assignedRobot
-	qtyNeeded = work.inventoryItemQtyRemaining
-
-	qtyTaken = robot.inventory:RemoveFromInventory(invItemName.qtyNeeded)
-
-	work.inventory.AddInventoryItem(invItemName, qtyTaken)
-	work.inventoryItemQtyRemaining = work.inventoryItemQtyRemaining - qtyTaken
-		
-	if (work.inventoryItemQtyRemaining == 0) then
-		work:DoOnComplete()
-	end
-	]]
 end
 
-function OnComplete_Any (work) 
-	World.dbug("OnComplete_Any: " .. work:ToString())
+function OnComplete_AnyPre (work) 
+	work.workTile:RemoveWork(work)
+	
+end
+
+function OnComplete_AnyPost (work) 
+	
 	World.current.workManager:WorkItemComplete(work);
 end
 
@@ -116,6 +158,9 @@ end
 -- ------------------------------------------------InstalledItem---------------
 function OnWork_InstalledItem (work, deltaTime)
 	--World.dbug("OnWork_InstalledItemWork: " .. work:ToString())
+	if (work.complete) then
+		return
+	end
 	coolDown = work.assignedRobot.info:GetFloat("PleaseMoveCoolDown",0)
 
 	if (coolDown <= 0) then

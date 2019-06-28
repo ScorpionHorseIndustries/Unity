@@ -44,10 +44,18 @@ function SetInstalledItem(work,itemName)
 
 	proto = InstalledItem.GetPrototype(itemName)
 
-	for x = work.workTile.world_x, proto.width, 1 do
-		for y = work.workTile.world_y, proto.height, 1 do
+	xfrom = work.workTile.world_x
+	xto = xfrom + proto.width-1
+
+	yfrom = work.workTile.world_y
+	yto = yfrom + proto.height-1
+
+
+	for x = xfrom, xto, 1 do
+		for y = yfrom, yto, 1 do
 			tile = World.current:GetTileAt(x,y)
 			if (tile ~= nil) then
+				World.dbug(x .. "," .. y .. " = " .. proto.type)
 				work.relatedTiles:Add(tile)
 				tile:AddWork(work)
 			end
@@ -199,6 +207,8 @@ end
 
 function OnComplete_InstalledItem(work)
 	--World.dbug("OnComplete_InstalledItemWork: " .. work:ToString())
+
+	
 	World.current:PlaceInstalledItem(work.installedItemProto.type, work.workTile)
 
 end

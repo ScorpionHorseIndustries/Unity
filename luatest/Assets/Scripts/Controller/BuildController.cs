@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using NoYouDoIt.TheWorld;
 using NoYouDoIt.DataModels;
+using System.Linq;
 namespace NoYouDoIt.Controller {
   public class BuildController : MonoBehaviour {
     public WorldController wcon;
@@ -114,7 +115,7 @@ namespace NoYouDoIt.Controller {
     }
 
     private void CreateRemoveInstalledItemWork(List<Tile> tiles) {
-      foreach (Tile tile in tiles) {
+      foreach (Tile tile in tiles.Where(e => !e.HasPendingWork)) {
         if (tile.installedItem != null && tile.installedItem.tile == tile) {
           WorkItem.MakeWorkItem(tile, "SetRemoveInstalledItem");
         }

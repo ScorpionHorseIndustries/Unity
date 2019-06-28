@@ -59,6 +59,10 @@ namespace NoYouDoIt.DataModels {
     public string IsReady;
 
     public void DoOnComplete() {
+      if (complete) return;
+      foreach (Tile t in relatedTiles) {
+        t.RemoveWork(this);
+      }
       World.CallLuaFunctions(OnComplete.ToArray(), this);
       complete = true;
 
@@ -149,6 +153,10 @@ namespace NoYouDoIt.DataModels {
 
     }
 
+    public void UnnassignTiles() {
+      
+    }
+
     public static WorkItem MakeWorkItem(Tile tile, string function, params System.Object[] args) {
       WorkItem w = new WorkItem();
       w.workTile = tile;
@@ -183,9 +191,8 @@ namespace NoYouDoIt.DataModels {
           bool isComplete = false;
           if (bool.TryParse(results[0].ToString(), out isComplete)) {
             if (isComplete) {
-              World.CallLuaFunctions(OnComplete.ToArray(), this);
-              complete = true;
-              this.workTile.RemoveWork(this);
+              DoOnComplete();
+
             }
 
           }

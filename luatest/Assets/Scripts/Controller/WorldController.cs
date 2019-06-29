@@ -35,6 +35,9 @@ namespace NoYouDoIt.Controller {
     public GameObject jobsScrollItemPrefab;
     public GameObject jobsScrollContent;
     public GameObject genericSpritePrefab;
+    public GameObject prfStockpileManagementEntry;
+    public GameObject StockPileScrollContent;
+
     public Text leftMenuRecipeText;
 
     public GameObject debugCharItemPrefab;
@@ -51,6 +54,7 @@ namespace NoYouDoIt.Controller {
     private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
     //private Dictionary<Character, GameObject> Characters_GO_Map;
     private Dictionary<Robot, GameObject> Robot_GO_Map;
+    private Dictionary<string, GameObject> StockPileSettings_GO_Map;
 
     //private Dictionary<Job, GameObject> Job_GO_Map;
     //private Dictionary<Job, GameObject> JobScrollIt
@@ -262,12 +266,15 @@ namespace NoYouDoIt.Controller {
       TilesInventoryItems_GO_Map = new Dictionary<Tile, GameObject>();
       //Characters_ScrollItem_Map = new Dictionary<Character, GameObject>();
       Robot_GO_Map = new Dictionary<Robot, GameObject>();
+      StockPileSettings_GO_Map = new Dictionary<string, GameObject>();
       tempText = new List<GameObject>();
 
       eventSystem = EventSystem.current;
       timers = new List<NYDITimer>();
 
       timers.Add(new NYDITimer("updateMoney", 1, UpdateMoney));
+      timers.Add(new NYDITimer("updateStockPile", 2, 3,UpdateStockPile));
+      timers.Add(new NYDITimer("checkStockPile", 4, 5, CheckStockPile));
 
     }
 
@@ -391,7 +398,7 @@ namespace NoYouDoIt.Controller {
         InitialiseControllers();
         InitWorld();
       }
-
+      CreateStockpileManagement();
       Debug.Log("init done " + this.name);
       gameState = GAME_STATE.PLAY;
     }
@@ -479,7 +486,7 @@ namespace NoYouDoIt.Controller {
     void Update() {
 
       for (int i = 0; i < timers.Count; i += 1) {
-        timers[i].update(Time.deltaTime);
+        timers[i].Update(Time.deltaTime);
       }
 
 
@@ -862,7 +869,7 @@ namespace NoYouDoIt.Controller {
       Debug.Log(name + " " + r.Xint + "," + r.Yint);
 
       GameObject go = CreateGameObject(name, r.Xint, r.Yint);
-      Debug.Log(go);
+      //Debug.Log(go);
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
       spr.sprite = spriteController.GetSprite(r);
       spr.sortingLayerName = "Characters";
@@ -878,6 +885,37 @@ namespace NoYouDoIt.Controller {
 
 
       Robot_GO_Map.Add(r, go);
+    }
+
+    public void CreateStockpileManagement() {
+      foreach(string name in World.current.inventoryManager.stockpileSettings.Keys) {
+        StockPileSetting sps = World.current.inventoryManager.stockpileSettings[name];
+
+        
+
+        GameObject go = SimplePool.Spawn(prfStockpileManagementEntry, Vector2.zero, Quaternion.identity);
+        prfStockPileItemScript scr =  go.GetComponent<prfStockPileItemScript>();
+        scr.Set(sps);
+        scr.SetCurrentQty(0);
+        go.transform.SetParent(this.StockPileScrollContent.transform);
+        StockPileSettings_GO_Map[sps.name] = go;
+       
+
+      }
+    }
+
+    public void CheckStockPile() {
+      World.CallLuaFunction("CheckStockpiles");
+    }
+
+    public void UpdateStockPile() {
+      foreach (StockPileSetting sps in World.current.inventoryManager.stockpileSettings.Values) {
+        GameObject go = StockPileSettings_GO_Map[sps.name];
+        prfStockPileItemScript scr = go.GetComponent<prfStockPileItemScript>();
+        scr.SetCurrentQty(sps.currentQty);
+
+
+      }
     }
 
     //void OnCharacterCreated(Character chr) {

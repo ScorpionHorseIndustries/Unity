@@ -77,6 +77,10 @@ namespace NoYouDoIt.DataModels {
 
     }
 
+    public static List<string> GetAllPrototypeNames() {
+      return new List<string>(prototypes.Keys);
+    }
+
     public static InventoryItem GetRandomPrototype() {
       int r = UnityEngine.Random.Range(0, prototypes.Count);
       int c = 0;

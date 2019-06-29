@@ -2,21 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
 
 using NoYouDoIt.TheWorld;
 using NoYouDoIt.Utils;
 namespace NoYouDoIt.DataModels {
+
+  public class StockPileSetting {
+    public InventoryItem item;
+    public string name { get; private set; }
+    public int currentQty;
+    public int maxQty;
+    public bool all = false;
+    public int stackSize { get; private set; }
+    public bool pendingWork = false;
+    
+
+    public StockPileSetting(InventoryItem item) {
+      this.item = item;
+      this.name = item.type;
+      this.stackSize = InventoryItem.GetStackSize(this.name);
+      this.maxQty = this.stackSize;
+
+    }
+  }
+
   public class InventoryManager {
     private World world;
 
+    public Dictionary<string, StockPileSetting> stockpileSettings;
+
+    NYDITimer timer;
+
     //public Dictionary<string, List<InventoryItem>> inventories;
-    List<Inventory> inventories;
+    public List<Inventory> inventories;
     //private List<InventoryItem> items;
     public InventoryManager(World world) {
       this.world = world;
       inventories = new List<Inventory>();//new Dictionary<string, List<InventoryItem>>();
+      stockpileSettings = new Dictionary<string, StockPileSetting>();
+      timer = new NYDITimer("updateTimer", 1, UpdateStockPileSettings);
     }
 
+    public void SetStockPileSettingWork(string name, bool b) {
+      stockpileSettings[name].pendingWork = b;
+
+    }
 
     public void RegisterInventory(Inventory inventory) {
       if (!inventories.Contains(inventory)) {
@@ -30,6 +61,36 @@ namespace NoYouDoIt.DataModels {
         if (inventory.TotalQty() > 0) {
           inventory.Explode();
         }
+      }
+    }
+
+    public void InitStockpile() {
+      foreach (string name in InventoryItem.GetAllPrototypeNames()) {
+        InventoryItem item = InventoryItem.GetPrototype(name);
+
+        stockpileSettings[name] = new StockPileSetting(item);
+
+      }
+    }
+
+    public void Update(float deltaTime) {
+      timer.Update(deltaTime);
+
+    }
+
+
+    public int QtyInStockPiles(string name) {
+      int qty = 0;
+      foreach (Inventory inv in inventories.Where(e => e.IsStockPile)) {
+        qty += inv.HowMany(name);
+      }
+
+      return qty;
+    }
+
+    public void UpdateStockPileSettings() {
+      foreach (StockPileSetting sps in stockpileSettings.Values) {
+        sps.currentQty = QtyInStockPiles(sps.name);
       }
     }
 

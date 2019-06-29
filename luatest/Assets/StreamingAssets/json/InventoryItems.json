@@ -5,42 +5,48 @@
 "type" : "inv::steel_plates",
 "niceName" : "Steel Plates",
 "stackSize" : 32,
-"spriteName" : "inventory_items::steel_plates"
+"spriteName" : "inventory_items::steel_plates",
+"category" : "manufactured"
 },
 {
 "id" : 2,
 "type" : "inv::copper_plates",
 "niceName" : "Copper Plates",
 "stackSize" : 32,
-"spriteName" : "inventory_items::copper_plates"
+"spriteName" : "inventory_items::copper_plates",
+"category" : "manufactured"
 },
 {
 "id" : 3,
 "type" : "inv::stone_slabs",
 "niceName" : "Stone Slabs",
 "stackSize" : 32,
-"spriteName" : "inventory_items::stone_slabs"
+"spriteName" : "inventory_items::stone_slabs",
+"category" : "manufactured"
 },
 {
 "id" : 4,
 "type" : "inv::wood_planks",
 "niceName" : "Wood Planks",
 "stackSize" : 32,
-"spriteName" : "inventory_items::wooden_planks"
+"spriteName" : "inventory_items::wooden_planks",
+"category" : "raw"
 },
 {
 "id" : 5,
 "type" : "inv::organic_trash",
 "niceName" : "Organic Trash",
 "stackSize" : 1,
-"spriteName" : "inventory_items::organic_trash"
+"spriteName" : "inventory_items::organic_trash",
+"category" : "trash"
 },
 {
 "id" : 5,
 "type" : "inv::wallet",
 "niceName" : "Wallet",
 "stackSize" : 8,
-"spriteName" : "inventory_items::wallet_open_1"
+"spriteName" : "inventory_items::wallet_open_1",
+"category" : "money"
 }
 ]
 }

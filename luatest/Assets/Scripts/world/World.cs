@@ -284,7 +284,7 @@ namespace NoYouDoIt.TheWorld {
 
       loadNames();
 
-
+      inventoryManager.InitStockpile();
 
 
       //CreateEmptyTiles();
@@ -484,6 +484,8 @@ import 'NoYouDoIt.DataModels'
       //  c.Update(deltaTime);
       //}
 
+      inventoryManager.Update(deltaTime);
+      
 
       for (int i = robots.Count - 1; i >= 0; i -= 1) {
         Robot robot = robots[i];
@@ -947,6 +949,7 @@ import 'NoYouDoIt.DataModels'
     }
 
     public InstalledItem PlaceInstalledItem(string buildItem, Tile tile) {
+      if (buildItem == null) return null;
       ///TODO: Assumes 1x1 tiles
       ///with no rotation
       ///
@@ -954,7 +957,7 @@ import 'NoYouDoIt.DataModels'
       InstalledItem proto = getInstalledItemProto(buildItem);
 
       if (proto == null) {
-        //Debug.LogError("no prototype for InstalledItem of type \"" + buildItem + "\"");
+        Debug.LogError("no prototype for InstalledItem of type \"" + buildItem + "\"");
 
       } else {
         InstalledItem inst = InstalledItem.CreateInstance(this, proto, tile);
@@ -985,7 +988,7 @@ import 'NoYouDoIt.DataModels'
           return inst;
         } else {
 
-          //Debug.Log("failed to place item " + buildItem);
+          Debug.Log("failed to place item " + buildItem);
         }
       }
       return null;

@@ -1,8 +1,8 @@
 ﻿function OnUpdate_Robot(robot, deltaTime) 
 	
 
-	state = robot.state
-	saveState = state
+	local state = robot.state
+	local saveState = state
 
 	if (state == nil) then
 		state = "idle"
@@ -17,7 +17,7 @@
 		
 
 	elseif (state == "idle") then
-		findWorkTimer = robot.info:GetFloat("findWorkTimer");
+		local findWorkTimer = robot.info:GetFloat("findWorkTimer");
 		if (findWorkTimer <= 0) then
 			state = "find_work"
 			findWorkTimer = math.random(1,2)
@@ -27,7 +27,7 @@
 		end
 		robot.info:SetFloat("findWorkTimer", findWorkTimer)
 
-		wanderTimer = robot.info:GetFloat("wanderTimer", math.random(1,5))
+		local wanderTimer = robot.info:GetFloat("wanderTimer", math.random(1,5))
 		if (wanderTimer <= 0) then
 			wanderTimer = math.random(1,5)
 			state = "wander"
@@ -39,7 +39,7 @@
 		robot.info:SetFloat("wanderTimer", wanderTimer)
 
 	elseif  (state == "find_work") then
-		waitForWorkTimer = robot.info:GetFloat("waitForWorkTimer")
+		local waitForWorkTimer = robot.info:GetFloat("waitForWorkTimer")
 		
 		if (waitForWorkTimer <= 0) then
 			state = "idle"
@@ -68,7 +68,7 @@
 			state = "idle"
 		end
 	elseif (state == "wander") then
-		target = World.current:FindNearByEmptyTile(robot.pos)
+		local target = World.current:FindNearByEmptyTile(robot.pos)
 		if (target ~= nil) then
 			if (robot:FindPath(target,false)) then
 				state = "move"	
@@ -79,7 +79,7 @@
 		end
 	elseif (state == "find_item") then
 		--find some of that then
-		target = World.current.inventoryManager:GetNearest(robot.pos, robot.work.inventoryItemName,robot.work.inventorySearchStockpiles)
+		local target = World.current.inventoryManager:GetNearest(robot.pos, robot.work.inventoryItemName,robot.work.inventorySearchStockpiles)
 		--World.dbug("target:" + target.ToString() + "\nitem:" + work.inventoryItemName)
 		if (target ~= nil) then
 			robot.info:SetInt("goto_x", target.world_x);		
@@ -93,9 +93,9 @@
 
 		end		
 	elseif (state == "pickup") then
-		fx = robot.info:GetInt("goto_x")
-		fy = robot.info:GetInt("goto_y")
-		tile = World.current:GetTileAt(fx, fy)
+		local fx = robot.info:GetInt("goto_x")
+		local fy = robot.info:GetInt("goto_y")
+		local tile = World.current:GetTileAt(fx, fy)
 
 		
 
@@ -201,6 +201,8 @@
 	]]
 
 end
+
+
 
 --[[
 

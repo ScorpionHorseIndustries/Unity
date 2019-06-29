@@ -120,6 +120,7 @@
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Example\UConsoleExamplePlayerScript.cs" />
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Scripts\UConsole.cs" />
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Scripts\UConsoleCommands.cs" />
+    <Compile Include="Assets\prfStockPileItemScript.cs" />
     <Compile Include="Assets\scrBtnBuildRecipeData.cs" />
     <Compile Include="Assets\scrChest.cs" />
     <Compile Include="Assets\scrInventory.cs" />

@@ -57,17 +57,7 @@ namespace NoYouDoIt.TheWorld {
               if (j == tempT.height) {
                 t.SetType(tempT);
 
-                if (Funcs.Chance(1)) {
-                  if (InstalledItem.trashPrototypes.Count > 0) {
-                    string trashItemName = InstalledItem.trashPrototypes[UnityEngine.Random.Range(0, world.trashPrototypes.Count)].type;
-                    world.PlaceInstalledItem(trashItemName, t);
 
-                  }
-                } else if (Funcs.Chance(2)) {
-                  string type = InventoryItem.GetRandomPrototype().type;
-                  int qty = UnityEngine.Random.Range(1, InventoryItem.GetStackSize(type) + 1);
-                  world.PlaceTileInventoryItem(type, t, qty);
-                }
 
                 break;
               }
@@ -83,6 +73,32 @@ namespace NoYouDoIt.TheWorld {
       for (int xx = 0; xx < CHUNK_WIDTH; xx += 1) {
         for (int yy = 0; yy < CHUNK_HEIGHT; yy += 1) {
           tiles[xx, yy].SetNeighbours(true);
+
+          Tile t = tiles[xx,yy];
+          if (t.type.name != "empty" && t.type.name != "water") {
+            if (Funcs.Chance(1)) {
+              if (InstalledItem.trashPrototypes.Count > 0) {
+                string trashItemName = InstalledItem.GetRandomTrashItemName();
+                InstalledItem proto = InstalledItem.GetPrototype(trashItemName);
+
+                if (proto != null) {
+                  if (proto.canSpawnOnTileTypeList.Count > 0) {
+                    if (!proto.canSpawnOnTileTypeList.Contains(t.type.name)) continue;
+                  }
+
+                  //Debug.Log("I will spawn a " + (trashItemName == null ? "null" : trashItemName));
+                  world.PlaceInstalledItem(trashItemName, t);
+                }
+
+              }
+            } else if (Funcs.Chance(1)) {
+              string type = InventoryItem.GetRandomPrototype().type;
+              int qty = UnityEngine.Random.Range(1, InventoryItem.GetStackSize(type) + 1);
+              world.PlaceTileInventoryItem(type, t, qty);
+            }
+          }
+
+
         }
       }
       SetNeighbourChunks();

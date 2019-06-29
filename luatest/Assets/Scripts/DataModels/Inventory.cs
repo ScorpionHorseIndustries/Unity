@@ -21,6 +21,15 @@ namespace NoYouDoIt.DataModels {
     public Robot robot { get; private set; }
     public WorkItem work { get; private set; }
     public System.Object parent { get; private set; }
+    public bool IsStockPile {
+      get {
+        if (tile != null && tile.installedItem != null && tile.installedItem.type == "installed::stockpile") {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
 
     private World world;
     //-------------------------------CALLBACKS------------------------------

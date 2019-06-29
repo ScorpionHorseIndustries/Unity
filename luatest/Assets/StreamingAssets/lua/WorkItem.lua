@@ -235,4 +235,47 @@ function IsReady_InstalledItem(work)
 end
 
 
+---------------------------------------------------HAUL TO STOCKPILE--------------------
+
+function SetHaul(work,invItemName,qty) 
+	work.inventoryItemName = invItemName
+	work.inventoryItemQtyRequired = qty
+	work.inventoryItemQtyRemaining = qty
+
+
+	work.OnWork:Add("OnWork_Haul")
+	work.OnComplete:Add("OnComplete_AnyPre")
+	work.OnComplete:Add("OnComplete_Haul")
+	work.OnComplete:Add("OnComplete_AnyPost")
+	work.IsComplete = "IsComplete_Haul"
+	work.IsReady = "IsReady_Haul"
+	World.current.inventoryManager:SetStockPileSettingWork(invItemName, true)
+end
+
+function IsReady_Haul(work)
+	return true
+
+end
+
+function IsComplete_Haul(work) 
+	if (work.inventoryItemQtyRemaining == 0) then
+		return true
+	else
+		return false
+	end
+end
+
+
+function OnComplete_Haul(work)
+	World.current.inventoryManager:SetStockPileSettingWork(work.inventoryItemName, false)
+	work.workTile:RemoveWork(work)
+end
+
+function OnWork_Haul(work)
+	work.assignedRobot:PlaceItemOnTile()
+	
+end
+
+
+
 

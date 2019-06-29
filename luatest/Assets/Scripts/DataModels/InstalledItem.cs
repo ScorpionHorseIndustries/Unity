@@ -12,6 +12,8 @@ using NoYouDoIt.Controller;
 namespace NoYouDoIt.DataModels {
   public class InstalledItem {
 
+    public static readonly string NONE = "installed::none";
+
     public struct ProductOfWork {
       string inv_name;
       int minQty;
@@ -45,6 +47,9 @@ namespace NoYouDoIt.DataModels {
     public Inventory inventory;
     public Recipe recipe { get; private set; }
     public bool paletteSwap { get; private set; }
+    public float trashSpawnChance { get; private set; }
+    public List<string> canSpawnOnTileTypeList { get; private set; }
+
 
     private InstalledItem prototype = null;
     public Vector2 workTileOffset { get; protected set; } = Vector2.zero; //relative to bottom left tile
@@ -123,6 +128,7 @@ namespace NoYouDoIt.DataModels {
       this.updateActionCountDown = proto.updateActionCountDownMax;
       this.workRecipeName = proto.workRecipeName;
       this.isWorkstation = proto.isWorkstation;
+      this.canSpawnOnTileTypeList = proto.canSpawnOnTileTypeList;
 
     }
 
@@ -254,7 +260,6 @@ namespace NoYouDoIt.DataModels {
           if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty() || t.HasPendingWork) {
             return false;
           }
-
         }
       }
 
@@ -341,6 +346,39 @@ namespace NoYouDoIt.DataModels {
     public static List<InstalledItem> trashPrototypes;
     public static Dictionary<string, string> prototypeRecipes;
     public static readonly string DECONSTRUCT = "installeditem::action::deconstruct";
+    private static List<string> spawnChanceList = new List<string>();
+
+    public static string GetRandomTrashItemName() {
+      if (spawnChanceList.Count == 0) {
+        foreach (InstalledItem trashProto in trashPrototypes) {
+          for (int i = 0; i < trashProto.trashSpawnChance * 100; i += 1) {
+            spawnChanceList.Add(trashProto.type);
+            //Debug.Log(i + " " + rp.name + " " + prlist.Count);
+          }
+        }
+        while (spawnChanceList.Count < 100) {
+          spawnChanceList.Add(null);
+        }
+
+        //string output = "";
+        //int c = 0;
+        //foreach (string s in spawnChanceList) {
+        //  output += " " + c;
+        //  if (s == null) {
+        //    output += " null";
+        //  } else {
+        //    output += " " + s;
+        //  }
+        //  c += 1;
+        //}
+        //Debug.Log("Random Spawn Trahs List: " + output);
+      }
+
+      int r = UnityEngine.Random.Range(0, spawnChanceList.Count);
+      return spawnChanceList[r];
+
+
+    }
 
 
     public static InstalledItem GetPrototype(string name) {
@@ -417,6 +455,15 @@ namespace NoYouDoIt.DataModels {
         bool IsWorkstation = Funcs.jsonGetBool(installedItemJson["workstation"], false);
         string workRecipeName = Funcs.jsonGetString(installedItemJson["workRecipe"], "");
         bool paletteSwap = Funcs.jsonGetBool(installedItemJson["paletteSwap"], false);
+        float trashSpawnChance = Funcs.jsonGetFloat(installedItemJson["trashSpawnChance"], 0);
+
+        JArray jsonCanSpawnOn = Funcs.jsonGetArray(installedItemJson, "canSpawnOn");
+        List<string> canSpawnOn = new List<string>();
+        if (jsonCanSpawnOn != null) {
+          foreach (string tempName in jsonCanSpawnOn) {
+            canSpawnOn.Add(tempName);
+          }
+        }
 
 
         List<string> sprites = new List<string>();
@@ -472,6 +519,8 @@ namespace NoYouDoIt.DataModels {
         proto.isWorkstation = IsWorkstation;
         proto.workRecipeName = workRecipeName;
         proto.paletteSwap = paletteSwap;
+        proto.trashSpawnChance = trashSpawnChance;
+        proto.canSpawnOnTileTypeList = canSpawnOn;
         //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
         //Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);
@@ -487,9 +536,9 @@ namespace NoYouDoIt.DataModels {
 
         if (proto.paletteSwap) {
           List<string> randoSprites = NYDISpriteManager.Instance.GetSpritesStarting(proto.spriteName);
-          foreach (string s in randoSprites) {
-            Debug.Log(s);
-          }
+          //foreach (string s in randoSprites) {
+          //  Debug.Log(s);
+          //}
           proto.setRandomSprites(randoSprites);
         } else if (sprites.Count > 0) {
           proto.setRandomSprites(sprites);

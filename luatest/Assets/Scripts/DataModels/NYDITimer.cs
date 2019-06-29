@@ -10,6 +10,32 @@ namespace NoYouDoIt.DataModels {
     float initialTime;
     string name;
     Action func;
+    bool random = false;
+    float randomTimeFrom, randomTimeTo;
+
+    public NYDITimer(string name, float timeFrom, float timeTo, Action func) {
+      this.func += func;
+      this.name = name;
+      this.randomTimeFrom = timeFrom;
+      this.randomTimeTo = timeTo;
+
+
+      
+      
+      this.random = true;
+
+      
+
+      this.time = initialTime;
+    }
+
+    private float GetResetTime() {
+      if (random) {
+        return UnityEngine.Random.Range(randomTimeFrom, randomTimeTo);
+      } else {
+        return initialTime;
+      }
+    }
 
     public NYDITimer(string name, float initialTime, Action func) {
       this.func += func;
@@ -18,10 +44,10 @@ namespace NoYouDoIt.DataModels {
       this.time = initialTime;
     }
 
-    public void update(float deltaTime) {
+    public void Update(float deltaTime) {
       time -= deltaTime;
       if (time < 0) {
-        time += initialTime;
+        time += GetResetTime();
         if (func != null) {
           func();
         }

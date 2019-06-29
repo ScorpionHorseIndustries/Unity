@@ -175,9 +175,21 @@ namespace NoYouDoIt.DataModels {
         int placed = work.inventory.AddItem(holding, holdingQty);
         inventory.RemoveItem(holding, placed);
         work.inventoryItemQtyRemaining -= placed;
-        Debug.Log("robot.PlaceItemAtJob: " + work);
+        //Debug.Log("robot.PlaceItemAtJob: " + work);
         return true;
       }
+      return false;
+    }
+
+    public bool PlaceItemOnTile() {
+      if (work != null ) {
+        string holding = work.inventoryItemName;
+        int holdingQty = inventory.HowMany(holding);
+        int placed = work.workTile.AddToInventory(holding, holdingQty);
+        inventory.RemoveItem(holding, placed);
+        work.inventoryItemQtyRemaining -= placed;
+      }
+
       return false;
     }
 

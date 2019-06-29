@@ -28,6 +28,7 @@
       "movementFactor": 0.8,
       "linked": false,
       "trash": true,
+	  "trashSpawnChance" : 0.3,
       "build": false,
       "randomRotation": true,
       "enclosesRoom": false,
@@ -191,6 +192,26 @@
       "workRecipe": "recipe::installed::robo_pod::work"
 
 
+
+    },
+	    {
+      "id": 10,
+      "name": "installed::tree",
+      "niceName": "Tree",
+      "sprite": "installed_items::tree_0",
+      "sprites": ["installed_items::tree_0", "installed_items::tree_1"],
+      "linked": false,
+      "movementFactor": 0.5,
+      "trash": true,
+	  "trashSpawnChance" : 0.7,
+	  "canSpawnOn" : ["grass", "dirt"],
+      "build": false,
+      "neighbourTypes": [],
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::tree::build",
+      "inventorySlots": 0,
+      "width": 1,
+      "height": 2
 
     }
 

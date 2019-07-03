@@ -209,14 +209,18 @@
     },
 	{
       "name": "recipe::installed::tree::build",
-      "id": 12,
+      "id": 14,
       "buildTime": 1,
       "cost": 0,
       "resources": [
         {
           "name": "inv::wood_planks",
           "qty": 8
-        }
+        },
+		{
+			"name" : "inv::sapling",
+			"qty" : 4
+		}
       ]
 
     }

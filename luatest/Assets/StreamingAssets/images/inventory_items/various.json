@@ -27,6 +27,11 @@
 		"name" : "wallet_open_1",
 		"x":0,
 		"y":0
+		},
+		{
+		"name" : "sapling",
+		"x" : 1,
+		"y" : 0
 		}
 		
 	

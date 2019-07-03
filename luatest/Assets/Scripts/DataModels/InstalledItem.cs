@@ -86,6 +86,7 @@ namespace NoYouDoIt.DataModels {
     public int inventorySlots { get; private set; } = 0;
     public float updateActionCountDown = 0;
     public float updateActionCountDownMax { get; private set; }
+    public float updateActionCountDownRange { get; private set; }
     public string workRecipeName { get; private set; }
     public bool isWorkstation { get; private set; } = false;
 
@@ -142,6 +143,7 @@ namespace NoYouDoIt.DataModels {
       this.workTileOffset = new Vector2(proto.workTileOffset.x, proto.workTileOffset.y);
       //set the countdown timer
       this.updateActionCountDownMax = proto.updateActionCountDownMax;
+      this.updateActionCountDownRange = proto.updateActionCountDownRange;
       this.updateActionCountDown = proto.updateActionCountDownMax;
       this.workRecipeName = proto.workRecipeName;
       this.isWorkstation = proto.isWorkstation;
@@ -229,7 +231,7 @@ namespace NoYouDoIt.DataModels {
           updateActionCountDown -= deltaTime;
           //Debug.Log(updateActionCountDown + " " + updateActionCountDownMax);
         } else {
-          updateActionCountDown = updateActionCountDownMax;
+          updateActionCountDown = updateActionCountDownMax + UnityEngine.Random.Range(-updateActionCountDownRange, updateActionCountDownRange);
           //updateActions(this, deltaTime);
           World.CallLuaFunctions(this.updateActions.ToArray(), this, deltaTime);
         }
@@ -477,6 +479,7 @@ namespace NoYouDoIt.DataModels {
         int workTileOffsetX = Funcs.jsonGetInt(installedItemJson["workTileOffsetX"], 0);
         int workTileOffsetY = Funcs.jsonGetInt(installedItemJson["workTileOffsetY"], 0);
         float updateActionCD = Funcs.jsonGetFloat(installedItemJson["updateActionCountDown"], 0);
+        float updateActionCDRange = Funcs.jsonGetFloat(installedItemJson["updateActionCountDownRange"], 0);
         bool IsWorkstation = Funcs.jsonGetBool(installedItemJson["workstation"], false);
         string workRecipeName = Funcs.jsonGetString(installedItemJson["workRecipe"], "");
         bool paletteSwap = Funcs.jsonGetBool(installedItemJson["paletteSwap"], false);
@@ -541,6 +544,7 @@ namespace NoYouDoIt.DataModels {
         proto.inventorySlots = inventorySlots;
         proto.workTileOffset = new Vector2(workTileOffsetX, workTileOffsetY);
         proto.updateActionCountDownMax = updateActionCD;
+        proto.updateActionCountDownRange = updateActionCDRange;
         proto.isWorkstation = IsWorkstation;
         proto.workRecipeName = workRecipeName;
         proto.paletteSwap = paletteSwap;

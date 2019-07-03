@@ -65,6 +65,9 @@ namespace NoYouDoIt.DataModels {
       }
       World.CallLuaFunctions(OnComplete.ToArray(), this);
       complete = true;
+      if (recipe != null) {
+        WorldController.Instance.DeductMoney(recipe.cost);
+      }
 
     }
 

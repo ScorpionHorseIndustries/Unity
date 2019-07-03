@@ -78,6 +78,14 @@ namespace NoYouDoIt.DataModels {
 
     }
 
+    public int GetLooseQty(string name) {
+      int qty = 0;
+      foreach (Inventory inv in inventories.Where(e => !e.IsStockPile && e.tile != null)) {
+        qty += inv.HowMany(name);
+      }
+
+      return qty;
+    }
 
     public int QtyInStockPiles(string name) {
       int qty = 0;

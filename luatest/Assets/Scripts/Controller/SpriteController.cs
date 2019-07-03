@@ -106,6 +106,8 @@ namespace NoYouDoIt.Controller {
       return GetSprite(tSprites[Random.Range(0, tSprites.Length)]);
     }
 
+ 
+
     public Sprite GetSprite(string name) {
       return NYDISpriteManager.Instance.GetSprite(name);
 
@@ -155,7 +157,18 @@ namespace NoYouDoIt.Controller {
 
     public SpriteHolder GetSprite(InstalledItem item) {
       SpriteHolder sp = new SpriteHolder();
-      sp.s = GetSprite(item.getRandomSpriteName());
+      if (item.growthStage >= 0) {
+        Growth g = item.growthStages[item.growthStage];
+        sp.s = GetSprite(g.sprite);
+
+      } else {
+        sp.s = GetSprite(item.getRandomSpriteName());
+      }
+
+      
+      
+
+
 
 
       if (item.randomRotation) {

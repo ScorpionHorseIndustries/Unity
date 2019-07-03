@@ -554,6 +554,10 @@ import 'NoYouDoIt.DataModels'
 
     }
 
+    public bool CreateRobotAtTile(Tile t) {
+      return CreateRobot(t);
+    }
+
     public bool CreateRobot(Tile t) {
       Robot c = Robot.MakeRobot(t, "basic");//new Character(this, t);
       return CreateRobot(c);
@@ -774,6 +778,30 @@ import 'NoYouDoIt.DataModels'
 
       return null;
     }
+
+    public Tile FindEmptyUnnoccupiedTile(Tile t) {
+      
+
+      int n = 0;
+      while (n < 1000) {
+        Vector2 vec = Funcs.Spiral(n);
+
+        int x = t.world_x + (int)vec.x;
+        int y = t.world_y + (int)vec.y;
+        if (x >= 0 && y >= 0) {
+          Tile tn = GetTileIfChunkExists(x, y);
+          if (tn != null && tn.IsEmpty() && tn.countOfOccupied == 0) {
+            return tn;
+
+          }
+        }
+
+        n += 1;
+      }
+
+      return null;
+    }
+
     public Tile FindEmptyTile(Tile t) {
 
       if (t.IsEmpty()) return t;

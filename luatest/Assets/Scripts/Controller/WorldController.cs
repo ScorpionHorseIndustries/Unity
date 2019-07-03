@@ -274,7 +274,7 @@ namespace NoYouDoIt.Controller {
 
       timers.Add(new NYDITimer("updateMoney", 1, UpdateMoney));
       timers.Add(new NYDITimer("updateStockPile", 2, 3,UpdateStockPile));
-      timers.Add(new NYDITimer("checkStockPile", 4, 5, CheckStockPile));
+      timers.Add(new NYDITimer("checkStockPile", 2, 5, CheckStockPile));
 
     }
 
@@ -449,7 +449,7 @@ namespace NoYouDoIt.Controller {
       SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void addCurrency(float amt) {
+    public void AddCurrency(float amt) {
       money += amt;
 
 
@@ -898,6 +898,7 @@ namespace NoYouDoIt.Controller {
         scr.Set(sps);
         scr.SetCurrentQty(0);
         go.transform.SetParent(this.StockPileScrollContent.transform);
+        go.transform.localScale = Vector3.one;
         StockPileSettings_GO_Map[sps.name] = go;
        
 

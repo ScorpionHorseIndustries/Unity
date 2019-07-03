@@ -89,7 +89,7 @@ namespace NoYouDoIt.Controller {
           w.Assign(worker);
           assignedWork.Add(w);
           workItems.Remove(w);
-          Debug.Log("gave work " + w.ToString()+ " to " + worker.name);
+          //Debug.Log("gave work " + w.ToString()+ " to " + worker.name);
         }
       }
        

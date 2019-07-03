@@ -196,10 +196,6 @@ function OnWork_InstalledItem (work, deltaTime)
 	if (work.assignedRobot ~= nil) then
 		work.assignedRobot.info:SetFloat("PleaseMoveCoolDown",coolDown)
 	end
-
-
-
-
 	
 end
 
@@ -225,7 +221,7 @@ function IsComplete_InstalledItem(work)
 end
 
 function IsReady_InstalledItem(work)	
-	World.dbug("IsReady_InstalledItemWork: " .. work:ToString())
+	--World.dbug("IsReady_InstalledItemWork: " .. work:ToString())
 	if (work:GetCountOfPrereqs() > 0) then
 		return false
 	else
@@ -241,6 +237,7 @@ function SetHaul(work,invItemName,qty)
 	work.inventoryItemName = invItemName
 	work.inventoryItemQtyRequired = qty
 	work.inventoryItemQtyRemaining = qty
+	work.inventorySearchStockpiles = false
 
 
 	work.OnWork:Add("OnWork_Haul")
@@ -275,6 +272,117 @@ function OnWork_Haul(work)
 	work.assignedRobot:PlaceItemOnTile()
 	
 end
+
+-----------------------------------------------WORK AT STATION -------------------------------------
+function SetWorkstation(work, recipeName) 
+
+	work.recipe = Recipe.GetRecipe(recipeName)
+	work.workTime = work.recipe.buildTime
+
+	for kvp in luanet.each(work.recipe.resources) do
+		resource = kvp.Value
+		rName = resource.name
+		rQty = resource.qtyRequired
+		--[[
+		World.dbug(tostring(rName .. " " .. rQty))
+		World.dbug(resource.name .. " " .. resource.qtyRequired)
+
+
+		]]--
+		--World.dbug("k=" .. resource.Key .. ", v=" .. resource.Value:ToString())
+
+		newItem = WorkItem.MakeWorkItem(work.workTile,"SetPrereq",work,rName,rQty)
+		newItem.description = "description (" .. rName  .. ":" .. rQty .. ")"
+
+		work:AddPrereq(newItem)
+
+	end
+	work.OnWork:Add("OnWork_Workstation")
+	work.OnComplete:Add("OnComplete_AnyPre")
+	work.OnComplete:Add("OnComplete_Workstation")
+	work.OnComplete:Add("OnComplete_AnyPost")
+	work.IsComplete = "IsComplete_Workstation"
+	work.IsReady = "IsReady_Workstation"
+	work.description = "Workstation"
+
+	--[[
+	for (string resourceName in j.recipe.resources.Keys) {
+        //(Tile tile, Action<Job> cbJobComplete, Action<Job> cbJobCancelled, JOB_TYPE type, string description, Recipe recipe, string name) {
+        Job nj = Job.MakeRecipeJob(j.tile, JOB_TYPE.HAUL, JOB_TYPE.HAUL.ToString(), j.recipe, resourceName, j);
+        nj.cbLuaRegisterJobComplete("JobQueue_HaulJobComplete");
+        nj.cbLuaRegisterJobCancelled("JobQueue_HaulJobCancelled");
+        Add(nj, nj.priority);
+        //publicJobs.Add(nj);
+
+
+        }
+
+	--  ]]
+
+	
+end
+
+
+function OnWork_Workstation(work,deltaTime) 
+	OnWork_InstalledItem(work,deltaTime)
+end
+
+function OnComplete_Workstation(work)
+	local products = work.recipe:GetProducts()
+	
+	for product in luanet.each(products) do 
+		--local product = products.Current
+
+
+		if (product.type == RECIPE_PRODUCT_TYPE.ROBOT) then
+			local tile = World.current:FindEmptyUnnoccupiedTile(work.workTile)
+			if (tile ~= nil) then
+				local res = World.current:CreateRobotAtTile(tile)
+				World.dbug("create robot = " .. tostring(res))
+			end
+
+
+		elseif (product.type == RECIPE_PRODUCT_TYPE.INVENTORY_ITEM) then
+			--how many	
+			local qty = math.random(product.qtyMin, product.qtyMax)
+			-- where
+			local tile = World.current:FindTileForInventoryItem(work.workTile,product.name, qty);
+
+			if (tile ~= nil) then
+				tile:AddToInventory(product.name,qty)
+			end
+		elseif (product.type == RECIPE_PRODUCT_TYPE.MONEY) then
+			amt = math.random() * (product.qtyMax - product.qtyMin) + product.qtyMin
+
+			WorldController.Instance:AddCurrency(amt)
+		
+
+		end
+
+	end
+
+
+
+end
+
+function IsComplete_Workstation(work)
+	if work.workTime <= 0 then
+		return true
+	else
+		return false
+	end
+
+end
+
+function IsReady_Workstation(work)
+	if (work:GetCountOfPrereqs() > 0) then
+		return false
+	else
+		return true
+	end
+end
+
+
 
 
 

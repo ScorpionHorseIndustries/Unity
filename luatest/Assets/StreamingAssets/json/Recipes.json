@@ -131,9 +131,15 @@
           "qty": 1
         }
       ],
-      "cash": true,
-      "minCash": 0.01,
-      "maxCash": 1.00
+	  "products" : [
+		{
+          "name": "money",
+          "qtyMin": 1,
+          "qtyMax": 5,
+          "chance": 1
+		  }
+		
+	  ]
     },
     {
       "name": "recipe::installed::atm::work",
@@ -145,9 +151,15 @@
           "qty": 1
         }
       ],
-      "cash": true,
-      "minCash": 1.0,
-      "maxCash": 10.00
+      "products" : [
+		{
+          "name": "money",
+          "qtyMin": 1,
+          "qtyMax": 10,
+          "chance": 1
+		  }
+		
+	  ]
 
     },
     {
@@ -186,7 +198,7 @@
       ],
       "products": [
         {
-          "name": "character::robot",
+          "name": "robot::basic",
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 1

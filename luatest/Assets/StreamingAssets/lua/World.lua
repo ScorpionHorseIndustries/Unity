@@ -32,17 +32,30 @@ function CheckStockpiles()
 			while spsList:MoveNext() do
 				local sps = spsList.Current
 				if ((inventory:TotalQty() == 0 or inventory:HowMany(sps.name) > 0) and sps.pendingWork == false) then
+					local tileQty = inventory:HowMany(sps.name)
+					
 
-					if (sps.currentQty < sps.maxQty) then
+					if (sps.currentQty < sps.maxQty and tileQty < sps.stackSize) then
 
+						local looseQty = World.current.inventoryManager:GetLooseQty(sps.name)
+						
 						local qtyWanted = sps.maxQty - sps.currentQty
 						if (qtyWanted > sps.stackSize) then
 							qtyWanted = sps.stackSize
 						end
 
-						toCreate[#toCreate+1] = {tile = inventory.tile, func = "SetHaul", name = sps.name, qty = qtyWanted}
-						sps.pendingWork = true
-						goto nextInventory
+						if (tileQty + qtyWanted > sps.stackSize) then
+							qtyWanted = sps.stackSize - tileQty
+						end
+
+						if (qtyWanted > looseQty) then
+							qtyWanted = looseQty
+						end
+						if (qtyWanted > 0) then
+							toCreate[#toCreate+1] = {tile = inventory.tile, func = "SetHaul", name = sps.name, qty = qtyWanted}
+							sps.pendingWork = true
+							goto nextInventory
+						end
 						--WorkItem.MakeWorkItem(inventory.tile,"SetHaul",sps.name,qtyWanted)
 
 

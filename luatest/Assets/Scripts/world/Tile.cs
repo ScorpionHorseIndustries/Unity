@@ -15,8 +15,6 @@ namespace NoYouDoIt.TheWorld {
     Action<Tile> cbChanged;
     Action<Tile> cbInventoryItemChanged;
     //Action<Tile> cbInventoryItemRemoved;
-
-
     public TileChunk chunk { get; protected set; }
     public Room room;
     //public Tile.TYPE type { get { return type; } set { type = value; if (cbTypeChanged != null) cbTypeChanged(this); } }

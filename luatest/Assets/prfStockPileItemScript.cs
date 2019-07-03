@@ -31,14 +31,16 @@ public class prfStockPileItemScript : MonoBehaviour {
     if (int.TryParse(stringValue, out i)) {
       intValue = i;
       stringValue = i.ToString();
+      
     } else if (stringValue == "all") {
-
+      intValue = 999;
     } else {
       intValue = 0;
       stringValue = intValue.ToString();
+      
     }
     inputField.text = stringValue;
-
+    this.stockPileSetting.maxQty = intValue;
   }
 
   public void OnEndEdit(string s) {

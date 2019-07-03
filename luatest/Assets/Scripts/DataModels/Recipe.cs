@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Linq;
 namespace NoYouDoIt.DataModels {
   using NoYouDoIt.Utils;
 
   public enum RECIPE_PRODUCT_TYPE {
     INVENTORY_ITEM,
-    CHARACTER
+    ROBOT,
+    MONEY
   }
   public class RecipeProduct {
     public string name { get; private set; }
@@ -22,12 +24,14 @@ namespace NoYouDoIt.DataModels {
       this.qtyMin = qtyMin;
       this.qtyMax = qtyMax;
       this.chance = chance;
-      if (name.Substring(0, 5) == "inv::") {
+      if (name.StartsWith("inv::")) {
         this.type = RECIPE_PRODUCT_TYPE.INVENTORY_ITEM;
-      } else if (name.Substring(0, 11) == "character::") {
-        this.type = RECIPE_PRODUCT_TYPE.CHARACTER;
+      } else if (name.StartsWith("robot::")) {
+        this.type = RECIPE_PRODUCT_TYPE.ROBOT;
+      } else if (name.StartsWith("money")) {
+        this.type = RECIPE_PRODUCT_TYPE.MONEY;
       }
-      Debug.Log("product added: " + this.ToString());
+      //Debug.Log("product added: " + this.ToString());
     }
 
     public override string ToString() {
@@ -151,30 +155,40 @@ namespace NoYouDoIt.DataModels {
 
     }
 
-    public RecipeProduct GetProduct() {
+    public List<RecipeProduct> GetProducts() {
       //List<string> prlist = new List<string>();
-
+      List<RecipeProduct> rpList = new List<RecipeProduct>();
       if (productChanceList == null) {
         productChanceList = new List<string>();
       }
 
       if (productChanceList.Count == 0) {
-        foreach (RecipeProduct rp in products.Values) {
+        foreach (RecipeProduct rp in products.Values.Where(e => e.chance < 1)) {
           for (int i = 0; i < rp.chance * 100; i += 1) {
             productChanceList.Add(rp.name);
             //Debug.Log(i + " " + rp.name + " " + prlist.Count);
           }
         }
+
       }
+
+      
+      rpList.AddRange(products.Values.Where(e => e.chance >= 1));
+      
 
       if (productChanceList.Count > 0) {
 
         string rpname = productChanceList[UnityEngine.Random.Range(0, productChanceList.Count)];
 
-        return products[rpname];
+        rpList.Add(products[rpname]);
       } else {
-        return null;
+        
       }
+
+
+      return rpList;//.ToArray();
+
+
 
 
     }
@@ -235,9 +249,6 @@ namespace NoYouDoIt.DataModels {
 
         recipe.products = new Dictionary<string, RecipeProduct>();
         recipe.resources = new Dictionary<string, RecipeResource>();
-        recipe.givesCash = Funcs.jsonGetBool(jRecipe["cash"], false);
-        recipe.minCash = Funcs.jsonGetFloat(jRecipe["minCash"], 0);
-        recipe.maxCash = Funcs.jsonGetFloat(jRecipe["maxCash"], 0);
         recipe.cost = Funcs.jsonGetFloat(jRecipe["cost"], 0);
         recipe.onDemand = Funcs.jsonGetBool(jRecipe["onDemand"], false);
         recipe.btnText = Funcs.jsonGetString(jRecipe["btnText"], "");

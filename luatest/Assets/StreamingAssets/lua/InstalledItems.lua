@@ -15,6 +15,30 @@ function Clamp01 (f)
 	return f
 end
 
+function OnUpdate_Plant(item, deltaTime) 
+
+	
+	local age = item.itemParameters:GetInt("age",0)
+	age = age + 1
+	local maxGrowthStage = item.itemParameters:GetInt("maxGrowthStage")
+	local growthStage = item:GetGrowthStage()
+
+	if (item.growthStage < maxGrowthStage) then
+
+		if (age > growthStage.length) then
+			item.growthStage = item.growthStage + 1
+			age = 0
+			if (item.cbOnChanged ~= nil) then
+				item.cbOnChanged(item)
+			end
+		end
+	end
+	item.itemParameters:SetInt("age", age)
+	
+	
+
+end
+
 function OnUpdate_Door(item, deltaTime) 
 	
 	opentime = item.itemParameters:GetFloat("opentime", 0.25)
@@ -41,25 +65,17 @@ function OnUpdate_Door(item, deltaTime)
 end
 
 function OnUpdate_Workstation(item, deltaTime) 
-    tile = item:GetWorkSpot()
+    local tile = item:GetWorkSpot()
+	World.dbug("item = " .. item.workRecipeName .. " " .. tile:ToString())
+	
 
-
-    if (tile.HasPendingJob == false) then
-      j = Job.MakeStandardJob(
-        tile,
-        --Workstation_JobComplete,
-        --Workstation_JobCancelled,
-        JOB_TYPE.WORK_AT_STATION,
-        1,
-        item.workRecipeName
-
-        )
-	  j:cbLuaRegisterJobComplete("OnJobComplete_Workstation")
-	  j:cbLuaRegisterJobCancelled("OnJobCancelled_Workstation")
-      world.current.jobQueue:Push(j)
+    if (tile.HasPendingWork == false) then
+		WorkItem.MakeWorkItem(tile,"SetWorkstation",item.workRecipeName, "abc", "def");
     end
 end
 
+
+--[[
 function OnJobComplete_Workstation(job)
 	InstalledItemActions.Workstation_JobComplete(job)
 end
@@ -68,10 +84,11 @@ function  OnJobCancelled_Workstation(job)
 	-- body
 	InstalledItemActions.Workstation_JobCancelled(job)
 end
+]]
 
 function OnUpdate_Stockpile(item, deltaTime) 
 
-	
+	--[[
 
     if (item.tile:IsInventoryEmpty() and not item.tile.HasPendingWork) then
 		
@@ -93,13 +110,13 @@ function OnUpdate_Stockpile(item, deltaTime)
       j.cancelIfReturned = true
 
       World.current.jobQueue:Push(j)
-	  ]]
+	  
     elseif (not item.tile:IsInventoryEmpty() and not item.tile.HasPendingWork) then
 
       itemName = item.tile:GetFirstInventoryItem()
       qtyRequired = InventoryItem.GetStackSize(itemName) - item.tile:InventoryTotal(itemName)
       nearest = World.current.inventoryManager:GetNearest(item.tile, itemName, false)
-	  --[[
+	  
       if (nearest ~= nil) then
         qtyRequired = math.min(qtyRequired, nearest:InventoryTotal(itemName))
 
@@ -118,9 +135,9 @@ function OnUpdate_Stockpile(item, deltaTime)
           World.current.jobQueue:Push(j)
         end
       end
-	  ]]
+	  
     end
-
+	]]
 end
 
 function OnEnterRequested_Door(item) 

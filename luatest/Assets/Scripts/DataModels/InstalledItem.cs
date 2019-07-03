@@ -8,20 +8,36 @@ using System.IO;
 using NoYouDoIt.Utils;
 using NoYouDoIt.TheWorld;
 using NoYouDoIt.Controller;
+using System.Linq;
 
 namespace NoYouDoIt.DataModels {
+
+  public class Growth {
+    public int stage;
+    public int length;
+    public string sprite;
+
+    public Growth(int stage, int length, string sprite) {
+      this.stage = stage;
+      this.length = length;
+      this.sprite = sprite;
+    }
+  }
   public class InstalledItem {
 
+    public Dictionary<int, Growth> growthStages;
     public static readonly string NONE = "installed::none";
 
-    public struct ProductOfWork {
-      string inv_name;
-      int minQty;
-      int maxQty;
-      float chance;
-    }
+    //public struct ProductOfWork {
+    //  string inv_name;
+    //  int minQty;
+    //  int maxQty;
+    //  float chance;
+    //}
 
     //-----------------------------------PROPERTIES-----------------------------------
+
+    public int growthStage = -1;
 
     public ItemParameters itemParameters;
     //public Action<InstalledItem, float> updateActions;
@@ -29,7 +45,7 @@ namespace NoYouDoIt.DataModels {
 
     //public Func<InstalledItem, Tile.CAN_ENTER> enterRequested;
     public string enterRequestedFunc;
-    public ProductOfWork[] products;
+    //public ProductOfWork[] products;
 
     public string niceName { get; private set; }
     public int prototypeId { get; private set; }
@@ -42,6 +58,7 @@ namespace NoYouDoIt.DataModels {
     public int height { get; private set; } = 1;
     public bool linksToNeighbour { get; private set; } = false;
     public string spriteName { get; private set; }
+    public string forcedSpriteName = null;
     public List<string> randomSprites = new List<string>();
     //List<Job> jobs;
     public Inventory inventory;
@@ -93,7 +110,7 @@ namespace NoYouDoIt.DataModels {
 
     }
 
-
+    
 
     private InstalledItem(World world, InstalledItem proto) {
 
@@ -129,6 +146,8 @@ namespace NoYouDoIt.DataModels {
       this.workRecipeName = proto.workRecipeName;
       this.isWorkstation = proto.isWorkstation;
       this.canSpawnOnTileTypeList = proto.canSpawnOnTileTypeList;
+      this.growthStages = proto.growthStages;
+      this.growthStage = proto.growthStage;
 
     }
 
@@ -175,6 +194,12 @@ namespace NoYouDoIt.DataModels {
 
     }
 
+    public Growth GetGrowthStage() {
+      if (growthStages.ContainsKey(growthStage)) {
+        return growthStages[growthStage];
+      }
+      return null;
+    }
 
 
 
@@ -545,6 +570,31 @@ namespace NoYouDoIt.DataModels {
           //Debug.Log("proto " + proto.type + " has " + proto.randomSprites.Count + " random sprites");
 
         }
+
+        JArray growth = Funcs.jsonGetArray(installedItemJson, "growth");
+        proto.growthStages = new Dictionary<int, Growth>();
+
+        if (growth != null) {
+          foreach (JObject growthStage in growth) {
+            int stage = Funcs.jsonGetInt(growthStage["stage"], -1);
+            int length = Funcs.jsonGetInt(growthStage["length"], -1);
+            string gSprite = Funcs.jsonGetString(growthStage["sprite"], null);
+
+            if (stage >= 0 && length > 0 && gSprite != null) {
+              proto.growthStages[stage] = new Growth(stage, length, gSprite);
+            }
+
+
+
+          }
+        }
+        if (proto.growthStages.Count > 0) {
+          proto.growthStage = 0;
+          proto.itemParameters.SetInt("maxGrowthStage", proto.growthStages.Values.Max(e => e.stage));
+        } else {
+          proto.growthStage = -1;
+        }
+        
 
         JArray parameters = Funcs.jsonGetArray(installedItemJson, "parameters");
         if (parameters != null) {

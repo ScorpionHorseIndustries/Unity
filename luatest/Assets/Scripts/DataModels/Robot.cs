@@ -204,7 +204,7 @@ namespace NoYouDoIt.DataModels {
 
       if (t == pos || t.IsNeighbour(pos, false)) {
         int qtyTaken = t.RemoveFromInventory(itemName, qty);
-        Debug.Log("qty actually removed:" + qtyTaken);
+        //Debug.Log("qty actually removed:" + qtyTaken);
         if (qtyTaken == 0) return false;
 
         int qtyAdded = inventory.AddItem(itemName, qtyTaken);

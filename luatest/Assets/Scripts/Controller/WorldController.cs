@@ -573,7 +573,12 @@ namespace NoYouDoIt.Controller {
       } else if (o.GetType() == typeof(InstalledItem)) {
         displayMe += "Installed Item: " + ((InstalledItem)o).niceName;
       } else if (o.GetType() == typeof(string)) {
-        displayMe += InventoryItem.GetPrototype(t.GetFirstInventoryItem()).niceName + ": " + t.InventoryTotal(((string)o));
+        string invname = t.GetFirstInventoryItem();
+        if (invname != null) {
+          string nicename = InventoryItem.GetPrototype(invname).niceName;
+          displayMe += Funcs.pad(20, ".", nicename) + t.InventoryTotal(invname).ToString();
+        }
+        //displayMe += InventoryItem.GetPrototype(t.GetFirstInventoryItem()).niceName + ": " + t.InventoryTotal(((string)o));
 
       }
       //displayMe += "\nNeighbours:" + t.neighbours.Count + ", " + t.edges.Count;

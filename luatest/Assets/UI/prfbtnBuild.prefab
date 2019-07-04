@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 11.85, y: 1.17}
-  m_SizeDelta: {x: -33.63, y: -8.59}
+  m_AnchoredPosition: {x: 11.91, y: -0}
+  m_SizeDelta: {x: -33.75, y: -5.48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2504077637929096637
 CanvasRenderer:
@@ -66,12 +66,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: e4a548480a2793e48ab4b6bb4f4aef50, type: 3}
+    m_Font: {fileID: 12800000, guid: 0a2314f81f99e6d42981d07c63aef29a, type: 3}
     m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 1
-    m_MaxSize: 30
+    m_MinSize: 6
+    m_MaxSize: 42
     m_Alignment: 3
     m_AlignByGeometry: 1
     m_RichText: 1
@@ -150,8 +150,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 01b53d743a66afe4590d724803b5254b, type: 3}
-  m_Type: 2
+  m_Sprite: {fileID: 21300000, guid: 4d0e91ea9be86344f8746d4496b8a20e, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -261,6 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4bb0d929a61af45905f21548ec72d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  recipeData: []
 --- !u!1 &6714751501905262590
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,7 +296,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 15.37, y: 1.57}
+  m_AnchoredPosition: {x: 15.370003, y: 0}
   m_SizeDelta: {x: 23.91, y: 22.21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1257411522252506697

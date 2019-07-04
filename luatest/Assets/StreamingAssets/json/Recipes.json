@@ -131,15 +131,15 @@
           "qty": 1
         }
       ],
-	  "products" : [
-		{
+      "products": [
+        {
           "name": "money",
           "qtyMin": 1,
           "qtyMax": 5,
           "chance": 1
-		  }
-		
-	  ]
+        }
+
+      ]
     },
     {
       "name": "recipe::installed::atm::work",
@@ -151,15 +151,15 @@
           "qty": 1
         }
       ],
-      "products" : [
-		{
+      "products": [
+        {
           "name": "money",
           "qtyMin": 1,
           "qtyMax": 10,
           "chance": 1
-		  }
-		
-	  ]
+        }
+
+      ]
 
     },
     {
@@ -185,7 +185,7 @@
       "buildTime": 3,
       "cost": 150,
       "onDemand": true,
-      "btnText" :  "Build Robot",
+      "btnText": "Build Robot",
       "resources": [
         {
           "name": "inv::steel_plates",
@@ -207,20 +207,157 @@
       ]
 
     },
-	{
+    {
       "name": "recipe::installed::tree::build",
       "id": 14,
       "buildTime": 1,
       "cost": 0,
       "resources": [
+
+      ]
+
+    },
+    {
+      "name": "recipe::installed::wall::decon",
+      "id": 15,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        },
+        {
+          "name": "inv::stone_slabs",
+          "qtyMin": 0,
+          "qtyMax": 4,
+          "chance": 0.7
+        }
+      ]
+    },
+    {
+      "name": "recipe::installed::organic_trash::decon",
+      "id": 16,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::organic_trash",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        },
+        {
+          "name": "inv::wallet",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.7
+        }
+      ]
+    },
+    {
+      "name": "recipe::installed::atm::decon",
+      "id": 17,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 3,
+          "chance": 1
+        }
+      ]
+    },
+    {
+      "name": "recipe::installed::recycler::decon",
+      "id": 18,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 3,
+          "chance": 1
+        }
+      ]
+    },
+    {
+      "name": "recipe::installed::stockpile::decon",
+      "id": 19,
+      "buildTime": 1,
+      "products": []
+    },
+    {
+      "name": "recipe::installed::crate::decon",
+      "id": 20,
+      "buildTime": 1,
+      "products": [
         {
           "name": "inv::wood_planks",
-          "qty": 8
+          "qtyMin": 1,
+          "qtyMax": 3,
+          "chance": 1
+        }
+      ]
+    },
+
+    {
+      "name": "recipe::installed::mining_controller::decon",
+      "id": 21,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 6,
+          "chance": 1
         },
-		{
-			"name" : "inv::sapling",
-			"qty" : 4
-		}
+        {
+          "name": "inv::copper_plates",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        }
+      ]
+    },
+
+    {
+      "name": "recipe::installed::robo_pod::decon",
+      "id": 22,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 6,
+          "chance": 1
+        },
+        {
+          "name": "inv::copper_plates",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        }
+      ]
+    },
+    {
+      "name": "recipe::installed::tree::decon",
+      "id": 23,
+      "buildTime": 1,
+      "cost": 0,
+      "products": [
+        {
+          "name": "inv::wood_planks",
+          "qtyMin": 1,
+          "qtyMax": 4,
+          "chance": 1
+        },
+        {
+          "name": "inv::sapling",
+          "qtyMin": 1,
+          "qtyMax": 4,
+          "chance": 0.5
+        }
       ]
 
     }

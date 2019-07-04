@@ -17,6 +17,7 @@ namespace NoYouDoIt.DataModels {
     public int qtyMin { get; private set; }
     public int qtyMax { get; private set; }
     public float chance { get; private set; }
+    public float outputQty { get; private set; }
     public RECIPE_PRODUCT_TYPE type { get; private set; }
 
     public RecipeProduct(string name, int qtyMin, int qtyMax, float chance) {
@@ -34,6 +35,23 @@ namespace NoYouDoIt.DataModels {
       //Debug.Log("product added: " + this.ToString());
     }
 
+    private void SetOutput() {
+      if (UnityEngine.Random.Range(0,1) < chance) {
+        switch (type) {
+          case RECIPE_PRODUCT_TYPE.ROBOT:
+          case RECIPE_PRODUCT_TYPE.INVENTORY_ITEM:
+            outputQty = Mathf.FloorToInt(UnityEngine.Random.Range((int)qtyMin, (int)qtyMax + 1));          
+            break;
+          case RECIPE_PRODUCT_TYPE.MONEY:
+            outputQty = UnityEngine.Random.Range(qtyMin, qtyMax);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+
+
     public override string ToString() {
       return string.Format("{0}:t{1}:q{2}-{3}@{4}%", name, type.ToString(), qtyMin, qtyMax, chance * 100);
     }
@@ -44,6 +62,7 @@ namespace NoYouDoIt.DataModels {
       this.qtyMax = o.qtyMax;
       this.chance = o.chance;
       this.type = o.type;
+      SetOutput();
     }
 
   }
@@ -158,33 +177,13 @@ namespace NoYouDoIt.DataModels {
     public List<RecipeProduct> GetProducts() {
       //List<string> prlist = new List<string>();
       List<RecipeProduct> rpList = new List<RecipeProduct>();
-      if (productChanceList == null) {
-        productChanceList = new List<string>();
-      }
 
-      if (productChanceList.Count == 0) {
-        foreach (RecipeProduct rp in products.Values.Where(e => e.chance < 1)) {
-          for (int i = 0; i < rp.chance * 100; i += 1) {
-            productChanceList.Add(rp.name);
-            //Debug.Log(i + " " + rp.name + " " + prlist.Count);
-          }
-        }
-
-      }
-
-      
-      rpList.AddRange(products.Values.Where(e => e.chance >= 1));
-      
-
-      if (productChanceList.Count > 0) {
-
-        string rpname = productChanceList[UnityEngine.Random.Range(0, productChanceList.Count)];
-
-        rpList.Add(products[rpname]);
-      } else {
+      foreach (RecipeProduct rp in products.Values) {
+        RecipeProduct nrp = new RecipeProduct(rp);
         
-      }
+        rpList.Add(nrp);
 
+      }
 
       return rpList;//.ToArray();
 

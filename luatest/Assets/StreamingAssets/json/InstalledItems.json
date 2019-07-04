@@ -17,7 +17,8 @@
       "trash": false,
       "build": true,
       "enclosesRoom": true,
-      "recipe": "recipe::installed::wall::build"
+      "recipe": "recipe::installed::wall::build",
+      "deconstructRecipe": "recipe::installed::wall::decon"
 
     },
     {
@@ -28,12 +29,13 @@
       "movementFactor": 0.8,
       "linked": false,
       "trash": true,
-	  "trashSpawnChance" : 0.3,
+      "trashSpawnChance": 0.3,
       "build": false,
       "randomRotation": true,
       "enclosesRoom": false,
       "recipe": "recipe::installed::organic_trash::build",
-	  "paletteSwap" : true
+      "deconstructRecipe": "recipe::installed::organic_trash::decon",
+      "paletteSwap": true
 
     },
     {
@@ -41,7 +43,7 @@
       "name": "installed::atm",
       "niceName": "ATM",
       "sprite": "installed_items::atm_0",
-      "sprites": [ "installed_items::atm_0", "installed_items::atm_1","installed_items::atm_2","installed_items::atm_3"],
+      "sprites": [ "installed_items::atm_0", "installed_items::atm_1", "installed_items::atm_2", "installed_items::atm_3" ],
       "movementFactor": 0.5,
       "linked": false,
       "trash": false,
@@ -54,7 +56,8 @@
       "height": 2,
       "workRecipe": "recipe::installed::atm::work",
       "workstation": true,
-      "updateAction": "OnUpdate_Workstation"
+      "updateAction": "OnUpdate_Workstation",
+      "deconstructRecipe": "recipe::installed::atm::decon"
 
     },
     {
@@ -75,7 +78,8 @@
       "height": 2,
       "workRecipe": "recipe::installed::recycler::work",
       "workstation": true,
-      "updateAction": "OnUpdate_Workstation"
+      "updateAction": "OnUpdate_Workstation",
+      "deconstructRecipe": "recipe::installed::recycler::decon"
 
     },
     {
@@ -96,8 +100,9 @@
       "neighbour_nesw": "installed_items::door_0",
       "enclosesRoom": true,
       "recipe": "recipe::installed::door::build",
+      "deconstructRecipe": "recipe::installed::door::decon",
       "updateAction": "OnUpdate_Door",
-      "onEnterRequested" :  "OnEnterRequested_Door",
+      "onEnterRequested": "OnEnterRequested_Door",
       "parameters": [
         {
           "name": "openness",
@@ -126,6 +131,7 @@
       "neighbourTypes": [],
       "enclosesRoom": false,
       "recipe": "recipe::installed::stockpile::build",
+      "deconstructRecipe": "recipe::installed::stockpile::decon",
       "inventorySlots": 1,
       "updateActionCountDown": 2,
       "updateAction": "OnUpdate_Stockpile"
@@ -144,6 +150,7 @@
       "neighbourTypes": [],
       "enclosesRoom": false,
       "recipe": "recipe::installed::crate::build",
+      "deconstructRecipe": "recipe::installed::crate::decon",
       "inventorySlots": 0,
       "width": 2,
       "height": 2
@@ -162,6 +169,7 @@
       "neighbourTypes": [],
       "enclosesRoom": false,
       "recipe": "recipe::installed::mining_controller::build",
+      "deconstructRecipe": "recipe::installed::mining_controller::decon",
       "inventorySlots": 0,
       "width": 3,
       "height": 3,
@@ -185,6 +193,7 @@
       "neighbourTypes": [],
       "enclosesRoom": false,
       "recipe": "recipe::installed::robo_pod::build",
+      "deconstructRecipe": "recipe::installed::robo_pod::decon",
       "inventorySlots": 0,
       "width": 2,
       "height": 3,
@@ -194,7 +203,7 @@
 
 
     },
-	    {
+    {
       "id": 10,
       "name": "installed::tree",
       "niceName": "Tree",
@@ -203,51 +212,52 @@
       "linked": false,
       "movementFactor": 0.5,
       "trash": true,
-	  "trashSpawnChance" : 0.7,
-	  "canSpawnOn" : ["grass", "dirt"],
+      "trashSpawnChance": 0.7,
+      "canSpawnOn": [ "grass", "dirt" ],
       "build": false,
       "neighbourTypes": [],
       "enclosesRoom": false,
       "recipe": "recipe::installed::tree::build",
+      "deconstructRecipe": "recipe::installed::tree::decon",
       "inventorySlots": 0,
       "width": 1,
       "height": 2,
-	  "updateAction": "OnUpdate_Plant",
-	  "updateActionCountDown": 30,
-	  "updateActionCountDownRange" : 5,
-	  "growth" : [
-		{
-			"stage" : 0,
-			"length" : 2,
-			"sprite" : "installed_items::tree_sapling_0"
-		},
-		{
-			"stage" : 1,
-			"length" : 2,
-			"sprite" : "installed_items::tree_sapling_1"
-		},
-		{
-			"stage" : 2,
-			"length" : 2,
-			"sprite" : "installed_items::tree_sapling_2"
-		},
-		{
-			"stage" : 3,
-			"length" : 3,
-			"sprite" : "installed_items::tree_sapling_3"
-		},
-		{
-			"stage" : 4,
-			"length" : 4,
-			"sprite" : "installed_items::tree_mature_0"
-		},
-		{
-			"stage" : 5,
-			"length" : 4,
-			"sprite" : "installed_items::tree_mature_1"
-		}
-		
-	  ]
+      "updateAction": "OnUpdate_Plant",
+      "updateActionCountDown": 30,
+      "updateActionCountDownRange": 5,
+      "growth": [
+        {
+          "stage": 0,
+          "length": 2,
+          "sprite": "installed_items::tree_sapling_0"
+        },
+        {
+          "stage": 1,
+          "length": 2,
+          "sprite": "installed_items::tree_sapling_1"
+        },
+        {
+          "stage": 2,
+          "length": 2,
+          "sprite": "installed_items::tree_sapling_2"
+        },
+        {
+          "stage": 3,
+          "length": 3,
+          "sprite": "installed_items::tree_sapling_3"
+        },
+        {
+          "stage": 4,
+          "length": 4,
+          "sprite": "installed_items::tree_mature_0"
+        },
+        {
+          "stage": 5,
+          "length": 4,
+          "sprite": "installed_items::tree_mature_1"
+        }
+
+      ]
 
     }
 

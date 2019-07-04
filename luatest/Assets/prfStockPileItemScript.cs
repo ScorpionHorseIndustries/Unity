@@ -78,12 +78,21 @@ public class prfStockPileItemScript : MonoBehaviour {
   }
 
   public void Increment() {
-    intValue += 1;
+    int f = 1;
+    if (Input.GetKey(KeyCode.LeftShift)) {
+      f = 8;
+    }
+    intValue += f * 1;
     OnValueChanged(intValue.ToString());
   }
 
   public void Decrement() {
-    intValue -= 1;
+    int f = 1;
+
+    if (Input.GetKey(KeyCode.LeftShift)) {
+      f = 8;
+    }
+    intValue -= f * 1;
     if (intValue < 0) {
       intValue = 0;
     }

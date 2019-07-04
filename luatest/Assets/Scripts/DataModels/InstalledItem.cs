@@ -63,6 +63,7 @@ namespace NoYouDoIt.DataModels {
     //List<Job> jobs;
     public Inventory inventory;
     public Recipe recipe { get; private set; }
+
     public bool paletteSwap { get; private set; }
     public float trashSpawnChance { get; private set; }
     public List<string> canSpawnOnTileTypeList { get; private set; }
@@ -88,6 +89,7 @@ namespace NoYouDoIt.DataModels {
     public float updateActionCountDownMax { get; private set; }
     public float updateActionCountDownRange { get; private set; }
     public string workRecipeName { get; private set; }
+    public string deconRecipeName { get; private set; }
     public bool isWorkstation { get; private set; } = false;
 
     //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
@@ -150,6 +152,7 @@ namespace NoYouDoIt.DataModels {
       this.canSpawnOnTileTypeList = proto.canSpawnOnTileTypeList;
       this.growthStages = proto.growthStages;
       this.growthStage = proto.growthStage;
+      this.deconRecipeName = proto.deconRecipeName;
 
     }
 
@@ -303,12 +306,24 @@ namespace NoYouDoIt.DataModels {
     public void Deconstruct() {
       Inventory inventory = new Inventory(World.current, 99, INVENTORY_TYPE.NONE, this.tile);
 
-      Recipe recipe = GetRecipe(this.type);
+      Recipe recipe = Recipe.GetRecipe(this.deconRecipeName);//GetRecipe(this.type);
+      List<RecipeProduct> prods = recipe.GetProducts();
+      foreach (RecipeProduct rp in prods) {
 
-      foreach (RecipeResource rr in recipe.resources.Values) {
-        int qty = Mathf.CeilToInt((float)rr.qtyRequired / 2.0f);
+        switch (rp.type) {
+          case RECIPE_PRODUCT_TYPE.ROBOT:
+            break;
+          case RECIPE_PRODUCT_TYPE.INVENTORY_ITEM:
+            inventory.AddItem(rp.name, (int)rp.outputQty);
+            break;
+          case RECIPE_PRODUCT_TYPE.MONEY:
+            WorldController.Instance.AddCurrency(rp.outputQty);
+            break;
+          default:
+            break;
+        }
 
-        inventory.AddItem(rr.name, qty);
+        
 
         //Debug.Log("Added: " +  + " of " + rr.name);
       }
@@ -484,6 +499,7 @@ namespace NoYouDoIt.DataModels {
         string workRecipeName = Funcs.jsonGetString(installedItemJson["workRecipe"], "");
         bool paletteSwap = Funcs.jsonGetBool(installedItemJson["paletteSwap"], false);
         float trashSpawnChance = Funcs.jsonGetFloat(installedItemJson["trashSpawnChance"], 0);
+        string deconRecipeName = Funcs.jsonGetString(installedItemJson["deconstructRecipe"], null);
 
         JArray jsonCanSpawnOn = Funcs.jsonGetArray(installedItemJson, "canSpawnOn");
         List<string> canSpawnOn = new List<string>();
@@ -550,6 +566,7 @@ namespace NoYouDoIt.DataModels {
         proto.paletteSwap = paletteSwap;
         proto.trashSpawnChance = trashSpawnChance;
         proto.canSpawnOnTileTypeList = canSpawnOn;
+        proto.deconRecipeName = deconRecipeName;
         //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
         //Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);

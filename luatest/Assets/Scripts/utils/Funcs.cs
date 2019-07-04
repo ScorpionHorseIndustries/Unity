@@ -9,6 +9,28 @@ using System.IO.Compression;
 using NoYouDoIt.TheWorld;
 namespace NoYouDoIt.Utils {
   public static class Funcs {
+
+    public static string pad(int width, string padding, params string[] args) {
+      string output = "";
+      if (padding.Length > 1) {
+        padding = padding.Substring(0, 1);
+      }
+
+      foreach(string s in args) {
+        string ss = s;
+        if (ss.Length > width) {
+          ss = s.Substring(0, width);
+        } else {
+          while (ss.Length < width) {
+            ss += padding;
+          }
+        }
+        output += ss;
+      }
+
+      return output;
+    }
+
     public static string getSpriteName(string name) {
       name = name.Replace(':', '_');
 

@@ -976,7 +976,7 @@ import 'NoYouDoIt.DataModels'
 
     }
 
-    public InstalledItem PlaceInstalledItem(string buildItem, Tile tile) {
+    public InstalledItem PlaceInstalledItem(string buildItem, Tile tile, bool spawn = false) {
       if (buildItem == null) return null;
       ///TODO: Assumes 1x1 tiles
       ///with no rotation
@@ -988,7 +988,7 @@ import 'NoYouDoIt.DataModels'
         Debug.LogError("no prototype for InstalledItem of type \"" + buildItem + "\"");
 
       } else {
-        InstalledItem inst = InstalledItem.CreateInstance(this, proto, tile);
+        InstalledItem inst = InstalledItem.CreateInstance(this, proto, tile, spawn);
         if (inst != null) {
           if (cbInstalledItem != null) {
             cbInstalledItem(inst);

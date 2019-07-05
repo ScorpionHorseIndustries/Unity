@@ -10,6 +10,35 @@ using NoYouDoIt.TheWorld;
 namespace NoYouDoIt.Utils {
   public static class Funcs {
 
+
+    public static string PadPair(int width, string property, string value, char padding) {
+      string output = "";
+
+      string p = property;
+      if (p.Length > width /2) {
+        p = p.Substring(0, width/2);
+      }
+
+      string pad = "";
+
+      string v = value;
+
+      if (v.Length > width / 2) {
+        v = v.Substring(0, width / 2);
+      }
+      
+      while ((p + pad + v).Length < width) {
+        pad += padding;
+      }
+
+
+      output = p + pad + v;
+
+      //Debug.Log("padpair " + output + ", " + output.Length);
+
+      return output;
+    }
+
     public static string pad(int width, string padding, params string[] args) {
       string output = "";
       if (padding.Length > 1) {

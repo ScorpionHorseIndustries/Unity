@@ -87,7 +87,7 @@ namespace NoYouDoIt.TheWorld {
                   }
 
                   //Debug.Log("I will spawn a " + (trashItemName == null ? "null" : trashItemName));
-                  world.PlaceInstalledItem(trashItemName, t);
+                  world.PlaceInstalledItem(trashItemName, t, true);
                 }
 
               }

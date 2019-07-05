@@ -11,7 +11,7 @@
         },
         {
           "name": "inv::stone_slabs",
-          "qty": 4
+          "qty": 2
         }
       ]
     },
@@ -213,7 +213,10 @@
       "buildTime": 1,
       "cost": 0,
       "resources": [
-
+			{
+				"name" : "inv::sapling",
+				"qty" : 1
+			}
       ]
 
     },
@@ -347,7 +350,7 @@
       "cost": 0,
       "products": [
         {
-          "name": "inv::wood_planks",
+          "name": "inv::wood_logs",
           "qtyMin": 1,
           "qtyMax": 4,
           "chance": 1
@@ -357,6 +360,21 @@
           "qtyMin": 1,
           "qtyMax": 4,
           "chance": 0.5
+        }
+      ]
+
+    },
+    {
+      "name": "recipe::installed::sapling::decon",
+      "id": 24,
+      "buildTime": 0.5,
+      "cost": 0,
+      "products": [
+        {
+          "name": "inv::sapling",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
         }
       ]
 

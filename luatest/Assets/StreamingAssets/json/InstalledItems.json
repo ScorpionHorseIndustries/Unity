@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "installed::wall",
-      "niceName": "Wall",
+      "niceName": "wall",
       "sprite": "installed_items::walls_none",
       "sprites": [],
       "linked": true,
@@ -24,7 +24,7 @@
     {
       "id": 2,
       "name": "installed::organic_trash",
-      "niceName": "Organic Trash",
+      "niceName": "organic trash",
       "sprite": "installed_items::corpse",
       "movementFactor": 0.8,
       "linked": false,
@@ -41,7 +41,7 @@
     {
       "id": 3,
       "name": "installed::atm",
-      "niceName": "ATM",
+      "niceName": "atm",
       "sprite": "installed_items::atm_0",
       "sprites": [ "installed_items::atm_0", "installed_items::atm_1", "installed_items::atm_2", "installed_items::atm_3" ],
       "movementFactor": 0.5,
@@ -63,7 +63,7 @@
     {
       "id": 4,
       "name": "installed::recycler",
-      "niceName": "Recycler",
+      "niceName": "recycler",
       "sprite": "installed_items::recycler_0",
       "sprites": [],
       "movementFactor": 0.5,
@@ -85,7 +85,7 @@
     {
       "id": 5,
       "name": "installed::door",
-      "niceName": "Door",
+      "niceName": "door",
       "sprite": "installed_items::door_0",
       "sprites": [],
       "linked": true,
@@ -121,7 +121,7 @@
     {
       "id": 6,
       "name": "installed::stockpile",
-      "niceName": "Stockpile",
+      "niceName": "stockpile",
       "sprite": "installed_items::stockpile",
       "sprites": [],
       "linked": false,
@@ -140,7 +140,7 @@
     {
       "id": 7,
       "name": "installed::crate",
-      "niceName": "Crate",
+      "niceName": "crate",
       "sprite": "installed_items::crate_0",
       "sprites": [ "installed_items::crate_0", "installed_items::crate_1", "installed_items::crate_2", "installed_items::crate_3" ],
       "linked": false,
@@ -159,7 +159,7 @@
     {
       "id": 8,
       "name": "installed::mining_controller",
-      "niceName": "Mining Controller",
+      "niceName": "mining controller",
       "sprite": "installed_items::mining_controller",
       "sprites": [],
       "linked": false,
@@ -183,7 +183,7 @@
     {
       "id": 9,
       "name": "installed::robo_pod",
-      "niceName": "Robo Pod",
+      "niceName": "robo pod",
       "sprite": "installed_items::robo_pod",
       "sprites": [],
       "linked": false,
@@ -206,7 +206,7 @@
     {
       "id": 10,
       "name": "installed::tree",
-      "niceName": "Tree",
+      "niceName": "tree",
       "sprite": "installed_items::tree_sapling_0",
       "sprites": [],
       "linked": false,
@@ -214,7 +214,7 @@
       "trash": true,
       "trashSpawnChance": 0.7,
       "canSpawnOn": [ "grass", "dirt" ],
-      "build": false,
+      "build": true,
       "neighbourTypes": [],
       "enclosesRoom": false,
       "recipe": "recipe::installed::tree::build",
@@ -222,6 +222,8 @@
       "inventorySlots": 0,
       "width": 1,
       "height": 2,
+	  "x_clearance" : 1,
+	  "y_clearance" : 1,
       "updateAction": "OnUpdate_Plant",
       "updateActionCountDown": 30,
       "updateActionCountDownRange": 5,
@@ -229,32 +231,38 @@
         {
           "stage": 0,
           "length": 2,
-          "sprite": "installed_items::tree_sapling_0"
+          "sprite": "installed_items::tree_sapling_0",
+          "deconstructRecipe": "recipe::installed::sapling::decon"
         },
         {
           "stage": 1,
           "length": 2,
-          "sprite": "installed_items::tree_sapling_1"
+          "sprite": "installed_items::tree_sapling_1",
+          "deconstructRecipe": "recipe::installed::sapling::decon"
         },
         {
           "stage": 2,
           "length": 2,
-          "sprite": "installed_items::tree_sapling_2"
+          "sprite": "installed_items::tree_sapling_2",
+          "deconstructRecipe": "recipe::installed::sapling::decon"
         },
         {
           "stage": 3,
           "length": 3,
-          "sprite": "installed_items::tree_sapling_3"
+          "sprite": "installed_items::tree_sapling_3",
+          "deconstructRecipe": "recipe::installed::sapling::decon"
         },
         {
           "stage": 4,
           "length": 4,
-          "sprite": "installed_items::tree_mature_0"
+          "sprite": "installed_items::tree_mature_0",
+		  "deconstructRecipe": "recipe::installed::tree::decon"
         },
         {
           "stage": 5,
           "length": 4,
-          "sprite": "installed_items::tree_mature_1"
+          "sprite": "installed_items::tree_mature_1",
+		  "deconstructRecipe": "recipe::installed::tree::decon"
         }
 
       ]

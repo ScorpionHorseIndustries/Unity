@@ -19,13 +19,22 @@ public class scrUIBuildMenu : MonoBehaviour {
     if (o.pointerEnter.GetComponent<Button>() != null) {
       scrBtnBuildRecipeData rec = o.pointerEnter.GetComponent<scrBtnBuildRecipeData>();
 
+
+
       WorldController.Instance.UpdateRecipe(rec.ToString());
     }
 
   }
 
-  
 
+  void AddButtonEvent(Button btn, UnityEngine.Events.UnityAction<BaseEventData> call) {
+    EventTrigger trig = btn.GetComponent<EventTrigger>();
+    EventTrigger.Entry entry = new EventTrigger.Entry();
+    entry.eventID = EventTriggerType.PointerEnter;
+    entry.callback.AddListener(call);
+    trig.triggers.Add(entry);
+
+  }
 
   void Start() {
 
@@ -44,15 +53,18 @@ public class scrUIBuildMenu : MonoBehaviour {
 
 
       Button btn = MakeButton(proto);
-
-      EventTrigger trig = btn.GetComponent<EventTrigger>();
-      EventTrigger.Entry entry = new EventTrigger.Entry();
-      entry.eventID = EventTriggerType.PointerEnter;
-      entry.callback.AddListener(data => { scrUIBuildMenu.UpdateRecipe((PointerEventData)data); });
-      trig.triggers.Add(entry);
+      AddButtonEvent(btn,
+        data => { scrUIBuildMenu.UpdateRecipe((PointerEventData)data); }
+        );
+      //EventTrigger trig = btn.GetComponent<EventTrigger>();
+      //EventTrigger.Entry entry = new EventTrigger.Entry();
+      //entry.eventID = EventTriggerType.PointerEnter;
+      //entry.callback.AddListener(data => { scrUIBuildMenu.UpdateRecipe((PointerEventData)data); });
+      //trig.triggers.Add(entry);
 
       scrBtnBuildRecipeData recipeData = btn.GetComponent<scrBtnBuildRecipeData>();
       if (recipeData != null) {
+        recipeData.AddKeyValuePair("name", proto.niceName);
         recipeData.AddRecipe(proto.recipe);
       }
 
@@ -71,6 +83,16 @@ public class scrUIBuildMenu : MonoBehaviour {
         btn.transform.localScale = Vector2.one;
         SetButtonSprite(btn, proto.spriteName + NYDISpriteManager.ICON_SUFFIX);
 
+        AddButtonEvent(btn,
+              data => { scrUIBuildMenu.UpdateRecipe((PointerEventData)data); }
+            );
+
+        recipeData = btn.GetComponent<scrBtnBuildRecipeData>();
+        if (recipeData != null) {
+          recipeData.AddKeyValuePair("name", r.btnText);
+          recipeData.AddRecipe(r);
+          
+        }
       }
 
     }
@@ -102,21 +124,21 @@ public class scrUIBuildMenu : MonoBehaviour {
   private Button MakeButton(InstalledItem proto) {
     Button btn = MakeButton("btnBuild::" + proto.type, proto.niceName, proto.spriteName + NYDISpriteManager.ICON_SUFFIX);
     btn.onClick.AddListener(delegate { WorldController.Instance.SetBuildType_InstalledItem(proto.type); });
-    
+
     return btn;
   }
 
   private static void SetButtonSprite(Button btn, string spriteName) {
     Sprite sprite = WorldController.Instance.spriteController.GetSprite(spriteName);
     Image img = btn.GetComponentsInChildren<Image>().Where(e => e.transform.parent != btn.transform.parent).First(); //get the image from a child, not the current object
-    if (img != null ) {
+    if (img != null) {
       if (sprite == null || spriteName == null) {
         img.color = Color.clear;
       } else {
         img.sprite = sprite;
       }
     } else {
-      
+
     }
   }
 

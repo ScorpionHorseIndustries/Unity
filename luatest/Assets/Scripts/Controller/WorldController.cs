@@ -22,7 +22,7 @@ namespace NoYouDoIt.Controller {
 
   public class WorldController : MonoBehaviour {
     public float interestRate { get; private set; } = 0.001f;
-    MarketSim interestRateMarket;
+    MarketSimv2 interestRateMarket;
     [SerializeField]
     public Color positiveBalanceColour;
     public Color negativeBalanceColour;
@@ -83,6 +83,9 @@ namespace NoYouDoIt.Controller {
     public SoundController soundController;
     //public TrashController trashController;
     private List<GameObject> controllers = new List<GameObject>();
+
+    public Canvas UICanvas;
+    public Canvas WorldCanvas;
 
     private float countdown = 2f;
     public float money { get; private set; } = 0;
@@ -253,7 +256,7 @@ namespace NoYouDoIt.Controller {
 
     public void Init() {
       CreateControllers();
-      interestRateMarket = new MarketSim(10, 0.001f, 0.1f);
+      interestRateMarket = new MarketSimv2(0.001f, 0.1f);
       TileType.LoadFromFile();
 
       Tiles_GO_Map = new Dictionary<Tile, GameObject>();
@@ -466,15 +469,18 @@ namespace NoYouDoIt.Controller {
     }
 
     private void UpdateMoney() {
-
-      interestRate = interestRateMarket.GetValue();
+      
+      interestRate = interestRateMarket.GetNextValue();
 
       money = money + (money * (interestRate / 100f));//Mathf.Pow((1f + (((interestRate) / 100f) / SECONDS_PER_DAY)), SECONDS_PER_DAY);
                                                       //+ (money * interestRate * Time.deltaTime);
 
 
       Text t = cashText.GetComponent<Text>();
-      t.text = string.Format("{0:00.00} {1:0.00000}", money, interestRate);
+
+      t.text = Funcs.PadPair(20, "money",string.Format("{0:00.00}", money), '.');
+      t.text += "\n" + Funcs.PadPair(20, "interest", string.Format("{0:0.000}", 100.0 * interestRate), '.');
+      
       if (money < 0) {
         t.color = negativeBalanceColour;
       } else {
@@ -502,7 +508,7 @@ namespace NoYouDoIt.Controller {
 
       for (int i = tempText.Count - 1; i >= 0; i -= 1) {
         GameObject go = tempText[i];
-        SetSortingLayer ssl = go.GetComponent<SetSortingLayer>();
+        SetSortingLayer ssl = go.GetComponentInChildren<SetSortingLayer>();
         float a = Mathf.Sin(ssl.lifeTime);
         go.transform.Translate(0, 0.1f * a, 0);
         ssl.lifeTime -= Time.deltaTime;
@@ -560,23 +566,30 @@ namespace NoYouDoIt.Controller {
       Tile t = info.tile;
       object o = info.contents[info.subSelect];
 
-
+      int pw = 38;
+      
       string displayMe = "";
 
 
-      displayMe += "Chunk: (" + t.chunk.x + "," + t.chunk.y + ")\nworld:(" + t.world_x + "," + t.world_y + ")";
+      displayMe += Funcs.PadPair(pw, "chunk x", t.chunk.x.ToString(), '.');
+      displayMe += "\n" + Funcs.PadPair(pw, "chunk y", t.chunk.y.ToString(), '.');
+      displayMe += "\n" + Funcs.PadPair(pw, "world x", t.world_x.ToString(), '.'); 
+      displayMe += "\n" + Funcs.PadPair(pw, "world y", t.world_y.ToString(), '.'); 
+      
+        
+        
       displayMe += "\n";
       if (o.GetType() == typeof(Tile)) {
-        displayMe += "Tile Type: " + ((Tile)o).type;
+        displayMe += Funcs.PadPair(pw, "tile type", ((Tile)o).type.name, '.');
       } else if (o.GetType() == typeof(Robot)) {
-        displayMe += "Robot: " + ((Robot)o).name;
+        displayMe += Funcs.PadPair(pw, "robot",((Robot)o).name, '.');
       } else if (o.GetType() == typeof(InstalledItem)) {
-        displayMe += "Installed Item: " + ((InstalledItem)o).niceName;
+        displayMe += Funcs.PadPair(pw, "installed item", ((InstalledItem)o).niceName, '.');
       } else if (o.GetType() == typeof(string)) {
         string invname = t.GetFirstInventoryItem();
         if (invname != null) {
           string nicename = InventoryItem.GetPrototype(invname).niceName;
-          displayMe += Funcs.pad(20, ".", nicename) + t.InventoryTotal(invname).ToString();
+          displayMe += Funcs.PadPair(pw, nicename, t.InventoryTotal(invname).ToString(), '.');
         }
         //displayMe += InventoryItem.GetPrototype(t.GetFirstInventoryItem()).niceName + ": " + t.InventoryTotal(((string)o));
 
@@ -800,7 +813,7 @@ namespace NoYouDoIt.Controller {
         GameObject go = CreateGameObject("inv_" + tile.world_x + "," + tile.world_y + "_" + tile.GetContents(), tile.world_x, tile.world_y, true);
         SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
         spr.sprite = spriteController.GetSprite(tile.GetInventorySpriteName());
-        spr.sortingLayerName = "Objects";
+        spr.sortingLayerName = "LooseItems";
         if (InventoryItem.GetStackSize(tile.GetFirstInventoryItem()) > 1) {
           GameObject txt = Instantiate(prfInventoryItemText, go.transform.position, Quaternion.identity);
           txt.transform.SetParent(go.transform, true);
@@ -946,12 +959,26 @@ namespace NoYouDoIt.Controller {
 
 
     public void SpawnText(string text, int x, int y) {
-
+      //Canvas cnv = FindObjectOfType<Canvas>();
       GameObject go = SimplePool.Spawn(TextPrefab, Vector2.zero, Quaternion.identity);
       go.transform.Translate(x, y, 0);
-      TextMeshPro tmp = go.GetComponent<TextMeshPro>();
-      go.GetComponent<SetSortingLayer>().lifeTime = 1;
+      
+
+      
+      Transform goct = go.transform.GetChild(0);
+      GameObject goc = goct.gameObject;
+      TextMeshPro tmp = goc.GetComponent<TextMeshPro>();
+      goc.GetComponent<SetSortingLayer>().lifeTime = 1;
+      go.transform.SetParent(WorldCanvas.transform,true);
+      go.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+      goct.localScale = Vector3.one;
+      goct.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+      goct.transform.Translate(0, 0, -1);
+      
+      
       tmp.text = text;
+      
+
       tempText.Add(go);
     }
 

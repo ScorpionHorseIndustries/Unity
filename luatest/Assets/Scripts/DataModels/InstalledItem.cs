@@ -16,11 +16,13 @@ namespace NoYouDoIt.DataModels {
     public int stage;
     public int length;
     public string sprite;
+    public string deconstructRecipe;
 
-    public Growth(int stage, int length, string sprite) {
+    public Growth(int stage, int length, string sprite, string deconstructRecipe) {
       this.stage = stage;
       this.length = length;
       this.sprite = sprite;
+      this.deconstructRecipe = deconstructRecipe;
     }
   }
   public class InstalledItem {
@@ -56,6 +58,8 @@ namespace NoYouDoIt.DataModels {
     /// TODO: implement rotation
     public int width { get; private set; } = 1;
     public int height { get; private set; } = 1;
+    public int xClearance { get; private set; } = 0; //the distance to the east that this item must be away from other items
+    public int yClearance { get; private set; } = 0; //the distance to the north that this item must be away from other items
     public bool linksToNeighbour { get; private set; } = false;
     public string spriteName { get; private set; }
     public string forcedSpriteName = null;
@@ -115,7 +119,7 @@ namespace NoYouDoIt.DataModels {
 
     
 
-    private InstalledItem(World world, InstalledItem proto) {
+    private InstalledItem(World world, InstalledItem proto, bool spawn) {
 
       //this.updateActions = new List<Action>();
       //this.jobs = new List<Job>();
@@ -153,6 +157,13 @@ namespace NoYouDoIt.DataModels {
       this.growthStages = proto.growthStages;
       this.growthStage = proto.growthStage;
       this.deconRecipeName = proto.deconRecipeName;
+      this.xClearance = proto.xClearance;
+      this.yClearance = proto.yClearance;
+
+      if (spawn && this.growthStages.Count > 0) {
+        this.growthStage = UnityEngine.Random.Range(0, itemParameters.GetInt("maxGrowthStage"));
+
+      }
 
     }
 
@@ -283,8 +294,8 @@ namespace NoYouDoIt.DataModels {
 
     public bool isPositionValid(World world, int x, int y) {
 
-      for (int xx = x; xx < x + this.width; xx += 1) {
-        for (int yy = y; yy < y + this.height; yy += 1) {
+      for (int xx = x-this.xClearance; xx < x + this.width + this.xClearance; xx += 1) {
+        for (int yy = y-this.yClearance; yy < y + this.height + this.yClearance; yy += 1) {
           Tile t = world.GetTileIfChunkExists(xx, yy);
           //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
           if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty() || t.HasPendingWork) {
@@ -302,11 +313,26 @@ namespace NoYouDoIt.DataModels {
       return false;
     }
 
+    public string GetDeconRecipeName() {
+      if (growthStages.Count > 0) {
+        string dr = growthStages[growthStage].deconstructRecipe;
+
+        if (dr != null) {
+          return dr;
+        }
+
+      }
+
+      return deconRecipeName;
+    }
+
     //---
     public void Deconstruct() {
       Inventory inventory = new Inventory(World.current, 99, INVENTORY_TYPE.NONE, this.tile);
 
-      Recipe recipe = Recipe.GetRecipe(this.deconRecipeName);//GetRecipe(this.type);
+
+
+      Recipe recipe = Recipe.GetRecipe(this.GetDeconRecipeName());//GetRecipe(this.type);
       List<RecipeProduct> prods = recipe.GetProducts();
       foreach (RecipeProduct rp in prods) {
 
@@ -355,12 +381,12 @@ namespace NoYouDoIt.DataModels {
 
     //-----------------------STATIC METHODS------------------
 
-    public static InstalledItem CreateInstance(World world, InstalledItem proto, Tile tile) {
+    public static InstalledItem CreateInstance(World world, InstalledItem proto, Tile tile, bool spawn = false) {
       if (!proto.funcPositionValid(world, tile.world_x, tile.world_y)) {
         return null;
       }
       //Debug.Log("InstalledItem.CreateInstance");
-      InstalledItem o = new InstalledItem(world, proto);
+      InstalledItem o = new InstalledItem(world, proto, spawn);
 
 
       o.tile = tile;
@@ -500,6 +526,8 @@ namespace NoYouDoIt.DataModels {
         bool paletteSwap = Funcs.jsonGetBool(installedItemJson["paletteSwap"], false);
         float trashSpawnChance = Funcs.jsonGetFloat(installedItemJson["trashSpawnChance"], 0);
         string deconRecipeName = Funcs.jsonGetString(installedItemJson["deconstructRecipe"], null);
+        int yClearance = Funcs.jsonGetInt(installedItemJson["y_clearance"], 0);
+        int xClearance = Funcs.jsonGetInt(installedItemJson["x_clearance"], 0);
 
         JArray jsonCanSpawnOn = Funcs.jsonGetArray(installedItemJson, "canSpawnOn");
         List<string> canSpawnOn = new List<string>();
@@ -567,6 +595,8 @@ namespace NoYouDoIt.DataModels {
         proto.trashSpawnChance = trashSpawnChance;
         proto.canSpawnOnTileTypeList = canSpawnOn;
         proto.deconRecipeName = deconRecipeName;
+        proto.xClearance = xClearance;
+        proto.yClearance = yClearance;
         //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
         //Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);
@@ -600,9 +630,10 @@ namespace NoYouDoIt.DataModels {
             int stage = Funcs.jsonGetInt(growthStage["stage"], -1);
             int length = Funcs.jsonGetInt(growthStage["length"], -1);
             string gSprite = Funcs.jsonGetString(growthStage["sprite"], null);
+            string gdecon = Funcs.jsonGetString(growthStage["deconstructRecipe"], deconRecipeName);
 
             if (stage >= 0 && length > 0 && gSprite != null) {
-              proto.growthStages[stage] = new Growth(stage, length, gSprite);
+              proto.growthStages[stage] = new Growth(stage, length, gSprite, gdecon);
             }
 
 

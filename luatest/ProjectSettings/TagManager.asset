@@ -48,6 +48,9 @@ TagManager:
   - name: Objects
     uniqueID: 4033547021
     locked: 0
+  - name: LooseItems
+    uniqueID: 3079520213
+    locked: 0
   - name: Characters
     uniqueID: 2466846857
     locked: 0

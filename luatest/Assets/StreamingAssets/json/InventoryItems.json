@@ -29,7 +29,7 @@
       "type": "inv::wood_planks",
       "niceName": "wood planks",
       "stackSize": 32,
-      "spriteName": "inventory_items::wooden_planks",
+      "spriteName": "inventory_items::wood_planks",
       "category": "raw"
     },
     {
@@ -55,6 +55,14 @@
       "stackSize": 8,
       "spriteName": "inventory_items::sapling",
       "category": "plants"
-    }
+    },
+	    {
+      "id": 4,
+      "type": "inv::wood_logs",
+      "niceName": "wood logs",
+      "stackSize": 8,
+      "spriteName": "inventory_items::wood_logs",
+      "category": "raw"
+    },
   ]
 }

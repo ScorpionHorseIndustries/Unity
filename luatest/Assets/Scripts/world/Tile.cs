@@ -6,6 +6,26 @@ using System;
 using NoYouDoIt.DataModels;
 namespace NoYouDoIt.TheWorld {
 
+  public class TileOccupant {
+    public string name { get; private set; }
+    public string type { get; private set; }
+    public TileOccupant(string name, string type) {
+      this.name = name;
+      this.type = type;
+    }
+
+    public Action CBPleaseMove;
+
+    public void PleaseMove() {
+      if (CBPleaseMove!=null) {
+        CBPleaseMove();
+      }
+    }
+
+
+
+  }
+
   public class Tile {
 
     public enum CAN_ENTER {
@@ -46,8 +66,8 @@ namespace NoYouDoIt.TheWorld {
     private World world;
 
     //private List<Character> occupiedBy = new List<Character>();
-    private List<Robot> occupiedBy = new List<Robot>();
-    public Robot GetOccupant(int i) {
+    private List<TileOccupant> occupiedBy = new List<TileOccupant>();
+    public TileOccupant GetOccupant(int i) {
       if (i >= 0 && i <= occupiedBy.Count - 1) {
         return occupiedBy[i];
       }
@@ -132,7 +152,7 @@ namespace NoYouDoIt.TheWorld {
 
 
 
-    public void Enter(Robot c) {
+    public void Enter(TileOccupant c) {
       if (!occupiedBy.Contains(c)) {
         occupiedBy.Add(c);
       }
@@ -141,11 +161,11 @@ namespace NoYouDoIt.TheWorld {
     public string WhoIsHere() {
       string s = "";
       int c = 0;
-      foreach (Robot robot in occupiedBy) {
+      foreach (TileOccupant to in occupiedBy) {
         if (c > 0) {
           s += "\n";
         }
-        s += robot.name;// + "(" + robot.state.ToString() + ")";
+        s += to.type + "..." + to.name;// + "(" + robot.state.ToString() + ")";
         c += 1;
       }
 
@@ -153,17 +173,17 @@ namespace NoYouDoIt.TheWorld {
       return s;
     }
 
-    public bool IsItMe(Robot me) {
+    public bool IsItMe(TileOccupant me) {
       return occupiedBy.Count == 1 && occupiedBy.Contains(me);
     }
 
-    public void PleaseMove(Robot asker) {
-      foreach (Robot r in occupiedBy) {
-        r.PleaseMove(asker);
+    public void PleaseMove() {
+      foreach (TileOccupant to in occupiedBy) {
+        to.PleaseMove();
       }
     }
 
-    public void Leave(Robot c) {
+    public void Leave(TileOccupant c) {
       if (occupiedBy.Contains(c)) {
         occupiedBy.Remove(c);
       }
@@ -400,7 +420,7 @@ namespace NoYouDoIt.TheWorld {
 
     }
 
-    public CAN_ENTER CanEnter(Robot c) {
+    public CAN_ENTER CanEnter(TileOccupant r) {
       if (movementFactor == 0) return CAN_ENTER.NEVER;
 
 

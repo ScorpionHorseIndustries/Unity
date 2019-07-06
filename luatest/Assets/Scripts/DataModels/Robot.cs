@@ -14,7 +14,7 @@ namespace NoYouDoIt.DataModels {
 
     Action<Robot> CBOnChanged;
 
-
+    public TileOccupant occupier;
     private float waitTimer;
     public string state;
     public string NewState = null;
@@ -29,10 +29,13 @@ namespace NoYouDoIt.DataModels {
     private float moveProgress = 0;
 
     private Vector2 vPos = new Vector2();
-    private Vector2 vDst = new Vector2();
-    private Vector2 vJob = new Vector2();
 
-    PathAStar currentPath;
+
+    //PathAS currentPath;
+
+
+    public Tile target { get; private set; } = null;
+    public TilePathAStar path;
     string currentInstruction;
     public WorkItem work;
     public Inventory inventory;
@@ -73,7 +76,7 @@ namespace NoYouDoIt.DataModels {
 
 
 
-    public void PleaseMove(Robot asker) {
+    public void PleaseMove() {
       if (state == "idle") {
         NewState = "wander";
         state = "wander";
@@ -94,6 +97,9 @@ namespace NoYouDoIt.DataModels {
       this.proto = proto;
       this.SetPos(tile);
       this.SetDst(tile);
+      occupier = new TileOccupant(name, proto.typeName);
+      occupier.CBPleaseMove += PleaseMove;
+      
 
 
     }
@@ -222,16 +228,6 @@ namespace NoYouDoIt.DataModels {
 
     }
 
-    //public void GetWork() {
-    //  if (work == null) {
-    //    work = World.current.workManager.GetNearestWork(pos);
-    //    if (work != null) {
-    //      work.Assign(this);
-          
-    //    }
-    //  }
-    //}
-
     public void Move(float deltaTime) {
       if (pos.movementFactor == 0 || dst.movementFactor == 0) {
         NewState = "find_new_path";
@@ -244,7 +240,7 @@ namespace NoYouDoIt.DataModels {
       if (pos != dst) {
         float distToTravel = Funcs.Distance(pos, dst);
         bool never = false, soon = false;
-        switch (dst.CanEnter(this)) {
+        switch (dst.CanEnter(occupier)) {
           case Tile.CAN_ENTER.YES:
             break;
           case Tile.CAN_ENTER.NEVER:
@@ -261,7 +257,7 @@ namespace NoYouDoIt.DataModels {
           NewState = "find_new_path";
         } else if (soon) {
           //wait
-          dst.PleaseMove(this);
+          dst.PleaseMove();
           waitTimer += deltaTime;
 
           if (waitTimer > 3) {
@@ -307,11 +303,11 @@ namespace NoYouDoIt.DataModels {
       if (t != pos) {
         if (pos != null) {
           //leave the tile
-          pos.Leave(this);
+          pos.Leave(occupier);
 
         }
         pos = t;
-        pos.Enter(this);
+        pos.Enter(occupier);
         return true;
 
 
@@ -333,12 +329,8 @@ namespace NoYouDoIt.DataModels {
       }
     }
 
-    public Tile target { get; private set; } = null;
-    public TilePathAStar path;
     public bool FindPath(Tile end, bool neighboursOk) {
-      //findNewPath = false;
-      //Debug.Log(name + " Finding a path...");
-      //pathAttempts = 0;
+
       path = PathFinder.FindPath(World.current, pos, end, neighboursOk, neighboursOk);
       if (path != null && path.foundPath ) {
         return true;
@@ -347,20 +339,6 @@ namespace NoYouDoIt.DataModels {
         return false;
       }
 
-      //if (target != null) {
-      //  if (myJob != null && myJob.jobType != JOB_TYPE.WORK_AT_STATION) {
-      //    path = PathFinder.FindPath(world, PosTile, target, true, true);
-      //  } else {
-      //    path = new TilePathAStar(world, PosTile, target);
-      //  }
-      //  if (path != null && path.foundPath) {
-      //    state = STATE.MOVE;
-      //  } else {
-      //    state = STATE.RESET;
-      //  }
-      //} else {
-      //  state = STATE.RESET;
-      //}
     }
 
 

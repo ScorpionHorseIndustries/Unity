@@ -152,7 +152,11 @@ namespace NoYouDoIt.Controller {
     bool showingJobs = false;
     //state
 
-    void DoUpdate() {
+    public void SetInputMode(INPUT_MODE inputMode) {
+      this.inputMode = inputMode;
+    }
+
+    void Update() {
       if (!initialised) return;
 
 
@@ -166,7 +170,53 @@ namespace NoYouDoIt.Controller {
           if (Input.GetKeyDown(KeyCode.BackQuote)) {
             ActivateConsole();
           } else if (Input.GetKeyUp(KeyCode.E)) {
+            ActivateJobs();
+          } else {
+            if (wcon.eventSystem.IsPointerOverGameObject()) {
+              return;
+            }
 
+            if (Input.GetKeyUp(KeyCode.Escape) || Input.GetMouseButtonUp(1)) {
+              WorldController.Instance.SetBuildType_Clear();
+              destroyCursors();
+              selectionInfo = null;
+
+            }
+
+            mouseOverTile = null;
+
+            mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+            mxf = mousePos.x;
+            myf = mousePos.y;
+            mx = (int)Mathf.Round(mousePos.x);
+            my = (int)Mathf.Round(mousePos.y);
+            //mp.Set(mouseX, mouseY);
+            cx = mx - lastX;
+            cy = my - lastY;
+            if (mx >= 0 && my >= 0) {
+              mouseOverTile = World.current.GetTileAt(mx, my);
+              if (selectionInfo != null) {
+                WorldController.Instance.UpdateCurrentTile(selectionInfo);
+              }
+            }
+            //if (mouseOverTile != null) {
+            //  Debug.Log(mouseOverTile);
+            //} else {
+            //  Debug.Log("move over nothing");
+            //}
+
+            UpdateSelected();
+
+            UpdateDrag();
+
+
+            UpdateCamera();
+
+
+            //transform.Translate(cx, cy, 0);
+            lastX = mx;
+            lastY = my;
+            lastFrame = cam.ScreenToWorldPoint(Input.mousePosition);
           }
 
 
@@ -177,8 +227,13 @@ namespace NoYouDoIt.Controller {
           }
           break;
         case INPUT_MODE.SHOWING_JOBS:
+          if (Input.GetKeyUp(KeyCode.E)) {
+            DeactivateJobs();
+
+          }
           break;
         case INPUT_MODE.SHOWING_DIALOGUE:
+          selectionInfo = null;
           break;
         default:
           break;
@@ -191,7 +246,7 @@ namespace NoYouDoIt.Controller {
 
 
 
-      WorldController.Instance.jobsPanelPrefab.SetActive(showingJobs);
+      WorldController.Instance.jobsPanelPrefab.SetActive(true);
 
       WorldController.Instance.gameState = GAME_STATE.PAUSE;
       WorldController.Instance.CreateJobPanelItems();
@@ -206,6 +261,7 @@ namespace NoYouDoIt.Controller {
       WorldController.Instance.gameState = GAME_STATE.PLAY;
       WorldController.Instance.DestroyJobPanelItems();
       inputMode = INPUT_MODE.GAME;
+      WorldController.Instance.jobsPanelPrefab.SetActive(false);
 
     }
 
@@ -223,7 +279,7 @@ namespace NoYouDoIt.Controller {
       inputMode = INPUT_MODE.GAME;
     }
 
-
+    /*
     void Update() {
       if (!initialised) return;
 
@@ -322,6 +378,7 @@ namespace NoYouDoIt.Controller {
       lastY = my;
       lastFrame = cam.ScreenToWorldPoint(Input.mousePosition);
     }
+    */
 
     private void UpdateSelected() {
       if (mouseOverTile != null) {

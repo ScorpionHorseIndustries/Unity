@@ -138,6 +138,7 @@
     <Compile Include="Assets\Scripts\DataModels\Character.cs" />
     <Compile Include="Assets\Scripts\DataModels\CharacterJob.cs" />
     <Compile Include="Assets\Scripts\DataModels\CharacterJobTask.cs" />
+    <Compile Include="Assets\Scripts\DataModels\Creature.cs" />
     <Compile Include="Assets\Scripts\DataModels\InstalledItem.cs" />
     <Compile Include="Assets\Scripts\DataModels\InstalledItemActions.cs" />
     <Compile Include="Assets\Scripts\DataModels\Inventory.cs" />

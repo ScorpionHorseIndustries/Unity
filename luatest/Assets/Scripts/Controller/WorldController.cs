@@ -37,6 +37,7 @@ namespace NoYouDoIt.Controller {
     public GameObject genericSpritePrefab;
     public GameObject prfStockpileManagementEntry;
     public GameObject StockPileScrollContent;
+    public GameObject prfInstalledItemOptionsInScene;
 
     public Text leftMenuRecipeText;
 
@@ -590,6 +591,8 @@ namespace NoYouDoIt.Controller {
         if (item.itemParameters.HasProperty("socialMediaName")) {
           displayMe += "\n" + Funcs.PadPair(pw, "social media", item.itemParameters.GetString("socialMediaName"), '.');
         }
+
+        this.prfInstalledItemOptionsInScene.GetComponent<prfInstalledItemScript>().Set(item);
       } else if (o.GetType() == typeof(string)) {
         string invname = t.GetFirstInventoryItem();
         if (invname != null) {

@@ -96,7 +96,7 @@ namespace NoYouDoIt.DataModels {
     public string deconRecipeName { get; private set; }
     public bool isWorkstation { get; private set; } = false;
     public string luaOnCreate { get; private set; }
-    public string workCondition { get; private set; }
+    public string workCondition { get; set; }
 
     //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
     //bool opening = false;

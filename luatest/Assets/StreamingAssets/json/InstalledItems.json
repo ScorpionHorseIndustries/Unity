@@ -180,7 +180,7 @@
       "workRecipe": "recipe::installed::mining_controller::work",
       "workstation": true,
       "updateAction": "OnUpdate_Workstation",
-      "workCondition": " GetStockpileQty(inv__steel_plates) < 32"
+      "workCondition": "GetStockpileQty(inv__steel_plates) + GetLooseQty(inv__steel_plates) < 32"
 
     },
     {

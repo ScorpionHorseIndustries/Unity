@@ -1,4 +1,8 @@
 
+function SetSocialMediaName(item) 
+	item.itemParameters:SetString("socialMediaName", World.current:GetSocialMediaName())
+
+end
 
 function OnUpdate_Dummy(item,deltaTime) 
 

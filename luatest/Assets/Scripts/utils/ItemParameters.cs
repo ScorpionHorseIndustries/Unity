@@ -27,7 +27,9 @@ namespace NoYouDoIt.Utils {
       return s;
     }
 
-
+    public bool HasProperty(string propertyName) {
+      return items.ContainsKey(propertyName);
+    }
 
 
     public Dictionary<string, string> GetItems() {

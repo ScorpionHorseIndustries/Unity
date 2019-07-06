@@ -378,7 +378,45 @@
         }
       ]
 
-    }
+    },
+	{
+		"name" : "recipe::installed::shipping_station::build",
+		"id" : 25,
+		"buildTime" : 2,
+		"cost" : 150,
+		"resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 6
+        },
+        {
+          "name": "inv::copper_plates",
+          "qty": 2
+        }
+		]
+	},
+	{
+		"name" : "recipe::installed::shipping_station::decon",
+		"id" : 26,
+		      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 5,
+          "chance": 1
+        },
+        {
+          "name": "inv::copper_plates",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        }
+      ]
+	},
+	{
+		"name" : "recipe::installed::shipping_station::work",
+		"id" : 27
+	}
 
   ]
 }

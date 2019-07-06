@@ -35,7 +35,9 @@
       "enclosesRoom": false,
       "recipe": "recipe::installed::organic_trash::build",
       "deconstructRecipe": "recipe::installed::organic_trash::decon",
-      "paletteSwap": true
+      "paletteSwap": true,
+      "onCreate" :  "SetSocialMediaName"
+      
 
     },
     {
@@ -177,7 +179,8 @@
       "updateActionCountDown": 3,
       "workRecipe": "recipe::installed::mining_controller::work",
       "workstation": true,
-      "updateAction": "OnUpdate_Workstation"
+      "updateAction": "OnUpdate_Workstation",
+	  "workCondition" : ""
 
     },
     {
@@ -267,7 +270,31 @@
 
       ]
 
-    }
+    },
+	{
+      "id": 11,
+      "name": "installed::shipping_station",
+      "niceName": "shipping station",
+      "sprite": "installed_items::shipping_station",
+      "sprites": [],
+      "linked": false,
+      "movementFactor": 0.8,
+      "trash": false,
+      "build": true,
+      "neighbourTypes": [],
+      "enclosesRoom": false,
+      "recipe": "recipe::installed::shipping_station::build",
+      "deconstructRecipe": "recipe::installed::shipping_station::decon",
+      "inventorySlots": 0,
+      "width": 2,
+      "height": 3,
+      "workTileOffsetX": 1,
+      "updateActionCountDown": 3,
+      "workRecipe": "recipe::installed::shipping_station::work",
+      "workstation": true,
+      "updateAction": "OnUpdate_Workstation"
+
+    },
 
   ]
 }

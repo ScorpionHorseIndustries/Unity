@@ -11,7 +11,7 @@ namespace NoYouDoIt.Utils {
   public static class Funcs {
 
 
-    public static string PadPair(int width, string property, string value, char padding) {
+    public static string PadPair(int width, string property, string value, char padding = '.') {
       string output = "";
 
       string p = property;

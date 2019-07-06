@@ -66,7 +66,11 @@ namespace NoYouDoIt.TheWorld {
     private List<InstalledItem> installedItems;
     //public List<Character> characters;
     public List<Robot> robots;
-    public string[] names;
+    public string[] firstNames;
+    public string[] lastNames;
+    public string[] words;
+    public string[] adjectives;
+    public string[] animals;
     //private Tile[,] tiles;
     public List<Room> rooms;
     public Dictionary<int, Dictionary<int, TileChunk>> chunks;
@@ -1187,16 +1191,80 @@ import 'NoYouDoIt.DataModels'
       return InstalledItem.prototypes[itemType].funcPositionValid(world, t.world_x, t.world_y);
     }
 
+    public string GetSocialMediaName() {
+      string name = "";
+      int i = 0;
+      bool hadNumber = false;
+      int dummy = 0;
+      while (i < 2) {
+        string t = GetWord();
+        if (t != null) {
+          if (int.TryParse(t,out dummy)) {
+            if (hadNumber) continue;
+            hadNumber = true;
+          }
+          name += Funcs.TitleCase(t);
+          i += 1;
+        }
+      }
+
+      if (UnityEngine.Random.Range(0,100) % 3 == 0) {
+        name += GetNum();
+      } 
+
+
+      return name;
+    }
+
+    public string GetNum() {
+
+      if (Funcs.Chance(50)) {
+        return UnityEngine.Random.Range(1960, 2030).ToString();
+      } else if (Funcs.Chance(2)) {
+        return 69.ToString();
+      } else if (Funcs.Chance(1)) {
+        return 420.ToString();
+      } else {
+        return UnityEngine.Random.Range(1900, 5000).ToString();
+      }
+    }
+
+    public string GetWord() {
+      int r = UnityEngine.Random.Range(0, 5);
+
+      switch (r) {
+        case 0:
+          return words[UnityEngine.Random.Range(0, words.Length)];
+        case 1:
+          return adjectives[UnityEngine.Random.Range(0, adjectives.Length)];
+        case 2:
+          return animals[UnityEngine.Random.Range(0, animals.Length)];
+        case 3:
+          return GetNum();
+        case 4:
+          return firstNames[UnityEngine.Random.Range(0, firstNames.Length)];
+        default:
+          return null;
+          
+      }
+
+    }
+
     public string GetName() {
-      string name1 = names[UnityEngine.Random.Range(0, names.Length)];
-      string name2 = names[UnityEngine.Random.Range(0, names.Length)];
+      string name1 = firstNames[UnityEngine.Random.Range(0, firstNames.Length)];
+      string name2 = lastNames[UnityEngine.Random.Range(0, lastNames.Length)];
 
       return Funcs.TitleCase(name1) + " " + Funcs.TitleCase(name2);
 
     }
 
     private void loadNames() {
-      names = File.ReadAllLines(Application.streamingAssetsPath + "/csv/surnames.csv");
+      firstNames = File.ReadAllLines(Application.streamingAssetsPath + "/csv/firstnames.csv");
+      lastNames = File.ReadAllLines(Application.streamingAssetsPath + "/csv/surnames.csv");
+      
+      adjectives = File.ReadAllLines(Application.streamingAssetsPath + "/csv/adjectives.txt");
+      animals = File.ReadAllLines(Application.streamingAssetsPath + "/csv/animals.txt");
+      words = File.ReadAllLines(Application.streamingAssetsPath + "/csv/words.txt");
 
       //foreach (string line in lines)
       //  Console.WriteLine(line);

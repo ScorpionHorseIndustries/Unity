@@ -584,7 +584,12 @@ namespace NoYouDoIt.Controller {
       } else if (o.GetType() == typeof(Robot)) {
         displayMe += Funcs.PadPair(pw, "robot",((Robot)o).name, '.');
       } else if (o.GetType() == typeof(InstalledItem)) {
-        displayMe += Funcs.PadPair(pw, "installed item", ((InstalledItem)o).niceName, '.');
+        InstalledItem item = (InstalledItem)o;
+        displayMe += Funcs.PadPair(pw, "installed item", item.niceName, '.');
+
+        if (item.itemParameters.HasProperty("socialMediaName")) {
+          displayMe += "\n" + Funcs.PadPair(pw, "social media", item.itemParameters.GetString("socialMediaName"), '.');
+        }
       } else if (o.GetType() == typeof(string)) {
         string invname = t.GetFirstInventoryItem();
         if (invname != null) {

@@ -1,0 +1,21 @@
+{
+      "name": "recipe::installed::tree::decon",
+      "id": 23,
+      "buildTime": 1,
+      "cost": 0,
+      "products": [
+        {
+          "name": "inv::wood_logs",
+          "qtyMin": 1,
+          "qtyMax": 4,
+          "chance": 1
+        },
+        {
+          "name": "inv::sapling",
+          "qtyMin": 1,
+          "qtyMax": 4,
+          "chance": 0.5
+        }
+      ]
+
+    }

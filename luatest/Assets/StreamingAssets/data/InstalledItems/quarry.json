@@ -1,0 +1,26 @@
+{
+  "id": 12,
+  "name": "installed::quarry",
+  "niceName": "quarry",
+  "sprite": "installed_items::quarry",
+  "sprites": [],
+  "linked": false,
+  "movementFactor": 0.8,
+  "trash": false,
+  "build": true,
+  "neighbourTypes": [],
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::mining_controller::build",
+  "deconstructRecipe": "recipe::installed::mining_controller::decon",
+  "inventorySlots": 0,
+  "width": 3,
+  "height": 3,
+  "workTileOffsetX": 2,
+  "updateActionCountDown": 3,
+  "workRecipe": "recipe::installed::quarry::work",
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "workCondition": "GetStockpileQty(inv__stone_slabs) < 32"
+
+}

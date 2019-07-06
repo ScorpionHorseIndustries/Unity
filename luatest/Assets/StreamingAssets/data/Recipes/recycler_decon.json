@@ -1,0 +1,13 @@
+{
+      "name": "recipe::installed::recycler::decon",
+      "id": 18,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 3,
+          "chance": 1
+        }
+      ]
+    }

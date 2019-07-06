@@ -277,7 +277,7 @@ namespace NoYouDoIt.Controller {
       timers = new List<NYDITimer>();
 
       timers.Add(new NYDITimer("updateMoney", 1, UpdateMoney));
-      timers.Add(new NYDITimer("updateStockPile", 2, 3,UpdateStockPile));
+      timers.Add(new NYDITimer("updateStockPile", 2, 3, UpdateStockPile));
       timers.Add(new NYDITimer("checkStockPile", 2, 5, CheckStockPile));
 
     }
@@ -470,7 +470,7 @@ namespace NoYouDoIt.Controller {
     }
 
     private void UpdateMoney() {
-      
+
       interestRate = interestRateMarket.GetNextValue();
 
       money = money + (money * (interestRate / 100f));//Mathf.Pow((1f + (((interestRate) / 100f) / SECONDS_PER_DAY)), SECONDS_PER_DAY);
@@ -479,9 +479,9 @@ namespace NoYouDoIt.Controller {
 
       Text t = cashText.GetComponent<Text>();
 
-      t.text = Funcs.PadPair(20, "money",string.Format("{0:00.00}", money), '.');
+      t.text = Funcs.PadPair(20, "money", string.Format("{0:00.00}", money), '.');
       t.text += "\n" + Funcs.PadPair(20, "interest", string.Format("{0:0.000}", 100.0 * interestRate), '.');
-      
+
       if (money < 0) {
         t.color = negativeBalanceColour;
       } else {
@@ -568,22 +568,24 @@ namespace NoYouDoIt.Controller {
       object o = info.contents[info.subSelect];
 
       int pw = 38;
-      
+
       string displayMe = "";
 
 
       displayMe += Funcs.PadPair(pw, "chunk x", t.chunk.x.ToString(), '.');
       displayMe += "\n" + Funcs.PadPair(pw, "chunk y", t.chunk.y.ToString(), '.');
-      displayMe += "\n" + Funcs.PadPair(pw, "world x", t.world_x.ToString(), '.'); 
-      displayMe += "\n" + Funcs.PadPair(pw, "world y", t.world_y.ToString(), '.'); 
-      
-        
-        
+      displayMe += "\n" + Funcs.PadPair(pw, "world x", t.world_x.ToString(), '.');
+      displayMe += "\n" + Funcs.PadPair(pw, "world y", t.world_y.ToString(), '.');
+
+
+
       displayMe += "\n";
       if (o.GetType() == typeof(Tile)) {
         displayMe += Funcs.PadPair(pw, "tile type", ((Tile)o).type.name, '.');
-      } else if (o.GetType() == typeof(Robot)) {
-        displayMe += Funcs.PadPair(pw, "robot",((Robot)o).name, '.');
+      } else if (o.GetType() == typeof(TileOccupant)) {
+        TileOccupant to = (TileOccupant)o;
+        displayMe += Funcs.PadPair(pw, "type", to.type);
+        displayMe += "\n" + Funcs.PadPair(pw, "name", to.name);
       } else if (o.GetType() == typeof(InstalledItem)) {
         InstalledItem item = (InstalledItem)o;
         displayMe += Funcs.PadPair(pw, "installed item", item.niceName, '.');
@@ -592,7 +594,9 @@ namespace NoYouDoIt.Controller {
           displayMe += "\n" + Funcs.PadPair(pw, "social media", item.itemParameters.GetString("socialMediaName"), '.');
         }
 
-        this.prfInstalledItemOptionsInScene.GetComponent<prfInstalledItemScript>().Set(item);
+        if (item.editOnClick) {
+          this.prfInstalledItemOptionsInScene.GetComponent<prfInstalledItemScript>().Set(item);
+        }
       } else if (o.GetType() == typeof(string)) {
         string invname = t.GetFirstInventoryItem();
         if (invname != null) {
@@ -915,19 +919,19 @@ namespace NoYouDoIt.Controller {
     }
 
     public void CreateStockpileManagement() {
-      foreach(string name in World.current.inventoryManager.stockpileSettings.Keys) {
+      foreach (string name in World.current.inventoryManager.stockpileSettings.Keys) {
         StockPileSetting sps = World.current.inventoryManager.stockpileSettings[name];
 
-        
+
 
         GameObject go = SimplePool.Spawn(prfStockpileManagementEntry, Vector2.zero, Quaternion.identity);
-        prfStockPileItemScript scr =  go.GetComponent<prfStockPileItemScript>();
+        prfStockPileItemScript scr = go.GetComponent<prfStockPileItemScript>();
         scr.Set(sps);
         scr.SetCurrentQty(0);
         go.transform.SetParent(this.StockPileScrollContent.transform);
         go.transform.localScale = Vector3.one;
         StockPileSettings_GO_Map[sps.name] = go;
-       
+
 
       }
     }
@@ -971,22 +975,22 @@ namespace NoYouDoIt.Controller {
       //Canvas cnv = FindObjectOfType<Canvas>();
       GameObject go = SimplePool.Spawn(TextPrefab, Vector2.zero, Quaternion.identity);
       go.transform.Translate(x, y, 0);
-      
 
-      
+
+
       Transform goct = go.transform.GetChild(0);
       GameObject goc = goct.gameObject;
       TextMeshPro tmp = goc.GetComponent<TextMeshPro>();
       goc.GetComponent<SetSortingLayer>().lifeTime = 1;
-      go.transform.SetParent(WorldCanvas.transform,true);
+      go.transform.SetParent(WorldCanvas.transform, true);
       go.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
       goct.localScale = Vector3.one;
       goct.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
       goct.transform.Translate(0, 0, -1);
-      
-      
+
+
       tmp.text = text;
-      
+
 
       tempText.Add(go);
     }

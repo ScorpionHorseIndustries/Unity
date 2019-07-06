@@ -50,24 +50,17 @@ namespace NoYouDoIt.TheWorld {
       TYPES_BY_ID.Clear();
       countNatural = 0;
 
-      string path = Application.streamingAssetsPath + "/json/TileTypes.json";
-      string json = File.ReadAllText(path);
+      string path = Path.Combine(Application.streamingAssetsPath, "data", "TileTypes");
 
-      JObject job = JObject.Parse(json);
-      //Debug.Log(job);
+      string[] files = Directory.GetFiles(path, "*.json");
 
+      foreach (string file in files) {
+        string json = File.ReadAllText(file);
 
-      JArray ja = (JArray)job["tileTypes"];
-      foreach (JObject j in ja) {
-        string n = (string)j["name"];
-        //string prefix = Funcs.jsonGetString(j["spritePrefix"], "");
-        //int num = Funcs.jsonGetInt(j["sprites"], 0);
+        JObject tileTypeJson = JObject.Parse(json);
 
-        //int offset = Funcs.jsonGetInt(j["spritesOffset"], 0);
-
-
-
-        int id = Funcs.jsonGetInt(j["id"], 0);
+        string n = (string)tileTypeJson["name"];
+        int id = Funcs.jsonGetInt(tileTypeJson["id"], 0);
         List<string> sprites = new List<string>();
 
         for (int i = 0; i < 8; i += 1) {
@@ -77,11 +70,11 @@ namespace NoYouDoIt.TheWorld {
         //Debug.Log(n + " " + sprites[0] + " " + sprites.Count);
         TileType t = new TileType(n, sprites.ToArray<string>());
         t.id = id;
-        t.rangeLow = (float)j["rangeLow"];
-        t.rangeHigh = (float)j["rangeHigh"];
-        t.build = (bool)j["build"];
-        t.movementFactor = Funcs.jsonGetFloat(j["movementFactor"], 0.5f);
-        t.height = Funcs.jsonGetInt(j["height"], -1);
+        t.rangeLow = (float)tileTypeJson["rangeLow"];
+        t.rangeHigh = (float)tileTypeJson["rangeHigh"];
+        t.build = (bool)tileTypeJson["build"];
+        t.movementFactor = Funcs.jsonGetFloat(tileTypeJson["movementFactor"], 0.5f);
+        t.height = Funcs.jsonGetInt(tileTypeJson["height"], -1);
 
         TYPES.Add(n, t);
         TYPES_BY_ID.Add(t.id, t);
@@ -89,10 +82,10 @@ namespace NoYouDoIt.TheWorld {
         if (t.height >= 0) {
           countNatural += 1;
         }
+        //}
+        //loaded = true;
+
       }
-      //loaded = true;
-
-
 
 
     }

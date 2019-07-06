@@ -282,3 +282,5 @@ S:\unity\luatest\obj\Debug\Assembly-CSharp.dll
 S:\unity\luatest\obj\Debug\Assembly-CSharp.pdb
 S:\unity\luatest\Temp\bin\Debug\System.Drawing.dll
 S:\unity\luatest\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.dll
+S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.xml

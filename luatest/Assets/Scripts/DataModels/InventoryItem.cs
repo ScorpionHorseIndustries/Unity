@@ -93,29 +93,33 @@ namespace NoYouDoIt.DataModels {
       }
       return null;
     }
-    public static void CreateInventoryItemPrototypes(JArray InventoryPrototypesArray) {
+    //private static void CreateInventoryItemPrototypes(JArray InventoryPrototypesArray) {
 
 
-      foreach (JObject jsonProto in InventoryPrototypesArray) {
-        InventoryItem item = new InventoryItem();
-        string type = Funcs.jsonGetString(jsonProto["type"], "none");
-        string niceName = Funcs.jsonGetString(jsonProto["niceName"], "none");
-        string spriteName = Funcs.jsonGetString(jsonProto["spriteName"], "");
-        int stackSize = Funcs.jsonGetInt(jsonProto["stackSize"], 1);
+    //  foreach (JObject jsonProto in InventoryPrototypesArray) {
+    //    CreateInventoryItemPrototype(jsonProto);
 
-        item.type = type;
-        item.niceName = niceName;
-        //item.isPrototype = true;
-        //item.prototype = null;
-        item.stackSize = stackSize;
-        item.spriteName = spriteName;
-        prototypes.Add(item.type, item);
-        World.current.lua[Funcs.GetLuaVariableName(item.type)] = item.type;
-
-        //Debug.Log(item);
-      }
+    //    //Debug.Log(item);
+    //  }
 
 
+    //}
+
+    private static void CreateInventoryItemPrototype(JObject jsonProto) {
+      InventoryItem item = new InventoryItem();
+      string type = Funcs.jsonGetString(jsonProto["type"], "none");
+      string niceName = Funcs.jsonGetString(jsonProto["niceName"], "none");
+      string spriteName = Funcs.jsonGetString(jsonProto["spriteName"], "");
+      int stackSize = Funcs.jsonGetInt(jsonProto["stackSize"], 1);
+
+      item.type = type;
+      item.niceName = niceName;
+      //item.isPrototype = true;
+      //item.prototype = null;
+      item.stackSize = stackSize;
+      item.spriteName = spriteName;
+      prototypes.Add(item.type, item);
+      World.current.lua[Funcs.GetLuaVariableName(item.type)] = item.type;
     }
 
     public static int GetStackSize(string type) {
@@ -130,18 +134,17 @@ namespace NoYouDoIt.DataModels {
     public static void LoadFromFile() {
       prototypes.Clear();
 
-      string path = Application.streamingAssetsPath + "/json/InventoryItems.json";
+      string path = Path.Combine(Application.streamingAssetsPath, "data", "InventoryItems");
 
-      string json = File.ReadAllText(path);
+      string[] files = Directory.GetFiles(path, "*.json");
 
-      JObject jo = JObject.Parse(json);
+      foreach(string file in files) {
+        string fcontents = File.ReadAllText(file);
+        JObject json = JObject.Parse(fcontents);
 
-      JArray invItems = Funcs.jsonGetArray(jo, "InventoryItems");
-      if (invItems != null) {
-        CreateInventoryItemPrototypes(invItems);
-      } else {
-        Debug.LogError("could not find inventory items array in [" + path + "]");
+        CreateInventoryItemPrototype(json);
       }
+
 
     }
 

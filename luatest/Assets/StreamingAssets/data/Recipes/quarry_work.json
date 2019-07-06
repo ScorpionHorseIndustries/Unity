@@ -1,0 +1,14 @@
+{
+      "name": "recipe::installed::quarry::work",
+      "id": 8,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::stone_slabs",
+          "qtyMin": 1,
+          "qtyMax": 4,
+          "chance": 0.7
+        }
+        
+      ]
+    }

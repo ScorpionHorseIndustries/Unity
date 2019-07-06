@@ -1,0 +1,12 @@
+{
+      "name": "recipe::installed::atm::build",
+      "id": 2,
+      "buildTime": 1,
+      "cost": 50,
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 4
+        }
+      ]
+    }

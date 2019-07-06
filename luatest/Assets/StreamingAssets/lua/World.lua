@@ -2,6 +2,10 @@ function GetStockpileQty(inventoryItemName)
 	return World.current.inventoryManager:GetStockpileQty(inventoryItemName)
 end
 
+function GetStockPileQty(inventoryItemName)
+	return GetStockpileQty(inventoryItemName)
+end
+
 function GetLooseQty(inventoryItemName)
 	return World.current.inventoryManager:GetLooseQty(inventoryItemName)
 

@@ -10,6 +10,9 @@ namespace NoYouDoIt.DataModels {
   using NoYouDoIt.NYDIPaths;
   using NoYouDoIt.Utils;
   using NoYouDoIt.Controller;
+  using System.IO;
+  using Newtonsoft.Json.Linq;
+
   public class Robot {
 
     Action<Robot> CBOnChanged;
@@ -19,7 +22,7 @@ namespace NoYouDoIt.DataModels {
     public string state;
     public string NewState = null;
     public string typeName { get; private set; }
-    public RobotType proto { get; private set; }
+    public Robot proto { get; private set; }
 
     public ItemParameters info;
     public string name { get; private set; }
@@ -80,17 +83,17 @@ namespace NoYouDoIt.DataModels {
       if (state == "idle") {
         NewState = "wander";
         state = "wander";
-      }  
+      }
     }
 
 
     private Robot() {
-      throw new Exception("invalid constructor used");
+      
     }
-    private Robot(Tile tile, RobotType proto) {
+    private Robot(Tile tile, Robot proto) {
       inventory = new Inventory(World.current, 1, INVENTORY_TYPE.ROBOT, this);
       name = World.current.GetName();
-      info = new ItemParameters();
+      info = new ItemParameters(proto.info);
       info.SetFloat("movement_speed", 5);
       this.typeName = proto.typeName;
       this.spriteName = proto.spriteName;
@@ -99,7 +102,7 @@ namespace NoYouDoIt.DataModels {
       this.SetDst(tile);
       occupier = new TileOccupant(name, proto.typeName);
       occupier.CBPleaseMove += PleaseMove;
-      
+
 
 
     }
@@ -128,7 +131,7 @@ namespace NoYouDoIt.DataModels {
 
 
       if (t.IsEmpty() && t.countOfOccupied == 0) {
-        RobotType proto = RobotType.GetPrototype(typeName);
+        Robot proto = GetPrototype(typeName);
         if (proto != null) {
           Robot robot = new Robot(t, proto);
           robot.pos = t;
@@ -145,6 +148,8 @@ namespace NoYouDoIt.DataModels {
       return null;
 
     }
+
+
 
     public bool GiveInstruction(string instruction) {
 
@@ -188,7 +193,7 @@ namespace NoYouDoIt.DataModels {
     }
 
     public bool PlaceItemOnTile() {
-      if (work != null ) {
+      if (work != null) {
         string holding = work.inventoryItemName;
         int holdingQty = inventory.HowMany(holding);
         int placed = work.workTile.AddToInventory(holding, holdingQty);
@@ -233,7 +238,7 @@ namespace NoYouDoIt.DataModels {
         NewState = "find_new_path";
         SetPos(World.current.FindEmptyTile_NotThisOne(pos));
         SetDst(pos);
-        
+
       }
 
 
@@ -332,7 +337,7 @@ namespace NoYouDoIt.DataModels {
     public bool FindPath(Tile end, bool neighboursOk) {
 
       path = PathFinder.FindPath(World.current, pos, end, neighboursOk, neighboursOk);
-      if (path != null && path.foundPath ) {
+      if (path != null && path.foundPath) {
         return true;
       } else {
         path = null;
@@ -350,5 +355,43 @@ namespace NoYouDoIt.DataModels {
     public void CBUnregisterOnChanged(Action<Robot> cb) {
       CBOnChanged -= cb;
     }
+    //-------------------------------- STATIC- -------------------------------------
+    private static Dictionary<string, Robot> prototypes = new Dictionary<string, Robot>();
+
+    public static void LoadFromFile() {
+      string path = Path.Combine(Application.streamingAssetsPath, "data", "RobotTypes");
+
+      string[] files = Directory.GetFiles(path, "*.json");
+
+      foreach (string file in files) {
+        string fcontents = File.ReadAllText(file);
+        JObject json = JObject.Parse(fcontents);
+
+        CreateRobotPrototype(json);
+      }
+    }
+
+    private static void CreateRobotPrototype(JObject json) {
+      Robot proto = new Robot();
+      proto.name = "prototype";
+      proto.typeName = Funcs.jsonGetString(json["name"], null);
+      proto.spriteName = Funcs.jsonGetString(json["spriteName"], null);
+      proto.info = new ItemParameters();
+
+      prototypes.Add(proto.typeName, proto);
+    }
+
+    private static Robot GetPrototype(string typeName) {
+      if (prototypes.ContainsKey(typeName)) {
+        return prototypes[typeName];
+      } else {
+        return null;
+      }
+    }
   }
+
+
+
+
+
 }

@@ -1,0 +1,12 @@
+{
+  "rangeHigh": 0.6,
+  "movementFactor": 0.75,
+  "rangeLow": 0.2,
+  "build": true,
+  "name": "grass",
+  "id": 3,
+  "spritesOffset": 0,
+  "sprites": 8,
+  "spritePrefix": "tiles_",
+  "height": 1
+}

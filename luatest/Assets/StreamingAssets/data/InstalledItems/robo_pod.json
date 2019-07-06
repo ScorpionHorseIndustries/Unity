@@ -1,0 +1,24 @@
+{
+  "id": 9,
+  "name": "installed::robo_pod",
+  "niceName": "robo pod",
+  "sprite": "installed_items::robo_pod",
+  "sprites": [],
+  "linked": false,
+  "movementFactor": 0.8,
+  "trash": false,
+  "build": true,
+  "neighbourTypes": [],
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::robo_pod::build",
+  "deconstructRecipe": "recipe::installed::robo_pod::decon",
+  "inventorySlots": 0,
+  "width": 2,
+  "height": 3,
+  "updateActionCountDown": 3,
+  "editOnClick": true,
+  "workRecipe": "recipe::installed::robo_pod::work"
+
+
+
+}

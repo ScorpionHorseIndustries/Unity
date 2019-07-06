@@ -1,0 +1,21 @@
+{
+      "name": "recipe::installed::atm::work",
+      "id": 11,
+      "buildTime": 1,
+      "resources": [
+        {
+          "name": "inv::wallet",
+          "qty": 1
+        }
+      ],
+      "products": [
+        {
+          "name": "money",
+          "qtyMin": 1,
+          "qtyMax": 10,
+          "chance": 1
+        }
+
+      ]
+
+    }

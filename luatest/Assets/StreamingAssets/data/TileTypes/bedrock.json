@@ -1,0 +1,12 @@
+{
+  "rangeHigh": -1,
+  "movementFactor": 0,
+  "rangeLow": -1,
+  "build": false,
+  "name": "bedrock",
+  "id": 7,
+  "spritesOffset": 64,
+  "sprites": 8,
+  "spritePrefix": "tiles_",
+  "height": -1
+}

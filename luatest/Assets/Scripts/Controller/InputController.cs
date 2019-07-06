@@ -65,7 +65,7 @@ namespace NoYouDoIt.Controller {
     private bool tilesFound = false;
     GameObject uConsoleGO;
     CardboardKeep.UConsole UConsoleObj;
-    private bool dialogueWindowOpen = false;
+    //private bool dialogueWindowOpen = false;
 
 
 
@@ -149,7 +149,7 @@ namespace NoYouDoIt.Controller {
     // Update is called once per frame
 
     //state
-    bool showingJobs = false;
+    //bool showingJobs = false;
     //state
 
     public void SetInputMode(INPUT_MODE inputMode) {

@@ -188,7 +188,7 @@ function OnWork_InstalledItem (work, deltaTime)
 		else 
 			coolDown = math.random(1,2)
 
-			work.workTile:PleaseMove(work.assignedRobot);
+			work.workTile:PleaseMove(work.assignedRobot.occupier);
 		end
 	else
 		coolDown = coolDown - deltaTime

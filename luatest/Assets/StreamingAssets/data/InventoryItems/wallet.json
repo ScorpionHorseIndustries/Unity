@@ -1,0 +1,8 @@
+{
+      "id": 6,
+      "type": "inv::wallet",
+      "niceName": "wallet",
+      "stackSize": 8,
+      "spriteName": "inventory_items::wallet_open_1",
+      "category": "money"
+    }

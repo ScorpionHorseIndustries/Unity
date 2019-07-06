@@ -1,0 +1,8 @@
+{
+      "id": 3,
+      "type": "inv::stone_slabs",
+      "niceName": "stone slabs",
+      "stackSize": 32,
+      "spriteName": "inventory_items::stone_slabs",
+      "category": "manufactured"
+    }

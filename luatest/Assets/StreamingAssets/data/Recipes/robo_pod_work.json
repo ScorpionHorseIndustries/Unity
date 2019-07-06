@@ -1,0 +1,28 @@
+{
+      "name": "recipe::installed::robo_pod::work",
+      "id": 13,
+      "buildTime": 3,
+      "cost": 150,
+      "onDemand": true,
+      "btnText": "Build Robot",
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 2
+        },
+        {
+          "name": "inv::copper_plates",
+          "qty": 2
+        }
+      ],
+      "products": [
+        {
+          "name": "robot::basic",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+
+        }
+      ]
+
+    }

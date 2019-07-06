@@ -1,0 +1,23 @@
+{
+  "id": 3,
+  "name": "installed::atm",
+  "niceName": "atm",
+  "sprite": "installed_items::atm_0",
+  "sprites": [ "installed_items::atm_0", "installed_items::atm_1", "installed_items::atm_2", "installed_items::atm_3" ],
+  "movementFactor": 0.5,
+  "linked": false,
+  "trash": false,
+  "build": true,
+  "randomRotation": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::atm::build",
+  "updateActionCountDown": 1,
+  "width": 1,
+  "height": 2,
+  "workRecipe": "recipe::installed::atm::work",
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "deconstructRecipe": "recipe::installed::atm::decon"
+
+}

@@ -25,7 +25,7 @@ public class prfInstalledItemScript : MonoBehaviour {
 
   public void Set(InstalledItem item) {
     this.item = item;
-    this.itemName = item.type;
+    this.itemName = item.niceName;
     this.workCondition = item.workCondition == null ? "" : item.workCondition;
     txtItemName.text = item.type;
     tmpInputField.text = this.workCondition;

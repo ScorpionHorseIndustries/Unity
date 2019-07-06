@@ -1,0 +1,12 @@
+{
+  "rangeHigh": 0.8,
+  "movementFactor": 0.9,
+  "rangeLow": 0.7,
+  "build": true,
+  "name": "stone",
+  "id": 5,
+  "spritesOffset": 16,
+  "sprites": 8,
+  "spritePrefix": "tiles_",
+  "height": 3
+}

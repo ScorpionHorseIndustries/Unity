@@ -222,86 +222,100 @@ namespace NoYouDoIt.DataModels {
     public static void LoadFromFile() {
       recipes = new Dictionary<string, Recipe>();
 
-      string path = Application.streamingAssetsPath + "/json/Recipes.json";
+      string path = Path.Combine(Application.streamingAssetsPath, "data","Recipes");
 
-      string json = File.ReadAllText(path);
+      string[] files = Directory.GetFiles(path, "*.json");
 
-      JObject jo = JObject.Parse(json);
+      foreach (string file in files) {
+        
+        string json = File.ReadAllText(file);
+        //Debug.Log(file + "\n" +json);
+        JObject jo = JObject.Parse(json);
 
-      JArray invItems = Funcs.jsonGetArray(jo, "Recipes");
-      if (invItems != null) {
-        CreateRecipes(invItems);
-      } else {
-        Debug.LogError("could not find recipes items array in [" + path + "]");
+        CreateRecipePrototype(jo);
       }
+
+      
+
+      
+
+      //JArray invItems = Funcs.jsonGetArray(jo, "Recipes");
+      //if (invItems != null) {
+      //  CreateRecipes(invItems);
+      //} else {
+      //  Debug.LogError("could not find recipes items array in [" + path + "]");
+      //}
 
     }
 
 
-    private static void CreateRecipes(JArray recipeArray) {
-      foreach (JObject jRecipe in recipeArray) {
-        Recipe recipe = new Recipe();
+    //private static void CreateRecipes(JArray recipeArray) {
+    //  foreach (JObject jRecipe in recipeArray) {
+    //    CreateRecipePrototype(jRecipe);
 
-        recipe.name = Funcs.jsonGetString(jRecipe["name"], "");
-        recipe.id = Funcs.jsonGetInt(jRecipe["id"], -1);
-        recipe.buildTime = Funcs.jsonGetFloat(jRecipe["buildTime"], 1);
+    //  }
 
-        recipe.products = new Dictionary<string, RecipeProduct>();
-        recipe.resources = new Dictionary<string, RecipeResource>();
-        recipe.cost = Funcs.jsonGetFloat(jRecipe["cost"], 0);
-        recipe.onDemand = Funcs.jsonGetBool(jRecipe["onDemand"], false);
-        recipe.btnText = Funcs.jsonGetString(jRecipe["btnText"], "");
+    //}
 
-        JArray jaResources = Funcs.jsonGetArray(jRecipe, "resources");
+    private static void CreateRecipePrototype(JObject jRecipe) {
+      Recipe recipe = new Recipe();
 
-        if (jaResources != null) {
+      recipe.name = Funcs.jsonGetString(jRecipe["name"], "");
+      recipe.id = Funcs.jsonGetInt(jRecipe["id"], -1);
+      recipe.buildTime = Funcs.jsonGetFloat(jRecipe["buildTime"], 1);
 
-          foreach (JObject jResource in jaResources) {
-            string rname = Funcs.jsonGetString(jResource["name"], null);
-            int rqty = Funcs.jsonGetInt(jResource["qty"], -1);
+      recipe.products = new Dictionary<string, RecipeProduct>();
+      recipe.resources = new Dictionary<string, RecipeResource>();
+      recipe.cost = Funcs.jsonGetFloat(jRecipe["cost"], 0);
+      recipe.onDemand = Funcs.jsonGetBool(jRecipe["onDemand"], false);
+      recipe.btnText = Funcs.jsonGetString(jRecipe["btnText"], "");
 
+      JArray jaResources = Funcs.jsonGetArray(jRecipe, "resources");
 
+      if (jaResources != null) {
 
-            if (rname != null && rqty > 0) {
-              RecipeResource r = new RecipeResource(rname, rqty);
-
-              recipe.resources[rname] = r;
-
-            }
-
-
-          }
-        }
-
-
-        JArray jaProducts = Funcs.jsonGetArray(jRecipe, "products");
-        if (jaProducts != null) {
-
-          foreach (JObject jProduct in jaProducts) {
-            string rname = Funcs.jsonGetString(jProduct["name"], null);
-            int rminQty = Funcs.jsonGetInt(jProduct["qtyMin"], -1);
-            int rmaxQty = Funcs.jsonGetInt(jProduct["qtyMax"], -1);
-            float rchance = Funcs.jsonGetFloat(jProduct["chance"], 0);
+        foreach (JObject jResource in jaResources) {
+          string rname = Funcs.jsonGetString(jResource["name"], null);
+          int rqty = Funcs.jsonGetInt(jResource["qty"], -1);
 
 
 
-            if (rname != null && rminQty >= 0 && rmaxQty > 0) {
-              RecipeProduct r = new RecipeProduct(rname, rminQty, rmaxQty, rchance);
+          if (rname != null && rqty > 0) {
+            RecipeResource r = new RecipeResource(rname, rqty);
 
-              recipe.products[rname] = r;
-
-            }
-
+            recipe.resources[rname] = r;
 
           }
+
+
         }
-
-        recipes[recipe.name] = recipe;
-        //Debug.Log("recipe Added: " + recipe.ToString(true) + " " + recipe.buildTime);
-
       }
 
-    }
 
+      JArray jaProducts = Funcs.jsonGetArray(jRecipe, "products");
+      if (jaProducts != null) {
+
+        foreach (JObject jProduct in jaProducts) {
+          string rname = Funcs.jsonGetString(jProduct["name"], null);
+          int rminQty = Funcs.jsonGetInt(jProduct["qtyMin"], -1);
+          int rmaxQty = Funcs.jsonGetInt(jProduct["qtyMax"], -1);
+          float rchance = Funcs.jsonGetFloat(jProduct["chance"], 0);
+
+
+
+          if (rname != null && rminQty >= 0 && rmaxQty > 0) {
+            RecipeProduct r = new RecipeProduct(rname, rminQty, rmaxQty, rchance);
+
+            recipe.products[rname] = r;
+
+          }
+
+
+        }
+      }
+
+      recipes[recipe.name] = recipe;
+      //Debug.Log("recipe Added: " + recipe.ToString(true) + " " + recipe.buildTime);
+    }
   }
 }

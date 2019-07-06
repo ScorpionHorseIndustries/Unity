@@ -1,0 +1,8 @@
+{
+      "id": 4,
+      "type": "inv::wood_planks",
+      "niceName": "wood planks",
+      "stackSize": 32,
+      "spriteName": "inventory_items::wood_planks",
+      "category": "raw"
+    }

@@ -1,0 +1,13 @@
+{
+      "name": "recipe::installed::crate::decon",
+      "id": 20,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::wood_planks",
+          "qtyMin": 1,
+          "qtyMax": 3,
+          "chance": 1
+        }
+      ]
+    }

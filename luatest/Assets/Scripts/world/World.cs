@@ -278,11 +278,12 @@ namespace NoYouDoIt.TheWorld {
       SetCollections();
 
       //CreateAllInstalledItemPrototypes();
-      RobotType.LoadFromFile();
-
+      //RobotType.LoadFromFile();
+      Robot.LoadFromFile();
       Recipe.LoadFromFile();
       InstalledItem.LoadFromFile();
       InventoryItem.LoadFromFile();
+      
 
       this.trashPrototypes = InstalledItem.trashPrototypes;
 
@@ -1590,9 +1591,11 @@ import 'NoYouDoIt.DataModels'
       SetCollections();
       SetCallbacks();
       //CreateAllInstalledItemPrototypes();
+      Robot.LoadFromFile();
       InstalledItem.LoadFromFile();
       InventoryItem.LoadFromFile();
       Recipe.LoadFromFile();
+      
       CreateEmptyTiles();
       SetTilesFromArray(tilesArray);
       //SetInstalledFromArray(installedArray);

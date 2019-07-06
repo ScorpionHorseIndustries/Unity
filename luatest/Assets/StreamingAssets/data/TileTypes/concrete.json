@@ -1,0 +1,12 @@
+{
+  "rangeHigh": -100,
+  "movementFactor": 0.9,
+  "rangeLow": -100,
+  "build": true,
+  "name": "concrete",
+  "id": 6,
+  "spritesOffset": 40,
+  "sprites": 8,
+  "spritePrefix": "tiles_",
+  "height": -1
+}

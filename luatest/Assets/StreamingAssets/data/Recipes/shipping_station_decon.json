@@ -1,0 +1,19 @@
+{
+		"name" : "recipe::installed::shipping_station::decon",
+		"id" : 26,
+		      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 5,
+          "chance": 1
+        },
+        {
+          "name": "inv::copper_plates",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        }
+      ]
+	}
+	

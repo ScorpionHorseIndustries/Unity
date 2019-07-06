@@ -1,0 +1,19 @@
+{
+      "name": "recipe::installed::mining_controller::decon",
+      "id": 21,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 6,
+          "chance": 1
+        },
+        {
+          "name": "inv::copper_plates",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        }
+      ]
+    }

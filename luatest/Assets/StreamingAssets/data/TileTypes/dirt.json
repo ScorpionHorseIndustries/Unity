@@ -1,0 +1,12 @@
+{
+  "rangeHigh": 0.7,
+  "rangeLow": 0.5,
+  "build": true,
+  "name": "dirt",
+  "movementCost": 25,
+  "id": 2,
+  "spritesOffset": 8,
+  "sprites": 8,
+  "spritePrefix": "tiles_",
+  "height": 2
+}

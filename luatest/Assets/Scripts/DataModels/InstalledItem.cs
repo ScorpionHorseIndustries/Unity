@@ -97,6 +97,7 @@ namespace NoYouDoIt.DataModels {
     public bool isWorkstation { get; private set; } = false;
     public string luaOnCreate { get; private set; }
     public string workCondition { get; set; }
+    public bool editOnClick { get; private set; } = false;
 
     //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
     //bool opening = false;
@@ -119,7 +120,7 @@ namespace NoYouDoIt.DataModels {
 
     }
 
-    
+
 
     private InstalledItem(World world, InstalledItem proto, bool spawn) {
 
@@ -163,6 +164,7 @@ namespace NoYouDoIt.DataModels {
       this.yClearance = proto.yClearance;
       this.luaOnCreate = proto.luaOnCreate;
       this.workCondition = proto.workCondition;
+      this.editOnClick = proto.editOnClick;
 
       if (spawn && this.growthStages.Count > 0) {
         this.growthStage = UnityEngine.Random.Range(0, itemParameters.GetInt("maxGrowthStage"));
@@ -298,8 +300,8 @@ namespace NoYouDoIt.DataModels {
 
     public bool isPositionValid(World world, int x, int y) {
 
-      for (int xx = x-this.xClearance; xx < x + this.width + this.xClearance; xx += 1) {
-        for (int yy = y-this.yClearance; yy < y + this.height + this.yClearance; yy += 1) {
+      for (int xx = x - this.xClearance; xx < x + this.width + this.xClearance; xx += 1) {
+        for (int yy = y - this.yClearance; yy < y + this.height + this.yClearance; yy += 1) {
           Tile t = world.GetTileIfChunkExists(xx, yy);
           //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
           if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty() || t.HasPendingWork) {
@@ -353,7 +355,7 @@ namespace NoYouDoIt.DataModels {
             break;
         }
 
-        
+
 
         //Debug.Log("Added: " +  + " of " + rr.name);
       }
@@ -501,15 +503,21 @@ namespace NoYouDoIt.DataModels {
 
 
       int unnamedCounter = 0;
-      string path = Application.streamingAssetsPath + "/json/InstalledItems.json";
+      string path = Application.streamingAssetsPath;
+      path = System.IO.Path.Combine(path, "data", "InstalledItems");
 
-      string json = File.ReadAllText(path);
-      JObject jo = JObject.Parse(json);
+      string[] files = Directory.GetFiles(path, "*.json");
 
-      JArray installedItemsArray = (JArray)jo["InstalledItems"];
+      foreach (string file in files) {
+
+        string json = File.ReadAllText(file);
+        JObject installedItemJson = JObject.Parse(json);
+
+        //JArray installedItemsArray = (JArray)jo["InstalledItems"];
 
 
-      foreach (JObject installedItemJson in installedItemsArray) {
+        //foreach (JObject installedItemJson in installedItemsArray) {
+
         string name = Funcs.jsonGetString(installedItemJson["name"], "unnamed_" + unnamedCounter);
         string niceName = Funcs.jsonGetString(installedItemJson["niceName"], "JSON MISSING");
         unnamedCounter += 1;
@@ -537,6 +545,7 @@ namespace NoYouDoIt.DataModels {
         int yClearance = Funcs.jsonGetInt(installedItemJson["y_clearance"], 0);
         int xClearance = Funcs.jsonGetInt(installedItemJson["x_clearance"], 0);
         string workCondition = Funcs.jsonGetString(installedItemJson["workCondition"], null);
+        bool editOnClick = Funcs.jsonGetBool(installedItemJson["editOnClick"], false);
 
         string luaOnCreate = Funcs.jsonGetString(installedItemJson["onCreate"], null);
 
@@ -610,6 +619,7 @@ namespace NoYouDoIt.DataModels {
         proto.yClearance = yClearance;
         proto.luaOnCreate = luaOnCreate;
         proto.workCondition = workCondition;
+        proto.editOnClick = editOnClick;
         //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
         //Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);
@@ -659,7 +669,7 @@ namespace NoYouDoIt.DataModels {
         } else {
           proto.growthStage = -1;
         }
-        
+
 
         JArray parameters = Funcs.jsonGetArray(installedItemJson, "parameters");
         if (parameters != null) {

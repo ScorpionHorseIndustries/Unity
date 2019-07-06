@@ -36,8 +36,8 @@
       "recipe": "recipe::installed::organic_trash::build",
       "deconstructRecipe": "recipe::installed::organic_trash::decon",
       "paletteSwap": true,
-      "onCreate" :  "SetSocialMediaName"
-      
+      "onCreate": "SetSocialMediaName"
+
 
     },
     {
@@ -180,7 +180,7 @@
       "workRecipe": "recipe::installed::mining_controller::work",
       "workstation": true,
       "updateAction": "OnUpdate_Workstation",
-	  "workCondition" : ""
+      "workCondition": " GetStockpileQty(inv__steel_plates) < 32"
 
     },
     {
@@ -225,8 +225,8 @@
       "inventorySlots": 0,
       "width": 1,
       "height": 2,
-	  "x_clearance" : 1,
-	  "y_clearance" : 1,
+      "x_clearance": 1,
+      "y_clearance": 1,
       "updateAction": "OnUpdate_Plant",
       "updateActionCountDown": 30,
       "updateActionCountDownRange": 5,
@@ -259,19 +259,19 @@
           "stage": 4,
           "length": 4,
           "sprite": "installed_items::tree_mature_0",
-		  "deconstructRecipe": "recipe::installed::tree::decon"
+          "deconstructRecipe": "recipe::installed::tree::decon"
         },
         {
           "stage": 5,
           "length": 4,
           "sprite": "installed_items::tree_mature_1",
-		  "deconstructRecipe": "recipe::installed::tree::decon"
+          "deconstructRecipe": "recipe::installed::tree::decon"
         }
 
       ]
 
     },
-	{
+    {
       "id": 11,
       "name": "installed::shipping_station",
       "niceName": "shipping station",

@@ -8,10 +8,16 @@ using NoYouDoIt.TheWorld;
 namespace NoYouDoIt.Controller {
 
   public enum MOUSE_MODE {
-    SELECT,BUILD
+    SELECT, BUILD
   }
 
+  public enum INPUT_MODE {
+    GAME, CONSOLE, SHOWING_JOBS, SHOWING_DIALOGUE
+  }
+
+
   public class InputController : MonoBehaviour {
+    INPUT_MODE inputMode = INPUT_MODE.GAME;
     public const int MOUSE_LEFT = 0;
     public const int MOUSE_RIGHT = 1;
     public const int MOUSE_MIDDLE = 2;
@@ -59,6 +65,7 @@ namespace NoYouDoIt.Controller {
     private bool tilesFound = false;
     GameObject uConsoleGO;
     CardboardKeep.UConsole UConsoleObj;
+    private bool dialogueWindowOpen = false;
 
 
 
@@ -144,6 +151,79 @@ namespace NoYouDoIt.Controller {
     //state
     bool showingJobs = false;
     //state
+
+    void DoUpdate() {
+      if (!initialised) return;
+
+
+      switch (inputMode) {
+        case INPUT_MODE.GAME:
+          if (first) {
+            UConsoleObj.Deactivate();
+            uConsoleGO.SetActive(false);
+            first = false;
+          }
+          if (Input.GetKeyDown(KeyCode.BackQuote)) {
+            ActivateConsole();
+          } else if (Input.GetKeyUp(KeyCode.E)) {
+
+          }
+
+
+          break;
+        case INPUT_MODE.CONSOLE:
+          if (Input.GetKeyDown(KeyCode.BackQuote)) {
+            DeactivateConsole();
+          }
+          break;
+        case INPUT_MODE.SHOWING_JOBS:
+          break;
+        case INPUT_MODE.SHOWING_DIALOGUE:
+          break;
+        default:
+          break;
+      }
+
+
+    }
+
+    void ActivateJobs() {
+
+
+
+      WorldController.Instance.jobsPanelPrefab.SetActive(showingJobs);
+
+      WorldController.Instance.gameState = GAME_STATE.PAUSE;
+      WorldController.Instance.CreateJobPanelItems();
+      inputMode = INPUT_MODE.SHOWING_JOBS;
+
+
+
+
+    }
+
+    void DeactivateJobs() {
+      WorldController.Instance.gameState = GAME_STATE.PLAY;
+      WorldController.Instance.DestroyJobPanelItems();
+      inputMode = INPUT_MODE.GAME;
+
+    }
+
+    void ActivateConsole() {
+      uConsoleGO.SetActive(true);
+      UConsoleObj.Activate();
+      WorldController.Instance.gameState = GAME_STATE.PAUSE;
+      inputMode = INPUT_MODE.CONSOLE;
+    }
+
+    void DeactivateConsole() {
+      UConsoleObj.Deactivate();
+      uConsoleGO.SetActive(false);
+      WorldController.Instance.gameState = GAME_STATE.PLAY;
+      inputMode = INPUT_MODE.GAME;
+    }
+
+
     void Update() {
       if (!initialised) return;
 
@@ -158,8 +238,6 @@ namespace NoYouDoIt.Controller {
         //GameObject go = WorldController.Instance.uConsoleObject;
         //CardboardKeep.UConsole uc = WorldController.Instance.uConsoleObject.GetComponent<CardboardKeep.UConsole>();
         if (uConsoleGO.activeSelf) {
-
-
           UConsoleObj.Deactivate();
           uConsoleGO.SetActive(false);
           WorldController.Instance.gameState = GAME_STATE.PLAY;
@@ -176,6 +254,7 @@ namespace NoYouDoIt.Controller {
       if (uConsoleGO.activeSelf) {
         return;
       }
+
 
 
 

@@ -96,6 +96,7 @@ namespace NoYouDoIt.DataModels {
     public string deconRecipeName { get; private set; }
     public bool isWorkstation { get; private set; } = false;
     public string luaOnCreate { get; private set; }
+    public string workCondition { get; private set; }
 
     //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
     //bool opening = false;
@@ -161,6 +162,7 @@ namespace NoYouDoIt.DataModels {
       this.xClearance = proto.xClearance;
       this.yClearance = proto.yClearance;
       this.luaOnCreate = proto.luaOnCreate;
+      this.workCondition = proto.workCondition;
 
       if (spawn && this.growthStages.Count > 0) {
         this.growthStage = UnityEngine.Random.Range(0, itemParameters.GetInt("maxGrowthStage"));
@@ -534,6 +536,7 @@ namespace NoYouDoIt.DataModels {
         string deconRecipeName = Funcs.jsonGetString(installedItemJson["deconstructRecipe"], null);
         int yClearance = Funcs.jsonGetInt(installedItemJson["y_clearance"], 0);
         int xClearance = Funcs.jsonGetInt(installedItemJson["x_clearance"], 0);
+        string workCondition = Funcs.jsonGetString(installedItemJson["workCondition"], null);
 
         string luaOnCreate = Funcs.jsonGetString(installedItemJson["onCreate"], null);
 
@@ -606,6 +609,7 @@ namespace NoYouDoIt.DataModels {
         proto.xClearance = xClearance;
         proto.yClearance = yClearance;
         proto.luaOnCreate = luaOnCreate;
+        proto.workCondition = workCondition;
         //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
         //Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);

@@ -11,6 +11,22 @@ namespace NoYouDoIt.Utils {
   public static class Funcs {
 
 
+    public static object Coalesce(params object[] objects) {
+      foreach (object o in objects) {
+        if (o != null) return o;
+      }
+      return null;
+    }
+
+    public static string GetLuaVariableName(string name) {
+      string s = name;
+      s = s.Replace(':', '_');
+      
+
+      return s;
+    }
+
+
     public static string PadPair(int width, string property, string value, char padding = '.') {
       string output = "";
 

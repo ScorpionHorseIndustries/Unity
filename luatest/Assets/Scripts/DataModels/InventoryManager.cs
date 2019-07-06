@@ -87,7 +87,7 @@ namespace NoYouDoIt.DataModels {
       return qty;
     }
 
-    public int QtyInStockPiles(string name) {
+    public int GetStockpileQty(string name) {
       int qty = 0;
       foreach (Inventory inv in inventories.Where(e => e.IsStockPile)) {
         qty += inv.HowMany(name);
@@ -98,7 +98,7 @@ namespace NoYouDoIt.DataModels {
 
     public void UpdateStockPileSettings() {
       foreach (StockPileSetting sps in stockpileSettings.Values) {
-        sps.currentQty = QtyInStockPiles(sps.name);
+        sps.currentQty = GetStockpileQty(sps.name);
       }
     }
 

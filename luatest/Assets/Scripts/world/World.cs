@@ -420,6 +420,17 @@ import 'NoYouDoIt.DataModels'
     }
 
     //-------------------------------LUA-------------------------------
+    public static bool EvalLuaString(string s) {
+      object[] res = World.current.lua.DoString("return " + s);
+
+      bool returnValue = false;
+      bool.TryParse((string)res[0], out returnValue);
+
+
+
+      return returnValue;
+    }
+
     public static void CallLuaFunction(string functionName, params System.Object[] args) {
       LuaFunction luaFunc = World.current.lua[functionName] as LuaFunction;
       luaFunc.Call(args);

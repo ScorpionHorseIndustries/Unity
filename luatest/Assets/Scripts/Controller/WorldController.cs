@@ -594,7 +594,8 @@ namespace NoYouDoIt.Controller {
         string invname = t.GetFirstInventoryItem();
         if (invname != null) {
           string nicename = InventoryItem.GetPrototype(invname).niceName;
-          displayMe += Funcs.PadPair(pw, nicename, t.InventoryTotal(invname).ToString(), '.');
+          displayMe += Funcs.PadPair(pw, nicename, t.InventoryTotal(invname).ToString());
+          displayMe += "\n" + Funcs.PadPair(pw, "allocated", t.InventoryTotalAllocated(invname).ToString());
         }
         //displayMe += InventoryItem.GetPrototype(t.GetFirstInventoryItem()).niceName + ": " + t.InventoryTotal(((string)o));
 

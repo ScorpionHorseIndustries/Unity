@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 namespace NoYouDoIt.DataModels {
   using NoYouDoIt.Utils;
+  using NoYouDoIt.TheWorld;
   public class InventoryItem {
 
     public static readonly string ANY = "inv::any";
@@ -109,6 +110,7 @@ namespace NoYouDoIt.DataModels {
         item.stackSize = stackSize;
         item.spriteName = spriteName;
         prototypes.Add(item.type, item);
+        World.current.lua[Funcs.GetLuaVariableName(item.type)] = item.type;
 
         //Debug.Log(item);
       }

@@ -10,7 +10,7 @@ using NoYouDoIt.TheWorld;
 
 namespace NoYouDoIt.DataModels {
   public enum INVENTORY_TYPE {
-    NONE, TILE, JOB, CHARACTER, INSTALLED_ITEM, INVENTORY_ITEM,ROBOT
+    NONE, TILE, JOB, CHARACTER, INSTALLED_ITEM, INVENTORY_ITEM, ROBOT
   }
 
   public class Inventory {
@@ -66,8 +66,8 @@ namespace NoYouDoIt.DataModels {
         this.work = (WorkItem)parent;
       } else if (parent.GetType() == typeof(Tile)) {
         this.tile = (Tile)parent;
-      //} else if (parent.GetType() == typeof(Character)) {
-      //  this.character = (Character)parent;
+        //} else if (parent.GetType() == typeof(Character)) {
+        //  this.character = (Character)parent;
       } else if (parent.GetType() == typeof(Robot)) {
         this.robot = (Robot)parent;
       }
@@ -272,7 +272,16 @@ namespace NoYouDoIt.DataModels {
 
     }
 
+    public int GetAllocatedQty(string type) {
+      int qty = 0;
+      foreach (InventorySlot slot in slots.Where(e => e.type == type)) {
 
+        qty += slot.qtyAllocated;
+      }
+
+      return qty;
+
+    }
 
     public int HowMany(string type, bool freeQty = true) {
       int qty = 0;

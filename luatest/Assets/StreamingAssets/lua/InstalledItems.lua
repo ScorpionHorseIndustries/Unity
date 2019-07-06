@@ -74,8 +74,14 @@ function OnUpdate_Workstation(item, deltaTime)
 	
 
     if (tile.HasPendingWork == false) then
+		if (item.workCondition ~= nil) then
+			local wc = load("return ".. item.workCondition)
+			if (not wc()) then goto skip end
+
+		end
 		WorkItem.MakeWorkItem(tile,"SetWorkstation",item.workRecipeName, "abc", "def");
     end
+	::skip::
 end
 
 

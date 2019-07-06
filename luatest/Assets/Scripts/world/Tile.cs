@@ -200,7 +200,9 @@ namespace NoYouDoIt.TheWorld {
 
 
 
-
+    public int InventoryTotalAllocated(string type) {
+      return inventory.GetAllocatedQty(type);
+    }
 
     public int InventoryTotal(string type) {
       return inventory.HowMany(type);

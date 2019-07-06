@@ -1,17 +1,9 @@
-function GetStockpileTotal(inventoryItemName) 
-	local invTotal = 0
-	local inventories = World.current.inventoryManager.inventories:GetEnumerator()
+function GetStockpileQty(inventoryItemName) 
+	return World.current.inventoryManager:GetStockpileQty(inventoryItemName)
+end
 
-	while inventories:MoveNext() do
-		inventory = inventories.Current
-
-		if (inventory ~= nil and inventory.tile ~= nil and inventory.tile.installedItem ~= nil and inventory.tile.installedItem.type == "installed::stockpile") then
-			invTotal = invTotal + inventory:HowMany(inventoryItemName)
-		end
-
-	end
-	return invTotal
-
+function GetLooseQty(inventoryItemName)
+	return World.current.inventoryManager:GetLooseQty(inventoryItemName)
 
 end
 

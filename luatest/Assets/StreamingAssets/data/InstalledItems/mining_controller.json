@@ -21,6 +21,13 @@
   "workstation": true,
   "updateAction": "OnUpdate_Workstation",
   "editOnClick": true,
-  "workCondition": "GetStockpileQty(inv__steel_plates) + GetLooseQty(inv__steel_plates) < 32"
+  "workCondition": "GetStockpileQty(inv__steel_plates) + GetLooseQty(inv__steel_plates) < 32",
+  "parameters": [
+    {
+      "name": "something",
+      "value": "cheese",
+      "type": "string"
+    }
+  ]
 
 }

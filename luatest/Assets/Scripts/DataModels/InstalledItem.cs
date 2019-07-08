@@ -252,6 +252,7 @@ namespace NoYouDoIt.DataModels {
           //Debug.Log(updateActionCountDown + " " + updateActionCountDownMax);
         } else {
           updateActionCountDown = updateActionCountDownMax + UnityEngine.Random.Range(-updateActionCountDownRange, updateActionCountDownRange);
+          //Debug.Log("updating " + this.type + " timer:" + updateActionCountDown);
           //updateActions(this, deltaTime);
           World.CallLuaFunctions(this.updateActions.ToArray(), this, deltaTime);
         }

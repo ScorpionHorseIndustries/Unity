@@ -20,6 +20,7 @@
   "workRecipe": "recipe::installed::shipping_station::work",
   "workstation": true,
   "editOnClick": true,
-  "updateAction": "OnUpdate_Workstation"
+  "updateAction": "OnUpdate_Workstation",
+  "workCondition" :  "false"
 
 }

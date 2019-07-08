@@ -120,6 +120,7 @@
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Example\UConsoleExamplePlayerScript.cs" />
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Scripts\UConsole.cs" />
     <Compile Include="Assets\Packages\CK_Toolbox\CK_UConsole\Scripts\UConsoleCommands.cs" />
+    <Compile Include="Assets\prfInstalledItemKVPScript.cs" />
     <Compile Include="Assets\prfInstalledItemScript.cs" />
     <Compile Include="Assets\prfStockPileItemScript.cs" />
     <Compile Include="Assets\scrBtnBuildRecipeData.cs" />
@@ -195,6 +196,7 @@
     <None Include="Assets\StreamingAssets\data\Entities\human.json" />
     <None Include="Assets\StreamingAssets\images\installed_items\wall.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\recycler_work.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\fabricator_build.json" />
     <None Include="Assets\StreamingAssets\images\installed_items\trees.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\wood_logs.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\recycler_decon.json" />
@@ -208,6 +210,7 @@
     <None Include="Assets\StreamingAssets\data\TileTypes\dirt.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\mining_controller_work.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\organic_trash.json" />
+    <None Include="Assets\StreamingAssets\data\InstalledItems\fabricator.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\sapling_decon.json" />
     <None Include="Assets\StreamingAssets\images\entities\robot.json" />
     <None Include="Assets\StreamingAssets\data\TileTypes\empty.json" />
@@ -267,6 +270,7 @@
     <None Include="Assets\StreamingAssets\data\Recipes\mining_controller_decon.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\stockpile.json" />
     <None Include="Assets\StreamingAssets\data\Entities\chicken.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\fabricator_decon.json" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\StreamingAssets\xml\save.xml" />
@@ -288,21 +292,6 @@
     <None Include="Assets\Kenney\Spritesheet\spritesheetInfo.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Timeline">
-      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Entities.Properties">
       <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Entities.Properties.dll</HintPath>
@@ -328,6 +317,9 @@
     <Reference Include="Unity.Scenes.Editor">
       <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Scenes.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro.Editor">
+      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Mathematics.Extensions">
       <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Mathematics.Extensions.dll</HintPath>
     </Reference>
@@ -336,6 +328,15 @@
     </Reference>
     <Reference Include="Unity.Mathematics.Extensions.Hybrid">
       <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Mathematics.Extensions.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline">
+      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Rendering.Hybrid">
+      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Rendering.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.CollabProxy.Editor">
+      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Entities.BuildUtils">
       <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Entities.BuildUtils.dll</HintPath>
@@ -367,11 +368,14 @@
     <Reference Include="Unity.Mathematics.Editor">
       <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.DataPrivacy">
+      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Transforms.Hybrid">
       <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Transforms.Hybrid.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Rendering.Hybrid">
-      <HintPath>S:/unity/luatest/Library/ScriptAssemblies/Unity.Rendering.Hybrid.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>E:/applications/unity/Editor/2019.1.9f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

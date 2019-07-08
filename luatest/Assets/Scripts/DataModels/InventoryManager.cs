@@ -11,19 +11,19 @@ using Unity.Collections;
 
 namespace NoYouDoIt.DataModels {
 
-  public struct StockPileJob : IJob {
-    public NativeHashMap<int,int> naStockPileSettings;
+  //public struct StockPileJob : IJob {
+  //  public NativeHashMap<int,int> naStockPileSettings;
 
 
 
-    public void Execute() {
+  //  public void Execute() {
 
-    }
-  }
+  //  }
+  //}
 
   public class StockPileSetting {
     private static int ID = 0;
-    public int id { get; private set}
+    public int id { get; private set; }
     public InventoryItem item;
     public string name { get; private set; }
     public int currentQty;
@@ -48,7 +48,7 @@ namespace NoYouDoIt.DataModels {
   }
 
   public class InventoryManager {
-    StockPileJob job;
+    //StockPileJob job;
     private World world;
 
     public Dictionary<string, StockPileSetting> stockpileSettings;
@@ -86,14 +86,14 @@ namespace NoYouDoIt.DataModels {
     }
 
     public void InitStockpile() {
-      job.naStockPileSettings = new NativeHashMap<int, int>();
+      //job.naStockPileSettings = new NativeHashMap<int, int>();
       foreach (string name in InventoryItem.GetAllPrototypeNames()) {
         InventoryItem item = InventoryItem.GetPrototype(name);
 
         StockPileSetting sps = new StockPileSetting(item);
         stockpileSettings[name] = sps;
 
-        job.naStockPileSettings.TryAdd(sps.id, 0);
+        //job.naStockPileSettings.TryAdd(sps.id, 0);
       }
     }
 
@@ -121,7 +121,7 @@ namespace NoYouDoIt.DataModels {
     }
 
     public void UpdateStockPileSettings() {
-      job.Schedule();
+      //job.Schedule();
 
       foreach (StockPileSetting sps in stockpileSettings.Values) {
         sps.currentQty = GetStockpileQty(sps.name);

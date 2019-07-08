@@ -1,0 +1,25 @@
+﻿{
+  "id": 13,
+  "name": "installed::fabricator",
+  "niceName": "fabricator",
+  "sprite": "installed_items::fabricator",
+  "sprites": [],
+  "movementFactor": 0.5,
+  "linked": false,
+  "trash": false,
+  "build": true,
+  "randomRotation": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::fabricator::build",
+  "updateActionCountDown": 1,
+  "width": 1,
+  "height": 2,
+  "workRecipe": "",
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "deconstructRecipe": "recipe::installed::fabricator::decon",
+  "workCondition": "false"
+
+
+}

@@ -17,7 +17,7 @@ public class scrollItemDebugCharacters : MonoBehaviour {
   }
 
 
-  public void Set(Robot chr) {
+  public void Set(Entity chr) {
     //txtName.text = chr.name + " " + chr.state.ToString();
     //txtJob.text = "";
     //if (chr.myJob != null) {

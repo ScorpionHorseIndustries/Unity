@@ -11,6 +11,24 @@ namespace NoYouDoIt.Utils {
   public static class Funcs {
 
 
+    public static string GetSpriteDirection(float px, float py, float nx, float ny) {
+      float xx = nx - px;
+      float yy = ny - py;
+
+      if (xx < 0) {
+        return World.WEST;
+      } else if (xx > 0) {
+        return World.EAST;
+      } else if (yy > 0) {
+        return World.NORTH;
+      } else {
+        return World.SOUTH;
+      }
+
+
+
+    }
+
     public static object Coalesce(params object[] objects) {
       foreach (object o in objects) {
         if (o != null) return o;

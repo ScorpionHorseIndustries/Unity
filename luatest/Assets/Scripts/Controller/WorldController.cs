@@ -54,7 +54,9 @@ namespace NoYouDoIt.Controller {
     private Dictionary<Tile, GameObject> TilesInventoryItems_GO_Map;
     private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
     //private Dictionary<Character, GameObject> Characters_GO_Map;
-    private Dictionary<Robot, GameObject> Robot_GO_Map;
+    private Dictionary<Entity, GameObject> Entity_GO_Map;
+    //private Dictionary<Creature, GameObject> Create_GO_Map;
+    
     private Dictionary<string, GameObject> StockPileSettings_GO_Map;
 
     //private Dictionary<Job, GameObject> Job_GO_Map;
@@ -137,8 +139,8 @@ namespace NoYouDoIt.Controller {
 
       //}
 
-      foreach (Robot r in world.robots) {
-        OnRobotCreated(r);
+      foreach (Entity r in world.entities) {
+        OnEntityCreated(r);
       }
 
       //spriteController = SpriteController.Instance;
@@ -150,9 +152,9 @@ namespace NoYouDoIt.Controller {
       //world.CBRegisterCharacterChanged(OnCharacterChanged);
       //world.CBRegisterCharacterCreated(OnCharacterCreated);
       //world.CBRegisterCharacterKilled(OnCharacterKilled);
-      world.CBRegisterRobotCreated(OnRobotCreated);
-      world.CBRegisterRobotChanged(OnRobotChanged);
-      world.CBRegisterRobotRemoved(OnRobotRemoved);
+      world.CBRegisterEntityCreated(OnEntityCreated);
+      world.CBRegisterEntityChanged(OnEntityChanged);
+      world.CBRegisterEntityRemoved(OnEntityRemoved);
       //world.CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlacedOnTile);
       world.CBRegisterInventoryItemChangedOnTile(OnInventoryItemChanged);
       //world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
@@ -222,9 +224,9 @@ namespace NoYouDoIt.Controller {
       //world.CBRegisterCharacterChanged(OnCharacterChanged);
       //world.CBRegisterCharacterCreated(OnCharacterCreated);
       //world.CBRegisterCharacterKilled(OnCharacterKilled);
-      world.CBRegisterRobotCreated(OnRobotCreated);
-      world.CBRegisterRobotChanged(OnRobotChanged);
-      world.CBRegisterRobotRemoved(OnRobotRemoved);
+      world.CBRegisterEntityCreated(OnEntityCreated);
+      world.CBRegisterEntityChanged(OnEntityChanged);
+      world.CBRegisterEntityRemoved(OnEntityRemoved);
       //world.CBRegisterInventoryItemPlacedOnTile(OnInventoryItemPlacedOnTile);
       world.CBRegisterInventoryItemChangedOnTile(OnInventoryItemChanged);
       //world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
@@ -269,14 +271,14 @@ namespace NoYouDoIt.Controller {
       //invItem_GO_Map = new Dictionary<InventoryItem, GameObject>();
       TilesInventoryItems_GO_Map = new Dictionary<Tile, GameObject>();
       //Characters_ScrollItem_Map = new Dictionary<Character, GameObject>();
-      Robot_GO_Map = new Dictionary<Robot, GameObject>();
+      Entity_GO_Map = new Dictionary<Entity, GameObject>();
       StockPileSettings_GO_Map = new Dictionary<string, GameObject>();
       tempText = new List<GameObject>();
 
       eventSystem = EventSystem.current;
       timers = new List<NYDITimer>();
 
-      timers.Add(new NYDITimer("updateMoney", 1, UpdateMoney));
+      timers.Add(new NYDITimer("updateMoney", 1,1.5f, UpdateMoney));
       timers.Add(new NYDITimer("updateStockPile", 2, 3, UpdateStockPile));
       timers.Add(new NYDITimer("checkStockPile", 2, 5, CheckStockPile));
 
@@ -371,8 +373,8 @@ namespace NoYouDoIt.Controller {
       ////Gizmos.DrawCube(inputController.camBounds.center, Vector3.one);
 
       Gizmos.color = Color.white;
-      if (world != null && world.robots != null) {
-        foreach (Robot robot in world.robots) {
+      if (world != null && world.entities != null) {
+        foreach (Entity robot in world.entities) {
 
           if (robot.path != null) {
             Vector2 a = robot.position;
@@ -582,10 +584,12 @@ namespace NoYouDoIt.Controller {
       displayMe += "\n";
       if (o.GetType() == typeof(Tile)) {
         displayMe += Funcs.PadPair(pw, "tile type", ((Tile)o).type.name, '.');
-      } else if (o.GetType() == typeof(TileOccupant)) {
-        TileOccupant to = (TileOccupant)o;
-        displayMe += Funcs.PadPair(pw, "type", to.type);
+      } else if (o.GetType() == typeof(Entity)) {
+        Entity to = (Entity)o;
+        displayMe += Funcs.PadPair(pw, "type", to.typeName);
         displayMe += "\n" + Funcs.PadPair(pw, "name", to.name);
+        displayMe += "\n" + Funcs.PadPair(pw, "state", to.state);
+        
       } else if (o.GetType() == typeof(InstalledItem)) {
         InstalledItem item = (InstalledItem)o;
         displayMe += Funcs.PadPair(pw, "installed item", item.niceName, '.');
@@ -885,17 +889,17 @@ namespace NoYouDoIt.Controller {
     //  }
     //}
 
-    void OnRobotRemoved(Robot r) {
+    void OnEntityRemoved(Entity r) {
       Debug.Log("remove robot " + r.name);
-      if (Robot_GO_Map.ContainsKey(r)) {
-        GameObject go = Robot_GO_Map[r];
+      if (Entity_GO_Map.ContainsKey(r)) {
+        GameObject go = Entity_GO_Map[r];
         Destroy(go);
-        Robot_GO_Map.Remove(r);
+        Entity_GO_Map.Remove(r);
       }
 
     }
 
-    void OnRobotCreated(Robot r) {
+    void OnEntityCreated(Entity r) {
       string name = r.name + "_" + r.GetHashCode();
       Debug.Log(name + " " + r.Xint + "," + r.Yint);
 
@@ -904,7 +908,7 @@ namespace NoYouDoIt.Controller {
       SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
       spr.sprite = spriteController.GetSprite(r);
       spr.sortingLayerName = "Characters";
-      r.CBRegisterOnChanged(OnRobotChanged);
+      r.CBRegisterOnChanged(OnEntityChanged);
 
 
       //GameObject gln = Instantiate(LinePrefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -915,7 +919,7 @@ namespace NoYouDoIt.Controller {
       //gtx.transform.SetParent(go.transform, true);
 
 
-      Robot_GO_Map.Add(r, go);
+      Entity_GO_Map.Add(r, go);
     }
 
     public void CreateStockpileManagement() {
@@ -995,11 +999,17 @@ namespace NoYouDoIt.Controller {
       tempText.Add(go);
     }
 
-    void OnRobotChanged(Robot r) {
-      if (Robot_GO_Map.ContainsKey(r)) {
-        GameObject go = Robot_GO_Map[r];
+    void OnEntityChanged(Entity r) {
+      if (Entity_GO_Map.ContainsKey(r)) {
+        GameObject go = Entity_GO_Map[r];
         SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
         go.transform.position = r.position;
+
+        if (r.directionChanged) {
+          spr.sprite = NYDISpriteManager.Instance.GetSprite(r.facingSprites[r.facing]);
+          r.directionChanged = false;
+
+        }
       }
     }
 

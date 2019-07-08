@@ -188,7 +188,7 @@ function OnWork_InstalledItem (work, deltaTime)
 		else 
 			coolDown = math.random(1,2)
 
-			work.workTile:PleaseMove(work.assignedRobot.occupier);
+			work.workTile:PleaseMove();
 		end
 	else
 		coolDown = coolDown - deltaTime
@@ -334,11 +334,11 @@ function OnComplete_Workstation(work)
 		--local product = products.Current
 
 
-		if (product.type == RECIPE_PRODUCT_TYPE.ROBOT) then
+		if (product.type == RECIPE_PRODUCT_TYPE.ENTITY) then
 			local tile = World.current:FindEmptyUnnoccupiedTile(work.workTile)
 			if (tile ~= nil) then
-				local res = World.current:CreateRobotAtTile(tile)
-				World.dbug("create robot = " .. tostring(res))
+				local res = World.current:CreateEntityAtTile(tile, product.name)
+				--World.dbug("create robot = " .. tostring(res))
 			end
 
 

@@ -125,7 +125,6 @@ S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.StandardEvents.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.Tracker.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.CollabProxy.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Locator.dll
-S:\unity\luatest\Temp\bin\Debug\Unity.PackageManagerUI.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Timeline.dll
@@ -208,7 +207,6 @@ S:\unity\luatest\Temp\bin\Debug\UnityEngine.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEditor.xml
 S:\unity\luatest\Temp\bin\Debug\Unity.Timeline.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.Editor.pdb
-S:\unity\luatest\Temp\bin\Debug\Unity.PackageManagerUI.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Timeline.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.CollabProxy.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.pdb

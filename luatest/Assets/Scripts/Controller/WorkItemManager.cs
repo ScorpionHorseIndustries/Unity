@@ -71,10 +71,10 @@ namespace NoYouDoIt.Controller {
         WorkItem w = workItems[i];
 
         if (!w.IsItReadyYet()) continue;
-        Robot worker = null;
+        Entity worker = null;
         float dist = 0;
         float nearest = 0;
-        foreach (Robot robot in World.current.robots.Where(e => e.state == "find_work")) {
+        foreach (Entity robot in World.current.entities.Where(e => e.state == "find_work")) {
           dist = Funcs.TaxiDistance(w.workTile, robot.pos);
           if (worker == null || dist < nearest) {
             worker = robot;

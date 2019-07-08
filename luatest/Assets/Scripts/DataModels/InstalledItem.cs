@@ -305,7 +305,15 @@ namespace NoYouDoIt.DataModels {
           Tile t = world.GetTileIfChunkExists(xx, yy);
           //Debug.Log("Is Position Valid (" + x + "," + y + "): " + t);
           if (t == null || !t.type.build || t.installedItem != null || !t.IsInventoryEmpty() || t.HasPendingWork) {
+            
             return false;
+          } else {
+            if (canSpawnOnTileTypeList.Count > 0) {
+              if (!canSpawnOnTileTypeList.Contains(t.type.name)) {
+                return false;
+              }
+
+            }
           }
         }
       }
@@ -343,7 +351,7 @@ namespace NoYouDoIt.DataModels {
       foreach (RecipeProduct rp in prods) {
 
         switch (rp.type) {
-          case RECIPE_PRODUCT_TYPE.ROBOT:
+          case RECIPE_PRODUCT_TYPE.ENTITY:
             break;
           case RECIPE_PRODUCT_TYPE.INVENTORY_ITEM:
             inventory.AddItem(rp.name, (int)rp.outputQty);

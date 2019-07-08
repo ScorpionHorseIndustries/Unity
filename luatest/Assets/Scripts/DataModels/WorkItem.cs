@@ -11,7 +11,7 @@ namespace NoYouDoIt.DataModels {
   using NoYouDoIt.Utils;
   public class WorkItem {
     public Tile workTile { get; private set; }
-    public Robot assignedRobot { get; private set; }
+    public Entity assignedRobot { get; private set; }
     public bool complete { get; private set; } = false;
     public bool isReady { get; private set; } = false;
     public Inventory inventory;
@@ -31,7 +31,7 @@ namespace NoYouDoIt.DataModels {
   
 
 
-    public void Assign(Robot robot) {
+    public void Assign(Entity robot) {
       this.assignedRobot = robot;
     }
 
@@ -163,7 +163,7 @@ namespace NoYouDoIt.DataModels {
     public static WorkItem MakeWorkItem(Tile tile, string function, params System.Object[] args) {
       WorkItem w = new WorkItem();
       w.workTile = tile;
-      w.inventory = new Inventory(World.current, 99, INVENTORY_TYPE.ROBOT, w);
+      w.inventory = new Inventory(World.current, 99, INVENTORY_TYPE.ENTITY, w);
       w.inventory.CBRegisterOnItemAdded(w.OnItemAdded);
 
       args = args.Prepend(w).Cast<System.Object>().ToArray();

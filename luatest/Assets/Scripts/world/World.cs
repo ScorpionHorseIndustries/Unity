@@ -65,12 +65,13 @@ namespace NoYouDoIt.TheWorld {
     public List<InstalledItem> trashInstances;
     private List<InstalledItem> installedItems;
     //public List<Character> characters;
-    public List<Robot> robots;
+    public List<Entity> entities;
     public string[] firstNames;
     public string[] lastNames;
     public string[] words;
     public string[] adjectives;
     public string[] animals;
+    public string[] petNames;
     //private Tile[,] tiles;
     public List<Room> rooms;
     public Dictionary<int, Dictionary<int, TileChunk>> chunks;
@@ -133,9 +134,9 @@ namespace NoYouDoIt.TheWorld {
     //Action<Character> cbCharacterCreated;
     //Action<Character> cbCharacterKilled;
 
-    Action<Robot> CBRobotChanged;
-    Action<Robot> CBRobotCreated;
-    Action<Robot> CBRobotRemoved;
+    Action<Entity> CBEntityChanged;
+    Action<Entity> CBEntityCreated;
+    Action<Entity> CBEntityRemoved;
     Action cbPathNodesDestroyed;
 
     //Action<Tile> cbTileInventoryItemPlacedOnTile;
@@ -228,7 +229,7 @@ namespace NoYouDoIt.TheWorld {
     private void SetCollections() {
       //installedItemProtos = new Dictionary<string, InstalledItem>();
       //installedItemProtos_BY_ID = new Dictionary<int, string>();
-      robots = new List<Robot>();
+      entities = new List<Entity>();
       //characters = new List<Character>();
       //jobQueue = new JobQueue(this);
       workManager = new WorkItemManager();
@@ -279,7 +280,7 @@ namespace NoYouDoIt.TheWorld {
 
       //CreateAllInstalledItemPrototypes();
       //RobotType.LoadFromFile();
-      Robot.LoadFromFile();
+      Entity.LoadFromFile();
       Recipe.LoadFromFile();
       InstalledItem.LoadFromFile();
       InventoryItem.LoadFromFile();
@@ -287,7 +288,7 @@ namespace NoYouDoIt.TheWorld {
 
       this.trashPrototypes = InstalledItem.trashPrototypes;
 
-      loadNames();
+      LoadAllNames();
 
       inventoryManager.InitStockpile();
 
@@ -372,12 +373,13 @@ import 'NoYouDoIt.DataModels'
 
 ");
       lua["world"] = this;
-      LoadLuaFile("World");
-      LoadLuaFile("WorldController");
-      LoadLuaFile("InstalledItems");
-      LoadLuaFile("Jobs");
-      LoadLuaFile("Robot");
-      LoadLuaFile("WorkItem");
+      LoadAllLuaFiles();
+      //LoadLuaFile("World");
+      //LoadLuaFile("WorldController");
+      //LoadLuaFile("InstalledItems");
+      //LoadLuaFile("Jobs");
+      //LoadLuaFile("Robot");
+      //LoadLuaFile("WorkItem");
 
 
 
@@ -422,7 +424,7 @@ import 'NoYouDoIt.DataModels'
 
     //-------------------------------LUA-------------------------------
     public static bool EvalLuaString(string s) {
-      object[] res = World.current.lua.DoString("return " + s);
+      object[] res = TheWorld.World.current.lua.DoString("return " + s);
 
       bool returnValue = false;
       bool.TryParse((string)res[0], out returnValue);
@@ -433,31 +435,51 @@ import 'NoYouDoIt.DataModels'
     }
 
     public static void CallLuaFunction(string functionName, params System.Object[] args) {
-      LuaFunction luaFunc = World.current.lua[functionName] as LuaFunction;
+      LuaFunction luaFunc = TheWorld.World.current.lua[functionName] as LuaFunction;
       luaFunc.Call(args);
     }
 
     public static System.Object[] GetLuaResult(string functionName, params System.Object[] args) {
-      LuaFunction luaFunc = World.current.lua[functionName] as LuaFunction;
+      LuaFunction luaFunc = TheWorld.World.current.lua[functionName] as LuaFunction;
       return luaFunc.Call(args);
     }
 
     public static void CallLuaFunctions(string[] functionList, params System.Object[] args) {
       foreach (string fname in functionList) {
-        LuaFunction luaFunc = World.current.lua[fname] as LuaFunction;
+        LuaFunction luaFunc = TheWorld.World.current.lua[fname] as LuaFunction;
         luaFunc.Call(args);
 
       }
     }
 
-    protected static void LoadLuaFile(string name) {
-      string path = Application.streamingAssetsPath;
-      path = System.IO.Path.Combine(path, "lua");
-      path = System.IO.Path.Combine(path, name + ".lua");
+    protected static void LoadAllLuaFiles() {
+      string path = Path.Combine(Application.streamingAssetsPath, "lua");
 
-      string lua = File.ReadAllText(path);
-      World.current.lua.DoString(lua);
-      Debug.Log("lua: " + lua);
+      LoadAllLuaFilesInFolder(path);
+    }
+
+    protected static void LoadAllLuaFilesInFolder(string folder) {
+      string[] files = Directory.GetFiles(folder, "*.lua");
+
+      foreach (string file in files) {
+        LoadLuaFile(file);
+
+      }
+
+      string[] folders = Directory.GetDirectories(folder);
+      foreach(string ff in folders) {
+        LoadAllLuaFilesInFolder(ff);
+      }
+    }
+
+    protected static void LoadLuaFile(string name) {
+      //string path = Application.streamingAssetsPath;
+      //path = System.IO.Path.Combine(path, "lua");
+      //path = System.IO.Path.Combine(path, name + ".lua");
+
+      string lua = File.ReadAllText(name);
+      TheWorld.World.current.lua.DoString(lua);
+      Debug.Log("loading lua file " + name);
 
 
     }
@@ -503,9 +525,9 @@ import 'NoYouDoIt.DataModels'
       inventoryManager.Update(deltaTime);
       
 
-      for (int i = robots.Count - 1; i >= 0; i -= 1) {
-        Robot robot = robots[i];
-        robot.Update(deltaTime);
+      for (int i = entities.Count - 1; i >= 0; i -= 1) {
+        Entity entity = entities[i];
+        entity.Update(deltaTime);
       }
 
 
@@ -537,9 +559,9 @@ import 'NoYouDoIt.DataModels'
     //  }
     //}
 
-    public void OnRobotChanged(Robot r) {
-      if (CBRobotChanged != null) {
-        CBRobotChanged(r);
+    public void OnEntityChanged(Entity r) {
+      if (CBEntityChanged != null) {
+        CBEntityChanged(r);
       }
     }
 
@@ -556,36 +578,37 @@ import 'NoYouDoIt.DataModels'
 
         if (t.type.movementFactor >= 0.5) {
 
-          Robot c = Robot.MakeRobot(t, "basic");//new Character(this, t);
+          Entity c = Entity.MakeEntity(t, "entities::basic_robot");//new Character(this, t);
 
-          if (CreateRobot(c)) {
+          if (CreateEntity(c)) {
             created += 1;
           }
         }
       }
 
-      foreach (Robot chr in robots) {
+      foreach (Entity chr in entities) {
         Debug.Log("char:" + chr.name);
       }
 
     }
 
-    public bool CreateRobotAtTile(Tile t) {
-      return CreateRobot(t);
+    public bool CreateEntityAtTile(Tile t, string type) {
+      Entity c = Entity.MakeEntity(t, type);
+      return CreateEntity(c);
     }
 
-    public bool CreateRobot(Tile t) {
-      Robot c = Robot.MakeRobot(t, "basic");//new Character(this, t);
-      return CreateRobot(c);
-    }
+    //public bool CreateEntity(Tile t) {
+    //  Entity c = Entity.MakeEntity(t, "basic");//new Character(this, t);
+    //  return CreateEntity(c);
+    //}
 
-    public bool CreateRobot(Robot r) {
+    public bool CreateEntity(Entity r) {
       if (r != null) {
-        robots.Add(r);
-        if (CBRobotCreated != null) {
-          CBRobotCreated(r);
+        entities.Add(r);
+        if (CBEntityCreated != null) {
+          CBEntityCreated(r);
         }
-        r.CBRegisterOnChanged(OnRobotChanged);
+        r.CBRegisterOnChanged(OnEntityChanged);
 
         //CBRegisterPathNodesDestroyed(c.PathNodesDestroyed);
         return true;
@@ -1095,28 +1118,28 @@ import 'NoYouDoIt.DataModels'
 
     //}
 
-    public void CBRegisterRobotChanged(Action<Robot> cb) {
-      CBRobotChanged += cb;
+    public void CBRegisterEntityChanged(Action<Entity> cb) {
+      CBEntityChanged += cb;
     }
 
-    public void CBUnregisterRobotChanged(Action<Robot> cb) {
-      CBRobotChanged -= cb;
+    public void CBUnregisterEntityChanged(Action<Entity> cb) {
+      CBEntityChanged -= cb;
     }
 
-    public void CBRegisterRobotCreated(Action<Robot> cb) {
-      CBRobotCreated += cb;
+    public void CBRegisterEntityCreated(Action<Entity> cb) {
+      CBEntityCreated += cb;
     }
 
-    public void CBUnregisterRobotCreated(Action<Robot> cb) {
-      CBRobotCreated -= cb;
+    public void CBUnregisterEntityCreated(Action<Entity> cb) {
+      CBEntityCreated -= cb;
     }
 
-    public void CBRegisterRobotRemoved(Action<Robot> cb) {
-      CBRobotRemoved += cb;
+    public void CBRegisterEntityRemoved(Action<Entity> cb) {
+      CBEntityRemoved += cb;
     }
 
-    public void CBUnregisterRobotRemoved(Action<Robot> cb) {
-      CBRobotRemoved -= cb;
+    public void CBUnregisterEntityRemoved(Action<Entity> cb) {
+      CBEntityRemoved -= cb;
     }
     /*
     public void CBRegisterCharacterChanged(Action<Character> cb) {
@@ -1203,6 +1226,10 @@ import 'NoYouDoIt.DataModels'
       return InstalledItem.prototypes[itemType].funcPositionValid(world, t.world_x, t.world_y);
     }
 
+    public string GetPetName() {
+      return petNames[UnityEngine.Random.Range(0, petNames.Length)];
+    }
+
     public string GetSocialMediaName() {
       string name = "";
       int i = 0;
@@ -1242,24 +1269,33 @@ import 'NoYouDoIt.DataModels'
     }
 
     public string GetWord() {
-      int r = UnityEngine.Random.Range(0, 5);
+      int r = UnityEngine.Random.Range(0, 6);
 
       switch (r) {
         case 0:
-          return words[UnityEngine.Random.Range(0, words.Length)];
+          return GetRandomString(words);//[UnityEngine.Random.Range(0, words.Length)];
         case 1:
-          return adjectives[UnityEngine.Random.Range(0, adjectives.Length)];
+          return GetRandomString(adjectives);//[UnityEngine.Random.Range(0, adjectives.Length)];
         case 2:
-          return animals[UnityEngine.Random.Range(0, animals.Length)];
+          return GetRandomString(animals);//[UnityEngine.Random.Range(0, animals.Length)];
         case 3:
           return GetNum();
         case 4:
-          return firstNames[UnityEngine.Random.Range(0, firstNames.Length)];
+          return GetRandomString(firstNames);
+        case 5:
+          return GetRandomString(petNames);
         default:
           return null;
           
       }
 
+    }
+
+    public string GetRandomString(string[] ar) {
+      if (ar.Length == 0) {
+        return "empty";
+      }
+      return ar[UnityEngine.Random.Range(0, ar.Length)];
     }
 
     public string GetName() {
@@ -1270,13 +1306,28 @@ import 'NoYouDoIt.DataModels'
 
     }
 
-    private void loadNames() {
-      firstNames = File.ReadAllLines(Application.streamingAssetsPath + "/csv/firstnames.csv");
-      lastNames = File.ReadAllLines(Application.streamingAssetsPath + "/csv/surnames.csv");
+    private string[] LoadNames(string file) {
+      string path = Path.Combine(Application.streamingAssetsPath, "csv", file);
+      return  File.ReadAllLines(path);
+    }
+
+    private void LoadAllNames() {
+
+
+      firstNames = LoadNames( "firstnames.csv");
+      lastNames = LoadNames("surnames.csv");
+      adjectives = LoadNames("adjectives.csv");
+      animals = LoadNames("animals.csv");
+      words = LoadNames("words.csv");
+      petNames = LoadNames("petnames.csv");
+
+      //firstNames = File.ReadAllLines(Application.streamingAssetsPath + "/csv/firstnames.csv");
+      //lastNames = File.ReadAllLines(Application.streamingAssetsPath + "/csv/surnames.csv");
       
-      adjectives = File.ReadAllLines(Application.streamingAssetsPath + "/csv/adjectives.txt");
-      animals = File.ReadAllLines(Application.streamingAssetsPath + "/csv/animals.txt");
-      words = File.ReadAllLines(Application.streamingAssetsPath + "/csv/words.txt");
+      //adjectives = File.ReadAllLines(Application.streamingAssetsPath + "/csv/adjectives.txt");
+      //animals = File.ReadAllLines(Application.streamingAssetsPath + "/csv/animals.txt");
+      //words = File.ReadAllLines(Application.streamingAssetsPath + "/csv/words.txt");
+      //petNames = File.ReadAllLines(Ap)
 
       //foreach (string line in lines)
       //  Console.WriteLine(line);
@@ -1401,15 +1452,15 @@ import 'NoYouDoIt.DataModels'
       int x = t.world_x;
       int y = t.world_y;
 
-      SetMeAndNeighbour(t, World.NORTH, World.SOUTH, x, y + 1);
-      SetMeAndNeighbour(t, World.EAST, World.WEST, x + 1, y);
-      SetMeAndNeighbour(t, World.SOUTH, World.NORTH, x, y - 1);
-      SetMeAndNeighbour(t, World.WEST, World.EAST, x - 1, y);
+      SetMeAndNeighbour(t, TheWorld.World.NORTH, TheWorld.World.SOUTH, x, y + 1);
+      SetMeAndNeighbour(t, TheWorld.World.EAST, TheWorld.World.WEST, x + 1, y);
+      SetMeAndNeighbour(t, TheWorld.World.SOUTH, TheWorld.World.NORTH, x, y - 1);
+      SetMeAndNeighbour(t, TheWorld.World.WEST, TheWorld.World.EAST, x - 1, y);
 
-      SetMeAndNeighbour(t, World.NORTHWEST, World.SOUTHEAST, x - 1, y + 1);
-      SetMeAndNeighbour(t, World.NORTHEAST, World.SOUTHWEST, x + 1, y + 1);
-      SetMeAndNeighbour(t, World.SOUTHWEST, World.NORTHEAST, x - 1, y - 1);
-      SetMeAndNeighbour(t, World.SOUTHEAST, World.NORTHWEST, x + 1, y - 1);
+      SetMeAndNeighbour(t, TheWorld.World.NORTHWEST, TheWorld.World.SOUTHEAST, x - 1, y + 1);
+      SetMeAndNeighbour(t, TheWorld.World.NORTHEAST, TheWorld.World.SOUTHWEST, x + 1, y + 1);
+      SetMeAndNeighbour(t, TheWorld.World.SOUTHWEST, TheWorld.World.NORTHEAST, x - 1, y - 1);
+      SetMeAndNeighbour(t, TheWorld.World.SOUTHEAST, TheWorld.World.NORTHWEST, x + 1, y - 1);
 
       dct = t.neighbours;
 
@@ -1591,7 +1642,7 @@ import 'NoYouDoIt.DataModels'
       SetCollections();
       SetCallbacks();
       //CreateAllInstalledItemPrototypes();
-      Robot.LoadFromFile();
+      Entity.LoadFromFile();
       InstalledItem.LoadFromFile();
       InventoryItem.LoadFromFile();
       Recipe.LoadFromFile();
@@ -1625,7 +1676,7 @@ import 'NoYouDoIt.DataModels'
 
 
 
-      loadNames();
+      LoadAllNames();
 
       //Init(width, height, 32, true, tilesArray);
     }

@@ -10,7 +10,7 @@ using NoYouDoIt.TheWorld;
 
 namespace NoYouDoIt.DataModels {
   public enum INVENTORY_TYPE {
-    NONE, TILE, JOB, CHARACTER, INSTALLED_ITEM, INVENTORY_ITEM, ROBOT
+    NONE, TILE, JOB, CHARACTER, INSTALLED_ITEM, INVENTORY_ITEM, ENTITY
   }
 
   public class Inventory {
@@ -18,7 +18,7 @@ namespace NoYouDoIt.DataModels {
     //public Job job;
     public Tile tile { get; private set; }
     //public Character character;
-    public Robot robot { get; private set; }
+    public Entity entity { get; private set; }
     public WorkItem work { get; private set; }
     public System.Object parent { get; private set; }
     public bool IsStockPile {
@@ -68,8 +68,8 @@ namespace NoYouDoIt.DataModels {
         this.tile = (Tile)parent;
         //} else if (parent.GetType() == typeof(Character)) {
         //  this.character = (Character)parent;
-      } else if (parent.GetType() == typeof(Robot)) {
-        this.robot = (Robot)parent;
+      } else if (parent.GetType() == typeof(Entity)) {
+        this.entity = (Entity)parent;
       }
       world.inventoryManager.RegisterInventory(this);
 
@@ -110,8 +110,8 @@ namespace NoYouDoIt.DataModels {
         t = tile;
       } else if (work != null) {
         t = work.workTile;
-      } else if (robot != null) {
-        t = robot.pos;
+      } else if (entity != null) {
+        t = entity.pos;
       }
 
 

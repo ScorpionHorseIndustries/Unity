@@ -1,0 +1,27 @@
+﻿{
+  "ppu": 32,
+  "width": 32,
+  "height": 32,
+  "sprites": [
+    {
+      "name": "chicken_west",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "chicken_east",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "name": "chicken_north",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "name": "chicken_south",
+      "x": 3,
+      "y": 0
+    }
+  ]
+}

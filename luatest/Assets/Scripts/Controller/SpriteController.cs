@@ -126,7 +126,7 @@ namespace NoYouDoIt.Controller {
     //  */
     //}
 
-    public Sprite GetSprite(Robot r) {
+    public Sprite GetSprite(Entity r) {
       return GetSprite(r.spriteName);
     }
 

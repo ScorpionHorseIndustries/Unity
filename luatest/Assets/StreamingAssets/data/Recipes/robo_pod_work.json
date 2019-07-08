@@ -17,7 +17,7 @@
       ],
       "products": [
         {
-          "name": "robot::basic",
+          "name": "entities::basic_robot",
           "qtyMin": 1,
           "qtyMax": 1,
           "chance": 1

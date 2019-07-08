@@ -9,7 +9,7 @@ namespace NoYouDoIt.DataModels {
 
   public enum RECIPE_PRODUCT_TYPE {
     INVENTORY_ITEM,
-    ROBOT,
+    ENTITY,
     MONEY
   }
   public class RecipeProduct {
@@ -27,8 +27,8 @@ namespace NoYouDoIt.DataModels {
       this.chance = chance;
       if (name.StartsWith("inv::")) {
         this.type = RECIPE_PRODUCT_TYPE.INVENTORY_ITEM;
-      } else if (name.StartsWith("robot::")) {
-        this.type = RECIPE_PRODUCT_TYPE.ROBOT;
+      } else if (name.StartsWith("entity::")) {
+        this.type = RECIPE_PRODUCT_TYPE.ENTITY;
       } else if (name.StartsWith("money")) {
         this.type = RECIPE_PRODUCT_TYPE.MONEY;
       }
@@ -38,7 +38,7 @@ namespace NoYouDoIt.DataModels {
     private void SetOutput() {
       if (UnityEngine.Random.Range(0,1) < chance) {
         switch (type) {
-          case RECIPE_PRODUCT_TYPE.ROBOT:
+          case RECIPE_PRODUCT_TYPE.ENTITY:
           case RECIPE_PRODUCT_TYPE.INVENTORY_ITEM:
             outputQty = Mathf.FloorToInt(UnityEngine.Random.Range((int)qtyMin, (int)qtyMax + 1));          
             break;

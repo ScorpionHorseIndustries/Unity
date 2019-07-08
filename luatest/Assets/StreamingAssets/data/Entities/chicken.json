@@ -1,0 +1,12 @@
+{
+  "name": "entities::chicken",
+  "niceName": "chicken",
+  "onUpdate": "OnUpdate_Chicken",
+  "movementSpeed": 3,
+  "spriteName": "entities::chicken_south",
+  "spriteNorth": "entities::chicken_north",
+  "spriteEast": "entities::chicken_east",
+  "spriteWest": "entities::chicken_west",
+  "spriteSouth": "entities::chicken_south",
+  "getName" :  "pet"
+}

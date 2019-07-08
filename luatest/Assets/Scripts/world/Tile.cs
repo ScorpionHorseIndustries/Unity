@@ -6,25 +6,25 @@ using System;
 using NoYouDoIt.DataModels;
 namespace NoYouDoIt.TheWorld {
 
-  public class TileOccupant {
-    public string name { get; private set; }
-    public string type { get; private set; }
-    public TileOccupant(string name, string type) {
-      this.name = name;
-      this.type = type;
-    }
+  //public class TileOccupant {
+  //  public string name { get; private set; }
+  //  public string type { get; private set; }
+  //  public TileOccupant(string name, string type) {
+  //    this.name = name;
+  //    this.type = type;
+  //  }
 
-    public Action CBPleaseMove;
+  //  public Action CBPleaseMove;
 
-    public void PleaseMove() {
-      if (CBPleaseMove!=null) {
-        CBPleaseMove();
-      }
-    }
+  //  public void PleaseMove() {
+  //    if (CBPleaseMove!=null) {
+  //      CBPleaseMove();
+  //    }
+  //  }
 
 
 
-  }
+  //}
 
   public class Tile {
 
@@ -66,8 +66,8 @@ namespace NoYouDoIt.TheWorld {
     private World world;
 
     //private List<Character> occupiedBy = new List<Character>();
-    private List<TileOccupant> occupiedBy = new List<TileOccupant>();
-    public TileOccupant GetOccupant(int i) {
+    private List<Entity> occupiedBy = new List<Entity>();
+    public Entity GetOccupant(int i) {
       if (i >= 0 && i <= occupiedBy.Count - 1) {
         return occupiedBy[i];
       }
@@ -152,7 +152,7 @@ namespace NoYouDoIt.TheWorld {
 
 
 
-    public void Enter(TileOccupant c) {
+    public void Enter(Entity c) {
       if (!occupiedBy.Contains(c)) {
         occupiedBy.Add(c);
       }
@@ -161,11 +161,11 @@ namespace NoYouDoIt.TheWorld {
     public string WhoIsHere() {
       string s = "";
       int c = 0;
-      foreach (TileOccupant to in occupiedBy) {
+      foreach (Entity to in occupiedBy) {
         if (c > 0) {
           s += "\n";
         }
-        s += to.type + "..." + to.name;// + "(" + robot.state.ToString() + ")";
+        s += to.typeName + "..." + to.name;// + "(" + robot.state.ToString() + ")";
         c += 1;
       }
 
@@ -173,17 +173,17 @@ namespace NoYouDoIt.TheWorld {
       return s;
     }
 
-    public bool IsItMe(TileOccupant me) {
+    public bool IsItMe(Entity me) {
       return occupiedBy.Count == 1 && occupiedBy.Contains(me);
     }
 
     public void PleaseMove() {
-      foreach (TileOccupant to in occupiedBy) {
+      foreach (Entity to in occupiedBy) {
         to.PleaseMove();
       }
     }
 
-    public void Leave(TileOccupant c) {
+    public void Leave(Entity c) {
       if (occupiedBy.Contains(c)) {
         occupiedBy.Remove(c);
       }
@@ -420,7 +420,7 @@ namespace NoYouDoIt.TheWorld {
 
     }
 
-    public CAN_ENTER CanEnter(TileOccupant r) {
+    public CAN_ENTER CanEnter(Entity r) {
       if (movementFactor == 0) return CAN_ENTER.NEVER;
 
 

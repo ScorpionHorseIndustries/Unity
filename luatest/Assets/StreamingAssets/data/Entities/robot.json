@@ -1,0 +1,10 @@
+{
+  "name": "entities::basic_robot",
+  "spriteName": "entities::robot_south",
+  "spriteNorth": "entities::robot_north",
+  "spriteEast": "entities::robot_east",
+  "spriteWest": "entities::robot_west",
+  "spriteSouth": "entities::robot_south",
+  "onUpdate": "OnUpdate_Robot",
+  "movementSpeed" :  5
+}

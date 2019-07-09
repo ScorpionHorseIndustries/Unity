@@ -6,8 +6,8 @@ using TMPro;
 using System;
 
 public class prfInstalledItemKVPScript : MonoBehaviour {
-  public TMP_Text propertyName;
-  public TMP_InputField input;
+  public TMP_InputField inputKey;
+  public TMP_InputField inputValue;
   public string k;
   public string v;
 
@@ -15,16 +15,31 @@ public class prfInstalledItemKVPScript : MonoBehaviour {
     this.k = k;
     this.v = v;
 
-    propertyName.text = k;
-    input.text = v;
+    inputKey.text = k;
+    inputValue.text = v;
   }
 
   // Start is called before the first frame update
   void Start() {
 
-    input.onValueChanged.AddListener(OnValueChanged);
-    input.onEndEdit.AddListener(OnEndEdit);
+    inputValue.onValueChanged.AddListener(OnValueChanged);
+    inputKey.onValueChanged.AddListener(OnKeyValueChanged);
+
+    inputValue.onEndEdit.AddListener(OnEndEdit);
+    inputKey.onEndEdit.AddListener(OnKeyEndEdit);
     
+
+
+  }
+
+
+  private void OnKeyEndEdit(string s) {
+    k = s;
+  }
+
+  private void OnKeyValueChanged(string s) {
+    k = s;
+
   }
 
   private void OnEndEdit(string s) {

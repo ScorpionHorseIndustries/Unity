@@ -15,8 +15,10 @@ public class prfInstalledItemScript : MonoBehaviour {
   public GameObject prfKVP;
   string itemName;
   string workCondition;
+  public TMP_Text currentRecipeText;
   InstalledItem item;
   List<GameObject> kvpGo;
+  bool ok = false;
 
   public void OnConditionValueChanged(string s) {
     workCondition = s;
@@ -28,6 +30,7 @@ public class prfInstalledItemScript : MonoBehaviour {
   }
 
   public void Set(InstalledItem item) {
+    ok = false;
     kvpGo = new List<GameObject>();
     this.item = item;
     this.itemName = item.niceName;
@@ -39,12 +42,24 @@ public class prfInstalledItemScript : MonoBehaviour {
     WorldController.Instance.gameState = GAME_STATE.PAUSE;
     Dictionary<string, string> kvps = item.itemParameters.GetItems();
 
-    foreach(string k in kvps.Keys) {
-      GameObject go = SimplePool.Spawn(prfKVP, Vector3.one, Quaternion.identity);
-      go.transform.SetParent(goContent.transform);
-      go.transform.localScale = Vector3.one;
-      kvpGo.Add(go);
+    currentRecipeText.text = "";
+    if (item.recipe != null) {
+      currentRecipeText.text = Funcs.PadPair(46,"current recipe", item.recipe.name);
     }
+
+    foreach (string k in kvps.Keys) {
+      CreateKVPControl(k, kvps[k]);
+    }
+  }
+
+  private void CreateKVPControl(string k, string v) {
+    GameObject go = SimplePool.Spawn(prfKVP, Vector3.one, Quaternion.identity);
+    go.transform.SetParent(goContent.transform);
+    go.transform.localScale = Vector3.one;
+    prfInstalledItemKVPScript kvpcontrol = go.GetComponent<prfInstalledItemKVPScript>();
+    kvpcontrol.Set(k, v);
+
+    kvpGo.Add(go);
   }
 
   void Start() {
@@ -58,7 +73,13 @@ public class prfInstalledItemScript : MonoBehaviour {
 
   }
 
+  public void AddBlankKVP() {
+    CreateKVPControl("##new key", "##new value");
+  }
+
+
   public void OkClicked() {
+    ok = true;
     this.item.workCondition = workCondition;
     Deactivate();
   }
@@ -69,12 +90,21 @@ public class prfInstalledItemScript : MonoBehaviour {
   }
 
   private void Deactivate() {
+
+    foreach (GameObject kvp in kvpGo) {
+      prfInstalledItemKVPScript kvps = kvp.GetComponent<prfInstalledItemKVPScript>();
+      if (ok) {
+        item.itemParameters.SetString(kvps.k, kvps.v);
+      }
+      SimplePool.Despawn(kvp);
+    }
+
+
+
     gameObject.SetActive(false);
     WorldController.Instance.inputController.SetInputMode(INPUT_MODE.GAME);
     WorldController.Instance.gameState = GAME_STATE.PLAY;
 
-    foreach (GameObject kvp in kvpGo) {
-      SimplePool.Despawn(kvp);
-    }
+
   }
 }

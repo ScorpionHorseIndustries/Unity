@@ -224,7 +224,7 @@ namespace NoYouDoIt.DataModels {
 
       string path = Path.Combine(Application.streamingAssetsPath, "data","Recipes");
 
-      string[] files = Directory.GetFiles(path, "*.json");
+      string[] files = Directory.GetFiles(path, "*.json",SearchOption.AllDirectories);
 
       foreach (string file in files) {
         

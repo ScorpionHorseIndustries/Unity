@@ -221,6 +221,25 @@ namespace NoYouDoIt.TheWorld {
 
       }
 
+      TileChunk ch = GetChunk(0, 0);
+      List<string> itemTypes = InventoryItem.GetAllPrototypeNames();
+      for (int x = 0; x < TileChunk.CHUNK_WIDTH; x += 1) {
+        for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
+
+          if (itemTypes.Count == 0) break;
+          string itemType = itemTypes[0];
+
+          Tile t = ch.GetTileAt(x, y);
+          if (t != null) {
+            if (t.AddToInventory(itemType, InventoryItem.GetStackSize(itemType)) > 0) {
+
+              itemTypes.RemoveAt(0);
+            }
+
+          }
+        }
+      }
+
 
 
 
@@ -284,7 +303,7 @@ namespace NoYouDoIt.TheWorld {
       Recipe.LoadFromFile();
       InstalledItem.LoadFromFile();
       InventoryItem.LoadFromFile();
-      
+
 
       this.trashPrototypes = InstalledItem.trashPrototypes;
 
@@ -467,7 +486,7 @@ import 'NoYouDoIt.DataModels'
       }
 
       string[] folders = Directory.GetDirectories(folder);
-      foreach(string ff in folders) {
+      foreach (string ff in folders) {
         LoadAllLuaFilesInFolder(ff);
       }
     }
@@ -523,7 +542,7 @@ import 'NoYouDoIt.DataModels'
       //}
 
       inventoryManager.Update(deltaTime);
-      
+
 
       for (int i = entities.Count - 1; i >= 0; i -= 1) {
         Entity entity = entities[i];
@@ -646,7 +665,7 @@ import 'NoYouDoIt.DataModels'
 
     }
 
-      
+
 
     public bool CreateCharacter(Tile t) {
       Character c = new Character(this, t);
@@ -819,7 +838,7 @@ import 'NoYouDoIt.DataModels'
     }
 
     public Tile FindEmptyUnnoccupiedTile(Tile t) {
-      
+
 
       int n = 0;
       while (n < 1000) {
@@ -1238,7 +1257,7 @@ import 'NoYouDoIt.DataModels'
       while (i < 2) {
         string t = GetWord();
         if (t != null) {
-          if (int.TryParse(t,out dummy)) {
+          if (int.TryParse(t, out dummy)) {
             if (hadNumber) continue;
             hadNumber = true;
           }
@@ -1247,9 +1266,9 @@ import 'NoYouDoIt.DataModels'
         }
       }
 
-      if (UnityEngine.Random.Range(0,100) % 3 == 0) {
+      if (UnityEngine.Random.Range(0, 100) % 3 == 0) {
         name += GetNum();
-      } 
+      }
 
 
       return name;
@@ -1286,7 +1305,7 @@ import 'NoYouDoIt.DataModels'
           return GetRandomString(petNames);
         default:
           return null;
-          
+
       }
 
     }
@@ -1308,13 +1327,13 @@ import 'NoYouDoIt.DataModels'
 
     private string[] LoadNames(string file) {
       string path = Path.Combine(Application.streamingAssetsPath, "csv", file);
-      return  File.ReadAllLines(path);
+      return File.ReadAllLines(path);
     }
 
     private void LoadAllNames() {
 
 
-      firstNames = LoadNames( "firstnames.csv");
+      firstNames = LoadNames("firstnames.csv");
       lastNames = LoadNames("surnames.csv");
       adjectives = LoadNames("adjectives.csv");
       animals = LoadNames("animals.csv");
@@ -1323,7 +1342,7 @@ import 'NoYouDoIt.DataModels'
 
       //firstNames = File.ReadAllLines(Application.streamingAssetsPath + "/csv/firstnames.csv");
       //lastNames = File.ReadAllLines(Application.streamingAssetsPath + "/csv/surnames.csv");
-      
+
       //adjectives = File.ReadAllLines(Application.streamingAssetsPath + "/csv/adjectives.txt");
       //animals = File.ReadAllLines(Application.streamingAssetsPath + "/csv/animals.txt");
       //words = File.ReadAllLines(Application.streamingAssetsPath + "/csv/words.txt");
@@ -1646,7 +1665,7 @@ import 'NoYouDoIt.DataModels'
       InstalledItem.LoadFromFile();
       InventoryItem.LoadFromFile();
       Recipe.LoadFromFile();
-      
+
       CreateEmptyTiles();
       SetTilesFromArray(tilesArray);
       //SetInstalledFromArray(installedArray);

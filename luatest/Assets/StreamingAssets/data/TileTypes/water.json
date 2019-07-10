@@ -1,12 +1,7 @@
 {
-  "rangeHigh": 0.2,
-  "movementFactor": 0.1,
-  "rangeLow": 0,
+  "movementFactor": 0.10000000149011612,
   "build": false,
   "name": "water",
-  "id": 4,
-  "spritesOffset": 24,
-  "sprites": 8,
-  "spritePrefix": "tiles_",
-  "height": 0
+  "id": 1,
+  "height": 1
 }

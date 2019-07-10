@@ -1,12 +1,24 @@
 {
-  "rangeHigh": 0.6,
-  "movementFactor": 0.75,
-  "rangeLow": 0.2,
+  "movementFactor": 0.6000000238418579,
+  "varieties": [
+    {
+      "name": "grass_iron",
+      "zOffsetB": 60,
+      "zOffsetA": 50
+    },
+    {
+      "name": "grass_copper",
+      "zOffsetB": 110,
+      "zOffsetA": 100
+    },
+    {
+      "name": "grass_coal",
+      "zOffsetB": 30,
+      "zOffsetA": 20
+    }
+  ],
   "build": true,
   "name": "grass",
-  "id": 3,
-  "spritesOffset": 0,
-  "sprites": 8,
-  "spritePrefix": "tiles_",
-  "height": 1
+  "id": 10,
+  "height": 250
 }

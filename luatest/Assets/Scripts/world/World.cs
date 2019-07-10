@@ -39,6 +39,7 @@ namespace NoYouDoIt.TheWorld {
     public Lua lua;
 
     private FastNoise noise;
+    public float oreZ { get; private set; }
 
     //testing
     public static readonly int NUMBER_OF_ROBOTS = 6;
@@ -154,7 +155,7 @@ namespace NoYouDoIt.TheWorld {
 
 
 
-    public static readonly int SPAWN_CHUNKS = 2;
+    public static readonly int SPAWN_CHUNKS = 4;
     public static readonly int HALF_SPAWN_CHUNKS = SPAWN_CHUNKS / 2;
 
 
@@ -291,7 +292,7 @@ namespace NoYouDoIt.TheWorld {
       xSeed = UnityEngine.Random.Range(-10f, 10f);
       ySeed = UnityEngine.Random.Range(-10f, 10f);
       noiseFactor = UnityEngine.Random.Range(0.01f, 0.1f);
-
+      oreZ = UnityEngine.Random.Range(0f, 10f);
 
 
       this.width = width;

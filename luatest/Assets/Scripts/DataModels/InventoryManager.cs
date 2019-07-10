@@ -52,6 +52,8 @@ namespace NoYouDoIt.DataModels {
     private World world;
 
     public Dictionary<string, StockPileSetting> stockpileSettings;
+    private StockPileSetting[] stockpileSettingsArray;
+    private int spsIndex = 0;
 
     NYDITimer timer;
 
@@ -95,6 +97,8 @@ namespace NoYouDoIt.DataModels {
 
         //job.naStockPileSettings.TryAdd(sps.id, 0);
       }
+      stockpileSettingsArray = stockpileSettings.Values.ToArray();
+      
     }
 
     public void Update(float deltaTime) {
@@ -120,12 +124,13 @@ namespace NoYouDoIt.DataModels {
       return qty;
     }
 
+    
     public void UpdateStockPileSettings() {
       //job.Schedule();
+      StockPileSetting sps = stockpileSettingsArray[spsIndex];
+      sps.currentQty = GetStockpileQty(sps.name);
 
-      foreach (StockPileSetting sps in stockpileSettings.Values) {
-        sps.currentQty = GetStockpileQty(sps.name);
-      }
+      spsIndex = (spsIndex + 1) % stockpileSettingsArray.Length;
     }
 
 

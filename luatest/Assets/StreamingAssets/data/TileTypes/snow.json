@@ -1,12 +1,7 @@
 {
-  "rangeHigh": 1,
-  "rangeLow": 0.8,
-  "build": true,
+  "movementFactor": 0.30000001192092896,
+  "build": false,
   "name": "snow",
-  "movementCost": 50,
-  "id": 1,
-  "spritesOffset": 32,
-  "sprites": 8,
-  "spritePrefix": "tiles_",
-  "height": 4
+  "id": 21,
+  "height": 1000
 }

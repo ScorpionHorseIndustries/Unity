@@ -1,0 +1,14 @@
+﻿{
+  "name": "installed::mining_spot_iron",
+  "niceName": "mining (iron)",
+  "sprite": "installed_items::mining_spot",
+  "linked": false,
+  "movementFactor": 1,
+  "build": true,
+  "trash": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::mining_spot_build",
+  "deconstructRecipe": "recipe::installed::mining_spot_decon",
+  "workRecipe": "recipe::installed::mining_spot_iron_work",
+  "workStation" :  true
+}

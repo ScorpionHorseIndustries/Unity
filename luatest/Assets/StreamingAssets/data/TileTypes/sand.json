@@ -1,0 +1,24 @@
+{
+  "movementFactor": 0.4000000059604645,
+  "varieties": [
+    {
+      "name": "sand_iron",
+      "zOffsetB": 60,
+      "zOffsetA": 50
+    },
+    {
+      "name": "sand_copper",
+      "zOffsetB": 110,
+      "zOffsetA": 100
+    },
+    {
+      "name": "sand_coal",
+      "zOffsetB": 30,
+      "zOffsetA": 20
+    }
+  ],
+  "build": true,
+  "name": "sand",
+  "id": 2,
+  "height": 150
+}

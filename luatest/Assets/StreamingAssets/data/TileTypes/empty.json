@@ -1,12 +1,7 @@
 {
-  "rangeHigh": -1,
   "movementFactor": 0,
-  "rangeLow": -1,
   "build": false,
   "name": "empty",
-  "id": 0,
-  "spritesOffset": 8,
-  "sprites": 8,
-  "spritePrefix": "tiles_",
+  "id": 18,
   "height": -1
 }

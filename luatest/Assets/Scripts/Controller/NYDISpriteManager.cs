@@ -35,6 +35,7 @@ namespace NoYouDoIt.Controller {
     private void Awake() {
       sprites = new Dictionary<string, Sprite>();
       LoadSprites();
+      MakeSpriteCombos();
     }
     private void OnEnable() {
 
@@ -63,6 +64,61 @@ namespace NoYouDoIt.Controller {
 
 
 
+    }
+
+    private void MakeSpriteCombos() {
+      string path = Path.Combine(Application.streamingAssetsPath, "data", "SpriteCombos");
+
+      string[] files = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
+
+      foreach(string file in files) {
+        JObject json = JObject.Parse(File.ReadAllText(file));
+        JArray combos = Funcs.jsonGetArray(json, "spriteCombos");
+
+        if (combos != null) {
+          foreach (JObject combo in combos) {
+
+            string name       = Funcs.jsonGetString(combo["name"], null);
+            string baseSprite = Funcs.jsonGetString(combo["base"], null);
+            string overlay    = Funcs.jsonGetString(combo["overlay"], null);
+
+            if (name != null && baseSprite != null && overlay != null) {
+              Sprite spriteA = GetSprite(baseSprite);
+              Sprite spriteB = GetSprite(overlay);
+
+              if (spriteA.texture.width == spriteB.texture.width && spriteA.texture.height == spriteB.texture.height) {
+                Debug.Log(spriteA + "\n" + spriteB);
+
+                Texture2D tex = new Texture2D(32, 32, DEFAULT_TEXTURE_FORMAT, false);
+                for (int x = 0; x < 32; x += 1) {
+                  for (int y = 0; y < 32; y += 1) {
+                    Color ca = spriteA.texture.GetPixel(x, y);
+                    Color cb = spriteB.texture.GetPixel(x, y);
+
+                    Color cc = Color.Lerp(ca, cb, cb.a);
+                    tex.SetPixel(x, y, cc);
+
+
+                  }
+
+                }
+                tex.Apply();
+                Rect rect = new Rect(0, 0, 32, 32);
+                Vector2 pivot = new Vector2(0.5f, 0.5f);
+                Sprite sprite = Sprite.Create(tex, rect, pivot, 32);
+                Debug.Log(name + "\n" + sprite);
+                sprites[name] = sprite;
+              } else {
+                Debug.LogError(spriteA + " and " + spriteB + " are not the same size."); 
+              }
+
+
+            }
+
+          }
+
+        }
+      }
     }
 
     public List<string> GetSpritesStarting(string starting) {

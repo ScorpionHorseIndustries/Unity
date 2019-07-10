@@ -47,15 +47,35 @@ namespace NoYouDoIt.TheWorld {
 
           //float xf = ((float)t.world_x + world.xSeed) * world.noiseFactor;
           //float yf = ((float)t.world_y + world.ySeed) * world.noiseFactor;
-          float n = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y));
+          float n1 = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y));
+          float n2 = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y),World.current.oreZ);
+          float n = (n1 + n2) / 2;
           int j = Mathf.FloorToInt(n * (float)TileType.countNatural);
 
           foreach (string k in TileType.TYPES.Keys) {
             TileType tempT = TileType.TYPES[k];
 
             if (tempT.name != "empty") {
-              if (j == tempT.height) {
+              if (j == tempT.heightIndex) {
+
                 t.SetType(tempT);
+
+                if (tempT.varieties.Count == 0) {
+                  
+                } else {
+                  foreach(string variety in tempT.varieties.Keys) {
+                    TileType vt = TileType.TYPES[variety];
+                    float A = tempT.varieties[variety].Item1;
+                    float B = tempT.varieties[variety].Item2;
+                    float na = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y), A);
+                    float nb = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y), B);
+                    float navg = (na + nb) / 2f;
+                    if ((navg >= 0.90f && navg <= 1f)|| (navg >= 0.0f && navg <= 0.1f)) {
+                      t.SetType(vt);
+                      break;
+                    }
+                  }
+                }
 
 
 

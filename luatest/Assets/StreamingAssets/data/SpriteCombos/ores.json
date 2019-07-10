@@ -1,0 +1,482 @@
+{"spriteCombos": [
+  {
+    "overlay": "tiles::coal_0",
+    "name": "tiles::grass_coal_0",
+    "base": "tiles::grass_0"
+  },
+  {
+    "overlay": "tiles::coal_1",
+    "name": "tiles::grass_coal_1",
+    "base": "tiles::grass_1"
+  },
+  {
+    "overlay": "tiles::coal_2",
+    "name": "tiles::grass_coal_2",
+    "base": "tiles::grass_2"
+  },
+  {
+    "overlay": "tiles::coal_3",
+    "name": "tiles::grass_coal_3",
+    "base": "tiles::grass_3"
+  },
+  {
+    "overlay": "tiles::coal_4",
+    "name": "tiles::grass_coal_4",
+    "base": "tiles::grass_4"
+  },
+  {
+    "overlay": "tiles::coal_5",
+    "name": "tiles::grass_coal_5",
+    "base": "tiles::grass_5"
+  },
+  {
+    "overlay": "tiles::coal_6",
+    "name": "tiles::grass_coal_6",
+    "base": "tiles::grass_6"
+  },
+  {
+    "overlay": "tiles::coal_7",
+    "name": "tiles::grass_coal_7",
+    "base": "tiles::grass_7"
+  },
+  {
+    "overlay": "tiles::iron_0",
+    "name": "tiles::grass_iron_0",
+    "base": "tiles::grass_0"
+  },
+  {
+    "overlay": "tiles::iron_1",
+    "name": "tiles::grass_iron_1",
+    "base": "tiles::grass_1"
+  },
+  {
+    "overlay": "tiles::iron_2",
+    "name": "tiles::grass_iron_2",
+    "base": "tiles::grass_2"
+  },
+  {
+    "overlay": "tiles::iron_3",
+    "name": "tiles::grass_iron_3",
+    "base": "tiles::grass_3"
+  },
+  {
+    "overlay": "tiles::iron_4",
+    "name": "tiles::grass_iron_4",
+    "base": "tiles::grass_4"
+  },
+  {
+    "overlay": "tiles::iron_5",
+    "name": "tiles::grass_iron_5",
+    "base": "tiles::grass_5"
+  },
+  {
+    "overlay": "tiles::iron_6",
+    "name": "tiles::grass_iron_6",
+    "base": "tiles::grass_6"
+  },
+  {
+    "overlay": "tiles::iron_7",
+    "name": "tiles::grass_iron_7",
+    "base": "tiles::grass_7"
+  },
+  {
+    "overlay": "tiles::copper_0",
+    "name": "tiles::grass_copper_0",
+    "base": "tiles::grass_0"
+  },
+  {
+    "overlay": "tiles::copper_1",
+    "name": "tiles::grass_copper_1",
+    "base": "tiles::grass_1"
+  },
+  {
+    "overlay": "tiles::copper_2",
+    "name": "tiles::grass_copper_2",
+    "base": "tiles::grass_2"
+  },
+  {
+    "overlay": "tiles::copper_3",
+    "name": "tiles::grass_copper_3",
+    "base": "tiles::grass_3"
+  },
+  {
+    "overlay": "tiles::copper_4",
+    "name": "tiles::grass_copper_4",
+    "base": "tiles::grass_4"
+  },
+  {
+    "overlay": "tiles::copper_5",
+    "name": "tiles::grass_copper_5",
+    "base": "tiles::grass_5"
+  },
+  {
+    "overlay": "tiles::copper_6",
+    "name": "tiles::grass_copper_6",
+    "base": "tiles::grass_6"
+  },
+  {
+    "overlay": "tiles::copper_7",
+    "name": "tiles::grass_copper_7",
+    "base": "tiles::grass_7"
+  },
+  {
+    "overlay": "tiles::coal_0",
+    "name": "tiles::dirt_coal_0",
+    "base": "tiles::dirt_0"
+  },
+  {
+    "overlay": "tiles::coal_1",
+    "name": "tiles::dirt_coal_1",
+    "base": "tiles::dirt_1"
+  },
+  {
+    "overlay": "tiles::coal_2",
+    "name": "tiles::dirt_coal_2",
+    "base": "tiles::dirt_2"
+  },
+  {
+    "overlay": "tiles::coal_3",
+    "name": "tiles::dirt_coal_3",
+    "base": "tiles::dirt_3"
+  },
+  {
+    "overlay": "tiles::coal_4",
+    "name": "tiles::dirt_coal_4",
+    "base": "tiles::dirt_4"
+  },
+  {
+    "overlay": "tiles::coal_5",
+    "name": "tiles::dirt_coal_5",
+    "base": "tiles::dirt_5"
+  },
+  {
+    "overlay": "tiles::coal_6",
+    "name": "tiles::dirt_coal_6",
+    "base": "tiles::dirt_6"
+  },
+  {
+    "overlay": "tiles::coal_7",
+    "name": "tiles::dirt_coal_7",
+    "base": "tiles::dirt_7"
+  },
+  {
+    "overlay": "tiles::iron_0",
+    "name": "tiles::dirt_iron_0",
+    "base": "tiles::dirt_0"
+  },
+  {
+    "overlay": "tiles::iron_1",
+    "name": "tiles::dirt_iron_1",
+    "base": "tiles::dirt_1"
+  },
+  {
+    "overlay": "tiles::iron_2",
+    "name": "tiles::dirt_iron_2",
+    "base": "tiles::dirt_2"
+  },
+  {
+    "overlay": "tiles::iron_3",
+    "name": "tiles::dirt_iron_3",
+    "base": "tiles::dirt_3"
+  },
+  {
+    "overlay": "tiles::iron_4",
+    "name": "tiles::dirt_iron_4",
+    "base": "tiles::dirt_4"
+  },
+  {
+    "overlay": "tiles::iron_5",
+    "name": "tiles::dirt_iron_5",
+    "base": "tiles::dirt_5"
+  },
+  {
+    "overlay": "tiles::iron_6",
+    "name": "tiles::dirt_iron_6",
+    "base": "tiles::dirt_6"
+  },
+  {
+    "overlay": "tiles::iron_7",
+    "name": "tiles::dirt_iron_7",
+    "base": "tiles::dirt_7"
+  },
+  {
+    "overlay": "tiles::copper_0",
+    "name": "tiles::dirt_copper_0",
+    "base": "tiles::dirt_0"
+  },
+  {
+    "overlay": "tiles::copper_1",
+    "name": "tiles::dirt_copper_1",
+    "base": "tiles::dirt_1"
+  },
+  {
+    "overlay": "tiles::copper_2",
+    "name": "tiles::dirt_copper_2",
+    "base": "tiles::dirt_2"
+  },
+  {
+    "overlay": "tiles::copper_3",
+    "name": "tiles::dirt_copper_3",
+    "base": "tiles::dirt_3"
+  },
+  {
+    "overlay": "tiles::copper_4",
+    "name": "tiles::dirt_copper_4",
+    "base": "tiles::dirt_4"
+  },
+  {
+    "overlay": "tiles::copper_5",
+    "name": "tiles::dirt_copper_5",
+    "base": "tiles::dirt_5"
+  },
+  {
+    "overlay": "tiles::copper_6",
+    "name": "tiles::dirt_copper_6",
+    "base": "tiles::dirt_6"
+  },
+  {
+    "overlay": "tiles::copper_7",
+    "name": "tiles::dirt_copper_7",
+    "base": "tiles::dirt_7"
+  },
+  {
+    "overlay": "tiles::coal_0",
+    "name": "tiles::stone_coal_0",
+    "base": "tiles::stone_0"
+  },
+  {
+    "overlay": "tiles::coal_1",
+    "name": "tiles::stone_coal_1",
+    "base": "tiles::stone_1"
+  },
+  {
+    "overlay": "tiles::coal_2",
+    "name": "tiles::stone_coal_2",
+    "base": "tiles::stone_2"
+  },
+  {
+    "overlay": "tiles::coal_3",
+    "name": "tiles::stone_coal_3",
+    "base": "tiles::stone_3"
+  },
+  {
+    "overlay": "tiles::coal_4",
+    "name": "tiles::stone_coal_4",
+    "base": "tiles::stone_4"
+  },
+  {
+    "overlay": "tiles::coal_5",
+    "name": "tiles::stone_coal_5",
+    "base": "tiles::stone_5"
+  },
+  {
+    "overlay": "tiles::coal_6",
+    "name": "tiles::stone_coal_6",
+    "base": "tiles::stone_6"
+  },
+  {
+    "overlay": "tiles::coal_7",
+    "name": "tiles::stone_coal_7",
+    "base": "tiles::stone_7"
+  },
+  {
+    "overlay": "tiles::iron_0",
+    "name": "tiles::stone_iron_0",
+    "base": "tiles::stone_0"
+  },
+  {
+    "overlay": "tiles::iron_1",
+    "name": "tiles::stone_iron_1",
+    "base": "tiles::stone_1"
+  },
+  {
+    "overlay": "tiles::iron_2",
+    "name": "tiles::stone_iron_2",
+    "base": "tiles::stone_2"
+  },
+  {
+    "overlay": "tiles::iron_3",
+    "name": "tiles::stone_iron_3",
+    "base": "tiles::stone_3"
+  },
+  {
+    "overlay": "tiles::iron_4",
+    "name": "tiles::stone_iron_4",
+    "base": "tiles::stone_4"
+  },
+  {
+    "overlay": "tiles::iron_5",
+    "name": "tiles::stone_iron_5",
+    "base": "tiles::stone_5"
+  },
+  {
+    "overlay": "tiles::iron_6",
+    "name": "tiles::stone_iron_6",
+    "base": "tiles::stone_6"
+  },
+  {
+    "overlay": "tiles::iron_7",
+    "name": "tiles::stone_iron_7",
+    "base": "tiles::stone_7"
+  },
+  {
+    "overlay": "tiles::copper_0",
+    "name": "tiles::stone_copper_0",
+    "base": "tiles::stone_0"
+  },
+  {
+    "overlay": "tiles::copper_1",
+    "name": "tiles::stone_copper_1",
+    "base": "tiles::stone_1"
+  },
+  {
+    "overlay": "tiles::copper_2",
+    "name": "tiles::stone_copper_2",
+    "base": "tiles::stone_2"
+  },
+  {
+    "overlay": "tiles::copper_3",
+    "name": "tiles::stone_copper_3",
+    "base": "tiles::stone_3"
+  },
+  {
+    "overlay": "tiles::copper_4",
+    "name": "tiles::stone_copper_4",
+    "base": "tiles::stone_4"
+  },
+  {
+    "overlay": "tiles::copper_5",
+    "name": "tiles::stone_copper_5",
+    "base": "tiles::stone_5"
+  },
+  {
+    "overlay": "tiles::copper_6",
+    "name": "tiles::stone_copper_6",
+    "base": "tiles::stone_6"
+  },
+  {
+    "overlay": "tiles::copper_7",
+    "name": "tiles::stone_copper_7",
+    "base": "tiles::stone_7"
+  },
+  {
+    "overlay": "tiles::coal_0",
+    "name": "tiles::sand_coal_0",
+    "base": "tiles::sand_0"
+  },
+  {
+    "overlay": "tiles::coal_1",
+    "name": "tiles::sand_coal_1",
+    "base": "tiles::sand_1"
+  },
+  {
+    "overlay": "tiles::coal_2",
+    "name": "tiles::sand_coal_2",
+    "base": "tiles::sand_2"
+  },
+  {
+    "overlay": "tiles::coal_3",
+    "name": "tiles::sand_coal_3",
+    "base": "tiles::sand_3"
+  },
+  {
+    "overlay": "tiles::coal_4",
+    "name": "tiles::sand_coal_4",
+    "base": "tiles::sand_4"
+  },
+  {
+    "overlay": "tiles::coal_5",
+    "name": "tiles::sand_coal_5",
+    "base": "tiles::sand_5"
+  },
+  {
+    "overlay": "tiles::coal_6",
+    "name": "tiles::sand_coal_6",
+    "base": "tiles::sand_6"
+  },
+  {
+    "overlay": "tiles::coal_7",
+    "name": "tiles::sand_coal_7",
+    "base": "tiles::sand_7"
+  },
+  {
+    "overlay": "tiles::iron_0",
+    "name": "tiles::sand_iron_0",
+    "base": "tiles::sand_0"
+  },
+  {
+    "overlay": "tiles::iron_1",
+    "name": "tiles::sand_iron_1",
+    "base": "tiles::sand_1"
+  },
+  {
+    "overlay": "tiles::iron_2",
+    "name": "tiles::sand_iron_2",
+    "base": "tiles::sand_2"
+  },
+  {
+    "overlay": "tiles::iron_3",
+    "name": "tiles::sand_iron_3",
+    "base": "tiles::sand_3"
+  },
+  {
+    "overlay": "tiles::iron_4",
+    "name": "tiles::sand_iron_4",
+    "base": "tiles::sand_4"
+  },
+  {
+    "overlay": "tiles::iron_5",
+    "name": "tiles::sand_iron_5",
+    "base": "tiles::sand_5"
+  },
+  {
+    "overlay": "tiles::iron_6",
+    "name": "tiles::sand_iron_6",
+    "base": "tiles::sand_6"
+  },
+  {
+    "overlay": "tiles::iron_7",
+    "name": "tiles::sand_iron_7",
+    "base": "tiles::sand_7"
+  },
+  {
+    "overlay": "tiles::copper_0",
+    "name": "tiles::sand_copper_0",
+    "base": "tiles::sand_0"
+  },
+  {
+    "overlay": "tiles::copper_1",
+    "name": "tiles::sand_copper_1",
+    "base": "tiles::sand_1"
+  },
+  {
+    "overlay": "tiles::copper_2",
+    "name": "tiles::sand_copper_2",
+    "base": "tiles::sand_2"
+  },
+  {
+    "overlay": "tiles::copper_3",
+    "name": "tiles::sand_copper_3",
+    "base": "tiles::sand_3"
+  },
+  {
+    "overlay": "tiles::copper_4",
+    "name": "tiles::sand_copper_4",
+    "base": "tiles::sand_4"
+  },
+  {
+    "overlay": "tiles::copper_5",
+    "name": "tiles::sand_copper_5",
+    "base": "tiles::sand_5"
+  },
+  {
+    "overlay": "tiles::copper_6",
+    "name": "tiles::sand_copper_6",
+    "base": "tiles::sand_6"
+  },
+  {
+    "overlay": "tiles::copper_7",
+    "name": "tiles::sand_copper_7",
+    "base": "tiles::sand_7"
+  }
+]}

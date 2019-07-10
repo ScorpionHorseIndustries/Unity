@@ -1,12 +1,24 @@
 {
-  "rangeHigh": 0.7,
-  "rangeLow": 0.5,
+  "movementFactor": 0.5,
+  "varieties": [
+    {
+      "name": "dirt_iron",
+      "zOffsetB": 60,
+      "zOffsetA": 50
+    },
+    {
+      "name": "dirt_copper",
+      "zOffsetB": 110,
+      "zOffsetA": 100
+    },
+    {
+      "name": "dirt_coal",
+      "zOffsetB": 30,
+      "zOffsetA": 20
+    }
+  ],
   "build": true,
   "name": "dirt",
-  "movementCost": 25,
-  "id": 2,
-  "spritesOffset": 8,
-  "sprites": 8,
-  "spritePrefix": "tiles_",
-  "height": 2
+  "id": 6,
+  "height": 200
 }

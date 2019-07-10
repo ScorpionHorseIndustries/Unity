@@ -327,3 +327,5 @@ S:\unity\luatest\Temp\bin\Debug\Unity.Transforms.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Burst.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Mathematics.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Transforms.Hybrid.pdb
+S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.dll
+S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.xml

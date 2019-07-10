@@ -35,7 +35,7 @@ public class prfInstalledItemScript : MonoBehaviour {
     this.item = item;
     this.itemName = item.niceName;
     this.workCondition = item.workCondition == null ? "" : item.workCondition;
-    txtItemName.text = item.type;
+    txtItemName.text = item.niceName;
     tmpInputField.text = this.workCondition;
     gameObject.SetActive(true);
     WorldController.Instance.inputController.SetInputMode(INPUT_MODE.SHOWING_DIALOGUE);
@@ -43,8 +43,10 @@ public class prfInstalledItemScript : MonoBehaviour {
     Dictionary<string, string> kvps = item.itemParameters.GetItems();
 
     currentRecipeText.text = "";
-    if (item.recipe != null) {
-      currentRecipeText.text = Funcs.PadPair(46,"current recipe", item.recipe.name);
+    if (item.workRecipeName != null) {
+      currentRecipeText.text = Funcs.PadPair(46,"current recipe", item.workRecipeName);
+
+      currentRecipeText.text += Recipe.GetRecipe(item.workRecipeName).ToString(46);
     }
 
     foreach (string k in kvps.Keys) {

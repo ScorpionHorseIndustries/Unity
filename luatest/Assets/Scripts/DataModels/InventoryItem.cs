@@ -78,6 +78,16 @@ namespace NoYouDoIt.DataModels {
 
     }
 
+    public static string GetNiceName(string type) {
+      InventoryItem item = GetPrototype(type);
+
+      if (item != null) {
+        return item.niceName;
+      } else {
+        return null;
+      }
+    }
+
     public static List<string> GetAllPrototypeNames() {
       return new List<string>(prototypes.Keys);
     }

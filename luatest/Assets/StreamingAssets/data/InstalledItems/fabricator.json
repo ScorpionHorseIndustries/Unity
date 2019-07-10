@@ -14,7 +14,7 @@
   "updateActionCountDown": 1,
   "width": 1,
   "height": 2,
-  "workRecipe": "",
+  
   "workstation": true,
   "updateAction": "OnUpdate_Workstation",
   "editOnClick": true,

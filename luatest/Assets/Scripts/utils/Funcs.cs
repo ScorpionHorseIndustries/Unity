@@ -287,6 +287,9 @@ namespace NoYouDoIt.Utils {
       return ss;
     }
 
+    public static bool fChance(float chance = 50.0f) {
+      return UnityEngine.Random.Range(0.0f, 100.0f) < chance;
+    }
 
     public static bool Chance(int chance = 50) {
       return UnityEngine.Random.Range(0, 100) < chance;

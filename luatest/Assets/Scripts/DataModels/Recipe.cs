@@ -27,7 +27,7 @@ namespace NoYouDoIt.DataModels {
       this.chance = chance;
       if (name.StartsWith("inv::")) {
         this.type = RECIPE_PRODUCT_TYPE.INVENTORY_ITEM;
-      } else if (name.StartsWith("entity::")) {
+      } else if (name.StartsWith("entities::")) {
         this.type = RECIPE_PRODUCT_TYPE.ENTITY;
       } else if (name.StartsWith("money")) {
         this.type = RECIPE_PRODUCT_TYPE.MONEY;
@@ -36,11 +36,11 @@ namespace NoYouDoIt.DataModels {
     }
 
     private void SetOutput() {
-      if (UnityEngine.Random.Range(0,1) < chance) {
+      if (UnityEngine.Random.Range(0, 1) < chance) {
         switch (type) {
           case RECIPE_PRODUCT_TYPE.ENTITY:
           case RECIPE_PRODUCT_TYPE.INVENTORY_ITEM:
-            outputQty = Mathf.FloorToInt(UnityEngine.Random.Range((int)qtyMin, (int)qtyMax + 1));          
+            outputQty = Mathf.FloorToInt(UnityEngine.Random.Range((int)qtyMin, (int)qtyMax + 1));
             break;
           case RECIPE_PRODUCT_TYPE.MONEY:
             outputQty = UnityEngine.Random.Range(qtyMin, qtyMax);
@@ -50,6 +50,7 @@ namespace NoYouDoIt.DataModels {
         }
       }
     }
+
 
 
     public override string ToString() {
@@ -112,7 +113,43 @@ namespace NoYouDoIt.DataModels {
 
 
 
+    public string ToString(int lineWidth) {
+      string output = "";
 
+      if (resources.Count > 0) {
+        output += "\n" + Funcs.PadPair(lineWidth, "input item", "qty");
+        foreach (RecipeResource rr in resources.Values) {
+          string niceName = InventoryItem.GetNiceName(rr.name);
+          if (niceName == null) {
+            niceName = rr.name;
+          }
+          output += "\n" + Funcs.PadPair(lineWidth, niceName, rr.qtyRequired.ToString());
+        }
+      }
+
+      if (products.Count > 0) {
+        output += "\n" + Funcs.PadPair(lineWidth, "output item", "qty");
+        foreach (RecipeProduct rp in products.Values) {
+
+          switch (rp.type) {
+            case RECIPE_PRODUCT_TYPE.INVENTORY_ITEM:
+              output += "\n" + Funcs.PadPair(lineWidth, InventoryItem.GetNiceName(rp.name), rp.qtyMin + "-" + rp.qtyMax);
+              break;
+            case RECIPE_PRODUCT_TYPE.ENTITY:
+            case RECIPE_PRODUCT_TYPE.MONEY:
+              output += "\n" + Funcs.PadPair(lineWidth, rp.name, rp.qtyMin + "-" + rp.qtyMax);
+              break;
+            default:
+              break;
+          }
+          
+        }
+      }
+
+
+
+      return output;
+    }
 
 
 
@@ -180,7 +217,7 @@ namespace NoYouDoIt.DataModels {
 
       foreach (RecipeProduct rp in products.Values) {
         RecipeProduct nrp = new RecipeProduct(rp);
-        
+
         rpList.Add(nrp);
 
       }
@@ -222,12 +259,12 @@ namespace NoYouDoIt.DataModels {
     public static void LoadFromFile() {
       recipes = new Dictionary<string, Recipe>();
 
-      string path = Path.Combine(Application.streamingAssetsPath, "data","Recipes");
+      string path = Path.Combine(Application.streamingAssetsPath, "data", "Recipes");
 
-      string[] files = Directory.GetFiles(path, "*.json",SearchOption.AllDirectories);
+      string[] files = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 
       foreach (string file in files) {
-        
+
         string json = File.ReadAllText(file);
         //Debug.Log(file + "\n" +json);
         JObject jo = JObject.Parse(json);
@@ -235,9 +272,9 @@ namespace NoYouDoIt.DataModels {
         CreateRecipePrototype(jo);
       }
 
-      
 
-      
+
+
 
       //JArray invItems = Funcs.jsonGetArray(jo, "Recipes");
       //if (invItems != null) {

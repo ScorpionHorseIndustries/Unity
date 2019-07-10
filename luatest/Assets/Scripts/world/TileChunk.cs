@@ -95,7 +95,7 @@ namespace NoYouDoIt.TheWorld {
               string type = InventoryItem.GetRandomPrototype().type;
               int qty = UnityEngine.Random.Range(1, InventoryItem.GetStackSize(type) + 1);
               world.PlaceTileInventoryItem(type, t, qty);
-            } else if (Funcs.Chance(1)) {
+            } else if (Funcs.fChance(0.05f)) {
               World.current.CreateEntityAtTile(t, "entities::chicken");
             }
           }

@@ -96,6 +96,9 @@ namespace NoYouDoIt.TheWorld {
     //objects
     //public JobQueue jobQueue;
     public WorkItemManager workManager;
+
+
+
     public TileNodeMap nodeMap;
 
     public string LuaString(string code) {
@@ -1322,6 +1325,15 @@ import 'NoYouDoIt.DataModels'
       string name2 = lastNames[UnityEngine.Random.Range(0, lastNames.Length)];
 
       return Funcs.TitleCase(name1) + " " + Funcs.TitleCase(name2);
+
+    }
+
+    public string GetRobotName() {
+      string name = GetRandomString(firstNames);
+
+      name += " " + UnityEngine.Random.Range(1, int.MaxValue).ToString("X");
+
+      return name;
 
     }
 

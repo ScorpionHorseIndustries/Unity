@@ -109,6 +109,9 @@ namespace NoYouDoIt.DataModels {
         case "pet":
           name = World.current.GetPetName();
           break;
+        case "robot":
+          name = World.current.GetRobotName();
+          break;
         default:
           name = World.current.GetName();
           break;

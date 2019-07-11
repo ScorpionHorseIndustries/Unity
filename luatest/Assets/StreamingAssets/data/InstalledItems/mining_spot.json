@@ -1,0 +1,31 @@
+﻿{
+  "name": "installed::mining_spot",
+  "niceName": "mining spot",
+  "sprite": "installed_items::mining_spot",
+  "linked": false,
+  "movementFactor": 1,
+  "build": true,
+  "trash": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::mining_spot::build",
+  "deconstructRecipe": "recipe::installed::mining_spot::decon",
+  "canSpawnOn": [
+    "grass_coal",
+    "grass_iron",
+    "grass_copper",
+    "dirt_coal",
+    "dirt_iron",
+    "dirt_copper",
+    "stone_coal",
+    "stone_iron",
+    "stone_copper",
+    "sand_coal",
+    "sand_iron",
+    "sand_copper"
+  ],
+  "workStation": true,
+  "onCreate": "OnCreate_MiningSpot",
+  "updateActionCountDown": 3,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true
+}

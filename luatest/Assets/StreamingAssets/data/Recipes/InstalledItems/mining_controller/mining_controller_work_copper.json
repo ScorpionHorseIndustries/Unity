@@ -1,0 +1,14 @@
+{
+      "name": "recipe::installed::mining_controller::work::copper",
+      "id": 8,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::copper_ore",
+          "qtyMin": 1,
+          "qtyMax": 3,
+          "chance": 0.9
+        }
+
+      ]
+    }

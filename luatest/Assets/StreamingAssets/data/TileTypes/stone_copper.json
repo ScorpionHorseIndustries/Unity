@@ -1,6 +1,7 @@
 {
   "movementFactor": 0.4000000059604645,
   "build": true,
+  "minedProduct": "inv::copper_ore",
   "name": "stone_copper",
   "id": 17,
   "height": -1

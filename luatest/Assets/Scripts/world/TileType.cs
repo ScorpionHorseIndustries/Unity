@@ -28,6 +28,7 @@ namespace NoYouDoIt.TheWorld {
     public int height { get; private set; }
     public int heightIndex { get; private set; }
     public static int countNatural { get; private set; }
+    public string minedProduct { get; private set; } = null;
     private TileType(string name, string spriteName) {
       this.name = name;
       this.spriteName = spriteName;
@@ -66,6 +67,8 @@ namespace NoYouDoIt.TheWorld {
 
         string n = Funcs.jsonGetString(tileTypeJson["name"], null);
         int id = Funcs.jsonGetInt(tileTypeJson["id"], 0);
+        string minedProduct = Funcs.jsonGetString(tileTypeJson["minedProduct"], null);
+
         List<string> sprites = new List<string>();
 
         for (int i = 0; i < 8; i += 1) {
@@ -85,17 +88,18 @@ namespace NoYouDoIt.TheWorld {
         t.build = Funcs.jsonGetBool(tileTypeJson["build"], false);
         t.movementFactor = Funcs.jsonGetFloat(tileTypeJson["movementFactor"], 0.5f);
         t.height = Funcs.jsonGetInt(tileTypeJson["height"], -1);
+        t.minedProduct = minedProduct;
         t.varieties = new Dictionary<string, Tuple<float, float>>();
         JArray typeVarieties = Funcs.jsonGetArray(tileTypeJson, "varieties");
 
         if (typeVarieties != null) {
-          foreach(JObject variety in typeVarieties) {
+          foreach (JObject variety in typeVarieties) {
             string vName = Funcs.jsonGetString(variety["name"], null);
             float vzoffsetA = Funcs.jsonGetFloat(variety["zOffsetA"], 10);
             float vzoffsetB = Funcs.jsonGetFloat(variety["zOffsetB"], 10);
             if (vName != null) {
               t.varieties[vName] = new Tuple<float, float>(vzoffsetA, vzoffsetB);
-                }
+            }
           }
         }
 
@@ -112,14 +116,14 @@ namespace NoYouDoIt.TheWorld {
 
       }
       int heightIndex = 0;
-      foreach(TileType tt in TYPES.Values.OrderBy(e => e.height)) {
+      foreach (TileType tt in TYPES.Values.OrderBy(e => e.height)) {
         if (tt.height < 0) {
           tt.heightIndex = -1;
         } else {
           tt.heightIndex = heightIndex;
           heightIndex += 1;
         }
-        
+
       }
 
     }

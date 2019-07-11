@@ -1,0 +1,14 @@
+{
+      "name": "recipe::installed::mining_spot::work::coal",
+      "id": 8,
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::coal",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.9
+        }
+
+      ]
+    }

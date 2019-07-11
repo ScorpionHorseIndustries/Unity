@@ -1,0 +1,10 @@
+{
+  "name": "recipe::installed::mining_spot::build",
+  "buildTime": 0.5,
+  "cost": 0,
+  "resources": [
+    {"name" :  "inv::wood_planks","qty" :  2}
+
+
+  ]
+}

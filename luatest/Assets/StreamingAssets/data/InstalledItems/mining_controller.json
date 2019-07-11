@@ -4,6 +4,20 @@
   "niceName": "mining controller",
   "sprite": "installed_items::mining_controller",
   "sprites": [],
+  "canSpawnOn": [
+    "grass_coal",
+    "grass_iron",
+    "grass_copper",
+    "dirt_coal",
+    "dirt_iron",
+    "dirt_copper",
+    "stone_coal",
+    "stone_iron",
+    "stone_copper",
+    "sand_coal",
+    "sand_iron",
+    "sand_copper"
+  ],
   "linked": false,
   "movementFactor": 0.8,
   "trash": false,
@@ -21,13 +35,14 @@
   "workstation": true,
   "updateAction": "OnUpdate_Workstation",
   "editOnClick": true,
-  "workCondition": "GetStockpileQty(inv__steel_plates) + GetLooseQty(inv__steel_plates) < 32",
+  "workCondition": "GetStockpileQty(inv__iron_ore) + GetLooseQty(inv__steel_plates) < 32",
   "parameters": [
     {
       "name": "something",
       "value": "cheese",
       "type": "string"
     }
-  ]
+  ],
+  "onCreate": "OnCreate_MiningController"
 
 }

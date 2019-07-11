@@ -1,0 +1,15 @@
+{
+  "name": "recipe::installed::mining_spot::decon",
+  "buildTime": 0.5,
+  "cost": 0,
+  "products": [
+    {
+      "name": "inv::wood_planks",
+      "qtyMin": 1,
+      "qtyMax": 1,
+      "chance" :  1
+    }
+
+
+  ]
+}

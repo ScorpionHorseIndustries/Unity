@@ -162,3 +162,38 @@ function OnEnterRequested_Door(item)
 
 
 end
+
+function OnCreated_MiningController(item) 
+	local tile = item.tile
+	if (tile.type.minedProduct == nil) then
+		item.workRecipeName = "";
+		
+	elseif (tile.type.minedProduct == "inv::coal") then
+		item.workRecipeName = "recipe::installed::mining_controller::work::coal"
+	elseif (tile.type.minedProduct == "inv::iron_ore") then
+		item.workRecipeName = "recipe::installed::mining_controller::work::iron"
+	elseif (tile.type.minedProduct == "inv::copper_ore") then
+		item.workRecipeName = "recipe::installed::mining_controller::work::copper"
+	end
+	
+
+end
+
+
+function OnCreate_MiningSpot(item)
+
+	local tile = item.tile
+	if (tile.type.minedProduct == nil) then
+		item.workRecipeName = "";
+		
+	elseif (tile.type.minedProduct == "inv::coal") then
+		item.workRecipeName = "recipe::installed::mining_spot::work::coal"
+	elseif (tile.type.minedProduct == "inv::iron_ore") then
+		item.workRecipeName = "recipe::installed::mining_spot::work::iron"
+	elseif (tile.type.minedProduct == "inv::copper_ore") then
+		item.workRecipeName = "recipe::installed::mining_spot::work::copper"
+	end
+	
+
+
+end

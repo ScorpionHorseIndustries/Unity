@@ -1,6 +1,7 @@
 {
   "movementFactor": 0.4000000059604645,
   "build": true,
+  "minedProduct": "inv::coal",
   "name": "stone_coal",
   "id": 16,
   "height": -1

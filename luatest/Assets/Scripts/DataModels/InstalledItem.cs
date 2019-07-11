@@ -45,6 +45,7 @@ namespace NoYouDoIt.DataModels {
     //public Action<InstalledItem, float> updateActions;
     protected List<string> updateActions;
 
+
     //public Func<InstalledItem, Tile.CAN_ENTER> enterRequested;
     public string enterRequestedFunc;
     //public ProductOfWork[] products;
@@ -92,12 +93,14 @@ namespace NoYouDoIt.DataModels {
     public float updateActionCountDown = 0;
     public float updateActionCountDownMax { get; private set; }
     public float updateActionCountDownRange { get; private set; }
-    public string workRecipeName { get; private set; }
+    public string workRecipeName { get; set; }
     public string deconRecipeName { get; private set; }
     public bool isWorkstation { get; private set; } = false;
     public string luaOnCreate { get; private set; }
     public string workCondition { get; set; }
     public bool editOnClick { get; private set; } = false;
+    
+    public string onRemoved { get; private set; }
 
     //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
     //bool opening = false;
@@ -165,6 +168,8 @@ namespace NoYouDoIt.DataModels {
       this.luaOnCreate = proto.luaOnCreate;
       this.workCondition = proto.workCondition;
       this.editOnClick = proto.editOnClick;
+      
+      this.onRemoved = proto.onRemoved;
 
       if (spawn && this.growthStages.Count > 0) {
         this.growthStage = UnityEngine.Random.Range(0, itemParameters.GetInt("maxGrowthStage"));
@@ -275,6 +280,9 @@ namespace NoYouDoIt.DataModels {
     public void Destroy() {
       if (cbOnDestroyed != null) {
         cbOnDestroyed(this);
+      }
+      if (onRemoved != null) {
+        World.CallLuaFunction(onRemoved, this);
       }
     }
 
@@ -556,6 +564,10 @@ namespace NoYouDoIt.DataModels {
         string workCondition = Funcs.jsonGetString(installedItemJson["workCondition"], null);
         bool editOnClick = Funcs.jsonGetBool(installedItemJson["editOnClick"], false);
 
+        string onPlaced = Funcs.jsonGetString(installedItemJson["onPlaced"], null);
+        string onRemoved= Funcs.jsonGetString(installedItemJson["onRemoved"], null);
+          
+
         string luaOnCreate = Funcs.jsonGetString(installedItemJson["onCreate"], null);
 
         JArray jsonCanSpawnOn = Funcs.jsonGetArray(installedItemJson, "canSpawnOn");
@@ -629,6 +641,8 @@ namespace NoYouDoIt.DataModels {
         proto.luaOnCreate = luaOnCreate;
         proto.workCondition = workCondition;
         proto.editOnClick = editOnClick;
+        
+        proto.onRemoved = onRemoved;
         //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
         //Debug.Log(proto.ToString() + "\n" + workTileOffsetX + "," + workTileOffsetY);

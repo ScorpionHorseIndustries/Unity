@@ -70,7 +70,7 @@ namespace NoYouDoIt.TheWorld {
                     float na = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y), A);
                     float nb = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y), B);
                     float navg = (na + nb) / 2f;
-                    if ((navg >= 0.90f && navg <= 1f)|| (navg >= 0.0f && navg <= 0.1f)) {
+                    if ((navg >= 0.95f && navg <= 1f)|| (navg >= 0.05f && navg <= 0.1f)) {
                       t.SetType(vt);
                       break;
                     }
@@ -116,7 +116,7 @@ namespace NoYouDoIt.TheWorld {
               if (item != null) {
                 string type = item.type;
                 int qty = UnityEngine.Random.Range(1, InventoryItem.GetStackSize(type) + 1);
-                if (Funcs.fChance(item.spawnsOnChunkGenchance / 100)) {
+                if (Funcs.fChance(item.spawnsOnChunkGenchance * 100)) {
                   world.PlaceTileInventoryItem(type, t, qty);
                 }
               }

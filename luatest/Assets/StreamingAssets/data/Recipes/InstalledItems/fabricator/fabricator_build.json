@@ -1,16 +1,16 @@
 {
-      "name": "recipe::installed::fabricator::build",
-      "niceName" : "build",
-      "buildTime": 1,
-      "cost": 100,
-      "resources": [
-        {
-          "name": "inv::steel_plates",
-          "qty": 8
-        },
-        {
-          "name": "inv::copper_plates",
-          "qty": 2
-        }
-      ]
+  "name": "recipe::installed::fabricator::build",
+  "niceName": "build",
+  "buildTime": 3,
+  "cost": 0,
+  "resources": [
+    {
+      "name": "inv::steel_plates",
+      "qty": 8
+    },
+    {
+      "name": "inv::copper_plates",
+      "qty": 2
     }
+  ]
+}

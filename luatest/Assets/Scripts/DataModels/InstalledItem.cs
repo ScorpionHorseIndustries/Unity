@@ -96,6 +96,7 @@ namespace NoYouDoIt.DataModels {
     public float updateActionCountDownMax { get; private set; }
     public float updateActionCountDownRange { get; private set; }
     public string workRecipeName { get; set; }
+    public string nextWorkRecipeName { get; set; }
     public string deconRecipeName { get; private set; }
     public bool isWorkstation { get; private set; } = false;
     public string luaOnCreate { get; private set; }
@@ -103,6 +104,10 @@ namespace NoYouDoIt.DataModels {
     public bool editOnClick { get; private set; } = false;
     
     public string onRemoved { get; private set; }
+    public bool active { get; set; }
+    public bool canChangeRecipe { get; private set; }
+
+    
 
     //public float open { get; private set; } = 0f; //0 = closed, 1 = open, see if you guess what intermediate values mean.
     //bool opening = false;
@@ -171,9 +176,10 @@ namespace NoYouDoIt.DataModels {
       this.workCondition = proto.workCondition;
       this.editOnClick = proto.editOnClick;
       this.availableRecipes = proto.availableRecipes;
-      
+      this.nextWorkRecipeName = this.workRecipeName;
       this.onRemoved = proto.onRemoved;
-
+      this.canChangeRecipe = proto.canChangeRecipe;
+      this.active = false;
       if (spawn && this.growthStages.Count > 0) {
         this.growthStage = UnityEngine.Random.Range(0, itemParameters.GetInt("maxGrowthStage"));
 
@@ -539,7 +545,7 @@ namespace NoYouDoIt.DataModels {
         //foreach (JObject installedItemJson in installedItemsArray) {
 
         string name = Funcs.jsonGetString(installedItemJson["name"], "unnamed_" + unnamedCounter);
-        string niceName = Funcs.jsonGetString(installedItemJson["niceName"], "JSON MISSING");
+        string niceName = Funcs.jsonGetString(installedItemJson["niceName"], name);
         unnamedCounter += 1;
         string sprite = Funcs.jsonGetString(installedItemJson["sprite"], "");
         float movement = Funcs.jsonGetFloat(installedItemJson["movementFactor"], 1);
@@ -566,6 +572,7 @@ namespace NoYouDoIt.DataModels {
         int xClearance = Funcs.jsonGetInt(installedItemJson["x_clearance"], 0);
         string workCondition = Funcs.jsonGetString(installedItemJson["workCondition"], null);
         bool editOnClick = Funcs.jsonGetBool(installedItemJson["editOnClick"], false);
+        bool canChangeRecipe = Funcs.jsonGetBool(installedItemJson["canChangeRecipe"], false);
 
         string onPlaced = Funcs.jsonGetString(installedItemJson["onPlaced"], null);
         string onRemoved= Funcs.jsonGetString(installedItemJson["onRemoved"], null);
@@ -657,6 +664,7 @@ namespace NoYouDoIt.DataModels {
         proto.workCondition = workCondition;
         proto.editOnClick = editOnClick;
         proto.availableRecipes = availableRecipes;
+        proto.canChangeRecipe = canChangeRecipe;
 
 
 

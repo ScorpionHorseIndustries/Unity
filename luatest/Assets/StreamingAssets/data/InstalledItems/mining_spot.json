@@ -29,5 +29,7 @@
   "onCreate": "OnCreate_MiningSpot",
   "updateActionCountDown": 3,
   "updateAction": "OnUpdate_Workstation",
-  "editOnClick": true
+  "editOnClick": true,
+  "canChangeRecipe" :  false
+
 }

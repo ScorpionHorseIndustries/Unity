@@ -1,5 +1,5 @@
 ﻿{
-  
+
   "name": "installed::fabricator",
   "niceName": "fabricator",
   "sprite": "installed_items::fabricator",
@@ -14,12 +14,18 @@
   "updateActionCountDown": 1,
   "width": 1,
   "height": 2,
-  
+
   "workstation": true,
   "updateAction": "OnUpdate_Workstation",
   "editOnClick": true,
   "deconstructRecipe": "recipe::installed::fabricator::decon",
-  "workCondition": "false"
+  "workCondition": "false",
+  "availableWorkRecipes": [
+    "recipe::installed::fabricator::work::",
+    "recipe::installed::fabricator::work::b",
+    "recipe::installed::fabricator::work::c"
+  ],
+  "canChangeRecipe": true
 
 
 }

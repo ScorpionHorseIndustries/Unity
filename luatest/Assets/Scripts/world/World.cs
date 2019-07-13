@@ -244,6 +244,17 @@ namespace NoYouDoIt.TheWorld {
         }
       }
 
+      for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1 ) {
+        Tile a = ch.GetTileAt(5, y);
+        Tile b = ch.GetTileAt(6, y);
+        Tile c = ch.GetTileAt(7, y);
+        Tile d = ch.GetTileAt(8, y);
+
+        a.SetType(TileType.TYPES["stone_coal"]);
+        b.SetType(TileType.TYPES["stone_iron"]);
+        c.SetType(TileType.TYPES["stone_copper"]);
+        d.SetType(TileType.TYPES["sand"]);
+      }
 
 
 
@@ -378,6 +389,10 @@ namespace NoYouDoIt.TheWorld {
         }
       }
 
+    }
+
+    public int GetEntitiesAtState(string type, string state) {
+      return entities.Count(e => e.typeName == type && e.state == state);
     }
 
     //-----------------------------CONSTRUCTORS------------------------------

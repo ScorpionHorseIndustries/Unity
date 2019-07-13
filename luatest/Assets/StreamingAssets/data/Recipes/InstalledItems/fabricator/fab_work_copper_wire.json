@@ -1,0 +1,20 @@
+{
+  "name": "recipe::installed::fabricator::work::copper_wire",
+  "niceName": "make copper wire",
+  "buildTime": 1,
+  "resources": [
+    {
+      "name": "inv::copper_plates",
+      "qty": 1
+    }
+  ],
+  "products": [
+    {
+      "name": "inv::copper_wire",
+      "qtyMin": 8,
+      "qtyMax": 16,
+      "chance": 1
+    }
+
+  ]
+}

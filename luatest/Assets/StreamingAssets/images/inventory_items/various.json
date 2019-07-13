@@ -2,38 +2,63 @@
 	"ppu" : 32,
 	"width" : 32,
 	"height" : 32,
-	"sprites" : [
-		{
-		"name" : "money_pile",
-		"x":0,
-		"y":1
-		},
-		{
-		"name" : "organic_trash",
-		"x":1,
-		"y":1
-		},
-		{
-		"name" : "wallet_closed_0",
-		"x":2,
-		"y":1
-		},
-		{
-		"name" : "wallet_open_0",
-		"x":3,
-		"y":1
-		},
-		{
-		"name" : "wallet_open_1",
-		"x":0,
-		"y":0
-		},
-		{
-		"name" : "sapling",
-		"x" : 1,
-		"y" : 0
-		}
-		
-	
-	]
+  "sprites": [
+    {
+      "name": "money_pile",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "name": "organic_trash",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "name": "wallet_closed_0",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "name": "wallet_open_0",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "name": "wallet_open_1",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "sapling",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "name": "crate",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "name": "components",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "name": "circuit_boards",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "name": "copper_wire",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "name": "processor",
+      "x": 2,
+      "y": 2
+    }
+
+
+  ]
 }

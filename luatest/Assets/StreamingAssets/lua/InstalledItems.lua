@@ -69,11 +69,17 @@ function OnUpdate_Door(item, deltaTime)
 end
 
 function OnUpdate_Workstation(item, deltaTime) 
+	if (item.active == false) then return end
+
     local tile = item:GetWorkSpot()
-	World.dbug("item = " .. item.workRecipeName .. " " .. tile:ToString())
+	--World.dbug("item = " .. item.workRecipeName .. " " .. tile:ToString())
 	
 
     if (tile.HasPendingWork == false) then
+		if (item.nextWorkRecipeName ~= item.workRecipeName) then
+			item.workRecipeName = item.nextWorkRecipeName
+		end
+
 		if (item.workCondition ~= nil) then
 			local wc = load("return ".. item.workCondition)
 			if (not wc()) then goto skip end

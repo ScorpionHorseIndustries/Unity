@@ -14,6 +14,7 @@
   "updateActionCountDown": 1,
   "width": 1,
   "height": 2,
+  "canChangeRecipe" :  true,
   "availableWorkRecipes": [
     "recipe::installed::furnace::work::iron",
     "recipe::installed::furnace::work::copper",

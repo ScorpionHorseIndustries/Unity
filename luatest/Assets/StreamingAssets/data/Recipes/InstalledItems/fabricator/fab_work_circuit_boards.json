@@ -1,0 +1,33 @@
+{
+  "name": "recipe::installed::fabricator::work::circuit_boards",
+  "niceName": "make circuit boards",
+  "buildTime": 1,
+  "resources": [
+    {
+      "name": "inv::copper_plates",
+      "qty": 1
+    },
+    {
+      "name": "inv::copper_wire",
+      "qty": 2
+    },
+    {
+      "name": "inv::components",
+      "qty": 3
+    },
+    {
+      "name": "inv::silicon",
+      "qty": 2
+    }
+
+  ],
+  "products": [
+    {
+      "name": "inv::circuit_board",
+      "qtyMin": 1,
+      "qtyMax": 4,
+      "chance": 1
+    }
+
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "recipe::installed::furnace::work::iron",
-"niceName" : "smelt steel",
+  "niceName": "smelt steel",
   "buildTime": 1,
   "resources": [
     {
@@ -9,7 +9,7 @@
     },
     {
       "name": "inv::coal",
-      "qty" :  1
+      "qty": 1
     }
   ],
   "products": [

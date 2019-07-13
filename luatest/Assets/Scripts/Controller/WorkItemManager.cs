@@ -42,7 +42,7 @@ namespace NoYouDoIt.Controller {
         if (work.assignedRobot != null) {
           work.Unassign();
         }
-       }
+      }
 
     }
 
@@ -74,6 +74,14 @@ namespace NoYouDoIt.Controller {
         Entity worker = null;
         float dist = 0;
         float nearest = 0;
+        int closeBy = World.current.entities.Count(
+            e => e.typeName == "entities::basic_robot"
+            && e.state == "idle"
+            && w.workTile.chunk == e.pos.chunk);
+
+        if (closeBy > 0) continue;
+
+
         foreach (Entity robot in World.current.entities.Where(e => e.state == "find_work")) {
           dist = Funcs.TaxiDistance(w.workTile, robot.pos);
           if (worker == null || dist < nearest) {
@@ -92,7 +100,7 @@ namespace NoYouDoIt.Controller {
           //Debug.Log("gave work " + w.ToString()+ " to " + worker.name);
         }
       }
-       
+
 
     }
 

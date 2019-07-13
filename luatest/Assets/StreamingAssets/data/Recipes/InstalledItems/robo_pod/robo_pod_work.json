@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::robo_pod::work",
-      "id": 13,
+      "niceName" : "build robot",
       "buildTime": 3,
       "cost": 150,
       "onDemand": true,

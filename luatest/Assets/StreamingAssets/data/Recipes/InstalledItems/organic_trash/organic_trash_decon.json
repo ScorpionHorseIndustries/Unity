@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::organic_trash::decon",
-      "id": 16,
+      "niceName" : "disassemble",
       "buildTime": 1,
       "products": [
         {

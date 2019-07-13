@@ -111,10 +111,15 @@ namespace NoYouDoIt.TheWorld {
                 }
 
               }
-            } else if (Funcs.Chance(1)) {
-              string type = InventoryItem.GetRandomPrototype().type;
-              int qty = UnityEngine.Random.Range(1, InventoryItem.GetStackSize(type) + 1);
-              world.PlaceTileInventoryItem(type, t, qty);
+            } else if (Funcs.fChance(0.08f)) {
+              InventoryItem item = InventoryItem.GetRandomSpawnItem();
+              if (item != null) {
+                string type = item.type;
+                int qty = UnityEngine.Random.Range(1, InventoryItem.GetStackSize(type) + 1);
+                if (Funcs.fChance(item.spawnsOnChunkGenchance / 100)) {
+                  world.PlaceTileInventoryItem(type, t, qty);
+                }
+              }
             } else if (Funcs.fChance(0.05f)) {
               World.current.CreateEntityAtTile(t, "entities::chicken");
             }

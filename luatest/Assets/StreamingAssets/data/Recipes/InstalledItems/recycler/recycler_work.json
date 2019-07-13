@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::recycler::work",
-      "id": 10,
+      "niceName" : "recycle",
       "buildTime": 1,
       "resources": [
         {

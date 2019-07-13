@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::recycler::build",
-      "id": 3,
+      "niceName" : "build",
       "buildTime": 1,
       "cost": 30,
       "resources": [

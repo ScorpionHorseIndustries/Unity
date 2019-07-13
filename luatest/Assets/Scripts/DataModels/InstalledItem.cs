@@ -51,7 +51,7 @@ namespace NoYouDoIt.DataModels {
     //public ProductOfWork[] products;
 
     public string niceName { get; private set; }
-    public int prototypeId { get; private set; }
+    //public int prototypeId { get; private set; }
     public Tile tile { get; private set; } //an object could be more than one tile... so...
     public string type { get; private set; }
     public float movementFactor { get; private set; } = 1;
@@ -65,6 +65,7 @@ namespace NoYouDoIt.DataModels {
     public string spriteName { get; private set; }
     public string forcedSpriteName = null;
     public List<string> randomSprites = new List<string>();
+    public List<string> availableRecipes = new List<string>();
     //List<Job> jobs;
     public Inventory inventory;
     public Recipe recipe { get; private set; }
@@ -76,6 +77,7 @@ namespace NoYouDoIt.DataModels {
 
     private InstalledItem prototype = null;
     public Vector2 workTileOffset { get; protected set; } = Vector2.zero; //relative to bottom left tile
+
 
 
     public string sprite_ns { get; private set; }
@@ -129,7 +131,7 @@ namespace NoYouDoIt.DataModels {
 
       //this.updateActions = new List<Action>();
       //this.jobs = new List<Job>();
-      this.prototypeId = proto.prototypeId;
+      //this.prototypeId = proto.prototypeId;
       this.type = proto.type; // nice field name, doofus.
       this.niceName = proto.niceName;
       this.movementFactor = proto.movementFactor;
@@ -168,6 +170,7 @@ namespace NoYouDoIt.DataModels {
       this.luaOnCreate = proto.luaOnCreate;
       this.workCondition = proto.workCondition;
       this.editOnClick = proto.editOnClick;
+      this.availableRecipes = proto.availableRecipes;
       
       this.onRemoved = proto.onRemoved;
 
@@ -437,7 +440,7 @@ namespace NoYouDoIt.DataModels {
 
     //-----------=----------------------STATIC PROPERTIES--------------------------------
     public static Dictionary<string, InstalledItem> prototypes;
-    public static Dictionary<int, string> prototypesById;
+    //public static Dictionary<int, string> prototypesById;
     public static List<InstalledItem> trashPrototypes;
     public static Dictionary<string, string> prototypeRecipes;
     public static readonly string DECONSTRUCT = "installeditem::action::deconstruct";
@@ -515,7 +518,7 @@ namespace NoYouDoIt.DataModels {
       //LoadLua();
       prototypes = new Dictionary<string, InstalledItem>();
       trashPrototypes = new List<InstalledItem>();
-      prototypesById = new Dictionary<int, string>();
+      //prototypesById = new Dictionary<int, string>();
       prototypeRecipes = new Dictionary<string, string>();
 
 
@@ -545,7 +548,7 @@ namespace NoYouDoIt.DataModels {
         bool rotate = Funcs.jsonGetBool(installedItemJson["randomRotation"], false);
         int w = Funcs.jsonGetInt(installedItemJson["width"], 1);
         int h = Funcs.jsonGetInt(installedItemJson["height"], 1);
-        int id = Funcs.jsonGetInt(installedItemJson["id"], -1);
+        //int id = Funcs.jsonGetInt(installedItemJson["id"], -1);
         bool enclosesRoom = Funcs.jsonGetBool(installedItemJson["enclosesRoom"], false);
         string recipeName = Funcs.jsonGetString(installedItemJson["recipe"], null);
         bool linked = Funcs.jsonGetBool(installedItemJson["linked"], false);
@@ -566,6 +569,7 @@ namespace NoYouDoIt.DataModels {
 
         string onPlaced = Funcs.jsonGetString(installedItemJson["onPlaced"], null);
         string onRemoved= Funcs.jsonGetString(installedItemJson["onRemoved"], null);
+
           
 
         string luaOnCreate = Funcs.jsonGetString(installedItemJson["onCreate"], null);
@@ -585,6 +589,17 @@ namespace NoYouDoIt.DataModels {
           foreach (string tempSpriteName in spritesJsonArray) {
             sprites.Add(tempSpriteName);
           }
+        }
+
+        List<string> availableRecipes = new List<string>();
+        JArray otherRecipes = Funcs.jsonGetArray(installedItemJson, "availableWorkRecipes");
+        if (otherRecipes != null) {
+          foreach (string tempRecipeName in otherRecipes) {
+            availableRecipes.Add(tempRecipeName);
+          }
+        }
+        if (workRecipeName != null && !availableRecipes.Contains(workRecipeName)) {
+          availableRecipes.Add(workRecipeName);
         }
 
         List<string> neighbourTypeList = new List<string>();
@@ -612,7 +627,7 @@ namespace NoYouDoIt.DataModels {
         proto.neighbourTypes = neighbourTypeList;
         //proto.roomEnclosure = enclosesRoom;
         proto.niceName = niceName;
-        proto.prototypeId = id;
+        //proto.prototypeId = id;
         proto.type = name;
         proto.spriteName = sprite;
         proto.movementFactor = movement;
@@ -641,7 +656,11 @@ namespace NoYouDoIt.DataModels {
         proto.luaOnCreate = luaOnCreate;
         proto.workCondition = workCondition;
         proto.editOnClick = editOnClick;
-        
+        proto.availableRecipes = availableRecipes;
+
+
+
+
         proto.onRemoved = onRemoved;
         //proto.inventory = new Inventory(inventorySlots, INVENTORY_TYPE.INSTALLED_ITEM, proto);
 
@@ -747,7 +766,7 @@ namespace NoYouDoIt.DataModels {
         //  proto.updateActions += InstalledItemActions.Workstation_UpdateActions;
         //}
         prototypes.Add(proto.type, proto);
-        prototypesById.Add(proto.prototypeId, proto.type);
+        //prototypesById.Add(proto.prototypeId, proto.type);
         prototypeRecipes.Add(proto.type, proto.recipeName);
         proto.recipe = GetRecipe(proto.type);
 

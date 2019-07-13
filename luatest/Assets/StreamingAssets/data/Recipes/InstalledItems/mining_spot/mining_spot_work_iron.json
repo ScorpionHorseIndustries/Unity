@@ -1,6 +1,6 @@
 {
   "name": "recipe::installed::mining_spot::work::iron",
-  "id": 8,
+  "niceName" : "mine iron",
   "buildTime": 1,
   "products": [
     {

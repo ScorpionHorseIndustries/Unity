@@ -3,6 +3,6 @@
   "build": true,
   "minedProduct": "inv::iron_ore",
   "name": "grass_iron",
-  "id": 11,
+  
   "height": -1
 }

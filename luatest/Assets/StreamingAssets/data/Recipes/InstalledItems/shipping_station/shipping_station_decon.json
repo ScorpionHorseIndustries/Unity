@@ -1,6 +1,6 @@
 {
 		"name" : "recipe::installed::shipping_station::decon",
-		"id" : 26,
+		"niceName" : "decon",
 		      "products": [
         {
           "name": "inv::steel_plates",

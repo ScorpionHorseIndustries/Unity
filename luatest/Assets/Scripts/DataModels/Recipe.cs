@@ -14,6 +14,7 @@ namespace NoYouDoIt.DataModels {
   }
   public class RecipeProduct {
     public string name { get; private set; }
+    
     public int qtyMin { get; private set; }
     public int qtyMax { get; private set; }
     public float chance { get; private set; }
@@ -103,7 +104,8 @@ namespace NoYouDoIt.DataModels {
 
   public class Recipe {
     public string name { get; private set; }
-    public int id { get; private set; }
+    public string niceName { get; private set; }
+    //public int id { get; private set; }
     public float buildTime { get; private set; }
     public float cost { get; private set; }
     public bool onDemand { get; private set; }
@@ -188,7 +190,7 @@ namespace NoYouDoIt.DataModels {
     private Recipe(Recipe proto) {
 
       this.name = proto.name;
-      this.id = proto.id;
+      //this.id = proto.id;
       resources = new Dictionary<string, RecipeResource>();
       products = new Dictionary<string, RecipeProduct>();
       this.givesCash = proto.givesCash;
@@ -198,6 +200,8 @@ namespace NoYouDoIt.DataModels {
       this.cost = proto.cost;
       this.onDemand = proto.onDemand;
       this.btnText = proto.btnText;
+      this.niceName = proto.niceName;
+      
 
       foreach (RecipeResource rp in proto.resources.Values) {
         resources[rp.name] = new RecipeResource(rp);
@@ -245,12 +249,20 @@ namespace NoYouDoIt.DataModels {
       return recipes.Keys;
     }
 
+    public static string GetNiceName(string name) {
+      if (recipes.ContainsKey(name)) {
+        return recipes[name].niceName;
+      } else {
+        Debug.LogError("recipe nice name not found [" + name + "]");
+        return null;
+      }
+    }
 
     public static Recipe GetRecipe(string name) {
       if (recipes.ContainsKey(name)) {
         return new Recipe(recipes[name]);
       }
-
+      Debug.LogError("recipe not found [" + name + "]");
       return null;
     }
 
@@ -298,7 +310,8 @@ namespace NoYouDoIt.DataModels {
       Recipe recipe = new Recipe();
 
       recipe.name = Funcs.jsonGetString(jRecipe["name"], "");
-      recipe.id = Funcs.jsonGetInt(jRecipe["id"], -1);
+      recipe.niceName = Funcs.jsonGetString(jRecipe["niceName"], "");
+      //recipe.id = Funcs.jsonGetInt(jRecipe["id"], -1);
       recipe.buildTime = Funcs.jsonGetFloat(jRecipe["buildTime"], 1);
 
       recipe.products = new Dictionary<string, RecipeProduct>();

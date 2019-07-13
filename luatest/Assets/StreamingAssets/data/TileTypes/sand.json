@@ -19,6 +19,7 @@
   ],
   "build": true,
   "name": "sand",
-  "id": 2,
-  "height": 150
+
+  "height": 150,
+  "minedProduct": "inv::sand"
 }

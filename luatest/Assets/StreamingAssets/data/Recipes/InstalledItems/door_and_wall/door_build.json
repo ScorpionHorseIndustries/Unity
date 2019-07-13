@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::door::build",
-      "id": 4,
+	  "niceName" : "build",
       "buildTime": 1,
       "resources": [
         {

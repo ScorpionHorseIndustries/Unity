@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::quarry::work",
-      "id": 8,
+      "niceName" : "quarry",
       "buildTime": 1,
       "products": [
         {

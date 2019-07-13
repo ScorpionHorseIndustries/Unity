@@ -3,6 +3,6 @@
   "build": true,
   "minedProduct": "inv::coal",
   "name": "dirt_coal",
-  "id": 8,
+  
   "height": -1
 }

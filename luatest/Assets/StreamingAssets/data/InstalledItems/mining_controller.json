@@ -1,5 +1,5 @@
 {
-  "id": 8,
+
   "name": "installed::mining_controller",
   "niceName": "mining controller",
   "sprite": "installed_items::mining_controller",
@@ -31,7 +31,7 @@
   "height": 3,
   "workTileOffsetX": 1,
   "updateActionCountDown": 3,
-  "workRecipe": "recipe::installed::mining_controller::work",
+  "workRecipe": "recipe::installed::mining_controller::work::iron",
   "workstation": true,
   "updateAction": "OnUpdate_Workstation",
   "editOnClick": true,

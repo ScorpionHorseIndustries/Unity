@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::wall::build",
-      "id": 1,
+      "niceName" : "build",
       "buildTime": 1,
       "resources": [
         {

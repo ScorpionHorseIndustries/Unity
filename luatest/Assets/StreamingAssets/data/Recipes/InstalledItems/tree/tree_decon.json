@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::tree::decon",
-      "id": 23,
+      "niceName" : "chop",
       "buildTime": 1,
       "cost": 0,
       "products": [

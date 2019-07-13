@@ -486,6 +486,7 @@ MonoBehaviour:
   tglActive: {fileID: 1523608817937737694}
   goContent: {fileID: 5013622342180159956}
   prfKVP: {fileID: 7650402692159014903, guid: 44768343850deec49b7ae0144b7ad842, type: 3}
+  chooseRecipeDrop: {fileID: 3177788483928335730}
   currentRecipeText: {fileID: 2428733926879962571}
 --- !u!1 &1523608817541736647
 GameObject:
@@ -1761,7 +1762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.5, y: -0.50000095}
+  m_AnchoredPosition: {x: -7.5, y: -0.5000019}
   m_SizeDelta: {x: -35, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5259639405242709166
@@ -1792,7 +1793,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Option A
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6f5aec20bd248464a9b85b778676e0c3, type: 2}
   m_sharedMaterial: {fileID: 8354882000708013250, guid: 6f5aec20bd248464a9b85b778676e0c3,
@@ -1862,13 +1863,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 510248465093530923}
-    characterCount: 8
+    characterCount: 0
     spriteCount: 0
-    spaceCount: 1
-    wordCount: 2
+    spaceCount: 0
+    wordCount: 0
     linkCount: 0
-    lineCount: 1
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -3701,8 +3702,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 109.04, y: -24.1}
-  m_SizeDelta: {x: 257.57, y: 31.76}
+  m_AnchoredPosition: {x: -0.36417, y: -25.7}
+  m_SizeDelta: {x: 476.38, y: 34.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3898486166878858000
 CanvasRenderer:
@@ -3788,13 +3789,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: Option A
-      m_Image: {fileID: 0}
-    - m_Text: Option B
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

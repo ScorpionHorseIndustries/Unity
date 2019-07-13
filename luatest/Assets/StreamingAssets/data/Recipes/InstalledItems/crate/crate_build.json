@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::crate::build",
-      "id": 6,
+      "niceName" : "build",
       "buildTime": 1,
       "resources": [
         {

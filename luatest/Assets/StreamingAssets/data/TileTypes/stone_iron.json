@@ -3,6 +3,6 @@
   "build": true,
   "minedProduct": "inv::iron_ore",
   "name": "stone_iron",
-  "id": 15,
+  
   "height": -1
 }

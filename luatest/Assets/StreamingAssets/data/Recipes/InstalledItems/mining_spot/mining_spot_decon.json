@@ -1,5 +1,6 @@
 {
   "name": "recipe::installed::mining_spot::decon",
+  "niceName" : "decon",
   "buildTime": 0.5,
   "cost": 0,
   "products": [

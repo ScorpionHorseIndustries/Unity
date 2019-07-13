@@ -701,14 +701,14 @@ import 'NoYouDoIt.DataModels'
       return InstalledItem.prototypes;
     }
 
-    public InstalledItem getInstalledItemProtoById(int id) {
-      if (InstalledItem.prototypesById.ContainsKey(id)) {
-        return getInstalledItemProto(InstalledItem.prototypesById[id]);
+    //public InstalledItem getInstalledItemProtoById(int id) {
+    //  if (InstalledItem.prototypesById.ContainsKey(id)) {
+    //    return getInstalledItemProto(InstalledItem.prototypesById[id]);
 
-      } else {
-        return null;
-      }
-    }
+    //  } else {
+    //    return null;
+    //  }
+    //}
 
     public InstalledItem getInstalledItemProto(string item) {
       if (InstalledItem.prototypes.ContainsKey(item)) {
@@ -1535,86 +1535,89 @@ import 'NoYouDoIt.DataModels'
     }
 
     public void WriteXml(XmlWriter writer) {
-      writer.WriteElementString("width", width.ToString());
-      writer.WriteElementString("height", height.ToString());
-      writer.WriteElementString("tileSize", tileSize.ToString());
-      writer.WriteElementString("xSeed", xSeed.ToString());
-      writer.WriteElementString("ySeed", ySeed.ToString());
-      writer.WriteElementString("noiseFactor", noiseFactor.ToString());
 
-      writer.WriteStartElement("characters");
+      throw new NotImplementedException("write xml not implemented");
 
-      //foreach (Character c in characters) {
-      //  c.WriteXml(writer);
+      //writer.WriteElementString("width", width.ToString());
+      //writer.WriteElementString("height", height.ToString());
+      //writer.WriteElementString("tileSize", tileSize.ToString());
+      //writer.WriteElementString("xSeed", xSeed.ToString());
+      //writer.WriteElementString("ySeed", ySeed.ToString());
+      //writer.WriteElementString("noiseFactor", noiseFactor.ToString());
+
+      //writer.WriteStartElement("characters");
+
+      ////foreach (Character c in characters) {
+      ////  c.WriteXml(writer);
+
+      ////}
+      //writer.WriteEndElement();
+
+      //writer.WriteStartElement("tileTypes");
+
+      //Dictionary<string, int> types = new Dictionary<string, int>();
+
+      //foreach (string st in TileType.TYPES.Keys) {
+      //  TileType type = TileType.TYPES[st];
+      //  types[st] = type.id;
+
+      //  writer.WriteStartElement("tileType");
+      //  writer.WriteElementString("name", st);
+      //  writer.WriteElementString("id", type.id.ToString());
+
+      //  writer.WriteEndElement();
 
       //}
-      writer.WriteEndElement();
 
-      writer.WriteStartElement("tileTypes");
+      //writer.WriteEndElement();
 
-      Dictionary<string, int> types = new Dictionary<string, int>();
+      //StringBuilder str = new StringBuilder();
+      //StringBuilder str_installed = new StringBuilder();
 
-      foreach (string st in TileType.TYPES.Keys) {
-        TileType type = TileType.TYPES[st];
-        types[st] = type.id;
+      //for (int x = 0; x < width; x += 1) {
+      //  for (int y = 0; y < height; y += 1) {
+      //    Tile t = GetTileIfChunkExists(x, y);
+      //    //str.Append(t.x + "_" + t.y + "_" + types[t.type.name] + ";");
+      //    str.Append(types[t.type.name] + ";");
+      //    if (t.installedItem != null) {
+      //      //str.Append("I" + t.installedItem.prototypeId.ToString());
+      //      str_installed.Append(t.installedItem.prototypeId.ToString() + ":" + t.world_x + ":" + t.world_y);
+      //      StringBuilder installedData = new StringBuilder();
+      //      installedData.Append(":(");
+      //      Dictionary<string, string> items = t.installedItem.itemParameters.GetItems();
+      //      int count = 0;
+      //      foreach (string k in items.Keys) {
+      //        if (count > 0) {
+      //          installedData.Append(',');
 
-        writer.WriteStartElement("tileType");
-        writer.WriteElementString("name", st);
-        writer.WriteElementString("id", type.id.ToString());
-
-        writer.WriteEndElement();
-
-      }
-
-      writer.WriteEndElement();
-
-      StringBuilder str = new StringBuilder();
-      StringBuilder str_installed = new StringBuilder();
-
-      for (int x = 0; x < width; x += 1) {
-        for (int y = 0; y < height; y += 1) {
-          Tile t = GetTileIfChunkExists(x, y);
-          //str.Append(t.x + "_" + t.y + "_" + types[t.type.name] + ";");
-          str.Append(types[t.type.name] + ";");
-          if (t.installedItem != null) {
-            //str.Append("I" + t.installedItem.prototypeId.ToString());
-            str_installed.Append(t.installedItem.prototypeId.ToString() + ":" + t.world_x + ":" + t.world_y);
-            StringBuilder installedData = new StringBuilder();
-            installedData.Append(":(");
-            Dictionary<string, string> items = t.installedItem.itemParameters.GetItems();
-            int count = 0;
-            foreach (string k in items.Keys) {
-              if (count > 0) {
-                installedData.Append(',');
-
-              }
-              installedData.Append("{" + k + "}={" + items[k].ToString() + "}");
-              count += 1;
-            }
-            installedData.Append(")");
-            str_installed.Append(installedData + ";");
-          }
+      //        }
+      //        installedData.Append("{" + k + "}={" + items[k].ToString() + "}");
+      //        count += 1;
+      //      }
+      //      installedData.Append(")");
+      //      str_installed.Append(installedData + ";");
+      //    }
 
 
-        }
-      }
-      //Debug.Log("original: " + str.Length + "\n" + str.ToString());
+      //  }
+      //}
+      ////Debug.Log("original: " + str.Length + "\n" + str.ToString());
 
-      Debug.Log("installed: " + str_installed.ToString());
+      //Debug.Log("installed: " + str_installed.ToString());
 
-      byte[] tileByes = Funcs.Zip(str.ToString());
-      byte[] installedBytes = Funcs.Zip(str_installed.ToString());
-      Debug.Log("bytes: " + tileByes.Length);
-      writer.WriteStartElement("tiles");
-      writer.WriteBase64(tileByes, 0, tileByes.Length);
-      writer.WriteEndElement();
+      //byte[] tileByes = Funcs.Zip(str.ToString());
+      //byte[] installedBytes = Funcs.Zip(str_installed.ToString());
+      //Debug.Log("bytes: " + tileByes.Length);
+      //writer.WriteStartElement("tiles");
+      //writer.WriteBase64(tileByes, 0, tileByes.Length);
+      //writer.WriteEndElement();
 
-      writer.WriteStartElement("installed");
-      writer.WriteBase64(installedBytes, 0, installedBytes.Length);
-      writer.WriteEndElement();
+      //writer.WriteStartElement("installed");
+      //writer.WriteBase64(installedBytes, 0, installedBytes.Length);
+      //writer.WriteEndElement();
 
 
-      //jobQueue.WriteXml(writer);
+      ////jobQueue.WriteXml(writer);
 
 
     }
@@ -1714,25 +1717,25 @@ import 'NoYouDoIt.DataModels'
     }
 
     public void SetInstalledFromArray() {
-
-      if (savedInstalledItems != null) {
-        foreach (string s in savedInstalledItems) {
-          string[] ss = s.Split(':');
-          //Debug.Log(String.Format("0:\"{0}\" 1:\"{1}\" 2:\"{2}\"", ss[0], ss[1], ss[2]));
-          int installedItemId = int.Parse(ss[0]);
-          int x = int.Parse(ss[1]);
-          int y = int.Parse(ss[2]);
-          string prms = ss[3];
-          Tile t = GetTileAt(x, y);
-          if (installedItemId > 0 && x >= 0 && y >= 0 && t != null) {
-            InstalledItem item = PlaceInstalledItem(getInstalledItemProtoById(installedItemId).type, t);//InstalledItem.CreateInstance(this, getInstalledItemProtoById(installedItemId), t);
-            installedItems.Add(item);
-            if (prms != null) {
-              item.SetParameters(prms);
-            }
-          }
-        }
-      }
+      throw new NotImplementedException("not implemented");
+      //if (savedInstalledItems != null) {
+      //  foreach (string s in savedInstalledItems) {
+      //    string[] ss = s.Split(':');
+      //    //Debug.Log(String.Format("0:\"{0}\" 1:\"{1}\" 2:\"{2}\"", ss[0], ss[1], ss[2]));
+      //    int installedItemId = int.Parse(ss[0]);
+      //    int x = int.Parse(ss[1]);
+      //    int y = int.Parse(ss[2]);
+      //    string prms = ss[3];
+      //    Tile t = GetTileAt(x, y);
+      //    if (installedItemId > 0 && x >= 0 && y >= 0 && t != null) {
+      //      InstalledItem item = PlaceInstalledItem(getInstalledItemProtoById(installedItemId).type, t);//InstalledItem.CreateInstance(this, getInstalledItemProtoById(installedItemId), t);
+      //      installedItems.Add(item);
+      //      if (prms != null) {
+      //        item.SetParameters(prms);
+      //      }
+      //    }
+      //  }
+      //}
 
 
     }

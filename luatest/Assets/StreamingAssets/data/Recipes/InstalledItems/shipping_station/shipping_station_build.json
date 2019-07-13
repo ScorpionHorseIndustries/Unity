@@ -1,6 +1,6 @@
 {
 		"name" : "recipe::installed::shipping_station::build",
-		"id" : 25,
+		"niceName" : "build",
 		"buildTime" : 2,
 		"cost" : 150,
 		"resources": [

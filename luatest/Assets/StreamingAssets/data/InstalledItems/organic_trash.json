@@ -1,5 +1,5 @@
 {
-      "id": 2,
+      
       "name": "installed::organic_trash",
       "niceName": "organic trash",
       "sprite": "installed_items::corpse",
@@ -10,7 +10,7 @@
       "build": false,
       "randomRotation": true,
       "enclosesRoom": false,
-      "recipe": "recipe::installed::organic_trash::build",
+      
       "deconstructRecipe": "recipe::installed::organic_trash::decon",
       "paletteSwap": true,
       "onCreate": "SetSocialMediaName"

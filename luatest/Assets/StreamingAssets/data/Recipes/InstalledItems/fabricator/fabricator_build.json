@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::fabricator::build",
-      "id": 7,
+      "niceName" : "build",
       "buildTime": 1,
       "cost": 100,
       "resources": [

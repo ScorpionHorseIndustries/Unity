@@ -188,6 +188,7 @@
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\fabricator\fabricator_decon.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\copper_plates.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\door.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\furnace\furnace_work_iron.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\tree\tree_decon.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\shipping_station\shipping_station_work.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\atm.json" />
@@ -215,6 +216,7 @@
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\robo_pod\robo_pod_work.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\atm\atm_build.json" />
     <None Include="Assets\StreamingAssets\data\TileTypes\stone_iron.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\mining_spot\mining_spot_work_stone.json" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\StreamingAssets\data\TileTypes\snow.json" />
     <None Include="Assets\StreamingAssets\images\inventory_items\plates.json" />
@@ -222,10 +224,12 @@
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\recycler\recycler_work.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\solar_panel\solar_panel_decon.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\robo_pod\robo_pod_decon.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\furnace\furnace_decon.json" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\StreamingAssets\data\TileTypes\dirt.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\mining_controller\mining_controller_work_iron.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\organic_trash.json" />
+    <None Include="Assets\StreamingAssets\data\InventoryItems\silicon.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\fabricator.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\coal.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\solar_panel\solar_panel_build.json" />
@@ -242,7 +246,9 @@
     <None Include="Assets\animation\shaderImageEffect.shader" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\quarry\quarry_work.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\wood_planks.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\furnace\furnace_work_copper.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\stone_slabs.json" />
+    <None Include="Assets\StreamingAssets\data\InventoryItems\sand.json" />
     <None Include="Assets\Kenney\License.txt" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\tree.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\wall.json" />
@@ -260,9 +266,11 @@
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\organic_trash\organic_trash_decon.json" />
     <None Include="Assets\JsonDotNet\link.xml" />
     <None Include="Assets\StreamingAssets\lua\Jobs.lua" />
+    <None Include="Assets\StreamingAssets\data\InstalledItems\furnace.json" />
     <None Include="Assets\StreamingAssets\lua\WorkItem.lua" />
     <None Include="Assets\StreamingAssets\images\inventory_items\various.json" />
     <None Include="Assets\StreamingAssets\images\entities\chicken.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\mining_spot\mining_spot_work_sand.json" />
     <None Include="Assets\StreamingAssets\lua\InstalledItems.lua" />
     <None Include="Assets\StreamingAssets\images\tiles\tiles.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\tree\sapling_decon.json" />
@@ -286,6 +294,7 @@
     <None Include="Assets\StreamingAssets\images\installed_items\recycler.json" />
     <None Include="Assets\StreamingAssets\lua\entities\basic_robot.lua" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\wallet.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\furnace\furnace_build.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\mining_controller.json" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\StreamingAssets\data\TileTypes\sand.json" />

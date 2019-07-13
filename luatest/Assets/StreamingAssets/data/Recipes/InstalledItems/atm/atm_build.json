@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::atm::build",
-      "id": 2,
+      "niceName" : "build",
       "buildTime": 1,
       "cost": 50,
       "resources": [

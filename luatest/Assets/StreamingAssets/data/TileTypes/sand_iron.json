@@ -3,6 +3,6 @@
   "build": true,
   "minedProduct": "inv::iron_ore",
   "name": "sand_iron",
-  "id": 3,
+  
   "height": -1
 }

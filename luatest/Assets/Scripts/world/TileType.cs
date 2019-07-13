@@ -13,11 +13,11 @@ namespace NoYouDoIt.TheWorld {
   public class TileType {
 
     public static Dictionary<string, TileType> TYPES = new Dictionary<string, TileType>();
-    public static Dictionary<int, TileType> TYPES_BY_ID = new Dictionary<int, TileType>();
+    //public static Dictionary<int, TileType> TYPES_BY_ID = new Dictionary<int, TileType>();
 
     public Dictionary<string, Tuple<float, float>> varieties;
 
-    public int id { get; private set; }
+    //public int id { get; private set; }
     //private static bool loaded = false;
     public string name { get; private set; }
     public string spriteName { get; private set; }
@@ -53,7 +53,7 @@ namespace NoYouDoIt.TheWorld {
     public static void LoadFromFile() {
 
       TYPES.Clear();
-      TYPES_BY_ID.Clear();
+      //TYPES_BY_ID.Clear();
       countNatural = 0;
 
       string path = Path.Combine(Application.streamingAssetsPath, "data", "TileTypes");
@@ -66,7 +66,7 @@ namespace NoYouDoIt.TheWorld {
         JObject tileTypeJson = JObject.Parse(json);
 
         string n = Funcs.jsonGetString(tileTypeJson["name"], null);
-        int id = Funcs.jsonGetInt(tileTypeJson["id"], 0);
+        
         string minedProduct = Funcs.jsonGetString(tileTypeJson["minedProduct"], null);
 
         List<string> sprites = new List<string>();
@@ -82,7 +82,7 @@ namespace NoYouDoIt.TheWorld {
 
 
 
-        t.id = id;
+        
         //t.rangeLow = (float)tileTypeJson["rangeLow"];
         //t.rangeHigh = (float)tileTypeJson["rangeHigh"];
         t.build = Funcs.jsonGetBool(tileTypeJson["build"], false);
@@ -106,7 +106,7 @@ namespace NoYouDoIt.TheWorld {
 
 
         TYPES.Add(n, t);
-        TYPES_BY_ID.Add(t.id, t);
+        //TYPES_BY_ID.Add(t.id, t);
 
         if (t.height >= 0) {
           countNatural += 1;

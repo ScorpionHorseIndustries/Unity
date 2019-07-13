@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::atm::decon",
-      "id": 17,
+      "niceName" : "decon",
       "buildTime": 1,
       "products": [
         {

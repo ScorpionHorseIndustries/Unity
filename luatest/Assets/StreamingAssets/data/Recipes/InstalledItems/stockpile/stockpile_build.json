@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::stockpile::build",
-      "id": 5,
+	  "niceName" : "build",
       "buildTime": -1,
       "resources": []
     }

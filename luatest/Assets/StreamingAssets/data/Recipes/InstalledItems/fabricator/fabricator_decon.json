@@ -1,6 +1,6 @@
 {
   "name": "recipe::installed::fabricator::decon",
-  "id": 21,
+  "niceName" : "decon",
   "buildTime": 1,
   "products": [
     {

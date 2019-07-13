@@ -72,26 +72,28 @@ public class scrUIBuildMenu : MonoBehaviour {
 
 
 
-      Recipe r = Recipe.GetRecipe(proto.workRecipeName);
-      if (r != null && r.onDemand) {
-        btn = Instantiate(btnBuildPrefab, Vector2.zero, Quaternion.identity);
-        btn.transform.SetParent(this.transform);
+      if (proto.workRecipeName != null && proto.workRecipeName != "") {
+        Recipe r = Recipe.GetRecipe(proto.workRecipeName);
+        if (r != null && r.onDemand) {
+          btn = Instantiate(btnBuildPrefab, Vector2.zero, Quaternion.identity);
+          btn.transform.SetParent(this.transform);
 
-        btn.GetComponentInChildren<Text>().text = r.btnText;
-        btn.name = "btnBuild::" + r.name + "::ondemand";
-        btn.onClick.AddListener(delegate { World.current.InstalledItems_AssignOnDemandJobs(proto.type); });
-        btn.transform.localScale = Vector2.one;
-        SetButtonSprite(btn, proto.spriteName + NYDISpriteManager.ICON_SUFFIX);
+          btn.GetComponentInChildren<Text>().text = r.btnText;
+          btn.name = "btnBuild::" + r.name + "::ondemand";
+          btn.onClick.AddListener(delegate { World.current.InstalledItems_AssignOnDemandJobs(proto.type); });
+          btn.transform.localScale = Vector2.one;
+          SetButtonSprite(btn, proto.spriteName + NYDISpriteManager.ICON_SUFFIX);
 
-        AddButtonEvent(btn,
-              data => { scrUIBuildMenu.UpdateRecipe((PointerEventData)data); }
-            );
+          AddButtonEvent(btn,
+                data => { scrUIBuildMenu.UpdateRecipe((PointerEventData)data); }
+              );
 
-        recipeData = btn.GetComponent<scrBtnBuildRecipeData>();
-        if (recipeData != null) {
-          recipeData.AddKeyValuePair("name", r.btnText);
-          recipeData.AddRecipe(r);
-          
+          recipeData = btn.GetComponent<scrBtnBuildRecipeData>();
+          if (recipeData != null) {
+            recipeData.AddKeyValuePair("name", r.btnText);
+            recipeData.AddRecipe(r);
+
+          }
         }
       }
 

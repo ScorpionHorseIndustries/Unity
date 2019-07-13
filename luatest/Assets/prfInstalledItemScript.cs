@@ -13,12 +13,15 @@ public class prfInstalledItemScript : MonoBehaviour {
   public Toggle tglActive;
   public GameObject goContent;
   public GameObject prfKVP;
+  public TMP_Dropdown chooseRecipeDrop;
   string itemName;
   string workCondition;
   public TMP_Text currentRecipeText;
   InstalledItem item;
   List<GameObject> kvpGo;
   bool ok = false;
+  Dictionary<string, string> availableRecipes = new Dictionary<string, string>();
+  List<string> niceNames = new List<string>();
 
   public void OnConditionValueChanged(string s) {
     workCondition = s;
@@ -44,7 +47,7 @@ public class prfInstalledItemScript : MonoBehaviour {
 
     currentRecipeText.text = "";
     if (item.workRecipeName != null) {
-      currentRecipeText.text = Funcs.PadPair(46,"current recipe", item.workRecipeName);
+      currentRecipeText.text = Funcs.PadPair(46,"current recipe", Recipe.GetNiceName(item.workRecipeName));
 
       currentRecipeText.text += Recipe.GetRecipe(item.workRecipeName).ToString(46);
     }
@@ -52,6 +55,22 @@ public class prfInstalledItemScript : MonoBehaviour {
     foreach (string k in kvps.Keys) {
       CreateKVPControl(k, kvps[k]);
     }
+    availableRecipes.Clear();
+    niceNames.Clear();
+    //Debug.Log("avaiable recipes: " + item.availableRecipes.Count);
+    //item.itemParameters.SetInt("num recipes", item.availableRecipes.Count);
+    foreach (string r in item.availableRecipes) {
+      string niceName = Recipe.GetNiceName(r);
+      if (niceName == null) {
+
+      } else {
+        availableRecipes[niceName] = r;
+
+        niceNames.Add(niceName);
+      }
+    }
+    chooseRecipeDrop.ClearOptions();
+    chooseRecipeDrop.AddOptions(niceNames);
   }
 
   private void CreateKVPControl(string k, string v) {

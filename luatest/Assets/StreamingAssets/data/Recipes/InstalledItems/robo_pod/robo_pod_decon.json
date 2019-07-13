@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::robo_pod::decon",
-      "id": 22,
+      "niceName" : "decon",
       "buildTime": 1,
       "products": [
         {

@@ -6,6 +6,6 @@
   "spriteWest": "entities::robot_west",
   "spriteSouth": "entities::robot_south",
   "onUpdate": "OnUpdate_Robot",
-  "movementSpeed": 5,
+  "movementSpeed": 8,
   "getName": "robot"
 }

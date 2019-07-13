@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::crate::decon",
-      "id": 20,
+      "niceName" : "decon",
       "buildTime": 1,
       "products": [
         {

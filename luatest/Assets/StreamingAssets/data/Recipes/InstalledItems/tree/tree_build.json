@@ -1,5 +1,6 @@
 {
       "name": "recipe::installed::tree::build",
+	  "niceName" : "plant",
       "id": 14,
       "buildTime": 1,
       "cost": 0,

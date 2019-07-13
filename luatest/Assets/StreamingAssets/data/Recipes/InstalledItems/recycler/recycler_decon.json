@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::recycler::decon",
-      "id": 18,
+      "niceName" : "decon",
       "buildTime": 1,
       "products": [
         {

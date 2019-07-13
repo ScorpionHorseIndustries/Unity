@@ -192,6 +192,10 @@ function OnCreate_MiningSpot(item)
 		item.workRecipeName = "recipe::installed::mining_spot::work::iron"
 	elseif (tile.type.minedProduct == "inv::copper_ore") then
 		item.workRecipeName = "recipe::installed::mining_spot::work::copper"
+	elseif (tile.type.minedProduct == "inv::sand") then
+		item.workRecipeName = "recipe::installed::mining_spot::work::sand"
+	elseif (tile.type.minedProduct == "inv::stone_slabs") then
+		item.workRecipeName = "recipe::installed::mining_spot::work::stone"
 	end
 	
 

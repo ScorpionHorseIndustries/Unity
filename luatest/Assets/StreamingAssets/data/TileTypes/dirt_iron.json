@@ -3,6 +3,6 @@
   "build": true,
   "minedProduct": "inv::iron_ore",
   "name": "dirt_iron",
-  "id": 7,
+  
   "height": -1
 }

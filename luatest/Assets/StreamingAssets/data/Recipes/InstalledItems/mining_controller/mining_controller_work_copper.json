@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::mining_controller::work::copper",
-      "id": 8,
+      "niceName" : "mine copper",
       "buildTime": 1,
       "products": [
         {

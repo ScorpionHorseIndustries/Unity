@@ -1,0 +1,13 @@
+{
+      "name": "recipe::installed::furnace::build",
+	  "niceName" : "build",
+      "id": 2,
+      "buildTime": 1,
+      "cost": 0,
+      "resources": [
+        {
+          "name": "inv::stone_slabs",
+          "qty": 4
+        }
+      ]
+    }

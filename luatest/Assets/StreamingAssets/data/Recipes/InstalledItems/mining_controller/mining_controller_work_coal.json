@@ -1,6 +1,7 @@
 {
       "name": "recipe::installed::mining_controller::work::coal",
-      "id": 8,
+	  
+      "niceName" : "mine coal",
       "buildTime": 1,
       "products": [
         {

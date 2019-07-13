@@ -1,6 +1,6 @@
 {
       "name": "recipe::installed::mining_spot::work::coal",
-      "id": 8,
+      "niceName" : "mine coal",
       "buildTime": 1,
       "products": [
         {

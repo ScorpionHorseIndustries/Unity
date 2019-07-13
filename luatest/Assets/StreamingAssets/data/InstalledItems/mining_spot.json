@@ -21,7 +21,9 @@
     "stone_copper",
     "sand_coal",
     "sand_iron",
-    "sand_copper"
+    "sand_copper",
+    "sand",
+    "stone"
   ],
   "workStation": true,
   "onCreate": "OnCreate_MiningSpot",

@@ -1,5 +1,6 @@
 {
       "name": "recipe::installed::robo_pod::build",
+	  "niceName" : "build",
       "id": 12,
       "buildTime": 4,
       "cost": 100,

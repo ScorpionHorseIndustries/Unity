@@ -6,6 +6,8 @@ using UnityEngine;
 namespace NoYouDoIt.DataModels {
   using NoYouDoIt.Utils;
   using NoYouDoIt.TheWorld;
+  using System.Linq;
+
   public class InventoryItem {
 
     public static readonly string ANY = "inv::any";
@@ -18,7 +20,8 @@ namespace NoYouDoIt.DataModels {
     //private int prototypeStackSize = 50;
     public string spriteName { get; private set; }
     public int stackSize { get; private set; }
-
+    public bool spawnsOnChunkGen { get; private set; } = false;
+    public float spawnsOnChunkGenchance { get; private set; } = 0;
 
     //public int currentStack = 1;
 
@@ -92,6 +95,18 @@ namespace NoYouDoIt.DataModels {
       return new List<string>(prototypes.Keys);
     }
 
+    public static InventoryItem GetRandomSpawnItem() {
+      int c = prototypes.Values.Count(e => e.spawnsOnChunkGen && e.spawnsOnChunkGenchance > 0);
+
+      int r = UnityEngine.Random.Range(0, c - 1);
+
+      InventoryItem item = prototypes.Values.Where(e => e.spawnsOnChunkGen && e.spawnsOnChunkGenchance > 0).ToList()[r];
+
+      return item;
+      
+      
+    }
+
     public static InventoryItem GetRandomPrototype() {
       int r = UnityEngine.Random.Range(0, prototypes.Count);
       int c = 0;
@@ -128,6 +143,8 @@ namespace NoYouDoIt.DataModels {
       //item.prototype = null;
       item.stackSize = stackSize;
       item.spriteName = spriteName;
+      item.spawnsOnChunkGen = Funcs.jsonGetBool(jsonProto["spawnsOnChunkGen"], false);
+      item.spawnsOnChunkGenchance = Funcs.jsonGetFloat(jsonProto["spawnsOnChunkGenChance"], 0);
       prototypes.Add(item.type, item);
       World.current.lua[Funcs.GetLuaVariableName(item.type)] = item.type;
     }

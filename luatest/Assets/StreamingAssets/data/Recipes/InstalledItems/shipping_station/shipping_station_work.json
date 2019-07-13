@@ -1,4 +1,5 @@
 {
 		"name" : "recipe::installed::shipping_station::work",
+		"niceName" : "send",
 		"id" : 27
 	}

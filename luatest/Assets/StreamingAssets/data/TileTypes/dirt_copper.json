@@ -3,6 +3,6 @@
   "build": true,
   "minedProduct": "inv::copper_ore",
   "name": "dirt_copper",
-  "id": 9,
+  
   "height": -1
 }

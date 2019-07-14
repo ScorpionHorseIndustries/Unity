@@ -49,8 +49,8 @@ public class prfInstalledItemScript : MonoBehaviour {
 
     currentRecipeText.text = "";
     if (item.workRecipeName != null) {
-      currentRecipeText.text = Funcs.PadPair(46,"current recipe", Recipe.GetNiceName(item.workRecipeName));
-
+      currentRecipeText.text = Funcs.PadPair(40,"current recipe", Recipe.GetNiceName(item.workRecipeName));
+      //Debug.Log(currentRecipeText.textBounds.max.x);
       currentRecipeText.text += Recipe.GetRecipe(item.workRecipeName).ToString(46);
     }
 
@@ -132,7 +132,9 @@ public class prfInstalledItemScript : MonoBehaviour {
     if (ok) {
       this.item.active = tglActive.isOn;
       this.item.workCondition = workCondition.Length == 0 ? null : workCondition;
-      this.item.nextWorkRecipeName = availableRecipes[niceNames[chooseRecipeDrop.value].text];
+      if (chooseRecipeDrop.interactable && chooseRecipeDrop.options.Count > 0) {
+        this.item.nextWorkRecipeName = availableRecipes[niceNames[chooseRecipeDrop.value].text];
+      }
 
     }
 

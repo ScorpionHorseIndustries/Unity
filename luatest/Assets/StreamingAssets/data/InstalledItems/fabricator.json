@@ -20,10 +20,12 @@
   "editOnClick": true,
   "deconstructRecipe": "recipe::installed::fabricator::decon",
   "workCondition": "false",
+  "workRecipe": "recipe::installed::fabricator::work::copper_wire",
   "availableWorkRecipes": [
-    "recipe::installed::fabricator::work::",
-    "recipe::installed::fabricator::work::b",
-    "recipe::installed::fabricator::work::c"
+    "recipe::installed::fabricator::work::copper_wire",
+    "recipe::installed::fabricator::work::processor",
+    "recipe::installed::fabricator::work::circuit_boards",
+    "recipe::installed::fabricator::work::components"
   ],
   "canChangeRecipe": true
 

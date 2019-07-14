@@ -76,7 +76,7 @@ function OnUpdate_Workstation(item, deltaTime)
 	
 
     if (tile.HasPendingWork == false) then
-		if (item.nextWorkRecipeName ~= item.workRecipeName) then
+		if (item.canChangeRecipe and item.nextWorkRecipeName ~= item.workRecipeName and item.nextWorkRecipeName ~= nil) then
 			item.workRecipeName = item.nextWorkRecipeName
 		end
 

@@ -5151,7 +5151,11 @@ PrefabInstance:
     - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}
       propertyPath: m_Text
-      value: '..................'
+      value: '.......
+
+        <color="#ff0000">
+
+        ...........</color>'
       objectReference: {fileID: 0}
     - target: {fileID: 7111926385155430520, guid: 3717abc43410eff4ea45069fdd3584c7,
         type: 3}

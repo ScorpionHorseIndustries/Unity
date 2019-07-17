@@ -1,5 +1,5 @@
 {
-  "movementFactor": 0.4000000059604645,
+  "movementFactor": 0.4,
   "build": true,
   "minedProduct": "inv::copper_ore",
   "name": "dirt_copper",

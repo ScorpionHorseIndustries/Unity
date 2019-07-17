@@ -7,5 +7,101 @@
   "spriteSouth": "entities::robot_south",
   "onUpdate": "OnUpdate_Robot",
   "movementSpeed": 8,
-  "getName": "robot"
+  "getName": "robot",
+  "animations": [
+    {
+      "name": "east",
+      "frames": [
+        {
+          "sprite": "entities::robot_east_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::robot_east_1",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::robot_east_2",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::robot_east_3",
+          "time": 0.09
+        }
+      ]
+    },
+    {
+      "name": "north",
+      "frames": [
+        {
+          "sprite": "entities::robot_north_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::robot_north_1",
+          "time": 0.09
+        }
+      ]
+    },
+
+    {
+      "name": "south",
+      "frames": [
+        {
+          "sprite": "entities::robot_south_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::robot_south_1",
+          "time": 0.09
+        }
+      ]
+
+    },
+    {
+      "name": "idle",
+      "frames": [
+        {
+          "sprite": "entities::robot_idle_2",
+          "randomTimeMin": 3,
+          "randomTimeMax": 5
+        },
+        {
+          "sprite": "entities::robot_idle_1",
+          "time": 0.080
+        },
+        {
+          "sprite": "entities::robot_idle_0",
+          "time": 0.160
+        },
+        {
+          "sprite": "entities::robot_idle_1",
+          "time": 0.080
+        }
+
+      ]
+    },
+    {
+      "name": "west",
+      "frames": [
+        {
+          "sprite": "entities::robot_west_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::robot_west_1",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::robot_west_2",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::robot_west_3",
+          "time": 0.09
+        }
+      ]
+    }
+
+  ]
 }

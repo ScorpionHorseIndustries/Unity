@@ -1,5 +1,5 @@
 {
-  
+
   "name": "installed::shipping_station",
   "niceName": "shipping station",
   "sprite": "installed_items::shipping_station",
@@ -21,6 +21,7 @@
   "workstation": true,
   "editOnClick": true,
   "updateAction": "OnUpdate_Workstation",
-  "workCondition" :  "false"
+  "workCondition": "false",
+  "powerUsed": 0.6
 
 }

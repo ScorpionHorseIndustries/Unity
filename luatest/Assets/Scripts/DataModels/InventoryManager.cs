@@ -52,6 +52,7 @@ namespace NoYouDoIt.DataModels {
     private World world;
 
     public Dictionary<string, StockPileSetting> stockpileSettings;
+    public Dictionary<string, StockPileSetting> looseQtys;
     private StockPileSetting[] stockpileSettingsArray;
     private int spsIndex = 0;
 
@@ -64,12 +65,37 @@ namespace NoYouDoIt.DataModels {
       this.world = world;
       inventories = new List<Inventory>();//new Dictionary<string, List<InventoryItem>>();
       stockpileSettings = new Dictionary<string, StockPileSetting>();
+      looseQtys = new Dictionary<string, StockPileSetting>();
       timer = new NYDITimer("updateTimer", 1, UpdateStockPileSettings);
     }
 
     public void SetStockPileSettingWork(string name, bool b) {
       stockpileSettings[name].pendingWork = b;
 
+    }
+
+    public void SetStockpileQty(string name, int qty) {
+      if (stockpileSettings.ContainsKey(name)) {
+        stockpileSettings[name].currentQty = qty;
+      }
+    }
+
+    public void SetLooseQty(string name, int qty) {
+      if (looseQtys.ContainsKey(name)) {
+        looseQtys[name].currentQty = qty;
+      }
+    }
+
+    public void AddStockpileQty(string name, int qty) {
+      if (stockpileSettings.ContainsKey(name)) {
+        stockpileSettings[name].currentQty += qty;
+      }
+    }
+
+    public void AddLooseQty(string name, int qty) {
+      if (looseQtys.ContainsKey(name)) {
+        looseQtys[name].currentQty += qty;
+      }
     }
 
     public void RegisterInventory(Inventory inventory) {
@@ -94,10 +120,12 @@ namespace NoYouDoIt.DataModels {
 
         StockPileSetting sps = new StockPileSetting(item);
         stockpileSettings[name] = sps;
+        StockPileSetting loose = new StockPileSetting(item);
+        looseQtys[name] = loose;
 
         //job.naStockPileSettings.TryAdd(sps.id, 0);
       }
-      stockpileSettingsArray = stockpileSettings.Values.ToArray();
+      //stockpileSettingsArray = stockpileSettings.Values.ToArray();
       
     }
 
@@ -107,30 +135,32 @@ namespace NoYouDoIt.DataModels {
     }
 
     public int GetLooseQty(string name) {
-      int qty = 0;
-      foreach (Inventory inv in inventories.Where(e => !e.IsStockPile && e.tile != null)) {
-        qty += inv.HowMany(name);
+      if (looseQtys.ContainsKey(name)) {
+        return looseQtys[name].currentQty;
       }
-
-      return qty;
+      return 0;
     }
 
     public int GetStockpileQty(string name) {
-      int qty = 0;
-      foreach (Inventory inv in inventories.Where(e => e.IsStockPile)) {
-        qty += inv.HowMany(name);
+      if (stockpileSettings.ContainsKey(name)) {
+        return stockpileSettings[name].currentQty;
       }
+      return 0;
+      //int qty = 0;
+      //foreach (Inventory inv in inventories.Where(e => e.IsStockPile)) {
+      //  qty += inv.HowMany(name);
+      //}
 
-      return qty;
+      //return qty;
     }
 
     
     public void UpdateStockPileSettings() {
-      //job.Schedule();
-      StockPileSetting sps = stockpileSettingsArray[spsIndex];
-      sps.currentQty = GetStockpileQty(sps.name);
+      ////job.Schedule();
+      //StockPileSetting sps = stockpileSettingsArray[spsIndex];
+      //sps.currentQty = GetStockpileQty(sps.name);
 
-      spsIndex = (spsIndex + 1) % stockpileSettingsArray.Length;
+      //spsIndex = (spsIndex + 1) % stockpileSettingsArray.Length;
     }
 
 

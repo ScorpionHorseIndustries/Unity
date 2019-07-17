@@ -1,5 +1,5 @@
 {
-  
+
   "name": "installed::robo_pod",
   "niceName": "robo pod",
   "sprite": "installed_items::robo_pod",
@@ -17,7 +17,8 @@
   "height": 3,
   "updateActionCountDown": 3,
   "editOnClick": true,
-  "workRecipe": "recipe::installed::robo_pod::work"
+  "workRecipe": "recipe::installed::robo_pod::work",
+  "powerUsed": 0.4
 
 
 

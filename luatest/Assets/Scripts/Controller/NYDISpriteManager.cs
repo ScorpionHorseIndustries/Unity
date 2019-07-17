@@ -8,8 +8,7 @@ using System;
 using System.Linq;
 
 using NoYouDoIt.Utils;
-
-
+using NoYouDoIt.DataModels;
 
 namespace NoYouDoIt.Controller {
 
@@ -469,6 +468,12 @@ namespace NoYouDoIt.Controller {
       }
 
       return newDims;
+    }
+
+    public Sprite GetSprite(Entity e, string facing) {
+      return null;
+      
+
     }
 
     public Sprite GetSprite(string name) {

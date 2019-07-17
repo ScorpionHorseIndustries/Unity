@@ -11,8 +11,8 @@
   "randomRotation": false,
   "enclosesRoom": false,
   "recipe": "recipe::installed::fabricator::build",
-  "updateActionCountDown": 1,
-  "width": 1,
+  "updateActionCountDown": 5,
+  "width": 2,
   "height": 2,
 
   "workstation": true,

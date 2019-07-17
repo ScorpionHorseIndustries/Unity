@@ -40,6 +40,9 @@ namespace NoYouDoIt.DataModels {
 
     public Dictionary<string, string> facingSprites;
 
+    public Dictionary<string, NYDIAnimation> animations;
+    public NYDIAnimator animator; 
+
 
 
     //PathAS currentPath;
@@ -85,6 +88,7 @@ namespace NoYouDoIt.DataModels {
 
     public void Say(string s) {
       WorldController.Instance.SpawnText(s, Xint, Yint);
+      
     }
 
 
@@ -116,20 +120,22 @@ namespace NoYouDoIt.DataModels {
           name = World.current.GetName();
           break;
       }
-      
+
       info = new ItemParameters(proto.info);
-      
+
       this.typeName = proto.typeName;
       this.spriteName = proto.spriteName;
+      this.animations = proto.animations;
       this.proto = proto;
-      
+
       this.SetPos(tile);
       this.SetDst(tile);
       //this.occupier = new TileOccupant(name, proto.typeName);
       //this.occupier.CBPleaseMove += PleaseMove;
       this.facingSprites = proto.facingSprites;
       this.OnUpdate = proto.OnUpdate;
-      
+      this.animator = new NYDIAnimator(proto.animations);
+
 
 
     }
@@ -178,27 +184,48 @@ namespace NoYouDoIt.DataModels {
 
 
 
-    public bool GiveInstruction(string instruction) {
+    //public bool GiveInstruction(string instruction) {
 
-      if (currentInstruction == null) {
-        currentInstruction = instruction;
-        return true;
-      } else {
-        return false;
-      }
-    }
+    //  if (currentInstruction == null) {
+    //    currentInstruction = instruction;
+    //    return true;
+    //  } else {
+    //    return false;
+    //  }
+    //}
 
     public void Update(float deltaTime) {
       float old = (X * 11) + (Y * 3);
+      string oldState = state;
       World.CallLuaFunction(OnUpdate, this, deltaTime);
 
       float n = (X * 11) + (Y * 3);
+      if (animator.active) {
+        animator.Update(deltaTime);
+      }
+      if (old != n || oldState != state || animator.changed) {
 
-      if (old != n) {
+        if (animator.valid) {
+          if (oldState != state) {
+            switch (state) {
+              case "idle":
+                animator.Set("idle");
+                break;
+              case "move":
+                if (directionChanged) {
+                  animator.Set(facing);
+                }
+                break;
+              default:
+                break;
+            }
+          }
+        }
+
         if (CBOnChanged != null) {
           CBOnChanged(this);
         }
-        
+
       }
 
     }
@@ -266,7 +293,7 @@ namespace NoYouDoIt.DataModels {
     public void Move(float deltaTime) {
       pX = X;
       pY = Y;
-      
+
       if (pos.movementFactor == 0 || dst.movementFactor == 0) {
         NewState = "find_new_path";
         SetPos(World.current.FindEmptyTile_NotThisOne(pos));
@@ -315,6 +342,11 @@ namespace NoYouDoIt.DataModels {
           moveProgress += (distThisFrame / distToTravel);
           facing = Funcs.GetSpriteDirection(pX, pY, X, Y);
           if (prevFacing != facing) {
+            if (animator.valid) {
+              if (animator.Set(facing)) {
+
+              }
+            }
             directionChanged = true;
           }
           prevFacing = facing;
@@ -424,6 +456,28 @@ namespace NoYouDoIt.DataModels {
       float mv = Funcs.jsonGetFloat(json["movement_speed"], 4);
       proto.info.SetFloat("movement_speed", mv);
       proto.getNameType = Funcs.jsonGetString(json["getName"], "human");
+      proto.animations = new Dictionary<string, NYDIAnimation>();
+      JArray animations = Funcs.jsonGetArray(json, "animations");
+
+      if (animations != null) {
+        foreach (JObject anim in animations) {
+          NYDIAnimation animation = new NYDIAnimation();
+          animation.name = Funcs.jsonGetString(anim["name"], null);
+          JArray frames = Funcs.jsonGetArray(anim, "frames");
+          List<NYDIAnimationFrame> animFrames = new List<NYDIAnimationFrame>();
+          if (frames != null) {
+            foreach (JObject frame in frames ) {
+
+              //NYDIAnimationFrame frm = new NYDIAnimationFrame();
+              //frm.sprite = Funcs.jsonGetString(frame["sprite"], null);
+              //frm.time = Funcs.jsonGetFloat(frame["time"], 0);
+              animFrames.Add(NYDIAnimationFrame.MakeFrame(frame));
+            }
+          }
+          animation.frames = animFrames.ToArray();
+          proto.animations[animation.name] = animation;
+        }
+      }
 
       prototypes.Add(proto.typeName, proto);
     }

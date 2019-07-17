@@ -477,18 +477,22 @@ namespace NoYouDoIt.Controller {
 
       money = money + (money * (interestRate / 100f));//Mathf.Pow((1f + (((interestRate) / 100f) / SECONDS_PER_DAY)), SECONDS_PER_DAY);
                                                       //+ (money * interestRate * Time.deltaTime);
-
+      string positive = ColorUtility.ToHtmlStringRGB(positiveBalanceColour);
+      string negative = ColorUtility.ToHtmlStringRGB(negativeBalanceColour);
 
       Text t = cashText.GetComponent<Text>();
+      
 
-      t.text = Funcs.PadPair(20, "money", string.Format("{0:00.00}", money), '.');
-      t.text += "\n" + Funcs.PadPair(20, "interest", string.Format("{0:0.000}", 100.0 * interestRate), '.');
+      t.text = "<color=\"#" + (money < 0 ? negative: positive) + "\">"+ Funcs.PadPair(20, "money", string.Format("{0:00.00}", money)) + "</color>";
+      t.text += "\n" + Funcs.PadPair(20, "interest", string.Format("{0:0.000}", 100.0 * interestRate));
+      t.text += "\n" + "<color=\"#" + (world.usedPower >= world.currentPower ? negative : positive) + "\">" + 
+          Funcs.PadPair(20, "power", string.Format("{0:00.00}", world.currentPower)) + "</color>";
 
-      if (money < 0) {
-        t.color = negativeBalanceColour;
-      } else {
-        t.color = positiveBalanceColour;
-      }
+      //if (money < 0) {
+      //  t.color = negativeBalanceColour;
+      //} else {
+      //  t.color = positiveBalanceColour;
+      //}
     }
     public static readonly float SECONDS_PER_DAY = 60 * 60 * 24;
     // Update is called once per frame
@@ -589,6 +593,13 @@ namespace NoYouDoIt.Controller {
         displayMe += Funcs.PadPair(pw, "type", to.typeName);
         displayMe += "\n" + Funcs.PadPair(pw, "name", to.name);
         displayMe += "\n" + Funcs.PadPair(pw, "state", to.state);
+
+        if (to.animator.valid) {
+          displayMe += "\n" + Funcs.PadPair(pw, "animation", to.animator.currentAnimation.name);
+          displayMe += "\n" + Funcs.PadPair(pw, "running", to.animator.running.ToString());
+          //displayMe += "\n" + Funcs.PadPair(pw, "timer", to.animator.timer.ToString());
+          //displayMe += "\n" + Funcs.PadPair(pw, "index", to.animator.index.ToString());
+        }
         
       } else if (o.GetType() == typeof(InstalledItem)) {
         InstalledItem item = (InstalledItem)o;
@@ -1005,8 +1016,13 @@ namespace NoYouDoIt.Controller {
         SpriteRenderer spr = go.GetComponent<SpriteRenderer>();
         go.transform.position = r.position;
 
-        if (r.directionChanged) {
-          spr.sprite = NYDISpriteManager.Instance.GetSprite(r.facingSprites[r.facing]);
+        if (r.directionChanged || r.animator.changed) {
+          if (r.animator.active && r.animator.running) {
+            spr.sprite = NYDISpriteManager.Instance.GetSprite(r.animator.currentSprite);
+          } else {
+            spr.sprite = NYDISpriteManager.Instance.GetSprite(r.facingSprites[r.facing]);
+
+          }
           r.directionChanged = false;
 
         }

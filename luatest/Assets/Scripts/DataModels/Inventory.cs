@@ -173,6 +173,12 @@ namespace NoYouDoIt.DataModels {
         cbItemAdded(type, qtyAccepted);
       }
 
+      if (IsStockPile) {
+        World.current.inventoryManager.AddStockpileQty(type,qtyAccepted);
+      } else if (tile != null) {
+        World.current.inventoryManager.AddLooseQty(type,qtyAccepted);
+      }
+
       return qtyAccepted;
 
 
@@ -327,6 +333,12 @@ namespace NoYouDoIt.DataModels {
 
       if (cbItemRemoved != null) {
         cbItemRemoved(type, qtyGiven);
+      }
+
+      if (IsStockPile) {
+        World.current.inventoryManager.AddStockpileQty(type, -qtyGiven);
+      } else if (tile != null) {
+        World.current.inventoryManager.AddLooseQty(type, -qtyGiven);
       }
       return qtyGiven;
     }

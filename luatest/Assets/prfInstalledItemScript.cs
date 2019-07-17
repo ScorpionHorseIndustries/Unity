@@ -49,16 +49,26 @@ public class prfInstalledItemScript : MonoBehaviour {
 
     currentRecipeText.text = "";
     if (item.workRecipeName != null) {
-      currentRecipeText.text = Funcs.PadPair(40,"current recipe", Recipe.GetNiceName(item.workRecipeName));
+      currentRecipeText.text = Funcs.PadPair(46,"current recipe", Recipe.GetNiceName(item.workRecipeName));
+      currentRecipeText.text += "\n" + Funcs.PadPair(46, ".", ".");
       //Debug.Log(currentRecipeText.textBounds.max.x);
       currentRecipeText.text += Recipe.GetRecipe(item.workRecipeName).ToString(46);
+      currentRecipeText.text += "\n" + Funcs.PadPair(46, ".", ".");
     }
+
+    
+    //currentRecipeText.text += "\n" + Funcs.PadPair(46, ".", ".");
+    //currentRecipeText.text += "\n" + Funcs.PadPair(46, ".", ".");
+
+    
+
 
     foreach (string k in kvps.Keys) {
       CreateKVPControl(k, kvps[k]);
     }
     availableRecipes.Clear();
     niceNames.Clear();
+    chooseRecipeDrop.ClearOptions();
     //Debug.Log("avaiable recipes: " + item.availableRecipes.Count);
     //item.itemParameters.SetInt("num recipes", item.availableRecipes.Count);
 
@@ -75,7 +85,7 @@ public class prfInstalledItemScript : MonoBehaviour {
         }
       }
 
-      chooseRecipeDrop.ClearOptions();
+      
       chooseRecipeDrop.AddOptions(niceNames);
       chooseRecipeDrop.interactable = true;
       chooseRecipeDrop.value = chooseRecipeDrop.options.IndexOf(niceNames.Find(e => e.text == Recipe.GetNiceName(item.workRecipeName)));

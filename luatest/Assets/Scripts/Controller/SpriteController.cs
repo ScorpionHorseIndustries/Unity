@@ -127,6 +127,9 @@ namespace NoYouDoIt.Controller {
     //}
 
     public Sprite GetSprite(Entity r) {
+      if (r.animator.valid && r.animator.running) {
+        return GetSprite(r.animator.currentSprite);
+      }
       return GetSprite(r.spriteName);
     }
 

@@ -74,13 +74,19 @@ namespace NoYouDoIt.Controller {
         Entity worker = null;
         float dist = 0;
         float nearest = 0;
-        int closeBy = World.current.entities.Count(
+        /*
+        int closeByIdle = World.current.entities.Count(
             e => e.typeName == "entities::basic_robot"
             && e.state == "idle"
             && w.workTile.chunk == e.pos.chunk);
 
-        if (closeBy > 0) continue;
+        int closeByReady = World.current.entities.Count(
+            e => e.typeName == "entities::basic_robot"
+            && e.state == "find_work"
+            && w.workTile.chunk == e.pos.chunk);
 
+        if (closeByIdle > 0 && closeByReady == 0) continue;
+        */
 
         foreach (Entity robot in World.current.entities.Where(e => e.state == "find_work")) {
           dist = Funcs.TaxiDistance(w.workTile, robot.pos);

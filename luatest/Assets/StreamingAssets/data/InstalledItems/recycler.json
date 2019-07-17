@@ -1,5 +1,5 @@
 {
-  
+
   "name": "installed::recycler",
   "niceName": "recycler",
   "sprite": "installed_items::recycler_0",
@@ -18,6 +18,7 @@
   "workstation": true,
   "updateAction": "OnUpdate_Workstation",
   "editOnClick": true,
-  "deconstructRecipe": "recipe::installed::recycler::decon"
+  "deconstructRecipe": "recipe::installed::recycler::decon",
+  "powerUsed": 0.1
 
 }

@@ -36,13 +36,7 @@
   "updateAction": "OnUpdate_Workstation",
   "editOnClick": true,
   "workCondition": "GetStockpileQty(inv__iron_ore) < 32",
-  "parameters": [
-    {
-      "name": "something",
-      "value": "cheese",
-      "type": "string"
-    }
-  ],
+  "powerUsed" : 0.3,
   "onCreate": "OnCreate_MiningController"
 
 }

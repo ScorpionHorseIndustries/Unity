@@ -169,7 +169,7 @@ function OnEnterRequested_Door(item)
 
 end
 
-function OnCreated_MiningController(item) 
+function OnCreate_MiningController(item) 
 	local tile = item.tile
 	if (tile.type.minedProduct == nil) then
 		item.workRecipeName = "";

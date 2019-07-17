@@ -65,6 +65,7 @@ namespace NoYouDoIt.TheWorld {
     public List<InstalledItem> trashPrototypes;
     public List<InstalledItem> trashInstances;
     private List<InstalledItem> installedItems;
+    private List<InstalledItem> powerGenerators;
     //public List<Character> characters;
     public List<Entity> entities;
     public string[] firstNames;
@@ -244,7 +245,7 @@ namespace NoYouDoIt.TheWorld {
         }
       }
 
-      for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1 ) {
+      for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
         Tile a = ch.GetTileAt(5, y);
         Tile b = ch.GetTileAt(6, y);
         Tile c = ch.GetTileAt(7, y);
@@ -260,6 +261,8 @@ namespace NoYouDoIt.TheWorld {
 
     }
 
+    //power gen
+
     private void SetCollections() {
       //installedItemProtos = new Dictionary<string, InstalledItem>();
       //installedItemProtos_BY_ID = new Dictionary<int, string>();
@@ -271,6 +274,7 @@ namespace NoYouDoIt.TheWorld {
       installedItems = new List<InstalledItem>();
       trashPrototypes = new List<InstalledItem>();
       trashInstances = new List<InstalledItem>();
+      powerGenerators = new List<InstalledItem>();
       rooms = new List<Room>();
       rooms.Add(new Room(this));
       //inventoryItems = new List<InventoryItem>();
@@ -394,6 +398,38 @@ namespace NoYouDoIt.TheWorld {
     public int GetEntitiesAtState(string type, string state) {
       return entities.Count(e => e.typeName == type && e.state == state);
     }
+
+    //---POWER---
+
+      //all power gen code
+    public float currentPower { get; private set; }
+    public float usedPower { get; private set; }
+    
+    public void AddPowerGen(InstalledItem item) {
+      if (item.powerGenerated > 0) {
+        if (!powerGenerators.Contains(item)) {
+          powerGenerators.Add(item);
+        }
+      }
+    }
+
+    public void RemovePowerGen(InstalledItem item) {
+
+      if (powerGenerators.Contains(item)) {
+        powerGenerators.Remove(item);
+      }
+
+    }
+
+    private void SetCurrentPower() {
+      currentPower = 0;
+      foreach(InstalledItem item in powerGenerators) {
+        currentPower += item.powerGenerated;
+      }
+
+    }
+
+
 
     //-----------------------------CONSTRUCTORS------------------------------
     private void InitLua() {
@@ -559,7 +595,7 @@ import 'NoYouDoIt.DataModels'
       //  Character c = characters[i];
       //  c.Update(deltaTime);
       //}
-
+      SetCurrentPower();
       inventoryManager.Update(deltaTime);
 
 
@@ -569,15 +605,18 @@ import 'NoYouDoIt.DataModels'
       }
 
 
-      foreach (InstalledItem item in installedItems.Where(e => e.type == "installed::stockpile" && !e.inventory.IsEmpty())) {
+      foreach(InstalledItem item in installedItems) {
         item.Update(deltaTime);
       }
-      foreach (InstalledItem item in installedItems.Where(e => e.type == "installed::stockpile" && e.inventory.IsEmpty())) {
-        item.Update(deltaTime);
-      }
-      foreach (InstalledItem item in installedItems.Where(e => e.type != "installed::stockpile")) {
-        item.Update(deltaTime);
-      }
+      //foreach (InstalledItem item in installedItems.Where(e => e.type == "installed::stockpile" && !e.inventory.IsEmpty())) {
+      //  item.Update(deltaTime);
+      //}
+      //foreach (InstalledItem item in installedItems.Where(e => e.type == "installed::stockpile" && e.inventory.IsEmpty())) {
+      //  item.Update(deltaTime);
+      //}
+      //foreach (InstalledItem item in installedItems.Where(e => e.type != "installed::stockpile")) {
+      //  item.Update(deltaTime);
+      //}
 
       if (updateJobQueueTimer <= 0) {
         updateJobQueueTimer = 1;
@@ -624,9 +663,9 @@ import 'NoYouDoIt.DataModels'
         }
       }
 
-      foreach (Entity chr in entities) {
-        Debug.Log("char:" + chr.name);
-      }
+      //foreach (Entity chr in entities) {
+      //  Debug.Log("char:" + chr.name);
+      //}
 
     }
 
@@ -1051,6 +1090,10 @@ import 'NoYouDoIt.DataModels'
         trashInstances.Remove(item);
       }
 
+      if (powerGenerators.Contains(item)) {
+        RemovePowerGen(item);
+      }
+
     }
 
     public InstalledItem PlaceInstalledItem(string buildItem, Tile tile, bool spawn = false) {
@@ -1076,6 +1119,9 @@ import 'NoYouDoIt.DataModels'
           if (inst.trash) {
             //Debug.Log("Added trash:" + inst.type);
             trashInstances.Add(inst);
+          }
+          if (inst.powerGenerated > 0) {
+            AddPowerGen(inst);
           }
 
           GetNeighbours(inst.tile, true);

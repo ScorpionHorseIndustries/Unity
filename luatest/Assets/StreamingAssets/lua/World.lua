@@ -11,6 +11,14 @@ function GetLooseQty(inventoryItemName)
 
 end
 
+function GetQty(inventoryItemName) 
+	return World.current.inventoryManager:GetStockpileQty(inventoryItemName)
+end
+
+function GetMaxQty(inventoryItemName)
+	return World.current.inventoryManager:GetStockpileMaxQty(inventoryItemName)
+end
+
 
 function CheckStockpiles()
 	local toCreate = {}

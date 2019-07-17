@@ -63,7 +63,7 @@
       "frames": [
         {
           "sprite": "entities::robot_idle_2",
-          "randomTimeMin": 3,
+          "randomTimeMin": 1,
           "randomTimeMax": 5
         },
         {

@@ -74,6 +74,7 @@ namespace NoYouDoIt.DataModels {
     public float trashSpawnChance { get; private set; }
     public List<string> canSpawnOnTileTypeList { get; private set; }
     public float powerGenerated { get; private set; } = 0;
+    public float powerUsed { get; private set; } = 0;
 
 
     private InstalledItem prototype = null;
@@ -182,6 +183,7 @@ namespace NoYouDoIt.DataModels {
       this.canChangeRecipe = proto.canChangeRecipe;
       this.active = false;
       this.powerGenerated = proto.powerGenerated;
+      this.powerUsed = proto.powerUsed;
       if (spawn && this.growthStages.Count > 0) {
         this.growthStage = UnityEngine.Random.Range(0, itemParameters.GetInt("maxGrowthStage"));
 
@@ -579,6 +581,7 @@ namespace NoYouDoIt.DataModels {
         string onPlaced = Funcs.jsonGetString(installedItemJson["onPlaced"], null);
         string onRemoved= Funcs.jsonGetString(installedItemJson["onRemoved"], null);
         float powerGenerated = Funcs.jsonGetFloat(installedItemJson["powerGenerated"], 0);
+        float powerUsed = Funcs.jsonGetFloat(installedItemJson["powerUsed"], 0);
 
           
 
@@ -669,6 +672,7 @@ namespace NoYouDoIt.DataModels {
         proto.availableRecipes = availableRecipes;
         proto.canChangeRecipe = canChangeRecipe;
         proto.powerGenerated = powerGenerated;
+        proto.powerUsed = powerUsed;
 
 
 

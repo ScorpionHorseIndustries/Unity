@@ -27,7 +27,8 @@
     "recipe::installed::fabricator::work::circuit_boards",
     "recipe::installed::fabricator::work::components"
   ],
-  "canChangeRecipe": true
+  "canChangeRecipe": true,
+  "powerUsed": 0.1
 
 
 }

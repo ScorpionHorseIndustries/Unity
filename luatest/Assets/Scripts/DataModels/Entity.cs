@@ -41,7 +41,7 @@ namespace NoYouDoIt.DataModels {
     public Dictionary<string, string> facingSprites;
 
     public Dictionary<string, NYDIAnimation> animations;
-    public NYDIAnimator animator; 
+    public NYDIAnimator animator;
 
 
 
@@ -88,7 +88,7 @@ namespace NoYouDoIt.DataModels {
 
     public void Say(string s) {
       WorldController.Instance.SpawnText(s, Xint, Yint);
-      
+
     }
 
 
@@ -212,9 +212,9 @@ namespace NoYouDoIt.DataModels {
                 animator.Set("idle");
                 break;
               case "move":
-                if (directionChanged) {
-                  animator.Set(facing);
-                }
+                //if (directionChanged) {
+                animator.Set(facing);
+                //}
                 break;
               default:
                 break;
@@ -466,7 +466,7 @@ namespace NoYouDoIt.DataModels {
           JArray frames = Funcs.jsonGetArray(anim, "frames");
           List<NYDIAnimationFrame> animFrames = new List<NYDIAnimationFrame>();
           if (frames != null) {
-            foreach (JObject frame in frames ) {
+            foreach (JObject frame in frames) {
 
               //NYDIAnimationFrame frm = new NYDIAnimationFrame();
               //frm.sprite = Funcs.jsonGetString(frame["sprite"], null);

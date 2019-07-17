@@ -423,8 +423,13 @@ namespace NoYouDoIt.TheWorld {
 
     private void SetCurrentPower() {
       currentPower = 0;
+      usedPower = 0;
       foreach(InstalledItem item in powerGenerators) {
         currentPower += item.powerGenerated;
+      }
+
+      foreach (InstalledItem item in installedItems) {
+        usedPower += item.powerUsed;
       }
 
     }

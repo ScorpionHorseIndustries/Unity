@@ -1,19 +1,36 @@
 {
-		"name" : "recipe::installed::shipping_station::decon",
-		"niceName" : "decon",
-		      "products": [
-        {
-          "name": "inv::steel_plates",
-          "qtyMin": 1,
-          "qtyMax": 5,
-          "chance": 1
-        },
-        {
-          "name": "inv::copper_plates",
-          "qtyMin": 1,
-          "qtyMax": 1,
-          "chance": 1
-        }
-      ]
-	}
-	
+  "name": "recipe::installed::shipping_station::decon",
+  "niceName": "decon",
+  "products": [
+    {
+      "name": "inv::steel_plates",
+      "qtyMin": 1,
+      "qty": 6,
+      "chance": 1
+    },
+    {
+      "name": "inv::copper_wire",
+      "qtyMin": 1,
+      "qty": 6,
+      "chance": 1
+    },
+    {
+      "name": "inv::processor",
+      "qtyMin": 1,
+      "qty": 3,
+      "chance": 1
+    },
+    {
+      "name": "inv::circuit_boards",
+      "qtyMin": 1,
+      "qty": 4,
+      "chance": 1
+    },
+    {
+      "name": "inv::components",
+      "qtyMin": 1,
+      "qty": 6,
+      "chance": 1
+    }
+  ]
+}

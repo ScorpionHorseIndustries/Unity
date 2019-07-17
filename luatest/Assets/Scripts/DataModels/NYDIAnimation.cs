@@ -10,8 +10,8 @@ namespace NoYouDoIt.DataModels {
   public class NYDIAnimation {
     public string name;
     public NYDIAnimationFrame[] frames;
-    
-    }
+
+  }
 
   public class NYDIAnimationFrame {
 
@@ -32,7 +32,7 @@ namespace NoYouDoIt.DataModels {
 
 
       } else if (sprite != null && time > 0) {
-        frame.randomTime = false ;
+        frame.randomTime = false;
         frame.randomTimeMin = 0;
         frame.randomTimeMax = 0;
         frame.time = time;
@@ -50,7 +50,7 @@ namespace NoYouDoIt.DataModels {
     public string sprite { get; private set; }
 
     public float randomTimeMin { get; private set; }
-    public  float randomTimeMax { get; private set; }
+    public float randomTimeMax { get; private set; }
     public float time { get; private set; }
     public bool randomTime { get; private set; } = false;
 
@@ -63,7 +63,7 @@ namespace NoYouDoIt.DataModels {
       this.randomTimeMin = randomTimeMin;
       this.randomTimeMax = randomTimeMax;
       this.randomTime = true;
-      
+
     }
     public NYDIAnimationFrame(string sprite, float time) {
       this.sprite = sprite;

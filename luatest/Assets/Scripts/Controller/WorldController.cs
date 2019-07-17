@@ -25,7 +25,9 @@ namespace NoYouDoIt.Controller {
     MarketSimv2 interestRateMarket;
     [SerializeField]
     public Color positiveBalanceColour;
+    private string positiveBalanceColourString;
     public Color negativeBalanceColour;
+    private string negativeBalanceColourString;
     public GameObject buildProgressSprite;
     public GameObject cashText;
     public GameObject LinePrefab;
@@ -56,7 +58,7 @@ namespace NoYouDoIt.Controller {
     //private Dictionary<Character, GameObject> Characters_GO_Map;
     private Dictionary<Entity, GameObject> Entity_GO_Map;
     //private Dictionary<Creature, GameObject> Create_GO_Map;
-    
+
     private Dictionary<string, GameObject> StockPileSettings_GO_Map;
 
     //private Dictionary<Job, GameObject> Job_GO_Map;
@@ -278,9 +280,12 @@ namespace NoYouDoIt.Controller {
       eventSystem = EventSystem.current;
       timers = new List<NYDITimer>();
 
-      timers.Add(new NYDITimer("updateMoney", 1,1.5f, UpdateMoney));
+      timers.Add(new NYDITimer("updateMoney", 1, 1.5f, UpdateMoney));
       timers.Add(new NYDITimer("updateStockPile", 2, 3, UpdateStockPile));
       timers.Add(new NYDITimer("checkStockPile", 2, 5, CheckStockPile));
+
+      positiveBalanceColourString = "#" + ColorUtility.ToHtmlStringRGB(positiveBalanceColour);
+      negativeBalanceColourString = "#" + ColorUtility.ToHtmlStringRGB(negativeBalanceColour);
 
     }
 
@@ -477,16 +482,18 @@ namespace NoYouDoIt.Controller {
 
       money = money + (money * (interestRate / 100f));//Mathf.Pow((1f + (((interestRate) / 100f) / SECONDS_PER_DAY)), SECONDS_PER_DAY);
                                                       //+ (money * interestRate * Time.deltaTime);
-      string positive = ColorUtility.ToHtmlStringRGB(positiveBalanceColour);
-      string negative = ColorUtility.ToHtmlStringRGB(negativeBalanceColour);
+
 
       Text t = cashText.GetComponent<Text>();
-      
 
-      t.text = "<color=\"#" + (money < 0 ? negative: positive) + "\">"+ Funcs.PadPair(20, "money", string.Format("{0:00.00}", money)) + "</color>";
+
+      t.text = "<color=\"" + (money < 0 ? negativeBalanceColourString : positiveBalanceColourString) + "\">" + Funcs.PadPair(20, "money", string.Format("{0:00.00}", money)) + "</color>";
       t.text += "\n" + Funcs.PadPair(20, "interest", string.Format("{0:0.000}", 100.0 * interestRate));
-      t.text += "\n" + "<color=\"#" + (world.usedPower >= world.currentPower ? negative : positive) + "\">" + 
-          Funcs.PadPair(20, "power", string.Format("{0:00.00}", world.currentPower)) + "</color>";
+      t.text += "\n" + "<color=\"" + (world.usedPower >= world.currentPower ? negativeBalanceColourString : positiveBalanceColourString) + "\">" +
+          Funcs.PadPair(20, "power", string.Format("{0:0.00}kW", world.currentPower)) + "</color>";
+
+      t.text += "\n" + "<color=\"" + (world.usedPower >= world.currentPower ? negativeBalanceColourString : positiveBalanceColourString) + "\">" +
+    Funcs.PadPair(20, "used", string.Format("{0:0.00}kW", world.usedPower)) + "</color>";
 
       //if (money < 0) {
       //  t.color = negativeBalanceColour;
@@ -600,7 +607,7 @@ namespace NoYouDoIt.Controller {
           //displayMe += "\n" + Funcs.PadPair(pw, "timer", to.animator.timer.ToString());
           //displayMe += "\n" + Funcs.PadPair(pw, "index", to.animator.index.ToString());
         }
-        
+
       } else if (o.GetType() == typeof(InstalledItem)) {
         InstalledItem item = (InstalledItem)o;
         displayMe += Funcs.PadPair(pw, "installed item", item.niceName, '.');
@@ -1017,7 +1024,7 @@ namespace NoYouDoIt.Controller {
         go.transform.position = r.position;
 
         if (r.directionChanged || r.animator.changed) {
-          if (r.animator.active && r.animator.running) {
+          if (r.animator.active && r.animator.running && r.animator.currentSprite != null) {
             spr.sprite = NYDISpriteManager.Instance.GetSprite(r.animator.currentSprite);
           } else {
             spr.sprite = NYDISpriteManager.Instance.GetSprite(r.facingSprites[r.facing]);

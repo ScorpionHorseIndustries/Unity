@@ -54,7 +54,7 @@ namespace NoYouDoIt.DataModels {
     public Dictionary<string, StockPileSetting> stockpileSettings;
     public Dictionary<string, StockPileSetting> looseQtys;
     private StockPileSetting[] stockpileSettingsArray;
-    private int spsIndex = 0;
+    //private int spsIndex = 0;
 
     NYDITimer timer;
 
@@ -137,6 +137,13 @@ namespace NoYouDoIt.DataModels {
     public int GetLooseQty(string name) {
       if (looseQtys.ContainsKey(name)) {
         return looseQtys[name].currentQty;
+      }
+      return 0;
+    }
+
+    public int GetStockpileMaxQty(string name) {
+      if (stockpileSettings.ContainsKey(name)) {
+        return stockpileSettings[name].maxQty;
       }
       return 0;
     }

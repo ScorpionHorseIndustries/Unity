@@ -9,8 +9,20 @@
           "qty": 8
         },
         {
-          "name": "inv::copper_plates",
+          "name": "inv::processor",
           "qty": 2
+        },
+        {
+          "name": "inv::circuit_boards",
+          "qty": 4
+        },
+        {
+          "name": "inv::copper_wire",
+          "qty": 4
+        },
+        {
+          "name": "inv::components",
+          "qty": 3
         }
       ]
     }

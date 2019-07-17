@@ -32,9 +32,16 @@ namespace NoYouDoIt.DataModels {
         return true;
       }
       if (animations.ContainsKey(name)) {
-        active = true;
-        currentAnimation = animations[name];
-        running = true;
+        //if (currentAnimation == null || (currentAnimation != null && currentAnimation.name != name)) {
+          active = true;
+          currentAnimation = animations[name];
+          index = 0;
+          currentFrame = currentAnimation.frames[index];
+          currentSprite = currentFrame.sprite;
+          timer = currentFrame.Time;
+          running = true;
+          changed = true;
+        //}
         return true;
       }
       running = false;
@@ -59,7 +66,7 @@ namespace NoYouDoIt.DataModels {
 
         timer -= deltaTime;
 
-        
+
 
         if (timer <= 0) {
           index = (index + 1) % currentAnimation.frames.Length;
@@ -72,7 +79,8 @@ namespace NoYouDoIt.DataModels {
         currentSprite = null;
         running = false;
         changed = true;
-        
+        active = false;
+
       }
 
 

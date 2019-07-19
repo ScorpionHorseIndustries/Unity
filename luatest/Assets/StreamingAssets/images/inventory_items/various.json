@@ -57,6 +57,16 @@
       "name": "processor",
       "x": 2,
       "y": 2
+    },
+    {
+      "name": "consumer_electronics",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "name": "basic_shipping_carton",
+      "x": 0,
+      "y": 3
     }
 
 

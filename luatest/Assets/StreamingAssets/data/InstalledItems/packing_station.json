@@ -1,0 +1,32 @@
+﻿{
+
+  "name": "installed::packing_station",
+  "niceName": "packing station",
+  "sprite": "installed_items::packing_station",
+  "sprites": [],
+  "movementFactor": 0.5,
+  "linked": false,
+  "trash": false,
+  "build": true,
+  "randomRotation": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::packing_station::build",
+  "updateActionCountDown": 5,
+  "width": 3,
+  "height": 2,
+
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "deconstructRecipe": "recipe::installed::packing_station::decon",
+  "workCondition": "false",
+  "workRecipe": "recipe::installed::packing_station::work::basic_shipping_carton",
+  "availableWorkRecipes": [
+    "recipe::installed::packing_station::work::basic_shipping_carton"
+
+  ],
+  "canChangeRecipe": true,
+  "powerUsed": 0.1
+
+
+}

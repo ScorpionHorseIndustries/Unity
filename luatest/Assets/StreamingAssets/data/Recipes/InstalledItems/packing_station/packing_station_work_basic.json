@@ -1,0 +1,21 @@
+{
+  "name": "recipe::installed::packing_station::work::basic_shipping_carton",
+  "niceName": "basic carton",
+  "buildTime": 3,
+  "resources": [
+    {
+      "name": "inv::consumer_electronics",
+      "qty": 8
+    }
+  ],
+  "products": [
+    {
+      "name": "inv::basic_shipping_carton",
+      "qtyMin": 1,
+      "qtyMax": 1,
+      "chance": 1
+    }
+
+  ]
+
+}

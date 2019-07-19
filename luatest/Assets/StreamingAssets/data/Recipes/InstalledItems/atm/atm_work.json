@@ -11,8 +11,8 @@
       "products": [
         {
           "name": "money",
-          "qtyMin": 1,
-          "qtyMax": 10,
+          "qtyMin": 0,
+          "qtyMax": 5,
           "chance": 1
         }
 

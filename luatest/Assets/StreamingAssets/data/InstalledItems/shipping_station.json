@@ -17,7 +17,7 @@
   "height": 3,
   "workTileOffsetX": 1,
   "updateActionCountDown": 3,
-  "workRecipe": "recipe::installed::shipping_station::work",
+  "workRecipe": "recipe::installed::shipping_station::work::basic_shipping_carton",
   "workstation": true,
   "editOnClick": true,
   "updateAction": "OnUpdate_Workstation",

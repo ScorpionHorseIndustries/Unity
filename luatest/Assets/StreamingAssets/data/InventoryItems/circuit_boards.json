@@ -1,8 +1,8 @@
 {
-      
-      "type": "inv::circuit_boards",
-      "niceName": "circuit boards",
-      "stackSize": 32,
-      "spriteName": "inventory_items::circuit_boards",
-      "category": "manufactured"
-    }
+
+  "type": "inv::circuit_boards",
+  "niceName": "circuit boards",
+  "stackSize": 32,
+  "spriteName": "inventory_items::circuit_boards",
+  "category": "manufactured"
+}

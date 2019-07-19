@@ -144,7 +144,7 @@ namespace NoYouDoIt.DataModels {
       World.current.workManager.ReturnWork(work);
     }
 
-    private void DropAll() {
+    public  void DropAll() {
 
       while (!inventory.IsEmpty()) {
         Tile t = World.current.FindEmptyTile(pos);
@@ -424,8 +424,16 @@ namespace NoYouDoIt.DataModels {
     public void CBUnregisterOnChanged(Action<Entity> cb) {
       CBOnChanged -= cb;
     }
+
     //-------------------------------- STATIC- -------------------------------------
     private static Dictionary<string, Entity> prototypes = new Dictionary<string, Entity>();
+    public static Entity GetPrototype(string name) {
+      if (prototypes.ContainsKey(name)) {
+        return prototypes[name];
+      } else {
+        return null;
+      }
+    }
 
     public static void LoadFromFile() {
       string path = Path.Combine(Application.streamingAssetsPath, "data", "Entities");
@@ -482,13 +490,7 @@ namespace NoYouDoIt.DataModels {
       prototypes.Add(proto.typeName, proto);
     }
 
-    private static Entity GetPrototype(string typeName) {
-      if (prototypes.ContainsKey(typeName)) {
-        return prototypes[typeName];
-      } else {
-        return null;
-      }
-    }
+ 
   }
 
 

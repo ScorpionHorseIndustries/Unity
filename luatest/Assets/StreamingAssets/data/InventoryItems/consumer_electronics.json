@@ -1,0 +1,8 @@
+{
+
+  "type": "inv::consumer_electronics",
+  "niceName": "consumer electronics",
+  "stackSize": 16,
+  "spriteName": "inventory_items::consumer_electronics",
+  "category": "manufactured"
+}

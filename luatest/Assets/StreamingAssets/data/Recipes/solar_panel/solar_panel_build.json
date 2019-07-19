@@ -1,7 +1,0 @@
-﻿{
-  "name": "recipe::installed::solar_panel::build",
-  "niceName" : "build",
-  "buildTime": 1,
-  "cost": 50,
-  "resources": []
-}

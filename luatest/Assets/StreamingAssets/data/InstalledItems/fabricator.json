@@ -25,7 +25,8 @@
     "recipe::installed::fabricator::work::copper_wire",
     "recipe::installed::fabricator::work::processor",
     "recipe::installed::fabricator::work::circuit_boards",
-    "recipe::installed::fabricator::work::components"
+    "recipe::installed::fabricator::work::components",
+    "recipe::installed::fabricator::work::consumer_electronics"
   ],
   "canChangeRecipe": true,
   "powerUsed": 0.1

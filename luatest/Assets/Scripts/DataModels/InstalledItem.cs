@@ -261,6 +261,40 @@ namespace NoYouDoIt.DataModels {
 
     }
 
+    public void CheckRecipes() {
+      if (recipe == null) {
+        Debug.Log("item " + type + " has no recipe");
+      } else {
+        if (Recipe.GetRecipe(recipe.name) == null) {
+          throw new Exception("item " + type + " recipe not found");
+        }
+      }
+
+      if (deconRecipeName == null || deconRecipeName == "") {
+        Debug.Log("item " + type + " has no decon recipe");
+      } else {
+        if (Recipe.GetRecipe(deconRecipeName) == null) {
+          throw new Exception("item " + type + " decon recipe not found");
+        }
+      }
+
+      
+
+      if (workRecipeName == null || workRecipeName == "") {
+      
+      } else {
+        if (Recipe.GetRecipe(workRecipeName) == null) {
+          throw new Exception("item " + prototype.type + " work recipe not found");
+        }
+      }
+
+      foreach (string s in availableRecipes) {
+        if (Recipe.GetRecipe(s) == null) {
+          throw new Exception("item " + prototype.type + " work recipe " + s + " not found");
+        }
+      }
+    }
+
     //-=-=-=-=-=-=-=-=-=-=- UPDATES =-=-=-=-=-=-=-=-=-=-=-
 
     public void Update(float deltaTime) {
@@ -551,7 +585,7 @@ namespace NoYouDoIt.DataModels {
         string name = Funcs.jsonGetString(installedItemJson["name"], "unnamed_" + unnamedCounter);
         string niceName = Funcs.jsonGetString(installedItemJson["niceName"], name);
         unnamedCounter += 1;
-        string sprite = Funcs.jsonGetString(installedItemJson["sprite"], "");
+        string sprite = Funcs.jsonGetString(installedItemJson["sprite"], null);
         float movement = Funcs.jsonGetFloat(installedItemJson["movementFactor"], 1);
         bool trash = Funcs.jsonGetBool(installedItemJson["trash"], false);
         bool build = Funcs.jsonGetBool(installedItemJson["build"], false);
@@ -568,7 +602,7 @@ namespace NoYouDoIt.DataModels {
         float updateActionCD = Funcs.jsonGetFloat(installedItemJson["updateActionCountDown"], 0);
         float updateActionCDRange = Funcs.jsonGetFloat(installedItemJson["updateActionCountDownRange"], 0);
         bool IsWorkstation = Funcs.jsonGetBool(installedItemJson["workstation"], false);
-        string workRecipeName = Funcs.jsonGetString(installedItemJson["workRecipe"], "");
+        string workRecipeName = Funcs.jsonGetString(installedItemJson["workRecipe"], null);
         bool paletteSwap = Funcs.jsonGetBool(installedItemJson["paletteSwap"], false);
         float trashSpawnChance = Funcs.jsonGetFloat(installedItemJson["trashSpawnChance"], 0);
         string deconRecipeName = Funcs.jsonGetString(installedItemJson["deconstructRecipe"], null);

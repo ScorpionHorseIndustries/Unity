@@ -56,6 +56,7 @@
 		end
 		]]
 	elseif (state == "init_work") then
+		robot.info:SetBool("findNeighbourTiles", true)
 		if (robot.work ~= nil) then
 			if (robot.work.inventoryItemName ~= nil) then
 				state = "find_item"
@@ -63,6 +64,7 @@
 				--go to work tile
 				state = "find_path_work.tile"
 				robot.info:SetString("stateWhenMoved", "work")
+				robot.info:SetBool("findNeighbourTiles", false)		
 			end
 		else
 			state = "idle"
@@ -90,7 +92,8 @@
 			qtyToAllocate = robot.work.inventoryItemQtyRemaining - robot.inventory:HowMany(robot.work.inventoryItemName)
 			target:InventoryAllocate(robot.work.inventoryItemName, qtyToAllocate)
 
-
+		else
+			state = "reset"
 		end		
 	elseif (state == "pickup") then
 		local fx = robot.info:GetInt("goto_x")
@@ -132,7 +135,7 @@
 			state = "move"
 		end
 	elseif (state == "find_path_work.tile") then
-		if (robot:FindPath(robot.work.workTile,true)) then
+		if (robot:FindPath(robot.work.workTile,robot.info:GetBool("findNeighbourTiles"))) then
 			state = "move"
 		else	
 			state = "reset"

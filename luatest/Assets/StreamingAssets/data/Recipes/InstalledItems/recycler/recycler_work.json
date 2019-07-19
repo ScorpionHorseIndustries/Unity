@@ -12,7 +12,7 @@
         {
           "name": "money",
           "qtyMin": 1,
-          "qtyMax": 5,
+          "qtyMax": 4,
           "chance": 1
         }
       ]

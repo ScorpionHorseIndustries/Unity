@@ -1,0 +1,33 @@
+{
+  "name": "recipe::installed::fabricator::work::consumer_electronics",
+  "niceName": "make consumer electronics",
+  "buildTime": 1,
+  "resources": [
+    {
+      "name": "inv::processor",
+      "qty": 2
+    },
+    {
+      "name": "inv::copper_wire",
+      "qty": 2
+    },
+    {
+      "name": "inv::components",
+      "qty": 4
+    },
+    {
+      "name": "inv::circuit_boards",
+      "qty": 1
+    }
+
+  ],
+  "products": [
+    {
+      "name": "inv::consumer_electronics",
+      "qtyMin": 1,
+      "qtyMax": 1,
+      "chance": 1
+    }
+
+  ]
+}

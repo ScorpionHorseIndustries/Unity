@@ -330,9 +330,51 @@ namespace NoYouDoIt.TheWorld {
 
       inventoryManager.InitStockpile();
 
-
+      CheckRecipesAndItems();
       //CreateEmptyTiles();
 
+    }
+
+    private void CheckRecipesAndItems() {
+
+      foreach (InstalledItem item in InstalledItem.prototypes.Values) {
+        item.CheckRecipes();
+      }
+
+
+      foreach (string rn in Recipe.GetRecipeNames()) {
+
+        string output = "recipe: " + rn;
+        Recipe rcp = Recipe.GetRecipe(rn);
+
+        foreach(RecipeResource rr in rcp.resources.Values) {
+          if (InventoryItem.GetPrototype(rr.name) == null) {
+            throw new Exception(output + " item not found " + rr);
+          }
+
+        }
+
+        foreach (RecipeProduct rp in rcp.products.Values) {
+          switch (rp.type) {
+            case RECIPE_PRODUCT_TYPE.INVENTORY_ITEM:
+              if (InventoryItem.GetPrototype(rp.name) == null) {
+                throw new Exception(output + " item not found " + rp);
+              }
+              break;
+            case RECIPE_PRODUCT_TYPE.ENTITY:
+              if (Entity.GetPrototype(rp.name) == null) {
+                throw new Exception(output + " entity not found " + rp);
+              }       
+              break;
+            case RECIPE_PRODUCT_TYPE.MONEY:
+              break;
+            default:
+              break;
+          }
+
+        }
+
+      }
     }
 
 

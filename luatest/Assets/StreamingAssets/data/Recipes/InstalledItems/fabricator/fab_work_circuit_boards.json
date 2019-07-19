@@ -23,7 +23,7 @@
   ],
   "products": [
     {
-      "name": "inv::circuit_board",
+      "name": "inv::circuit_boards",
       "qtyMin": 1,
       "qtyMax": 4,
       "chance": 1

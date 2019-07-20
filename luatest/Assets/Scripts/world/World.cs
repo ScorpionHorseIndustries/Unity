@@ -44,8 +44,8 @@ namespace NoYouDoIt.TheWorld {
     //testing
     public static readonly int NUMBER_OF_ROBOTS = 6;
 
-    public static readonly int TEST_WIDTH = 30;
-    public static readonly int TEST_HEIGHT = 30;
+    public static readonly int WORLD_WIDTH = 4;
+    public static readonly int WORLD_HEIGHT = 4;
 
     public static readonly int M_M_MAXIMUM_TRASH = 11;
 
@@ -76,7 +76,8 @@ namespace NoYouDoIt.TheWorld {
     public string[] petNames;
     //private Tile[,] tiles;
     public List<Room> rooms;
-    public Dictionary<int, Dictionary<int, TileChunk>> chunks;
+    //public Dictionary<int, Dictionary<int, TileChunk>> chunks;
+    public TileChunk[,] chunks;
     public List<TileChunk> chunkList;
 
     //public List<InventoryItem> inventoryItems;
@@ -156,43 +157,52 @@ namespace NoYouDoIt.TheWorld {
 
 
 
-    public static readonly int SPAWN_CHUNKS = 4;
-    public static readonly int HALF_SPAWN_CHUNKS = SPAWN_CHUNKS / 2;
+    //public static readonly int SPAWN_CHUNKS = 4;
+    //public static readonly int HALF_SPAWN_CHUNKS = SPAWN_CHUNKS / 2;
 
 
     public TileChunk GetChunkIfExists(int x, int y) {
-      TileChunk chunk = null;
+      //TileChunk chunk = null;
+      if (x < 0 || y < 0 || x > WORLD_WIDTH - 1 || y > WORLD_HEIGHT - 1) return null;
+      return chunks[x,y];
 
-      if (chunks.ContainsKey(x)) {
-        if (chunks[x].ContainsKey(y)) {
-          chunk = chunks[x][y];
-        }
-      }
+      //if (chunks.ContainsKey(x)) {
+      //  if (chunks[x].ContainsKey(y)) {
+      //    chunk = chunks[x][y];
+      //  }
+      //}
 
 
-      return chunk;
+      //return chunk;
 
     }
 
     public TileChunk GetChunk(int x, int y) {
       TileChunk chunk = null;
-
+      if (x < 0 || y < 0 || x > WORLD_WIDTH - 1 || y > WORLD_HEIGHT - 1) return null;
 
       bool newChunk = false;
-      if (chunks.ContainsKey(x)) {
-        if (chunks[x].ContainsKey(y)) {
-          chunk = chunks[x][y];
-        } else {
-          chunk = new TileChunk(this, x, y);
-          newChunk = true;
-          chunks[x][y] = chunk;
-        }
-      } else {
-        chunks[x] = new Dictionary<int, TileChunk>();
+      if (chunks[x,y] == null) {
         chunk = new TileChunk(this, x, y);
         newChunk = true;
-        chunks[x][y] = chunk;
+        chunks[x,y] = chunk;
+      } else {
+        chunk = chunks[x,y];
       }
+      //if (chunks.ContainsKey(x)) {
+      //  if (chunks[x].ContainsKey(y)) {
+      //    chunk = chunks[x][y];
+      //  } else {
+      //    chunk = new TileChunk(this, x, y);
+      //    newChunk = true;
+      //    chunks[x][y] = chunk;
+      //  }
+      //} else {
+      //  //chunks[x] = new Dictionary<int, TileChunk>();
+      //  chunk = new TileChunk(this, x, y);
+      //  newChunk = true;
+      //  chunks[x][y] = chunk;
+      //}
 
       if (newChunk && chunk != null) {
         chunkList.Add(chunk);
@@ -212,16 +222,16 @@ namespace NoYouDoIt.TheWorld {
 
       if (chunksInitialised) return;
       chunksInitialised = true;
-
-      for (int x = 0; x < SPAWN_CHUNKS; x += 1) {
-        chunks[x] = new Dictionary<int, TileChunk>();
-        for (int y = 0; y < SPAWN_CHUNKS; y += 1) {
+      chunks = new TileChunk[WORLD_WIDTH,WORLD_HEIGHT];
+      for (int x = 0; x < WORLD_WIDTH; x += 1) {
+        //chunks[x] = new Dictionary<int, TileChunk>();
+        for (int y = 0; y < WORLD_HEIGHT; y += 1) {
           //int xx = x * TileChunk.CHUNK_WIDTH;
           //int yy = y * TileChunk.CHUNK_HEIGHT;
 
-          chunks[x][y] = new TileChunk(this, x, y);
-          chunkList.Add(chunks[x][y]);
-          chunks[x][y].Init();
+          chunks[x,y] = new TileChunk(this, x, y);
+          chunkList.Add(chunks[x,y]);
+          chunks[x,y].Init();
         }
 
       }
@@ -280,7 +290,7 @@ namespace NoYouDoIt.TheWorld {
       //inventoryItems = new List<InventoryItem>();
       inventoryManager = new InventoryManager(this);
       zones = new List<TileZone>();
-      chunks = new Dictionary<int, Dictionary<int, TileChunk>>();
+      chunks = new TileChunk[WORLD_WIDTH, WORLD_HEIGHT]; //new Dictionary<int, Dictionary<int, TileChunk>>();
       chunkList = new List<TileChunk>();
       //outside = rooms[0];
     }
@@ -526,9 +536,9 @@ import 'NoYouDoIt.DataModels'
     }
 
     public void SetAllNeighbours() {
-      foreach (int x in chunks.Keys) {
-        foreach (int y in chunks[x].Keys) {
-          TileChunk t = chunks[x][y];
+      for (int x = 0; x < chunks.GetLength(0); x += 1) {
+        for (int y = 0; y < chunks.GetLength(1); y += 1) {
+          TileChunk t = chunks[x,y];
 
           t.SetNeighbourChunks();
 
@@ -833,6 +843,7 @@ import 'NoYouDoIt.DataModels'
       //  return null;
       //}
       TileChunk chunk = GetChunk(x / TileChunk.CHUNK_WIDTH, y / TileChunk.CHUNK_HEIGHT);
+      if (chunk == null) return null;
       return chunk.GetTileAtWorldCoord(x, y);
     }
 

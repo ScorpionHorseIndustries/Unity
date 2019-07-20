@@ -28,6 +28,7 @@ namespace NoYouDoIt.DataModels {
     public string description = "work";
 
     public List<Tile> relatedTiles = new List<Tile>();
+    public bool canWorkFromNeighbourTiles = false;
   
 
 

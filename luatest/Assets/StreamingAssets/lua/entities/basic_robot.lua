@@ -56,15 +56,16 @@
 		end
 		]]
 	elseif (state == "init_work") then
-		robot.info:SetBool("findNeighbourTiles", true)
+		
 		if (robot.work ~= nil) then
+			robot.info:SetBool("findNeighbourTiles", robot.work.canWorkFromNeighbourTiles)
 			if (robot.work.inventoryItemName ~= nil) then
 				state = "find_item"
 			else
 				--go to work tile
 				state = "find_path_work.tile"
 				robot.info:SetString("stateWhenMoved", "work")
-				robot.info:SetBool("findNeighbourTiles", false)		
+				
 			end
 		else
 			state = "idle"
@@ -103,7 +104,7 @@
 		
 
 		qtyToTake = robot.work.inventoryItemQtyRequired - robot.inventory:HowMany(robot.work.inventoryItemName)
-		World.dbug("qty to pick up : " .. qtyToTake)
+		--World.dbug("qty to pick up : " .. qtyToTake)
 
 		if (robot:Pickup(tile, robot.work.inventoryItemName, qtyToTake)) then
 			if (robot.inventory:HowMany(robot.work.inventoryItemName) >= robot.work.inventoryItemQtyRequired) then

@@ -19,6 +19,10 @@ function GetMaxQty(inventoryItemName)
 	return World.current.inventoryManager:GetStockpileMaxQty(inventoryItemName)
 end
 
+function GetTotalQty(inventoryItemName)
+	return GetQty(inventoryItemName) + GetLooseQty(inventoryItemName)
+end
+
 
 function CheckStockpiles()
 	local toCreate = {}
@@ -35,7 +39,7 @@ function CheckStockpiles()
 
 			while spsList:MoveNext() do
 				local sps = spsList.Current
-				if ((inventory:TotalQty() == 0 or inventory:HowMany(sps.name) > 0) and sps.pendingWork == false) then
+				if (sps.pendingWork == false and (inventory:TotalQty() == 0 or inventory:HowMany(sps.name) > 0)) then
 					local tileQty = inventory:HowMany(sps.name)
 					
 
@@ -58,7 +62,7 @@ function CheckStockpiles()
 						if (qtyWanted > 0) then
 							toCreate[#toCreate+1] = {tile = inventory.tile, func = "SetHaul", name = sps.name, qty = qtyWanted}
 							sps.pendingWork = true
-							goto nextInventory
+							goto finish
 						end
 						--WorkItem.MakeWorkItem(inventory.tile,"SetHaul",sps.name,qtyWanted)
 
@@ -70,6 +74,7 @@ function CheckStockpiles()
 		end
 		::nextInventory::
 	end
+	::finish::
 
 	for n = 1, #toCreate do
 		a = toCreate[n]

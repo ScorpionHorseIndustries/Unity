@@ -208,7 +208,7 @@ namespace NoYouDoIt.Controller {
 
 
 
-      world = new World(World.TEST_WIDTH, World.TEST_HEIGHT);
+      world = new World(World.WORLD_WIDTH, World.WORLD_HEIGHT);
 
 
       //world.RandomiseTiles();
@@ -666,11 +666,11 @@ namespace NoYouDoIt.Controller {
     //}
 
     public void CreateTileGameObjects() {
-      foreach (int xc in world.chunks.Keys) {
-        //Debug.Log("xc = " + xc);
-        foreach (int yc in world.chunks[xc].Keys) {
+      for (int x = 0; x < World.current.chunks.GetLength(0); x += 1) {
+        for (int y = 0; y < World.current.chunks.GetLength(1); y += 1) {
           //Debug.Log("xc = " + xc + " yc = " + yc);
-          TileChunk chunk = world.chunks[xc][yc];
+
+          TileChunk chunk = world.chunks[x,y];
 
           CreateChunkTileGameObjects(chunk);
 

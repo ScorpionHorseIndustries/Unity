@@ -41,7 +41,7 @@ end
 --------------------------------InstalledItem------------------------------------
 function SetInstalledItem(work,itemName) 
 	
-
+	work.canWorkFromNeighbourTiles = true
 	proto = InstalledItem.GetPrototype(itemName)
 
 	xfrom = work.workTile.world_x
@@ -118,6 +118,7 @@ function SetPrereq(work,parent,invItemName,qty)
 	work.parent = parent;
 	work.inventory = parent.inventory
 	work.inventorySearchStockpiles = true
+	work.canWorkFromNeighbourTiles = true
 
 	work.OnWork:Add("OnWork_PreReq")
 	work.OnComplete:Add("OnComplete_AnyPre")
@@ -161,7 +162,12 @@ function OnComplete_PreReq(work)
 
 end
 function IsReady_PreReq(work) 
-	return true
+	local total_qty = GetStockpileQty(work.inventoryItemName) + GetLooseQty(work.inventoryItemName)
+	if (total_qty >= work.inventoryItemQtyRemaining) then
+		return true
+	else	
+		return false
+	end
 end
 -- ------------------------------------------------InstalledItem---------------
 function OnWork_InstalledItem (work, deltaTime)
@@ -173,7 +179,7 @@ function OnWork_InstalledItem (work, deltaTime)
 
 	if (coolDown <= 0) then
 
-		if (work.workTile.countOfOccupied == 0 or (work.workTile.countOfOccupied == 1 and work.workTile:IsItMe(this))) then
+		if (work.workTile.countOfOccupied == 0 or (work.workTile.countOfOccupied == 1 and work.workTile:IsItMe(work.assignedRobot))) then
 			if (work.workTime > 0) then
 				work.workTime = work.workTime - deltaTime
 
@@ -278,7 +284,7 @@ function SetWorkstation(work, recipeName)
 
 	work.recipe = Recipe.GetRecipe(recipeName)
 	work.workTime = work.recipe.buildTime
-
+	work.canWorkFromNeighbourTiles = false
 	for kvp in luanet.each(work.recipe.resources) do
 		resource = kvp.Value
 		rName = resource.name

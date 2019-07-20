@@ -7,12 +7,14 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using UnityEngine;
+
 namespace NoYouDoIt.TheWorld {
   using NoYouDoIt.Utils;
   using NoYouDoIt.DataModels;
+  using NoYouDoIt.Controller;
   public class TileChunk : IXmlSerializable {
-    public static readonly int CHUNK_WIDTH = 16;
-    public static readonly int CHUNK_HEIGHT = 16;
+    public static readonly int CHUNK_WIDTH = 8;
+    public static readonly int CHUNK_HEIGHT = 8;
     public Tile[,] tiles;
     protected World world;
     public int x { get; private set; }
@@ -22,6 +24,9 @@ namespace NoYouDoIt.TheWorld {
         return x * CHUNK_WIDTH;
       }
     }
+
+    public Texture2D texture;
+    public Sprite sprite;
 
     public int world_y {
       get {
@@ -34,6 +39,14 @@ namespace NoYouDoIt.TheWorld {
 
 
     public void Init() {
+      Rect rect = new Rect(0, 0, CHUNK_WIDTH * 32, CHUNK_HEIGHT * 32);
+      Vector2 pivot = new Vector2(0, 0);
+      texture = new Texture2D(CHUNK_WIDTH * 32, CHUNK_HEIGHT * 32, NYDISpriteManager.DEFAULT_TEXTURE_FORMAT,false);
+      texture.filterMode = FilterMode.Point;
+
+      sprite = Sprite.Create(texture, rect, pivot,32);
+      sprite.name = "sprite::chunk_" + x + "_" + y;
+
       for (int xx = 0; xx < CHUNK_WIDTH; xx += 1) {
         for (int yy = 0; yy < CHUNK_HEIGHT; yy += 1) {
           Tile t = new Tile(world, this, TileType.TYPES["empty"], xx, yy);

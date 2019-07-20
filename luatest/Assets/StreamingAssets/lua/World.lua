@@ -23,12 +23,25 @@ function GetTotalQty(inventoryItemName)
 	return GetQty(inventoryItemName) + GetLooseQty(inventoryItemName)
 end
 
+csInventoryIndex = 0
 
 function CheckStockpiles()
-	local toCreate = {}
-	local inventories = World.current.inventoryManager.inventories:GetEnumerator()
 
+	
+	local toCreate = {}
+
+	local inventories = World.current.inventoryManager.stockpiles:GetEnumerator()
+	--local totalInventories = 
+	local currentinvIndex = -1
 	while inventories:MoveNext() do
+		currentinvIndex = currentinvIndex + 1
+		if (currentinvIndex ~= csInventoryIndex) then
+			goto nextInventory
+		else
+			
+			--World.dbug("csInventoryIndex = " .. tostring(csInventoryIndex))
+		end
+		
 		
 		local inventory = inventories.Current
 		if (inventory.IsStockPile) then 
@@ -80,6 +93,9 @@ function CheckStockpiles()
 		a = toCreate[n]
 		WorkItem.MakeWorkItem(a["tile"], a["func"], a["name"], a["qty"])
 
+	end
+	if (World.current.inventoryManager.stockpiles.Count > 0) then
+		csInventoryIndex = (csInventoryIndex + 1 ) % World.current.inventoryManager.stockpiles.Count
 	end
 
 

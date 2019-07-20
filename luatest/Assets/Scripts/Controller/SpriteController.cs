@@ -90,15 +90,21 @@ namespace NoYouDoIt.Controller {
     //}
 
     public void SetTileSprite(Tile t) {
-      SpriteRenderer sr = WorldController.Instance.GetGameObjectFromTile(t).GetComponent<SpriteRenderer>();
-      //Debug.Log("give me sprite: " + t.type.spriteName);
-      sr.sprite = GetRandomSprite(t.type.sprites);//GetSprite(t.type.spriteName);
+      Sprite s = GetRandomSprite(t.type.sprites);
+      TileChunk tc = t.chunk;
+      tc.texture.SetPixels(t.local_x*32, t.local_y*32, 32, 32, s.texture.GetPixels());
+      tc.texture.Apply();
+      
 
-      if (t.zone == null) {
-        sr.color = Color.white;
-      } else {
-        sr.color = new Color(1, 0, 0, 0.1f);
-      }
+      //SpriteRenderer sr = WorldController.Instance.GetGameObjectFromTile(t).GetComponent<SpriteRenderer>();
+      ////Debug.Log("give me sprite: " + t.type.spriteName);
+      //sr.sprite = s;//GetSprite(t.type.spriteName);
+
+      //if (t.zone == null) {
+      //  sr.color = Color.white;
+      //} else {
+      //  sr.color = new Color(1, 0, 0, 0.1f);
+      //}
 
     }
 

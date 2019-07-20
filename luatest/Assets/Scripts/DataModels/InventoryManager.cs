@@ -56,17 +56,44 @@ namespace NoYouDoIt.DataModels {
     private StockPileSetting[] stockpileSettingsArray;
     //private int spsIndex = 0;
 
-    NYDITimer timer;
+    List<NYDITimer> timers;
 
     //public Dictionary<string, List<InventoryItem>> inventories;
     public List<Inventory> inventories;
+    public List<Inventory> stockpiles;
     //private List<InventoryItem> items;
     public InventoryManager(World world) {
       this.world = world;
       inventories = new List<Inventory>();//new Dictionary<string, List<InventoryItem>>();
       stockpileSettings = new Dictionary<string, StockPileSetting>();
       looseQtys = new Dictionary<string, StockPileSetting>();
-      timer = new NYDITimer("updateTimer", 1, UpdateStockPileSettings);
+      timers = new List<NYDITimer>();
+      //timers.Add(new NYDITimer("updateTimer", 2, UpdateStockPileSettings));
+      timers.Add(new NYDITimer("setStockpiles", 5, UpdateStockPileList));
+      stockpiles = new List<Inventory>();
+    }
+
+    public void UpdateStockPileList() {
+     // stockpiles = inventories.Where(e => e.IsStockPile).ToList<Inventory>();
+    }
+
+    public void RegisterStockpile(InstalledItem item) {
+      Inventory inv = item.tile.InventoryGetRef();
+      if (!stockpiles.Contains(inv)) {
+        stockpiles.Add(inv);
+      }
+
+
+    }
+
+
+    public void UnregisterStockpile(InstalledItem item) {
+      Inventory inv = item.tile.InventoryGetRef();
+      if (stockpiles.Contains(inv)) {
+        stockpiles.Remove(inv);
+      }
+
+
     }
 
     public void SetStockPileSettingWork(string name, bool b) {
@@ -130,9 +157,12 @@ namespace NoYouDoIt.DataModels {
     }
 
     public void Update(float deltaTime) {
-      timer.Update(deltaTime);
+      foreach (NYDITimer timer in timers) {
+        timer.Update(deltaTime);
+      }
 
-    }
+
+      }
 
     public int GetLooseQty(string name) {
       if (looseQtys.ContainsKey(name)) {
@@ -162,13 +192,13 @@ namespace NoYouDoIt.DataModels {
     }
 
     
-    public void UpdateStockPileSettings() {
-      ////job.Schedule();
-      //StockPileSetting sps = stockpileSettingsArray[spsIndex];
-      //sps.currentQty = GetStockpileQty(sps.name);
+    //public void UpdateStockPileSettings() {
+    //  ////job.Schedule();
+    //  //StockPileSetting sps = stockpileSettingsArray[spsIndex];
+    //  //sps.currentQty = GetStockpileQty(sps.name);
 
-      //spsIndex = (spsIndex + 1) % stockpileSettingsArray.Length;
-    }
+    //  //spsIndex = (spsIndex + 1) % stockpileSettingsArray.Length;
+    //}
 
 
     //public List<Tile> GetNearest(Tile fromHere, string itemType, int qty) {

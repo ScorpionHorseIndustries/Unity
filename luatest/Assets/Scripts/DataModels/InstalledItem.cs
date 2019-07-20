@@ -612,7 +612,7 @@ namespace NoYouDoIt.DataModels {
         bool editOnClick = Funcs.jsonGetBool(installedItemJson["editOnClick"], false);
         bool canChangeRecipe = Funcs.jsonGetBool(installedItemJson["canChangeRecipe"], false);
 
-        string onPlaced = Funcs.jsonGetString(installedItemJson["onPlaced"], null);
+        //string onPlaced = Funcs.jsonGetString(installedItemJson["onPlaced"], null);
         string onRemoved= Funcs.jsonGetString(installedItemJson["onRemoved"], null);
         float powerGenerated = Funcs.jsonGetFloat(installedItemJson["powerGenerated"], 0);
         float powerUsed = Funcs.jsonGetFloat(installedItemJson["powerUsed"], 0);

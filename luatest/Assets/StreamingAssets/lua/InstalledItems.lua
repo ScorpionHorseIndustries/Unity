@@ -168,7 +168,12 @@ function OnEnterRequested_Door(item)
 
 
 end
-
+function OnCreate_Stockpile(item)
+	World.current.inventoryManager:RegisterStockpile(item)
+end
+function OnRemoved_Stockpile(item)
+	World.current.inventoryManager:UnregisterStockpile(item)
+end
 function OnCreate_MiningController(item) 
 	local tile = item.tile
 	if (tile.type.minedProduct == nil) then

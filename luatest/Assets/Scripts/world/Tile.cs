@@ -210,6 +210,10 @@ namespace NoYouDoIt.TheWorld {
       return qtyGiven;
     }
 
+    public Inventory InventoryGetRef() {
+      return inventory;
+    }
+
     public int InventoryAllocate(string type, int qty) {
       return inventory.Allocate(type, qty);
     }

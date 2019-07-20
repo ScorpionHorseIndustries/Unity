@@ -51,8 +51,9 @@ namespace NoYouDoIt.Controller {
     public GAME_STATE gameState = GAME_STATE.PLAY;
 
 
+    private Dictionary<TileChunk, GameObject> Chunks_GO_Map;
 
-    private Dictionary<Tile, GameObject> Tiles_GO_Map;
+    //private Dictionary<Tile, GameObject> Tiles_GO_Map;
     private Dictionary<Tile, GameObject> TilesInventoryItems_GO_Map;
     private Dictionary<InstalledItem, GameObject> InstalledItems_GO_Map;
     //private Dictionary<Character, GameObject> Characters_GO_Map;
@@ -129,8 +130,10 @@ namespace NoYouDoIt.Controller {
       reader.Close();
 
       CreateTileGameObjects();
-      foreach (Tile t in Tiles_GO_Map.Keys) {
-        SetTileSprite(t);
+      foreach (TileChunk chunk in Chunks_GO_Map.Keys) {
+        foreach (Tile t in chunk.tiles) {
+          SetTileSprite(t);
+        }
 
 
       }
@@ -162,15 +165,22 @@ namespace NoYouDoIt.Controller {
       //world.CBRegisterInventoryItemRemovedFromTile(OnInventryItemDestoyed);
       world.SetAllNeighbours();
       world.SetInstalledFromArray();
+      foreach (TileChunk chunk in Chunks_GO_Map.Keys) {
+        foreach (Tile t in chunk.tiles) {
+          if (t.installedItem != null) {
+            OnInstalledItemCreated(t.installedItem);
 
-      foreach (Tile t in Tiles_GO_Map.Keys) {
-        //SetTileSprite(t);
-        if (t.installedItem != null) {
-          OnInstalledItemCreated(t.installedItem);
-
+          }
         }
-
       }
+      //foreach (Tile t in Tiles_GO_Map.Keys) {
+      //  //SetTileSprite(t);
+      //  if (t.installedItem != null) {
+      //    OnInstalledItemCreated(t.installedItem);
+
+      //  }
+
+      //}
 
       world.SetJoinedSprites();
       //Debug.Log(writer.ToString());
@@ -264,7 +274,8 @@ namespace NoYouDoIt.Controller {
       interestRateMarket = new MarketSimv2(0.001f, 0.1f);
       TileType.LoadFromFile();
 
-      Tiles_GO_Map = new Dictionary<Tile, GameObject>();
+      //Tiles_GO_Map = new Dictionary<Tile, GameObject>();
+      Chunks_GO_Map = new Dictionary<TileChunk, GameObject>();
       InstalledItems_GO_Map = new Dictionary<InstalledItem, GameObject>();
       //Characters_GO_Map = new Dictionary<Character, GameObject>();
       //Job_GO_Map = new Dictionary<Job, GameObject>();
@@ -293,15 +304,15 @@ namespace NoYouDoIt.Controller {
       world.Kill();
       world = null;
 
-      foreach (Tile t in Tiles_GO_Map.Keys) {
-        GameObject go = Tiles_GO_Map[t];
-        if (t.installedItem != null) {
-          t.installedItem.Destroy();
+      foreach (TileChunk chunk in Chunks_GO_Map.Keys) {
+        GameObject go = Chunks_GO_Map[chunk];
+        foreach (Tile t in chunk.tiles) {
+
+          if (t.installedItem != null) {
+            t.installedItem.Destroy();
+          }
         }
         Destroy(go);
-
-
-
       }
 
       foreach (WorkItem work in Work_GO_Map.Keys) {
@@ -316,7 +327,7 @@ namespace NoYouDoIt.Controller {
       //Job_GO_Map = null;
       Work_GO_Map = null;
 
-      Tiles_GO_Map = null;
+      Chunks_GO_Map = null;
 
       TilesInventoryItems_GO_Map = null;
       DestroyControllers();
@@ -644,13 +655,13 @@ namespace NoYouDoIt.Controller {
 
     }
 
-    public GameObject GetGameObjectFromTile(Tile t) {
-      if (Tiles_GO_Map.ContainsKey(t)) {
-        return Tiles_GO_Map[t];
-      } else {
-        return null;
-      }
-    }
+    //public GameObject GetGameObjectFromTile(Tile t) {
+    //  if (Tiles_GO_Map.ContainsKey(t)) {
+    //    return Tiles_GO_Map[t];
+    //  } else {
+    //    return null;
+    //  }
+    //}
 
     public GameObject GetGameObjectFromInstalledItem(InstalledItem item) {
       if (InstalledItems_GO_Map.ContainsKey(item)) {
@@ -670,7 +681,7 @@ namespace NoYouDoIt.Controller {
         for (int y = 0; y < World.current.chunks.GetLength(1); y += 1) {
           //Debug.Log("xc = " + xc + " yc = " + yc);
 
-          TileChunk chunk = world.chunks[x,y];
+          TileChunk chunk = world.chunks[x, y];
 
           CreateChunkTileGameObjects(chunk);
 
@@ -679,12 +690,18 @@ namespace NoYouDoIt.Controller {
     }
 
     public void CreateChunkTileGameObjects(TileChunk chunk) {
+
+      GameObject cgo = CreateGameObject("chunk_" + chunk.x + "_" + chunk.y, chunk.world_x, chunk.world_y, true);
+      cgo.transform.Translate(-0.5f, -0.5f, 0);
+      Chunks_GO_Map.Add(chunk, cgo);
+      cgo.GetComponent<SpriteRenderer>().sprite = chunk.sprite;
+
       for (int xt = 0; xt < TileChunk.CHUNK_WIDTH; xt += 1) {
         for (int yt = 0; yt < TileChunk.CHUNK_HEIGHT; yt += 1) {
           Tile t = chunk.tiles[xt, yt];
-          GameObject go = CreateGameObject("tile_" + t.world_x + "_" + t.world_y, t.world_x, t.world_y, true);
-          go.GetComponent<SpriteRenderer>().sortingLayerName = "Ground";
-          Tiles_GO_Map.Add(t, go);
+          //GameObject go = CreateGameObject("tile_" + t.world_x + "_" + t.world_y, t.world_x, t.world_y, true);
+          //go.GetComponent<SpriteRenderer>().sortingLayerName = "Ground";
+          //Tiles_GO_Map.Add(t, go);
 
 
           t.cbRegisterOnChanged(SetTileSprite);

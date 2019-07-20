@@ -256,10 +256,10 @@ namespace NoYouDoIt.TheWorld {
       }
 
       for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
-        Tile a = ch.GetTileAt(5, y);
-        Tile b = ch.GetTileAt(6, y);
-        Tile c = ch.GetTileAt(7, y);
-        Tile d = ch.GetTileAt(8, y);
+        Tile a = ch.GetTileAt(2, y);
+        Tile b = ch.GetTileAt(3, y);
+        Tile c = ch.GetTileAt(4, y);
+        Tile d = ch.GetTileAt(5, y);
 
         a.SetType(TileType.TYPES["stone_coal"]);
         b.SetType(TileType.TYPES["stone_iron"]);

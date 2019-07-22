@@ -1,6 +1,6 @@
 ﻿{
-  "world_width": 8,
-  "world_height": 8,
+  "world_width": 4,
+  "world_height": 4,
   "number_of_robots": 8,
   "noise_factor": 0.01,
   "chunk_width": 16,

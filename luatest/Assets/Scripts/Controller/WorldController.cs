@@ -598,19 +598,22 @@ namespace NoYouDoIt.Controller {
 
       displayMe += "\n";
       if (o.GetType() == typeof(Tile)) {
-        displayMe += Funcs.PadPair(pw, "tile type", ((Tile)o).type.name, '.');
+        Tile tile = (Tile)o;
+        displayMe += Funcs.PadPair(pw, "tile type", tile.type.name, '.');
+
+        displayMe += "\n" + tile.JobsToString(pw);
       } else if (o.GetType() == typeof(Entity)) {
         Entity to = (Entity)o;
         displayMe += Funcs.PadPair(pw, "type", to.typeName);
         displayMe += "\n" + Funcs.PadPair(pw, "name", to.name);
         displayMe += "\n" + Funcs.PadPair(pw, "state", to.state);
 
-        if (to.animator.valid) {
-          displayMe += "\n" + Funcs.PadPair(pw, "animation", to.animator.currentAnimation.name);
-          displayMe += "\n" + Funcs.PadPair(pw, "running", to.animator.running.ToString());
-          //displayMe += "\n" + Funcs.PadPair(pw, "timer", to.animator.timer.ToString());
-          //displayMe += "\n" + Funcs.PadPair(pw, "index", to.animator.index.ToString());
-        }
+        //if (to.animator.valid) {
+        //  displayMe += "\n" + Funcs.PadPair(pw, "animation", to.animator.currentAnimation.name);
+        //  displayMe += "\n" + Funcs.PadPair(pw, "running", to.animator.running.ToString());
+        //  //displayMe += "\n" + Funcs.PadPair(pw, "timer", to.animator.timer.ToString());
+        //  //displayMe += "\n" + Funcs.PadPair(pw, "index", to.animator.index.ToString());
+        //}
 
       } else if (o.GetType() == typeof(InstalledItem)) {
         InstalledItem item = (InstalledItem)o;

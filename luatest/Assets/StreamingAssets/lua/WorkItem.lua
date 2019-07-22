@@ -55,7 +55,7 @@ function SetInstalledItem(work,itemName)
 		for y = yfrom, yto, 1 do
 			tile = World.current:GetTileAt(x,y)
 			if (tile ~= nil) then
-				World.dbug(x .. "," .. y .. " = " .. proto.type)
+				--World.dbug(x .. "," .. y .. " = " .. proto.type)
 				work.relatedTiles:Add(tile)
 				tile:AddWork(work)
 			end
@@ -156,7 +156,7 @@ function IsComplete_PreReq(work)
 end
 
 function OnComplete_PreReq(work) 
-	World.dbug("OnComplete_PreReq: " .. work:ToString())
+	--World.dbug("OnComplete_PreReq: " .. work:ToString())
 	work.parent:RemovePrereq(work)
 	
 

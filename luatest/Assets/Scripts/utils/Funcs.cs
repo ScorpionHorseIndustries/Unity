@@ -340,7 +340,7 @@ namespace NoYouDoIt.Utils {
     public static string TitleCase(string s) {
       s = s.ToUpper();
       string ss = "";
-      if (s.Substring(0, 2) == "MC") {
+      if (s.StartsWith("MC")) {
         ss = "Mc";
         ss += s[2].ToString().ToUpper();
         ss += s.Substring(3).ToLower();

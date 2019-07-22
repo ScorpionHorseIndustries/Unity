@@ -28,7 +28,7 @@ namespace NoYouDoIt.TheWorld {
 
   //}
 
-  public class Tile {
+  public class Tile : IComparable<Tile>{
 
     public enum CAN_ENTER {
       YES, NEVER, SOON
@@ -94,7 +94,7 @@ namespace NoYouDoIt.TheWorld {
       this.local_y = y;
       this.world = world;
       this.chunk = chunk;
-      this.inventory = new Inventory(world, 1, INVENTORY_TYPE.TILE, this);
+      this.inventory = null; // new Inventory(world, 1, INVENTORY_TYPE.TILE, this);
       //world.GetNeighbours(this, true);
       //foreach(Tile t in neighbours.Values) {
       //  neighboursList.Add(t);
@@ -193,7 +193,7 @@ namespace NoYouDoIt.TheWorld {
 
 
     public int AddToInventory(string type, int qty) {
-
+      InventoryInit();
       int acceptedQty = inventory.AddItem(type, qty);
 
       if (cbInventoryItemChanged != null) {
@@ -204,33 +204,52 @@ namespace NoYouDoIt.TheWorld {
     }
 
     public int RemoveFromInventory(string type, int qty) {
+      if (inventory == null) return 0;
       int qtyGiven = inventory.RemoveItem(type, qty);
       if (cbInventoryItemChanged != null) {
         cbInventoryItemChanged(this);
       }
 
+      if (inventory.IsEmpty()) {
+        World.current.inventoryManager.UnregisterInventory(inventory);
+        inventory = null;
+      }
+
       return qtyGiven;
     }
 
+    public void InventoryInit() {
+      if (inventory == null) {
+        inventory = new Inventory(World.current, 1, INVENTORY_TYPE.TILE, this);
+      }
+    }
+
     public Inventory InventoryGetRef() {
+      InventoryInit();
       return inventory;
     }
 
     public int InventoryAllocate(string type, int qty) {
+      if (inventory == null) return 0;
       return inventory.Allocate(type, qty);
     }
 
     public int InventoryDeAllocate(string type, int qty) {
+      if (inventory == null) return 0;
       return inventory.DeAllocate(type, qty);
     }
 
 
 
     public int InventoryTotalAllocated(string type) {
+      if (inventory == null) {
+        return 0;
+      }
       return inventory.GetAllocatedQty(type);
     }
 
     public int InventoryTotal(string type) {
+      if (inventory == null) return 0;
       return inventory.HowMany(type);
     }
 
@@ -241,7 +260,7 @@ namespace NoYouDoIt.TheWorld {
         if (installedItem != null) {
           ws *= installedItem.movementFactor;
 
-        } else if (!inventory.IsEmpty()) {
+        } else if (inventory != null && !inventory.IsEmpty()) {
           ws *= 0.9f;
         }
         return ws;
@@ -369,15 +388,17 @@ namespace NoYouDoIt.TheWorld {
     }
 
     public bool InventoryHasSpaceFor(string type, int qty) {
+      InventoryInit();
       return inventory.HasSpaceFor(type, qty);
     }
 
     public bool IsInventoryEmpty() {
+      if (inventory == null) return true;
       return inventory.IsEmpty();
     }
 
     public bool IsEmpty() {
-      return (installedItem == null && inventory.IsEmpty() && movementFactor > 0.3 && !HasPendingWork);
+      return (installedItem == null && (inventory == null || inventory.IsEmpty()) && movementFactor > 0.3 && !HasPendingWork);
     }
 
     
@@ -387,22 +408,29 @@ namespace NoYouDoIt.TheWorld {
     }
 
     public string GetContents() {
+      if (inventory == null) return "";
       return inventory.ToString();
     }
 
     public string GetFirstInventoryItem() {
+      if (inventory == null) return null;
       return inventory.GetFirst();
     }
 
     public int GetInventoryTotal() {
+      if (inventory == null) return 0;
       return inventory.TotalQty();
     }
 
     public string GetInventorySpriteName() {
+      if (inventory == null) return null;
       return inventory.SpriteName();
     }
 
     public int GetInventorySpace() {
+      if (inventory == null) {
+        return 1;
+      }
       string itemName = inventory.GetFirst();
       if (itemName != null) {
         int current = inventory.HowMany(itemName, false);
@@ -480,14 +508,31 @@ namespace NoYouDoIt.TheWorld {
 
     }
 
-    public string JobsToString() {
-      string output = " (" + pendingWork.Count + "): ";
+    public string JobsToString(int w) {
+      string output = Funcs.PadPair(w, "work", "outstanding");
       foreach (WorkItem work in pendingWork) {
-        output += work.description + "(" + work.workTime + ")";
+        if (work.inventoryItemName != null) {
+          output += "\n" + Funcs.PadPair(w, work.inventoryItemName, work.inventoryItemQtyRemaining + "/" + work.inventoryItemQtyRequired);
+        } else { 
+          output += "\n" + Funcs.PadPair(w, work.description, "...");
+        }
+        if (work.assignedRobot != null) {
+          output += "\n" + Funcs.PadPair(w, "assigned", work.assignedRobot.name);
+        }
 
       }
 
       return output;
+    }
+
+    public bool Equals(Tile t) {
+      if (world_x == t.world_x && world_y == t.world_y) return true;
+
+      return false;
+    }
+
+    public int CompareTo(Tile other) {
+      return (world_x + world_y).CompareTo((other.world_x + other.world_y));
     }
   }
 }

@@ -19,8 +19,8 @@ namespace NoYouDoIt.NYDIPaths {
     Queue<Tile> pathQ = new Queue<Tile>();
     //Dictionary<PathNode<Tile>, Tile> nodesToTile = new Dictionary<PathNode<Tile>, Tile>();
 
-    List<Tile> closed = new List<Tile>();
-    List<Tile> open = new List<Tile>();
+    HashSet<Tile> closed = new HashSet<Tile>();
+    HashSet<Tile> open = new HashSet<Tile>();
     Dictionary<Tile, Tile> cameFrom = new Dictionary<Tile, Tile>();
     Dictionary<Tile, float> gScore = new Dictionary<Tile, float>();
     Dictionary<Tile, float> fScore = new Dictionary<Tile, float>();

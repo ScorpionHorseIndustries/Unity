@@ -1585,13 +1585,13 @@ import 'NoYouDoIt.DataModels'
 
       if (A.movementFactor > 0) {
         if (B != null && B.movementFactor > 0 && !IsClippingCorner(A, B)) {
-          float mf = 1.0f / Mathf.Pow(B.movementFactor, 2);
+          float mf = 1.0f / B.movementFactor;
           if (B.HasPendingWork) {
-            mf = Mathf.Pow(mf, 2);
+            mf *= 1.5f;
           }
 
           if (B.countOfOccupied > 0) {
-            mf = Mathf.Pow(mf, 2);
+            mf *= 1.5f;
           }
 
           return mf;

@@ -38,11 +38,11 @@ namespace NoYouDoIt.DataModels {
 
     public void Unassign() {
       if (this.assignedRobot != null) {
-        Debug.Log("Unassigning assigned worker");
+        //Debug.Log("Unassigning assigned worker");
         this.assignedRobot.NewState = "wander";
         this.assignedRobot = null;
       } else {
-        Debug.Log("Could not Unassign worker");
+        //Debug.Log("Could not Unassign worker");
       }
 
     }

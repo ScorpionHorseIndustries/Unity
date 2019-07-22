@@ -96,6 +96,8 @@ function CheckStockpiles()
 	end
 	if (World.current.inventoryManager.stockpiles.Count > 0) then
 		csInventoryIndex = (csInventoryIndex + 1 ) % World.current.inventoryManager.stockpiles.Count
+	else	
+		csInventoryIndex = 0
 	end
 
 

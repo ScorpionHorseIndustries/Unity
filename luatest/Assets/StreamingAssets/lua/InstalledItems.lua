@@ -181,13 +181,30 @@ function OnCreate_MiningController(item)
 		
 	elseif (tile.type.minedProduct == "inv::coal") then
 		item.workRecipeName = "recipe::installed::mining_controller::work::coal"
+		item.workCondition = "GetTotalQty(inv__coal) < GetMaxQty(inv__coal)"
 	elseif (tile.type.minedProduct == "inv::iron_ore") then
 		item.workRecipeName = "recipe::installed::mining_controller::work::iron"
+		item.workCondition = "GetTotalQty(inv__iron_ore) < GetMaxQty(inv__iron_ore)"
 	elseif (tile.type.minedProduct == "inv::copper_ore") then
 		item.workRecipeName = "recipe::installed::mining_controller::work::copper"
+		item.workCondition = "GetTotalQty(inv__copper_ore) < GetMaxQty(inv__copper_ore)"
 	end
 	
 
+end
+
+function OnCreate_Quarry(item)
+	local tile = item.tile
+	if (tile.type.minedProduct == nil) then
+		item.workRecipeName = "";
+		
+	elseif (tile.type.minedProduct == "inv::sand") then
+		item.workRecipeName = "recipe::installed::quarry::work::sand"
+		item.workCondition = "GetTotalQty(inv__coal) < GetMaxQty(inv__coal)"
+	elseif (tile.type.minedProduct == "inv::stone_slabs") then
+		item.workRecipeName = "recipe::installed::quarry::work::stone_slabs"
+		item.workCondition = "GetTotalQty(inv__stone_slabs) < GetMaxQty(inv__stone_slabs)"
+	end	
 end
 
 
@@ -199,14 +216,19 @@ function OnCreate_MiningSpot(item)
 		
 	elseif (tile.type.minedProduct == "inv::coal") then
 		item.workRecipeName = "recipe::installed::mining_spot::work::coal"
+		item.workCondition = "GetTotalQty(inv__coal) < GetMaxQty(inv__coal)"
 	elseif (tile.type.minedProduct == "inv::iron_ore") then
 		item.workRecipeName = "recipe::installed::mining_spot::work::iron"
+		item.workCondition = "GetTotalQty(inv__iron_ore) < GetMaxQty(inv__iron_ore)"
 	elseif (tile.type.minedProduct == "inv::copper_ore") then
 		item.workRecipeName = "recipe::installed::mining_spot::work::copper"
+		item.workCondition = "GetTotalQty(inv__copper_ore) < GetMaxQty(inv__copper_ore)"
 	elseif (tile.type.minedProduct == "inv::sand") then
 		item.workRecipeName = "recipe::installed::mining_spot::work::sand"
+		item.workCondition = "GetTotalQty(inv__sand) < GetMaxQty(inv__sand)"
 	elseif (tile.type.minedProduct == "inv::stone_slabs") then
 		item.workRecipeName = "recipe::installed::mining_spot::work::stone"
+		item.workCondition = "GetTotalQty(inv__stone_slabs) < GetMaxQty(inv__stone_slabs)"
 	end
 	
 

@@ -162,11 +162,13 @@
     <Compile Include="Assets\Scripts\Paths\PathFinder.cs" />
     <Compile Include="Assets\Scripts\Paths\PathNode.cs" />
     <Compile Include="Assets\Scripts\Paths\TileNodeMap.cs" />
+    <Compile Include="Assets\Scripts\Paths\TileNodePathAStar.cs" />
     <Compile Include="Assets\Scripts\Paths\TilePathAStar.cs" />
     <Compile Include="Assets\Scripts\Scriptables\scroItems.cs" />
     <Compile Include="Assets\Scripts\shaders\PaletteSwapLookup.cs" />
     <Compile Include="Assets\Scripts\Utils\FastNoise.cs" />
     <Compile Include="Assets\Scripts\Utils\Funcs.cs" />
+    <Compile Include="Assets\Scripts\Utils\Heap.cs" />
     <Compile Include="Assets\Scripts\Utils\ItemParameters.cs" />
     <Compile Include="Assets\Scripts\Utils\LuaFunctionList.cs" />
     <Compile Include="Assets\Scripts\Utils\MapGenerator.cs" />
@@ -194,6 +196,7 @@
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\tree\tree_decon.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\shipping_station\shipping_station_work.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\atm.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\sawmill\sawmill_work_planks.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\solar_panel.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\shipping_station.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\packing_station\packing_station_work_basic.json" />
@@ -221,6 +224,7 @@
     <None Include="Assets\StreamingAssets\data\InventoryItems\copper_wire.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\mining_spot\mining_spot_decon.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\robo_pod\robo_pod_work.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\quarry\quarry_build.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\components.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\atm\atm_build.json" />
     <None Include="Assets\StreamingAssets\data\TileTypes\stone_iron.json" />
@@ -228,8 +232,10 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\StreamingAssets\data\TileTypes\snow.json" />
     <None Include="Assets\StreamingAssets\images\inventory_items\plates.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\sawmill\fabricator_decon.json" />
     <None Include="Assets\StreamingAssets\data\TileTypes\stone_coal.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\recycler\recycler_work.json" />
+    <None Include="Assets\StreamingAssets\data\settings\settings.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\solar_panel\solar_panel_decon.json" />
     <None Include="Assets\StreamingAssets\data\animations\basic_robot_walk.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\robo_pod\robo_pod_decon.json" />
@@ -255,7 +261,7 @@
     <None Include="Assets\StreamingAssets\data\TileTypes\dirt_coal.json" />
     <None Include="Assets\StreamingAssets\data\TileTypes\bedrock.json" />
     <None Include="Assets\animation\shaderImageEffect.shader" />
-    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\quarry\quarry_work.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\quarry\quarry_work_stone.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\wood_planks.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\furnace\furnace_work_copper.json" />
     <None Include="Assets\StreamingAssets\data\InventoryItems\stone_slabs.json" />
@@ -265,6 +271,7 @@
     <None Include="Assets\StreamingAssets\data\InstalledItems\tree.json" />
     <None Include="Assets\StreamingAssets\data\InstalledItems\wall.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\atm\atm_work.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\quarry\quarry_decon.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\tree\tree_build.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\atm\atm_decon.json" />
     <None Include="Assets\StreamingAssets\images\installed_items\atm.json" />
@@ -272,6 +279,7 @@
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\shipping_station\shipping_station_build.json" />
     <None Include="Assets\StreamingAssets\data\TileTypes\stone.json" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+    <None Include="Assets\StreamingAssets\data\InstalledItems\Sawmill.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\mining_spot\mining_spot_work_copper.json" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\organic_trash\organic_trash_decon.json" />
@@ -285,6 +293,7 @@
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\fabricator\fab_work_copper_wire.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\mining_spot\mining_spot_work_sand.json" />
     <None Include="Assets\StreamingAssets\lua\InstalledItems.lua" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\quarry\quarry_work_sand.json" />
     <None Include="Assets\StreamingAssets\images\tiles\tiles.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\tree\sapling_decon.json" />
     <None Include="Assets\StreamingAssets\lua\entities\chicken.lua" />
@@ -346,6 +355,7 @@
     <None Include="Assets\animation\PaletteSwapLookup.shader" />
     <None Include="Assets\StreamingAssets\data\TileTypes\concrete.json" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\fabricator\fab_work_consumer_electronics.json" />
+    <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\sawmill\sawmill_build.json" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\Kenney\Spritesheet\spritesheetInfo.txt" />
     <None Include="Assets\StreamingAssets\data\Recipes\InstalledItems\furnace\furnace_work_sand.json" />

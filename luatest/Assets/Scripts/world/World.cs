@@ -42,12 +42,12 @@ namespace NoYouDoIt.TheWorld {
     public float oreZ { get; private set; }
 
     //testing
-    public static readonly int NUMBER_OF_ROBOTS = 6;
+    public static readonly int NUMBER_OF_ROBOTS = Funcs.GetSettingInt("number_of_robots");
 
-    public static readonly int WORLD_WIDTH = 4;
-    public static readonly int WORLD_HEIGHT = 4;
+    public static readonly int WORLD_WIDTH = Funcs.GetSettingInt("world_width");
+    public static readonly int WORLD_HEIGHT = Funcs.GetSettingInt("world_height");
 
-    public static readonly int M_M_MAXIMUM_TRASH = 11;
+    //public static readonly int M_M_MAXIMUM_TRASH = 11;
 
     public void OnInventoryItemChangedOnTile(Tile tile) {
       if (cbTileInventoryItemChangedOnTile != null) {
@@ -105,15 +105,24 @@ namespace NoYouDoIt.TheWorld {
     public TileNodeMap nodeMap;
 
     public string LuaString(string code) {
-      Debug.Log("lua code: " + code);
-      System.Object[] result = lua.DoString(code);
+      try {
+        System.Object[] result = lua.DoString(code);
+        foreach (System.Object o in result) {
+          Debug.Log(o.ToString());
+        }
 
+        return result[0].ToString();
 
-      foreach (System.Object o in result) {
-        Debug.Log(o.ToString());
+      } catch (Exception e) {
+        Debug.Log(e.Message);
+        
       }
 
-      return result[0].ToString();
+      return "an error occurred";
+      
+
+
+
     }
 
     public Room outside {
@@ -316,7 +325,7 @@ namespace NoYouDoIt.TheWorld {
       UnityEngine.Random.InitState(seed.GetHashCode());
       xSeed = UnityEngine.Random.Range(-10f, 10f);
       ySeed = UnityEngine.Random.Range(-10f, 10f);
-      noiseFactor = UnityEngine.Random.Range(0.01f, 0.1f);
+      noiseFactor = Funcs.GetSettingFloat("noise_factor");
       oreZ = UnityEngine.Random.Range(0f, 10f);
 
 
@@ -849,57 +858,57 @@ import 'NoYouDoIt.DataModels'
 
     //------------------------------------TILES--------------------------------------
 
-    public void RandomiseTiles() {
-      //Debug.Log("Randomise Tiles");
-      //float xo = xSeed;// UnityEngine.Random.Range(-10, 10);
-      //float yo = ySeed; // UnityEngine.Random.Range(-10, 10);
-      //float xx = 0;
-      //float yy = 0;
-      //for (int x = 0; x < width; x += 1) {
-      //  xx = ((float)x) * noiseFactor;
-      //  for (int y = 0; y < height; y += 1) {
-      //    yy = ((float)y) * noiseFactor;
-      //    //Tile t = tiles[x, y];
-      //    ////if (UnityEngine.Random.Range(0,2) == 0)
-      //    //float f = Mathf.PerlinNoise(xx + xo, yy + yo);
-      //    //TileType tt = TileType.TYPES["empty"];
-      //    //foreach (string k in TileType.TYPES.Keys) {
-      //    //  TileType tempT = TileType.TYPES[k];
+    //public void RandomiseTiles() {
+    //  //Debug.Log("Randomise Tiles");
+    //  //float xo = xSeed;// UnityEngine.Random.Range(-10, 10);
+    //  //float yo = ySeed; // UnityEngine.Random.Range(-10, 10);
+    //  //float xx = 0;
+    //  //float yy = 0;
+    //  //for (int x = 0; x < width; x += 1) {
+    //  //  xx = ((float)x) * noiseFactor;
+    //  //  for (int y = 0; y < height; y += 1) {
+    //  //    yy = ((float)y) * noiseFactor;
+    //  //    //Tile t = tiles[x, y];
+    //  //    ////if (UnityEngine.Random.Range(0,2) == 0)
+    //  //    //float f = Mathf.PerlinNoise(xx + xo, yy + yo);
+    //  //    //TileType tt = TileType.TYPES["empty"];
+    //  //    //foreach (string k in TileType.TYPES.Keys) {
+    //  //    //  TileType tempT = TileType.TYPES[k];
 
-      //    //  if (tempT.name != "empty") {
-      //    //    if (f >= tempT.rangeLow && f < tempT.rangeHigh) {
-      //    //      t.SetType(tempT);
-      //    //      break;
-      //    //    }
-      //    //  }
+    //  //    //  if (tempT.name != "empty") {
+    //  //    //    if (f >= tempT.rangeLow && f < tempT.rangeHigh) {
+    //  //    //      t.SetType(tempT);
+    //  //    //      break;
+    //  //    //    }
+    //  //    //  }
 
-      //    //}
-      //  }
+    //  //    //}
+    //  //  }
 
 
-      //}
-    }
+    //  //}
+    //}
 
-    public void PlaceTrash() {
-      //int countOfTrash = trashInstances.Count;
-      if (trashPrototypes.Count > 0) {
-        int attempts = 0;
-        int countAdd = 0;
-        while (countAdd < M_M_MAXIMUM_TRASH && attempts < 100) {
-          attempts += 1;
-          int x = UnityEngine.Random.Range(0, width);
-          int y = UnityEngine.Random.Range(0, height);
+    //public void PlaceTrash() {
+    //  //int countOfTrash = trashInstances.Count;
+    //  if (trashPrototypes.Count > 0) {
+    //    int attempts = 0;
+    //    int countAdd = 0;
+    //    while (countAdd < M_M_MAXIMUM_TRASH && attempts < 100) {
+    //      attempts += 1;
+    //      int x = UnityEngine.Random.Range(0, width);
+    //      int y = UnityEngine.Random.Range(0, height);
 
-          Tile tile = GetTileAt(x, y);
-          InstalledItem item = trashPrototypes[UnityEngine.Random.Range(0, trashPrototypes.Count)];
-          if (isInstalledItemPositionValid(this, item.type, tile)) {
-            PlaceInstalledItem(item.type, tile);
-            countAdd += 1;
+    //      Tile tile = GetTileAt(x, y);
+    //      InstalledItem item = trashPrototypes[UnityEngine.Random.Range(0, trashPrototypes.Count)];
+    //      if (isInstalledItemPositionValid(this, item.type, tile)) {
+    //        PlaceInstalledItem(item.type, tile);
+    //        countAdd += 1;
 
-          }
-        }
-      }
-    }
+    //      }
+    //    }
+    //  }
+    //}
 
 
     ////inventory items

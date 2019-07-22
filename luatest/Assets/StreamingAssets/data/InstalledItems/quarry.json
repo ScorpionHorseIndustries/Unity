@@ -10,18 +10,22 @@
   "build": true,
   "neighbourTypes": [],
   "enclosesRoom": false,
-  "recipe": "recipe::installed::mining_controller::build",
-  "deconstructRecipe": "recipe::installed::mining_controller::decon",
+  "recipe": "recipe::installed::quarry::build",
+  "deconstructRecipe": "recipe::installed::quarry::decon",
   "inventorySlots": 0,
   "width": 3,
   "height": 3,
   "workTileOffsetX": 2,
   "updateActionCountDown": 3,
-  "workRecipe": "recipe::installed::quarry::work",
+  "onCreate": "OnCreate_Quarry",
   "workstation": true,
   "updateAction": "OnUpdate_Workstation",
   "editOnClick": true,
-  "workCondition": "GetStockpileQty(inv__stone_slabs) < 32",
-  "powerUsed": 0.3
+  
+  "powerUsed": 0.3,
+  "canSpawnOn": [
+    "stone",
+    "sand"
+  ]
 
 }

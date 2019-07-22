@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using NoYouDoIt.TheWorld;
 using NoYouDoIt.Utils;
 namespace NoYouDoIt.NYDIPaths {
+
+
+
+
   public class TilePathAStar {
 
     protected World world;

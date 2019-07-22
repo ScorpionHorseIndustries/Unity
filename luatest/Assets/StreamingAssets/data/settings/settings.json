@@ -1,0 +1,8 @@
+﻿{
+  "world_width": 8,
+  "world_height": 8,
+  "number_of_robots": 8,
+  "noise_factor": 0.01,
+  "chunk_width": 16,
+  "chunk_height": 16
+}

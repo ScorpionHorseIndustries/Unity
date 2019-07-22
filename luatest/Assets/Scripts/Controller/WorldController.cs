@@ -291,9 +291,9 @@ namespace NoYouDoIt.Controller {
       eventSystem = EventSystem.current;
       timers = new List<NYDITimer>();
 
-      timers.Add(new NYDITimer("updateMoney", 1, 1.5f, UpdateMoney));
-      timers.Add(new NYDITimer("updateStockPile", 2, 3, UpdateStockPile));
-      timers.Add(new NYDITimer("checkStockPile", 2, 5, CheckStockPile));
+      timers.Add(new NYDITimer("updateMoney", 3, UpdateMoney));
+      timers.Add(new NYDITimer("updateStockPile", 2.5f, UpdateStockPile));
+      timers.Add(new NYDITimer("checkStockPile", 1, CheckStockPile));
 
       positiveBalanceColourString = "#" + ColorUtility.ToHtmlStringRGB(positiveBalanceColour);
       negativeBalanceColourString = "#" + ColorUtility.ToHtmlStringRGB(negativeBalanceColour);
@@ -516,33 +516,8 @@ namespace NoYouDoIt.Controller {
     // Update is called once per frame
     void Update() {
 
-      for (int i = 0; i < timers.Count; i += 1) {
-        timers[i].Update(Time.deltaTime);
-      }
 
 
-      //if (actualReady < EXPECTED) {
-      //  Debug.Log("Ready: " + actualReady);
-      //  return;
-      //} else {
-      //  if (!initDone) {
-      //    cbReady("hi");
-      //    initDone = true;
-      //  }
-      //}
-
-      for (int i = tempText.Count - 1; i >= 0; i -= 1) {
-        GameObject go = tempText[i];
-        SetSortingLayer ssl = go.GetComponentInChildren<SetSortingLayer>();
-        float a = Mathf.Sin(ssl.lifeTime);
-        go.transform.Translate(0, 0.1f * a, 0);
-        ssl.lifeTime -= Time.deltaTime;
-
-        if (ssl.lifeTime <= 0) {
-          SimplePool.Despawn(go);
-          tempText.RemoveAt(i);
-        }
-      }
 
       switch (gameState) {
         case GAME_STATE.PLAY:
@@ -550,6 +525,24 @@ namespace NoYouDoIt.Controller {
           if (countdown < 0) {
             //addCurrency(UnityEngine.Random.Range(-1f, 4f));
             countdown = 2;
+          }
+
+          for (int i = 0; i < timers.Count; i += 1) {
+            timers[i].Update(Time.deltaTime);
+          }
+
+
+          for (int i = tempText.Count - 1; i >= 0; i -= 1) {
+            GameObject go = tempText[i];
+            SetSortingLayer ssl = go.GetComponentInChildren<SetSortingLayer>();
+            float a = Mathf.Sin(ssl.lifeTime);
+            go.transform.Translate(0, 0.1f * a, 0);
+            ssl.lifeTime -= Time.deltaTime;
+
+            if (ssl.lifeTime <= 0) {
+              SimplePool.Despawn(go);
+              tempText.RemoveAt(i);
+            }
           }
 
 

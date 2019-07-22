@@ -1,0 +1,14 @@
+{
+  "name": "recipe::installed::sawmill::decon",
+  "niceName" : "decon",
+  "buildTime": 1,
+  "products": [
+    {
+      "name": "inv::steel_plates",
+      "qtyMin": 1,
+      "qtyMax": 4,
+      "chance": 1
+    }
+ 
+  ]
+}

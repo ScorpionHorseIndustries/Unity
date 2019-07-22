@@ -13,8 +13,8 @@ namespace NoYouDoIt.TheWorld {
   using NoYouDoIt.DataModels;
   using NoYouDoIt.Controller;
   public class TileChunk : IXmlSerializable {
-    public static readonly int CHUNK_WIDTH = 8;
-    public static readonly int CHUNK_HEIGHT = 8;
+    public static readonly int CHUNK_WIDTH = Funcs.GetSettingInt("chunk_width");
+    public static readonly int CHUNK_HEIGHT = Funcs.GetSettingInt("chunk_height");
     public Tile[,] tiles;
     protected World world;
     public int x { get; private set; }

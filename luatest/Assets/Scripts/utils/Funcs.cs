@@ -10,6 +10,75 @@ using NoYouDoIt.TheWorld;
 namespace NoYouDoIt.Utils {
   public static class Funcs {
 
+    static Funcs() {
+      LoadSettings();
+
+    }
+    private static Dictionary<string, string> settings;
+    public static string GetSettingString(string name) {
+      string n = name.ToLower();
+      return settings[n];
+    }
+
+    public static bool GetSettingBool(string name) {
+      string n = name.ToLower();
+      bool result;
+      if (bool.TryParse(settings[n], out result)) {
+        return result;
+      } else {
+        return false;
+      }
+    }
+
+    public static float GetSettingFloat(string name) {
+      string n = name.ToLower();
+      float result;
+      if (float.TryParse(settings[n], out result)) {
+        return result;
+      } else {
+        return 0;
+      }
+    }
+
+    public static int GetSettingInt(string name) {
+      string n = name.ToLower();
+      int result;
+      if (int.TryParse(settings[n], out result)) {
+        return result;
+      } else {
+        return 0;
+      }
+    }
+
+    public static void LoadSettings() {
+      settings = new Dictionary<string, string>();
+      string path = Path.Combine(Application.streamingAssetsPath, "data", "settings");
+
+      string[] files = Directory.GetFiles(path, "settings*.json");
+
+      foreach (string file in files) {
+
+
+        string json = File.ReadAllText(file);
+
+        JObject obj = JObject.Parse(json);
+
+        foreach (JProperty jp in obj.Properties()) {
+         settings[jp.Name.ToLower()] = jp.Value.ToString();
+
+        }
+
+
+
+        //foreach (var kvp in json.Children()) {
+
+        //  Debug.Log(kvp + " = [" + kvp.Path + "]:[" + kvp.Children()[kvp.Path] + "]");
+
+
+        //}
+      }
+
+    }
 
     public static string GetSpriteDirection(float px, float py, float nx, float ny) {
       float xx = nx - px;
@@ -39,7 +108,7 @@ namespace NoYouDoIt.Utils {
     public static string GetLuaVariableName(string name) {
       string s = name;
       s = s.Replace(':', '_');
-      
+
 
       return s;
     }
@@ -49,8 +118,8 @@ namespace NoYouDoIt.Utils {
       string output = "";
 
       string p = property;
-      if (p.Length > width /2) {
-        p = p.Substring(0, width/2);
+      if (p.Length > width / 2) {
+        p = p.Substring(0, width / 2);
       }
 
       string pad = "";
@@ -60,7 +129,7 @@ namespace NoYouDoIt.Utils {
       if (v.Length > width / 2) {
         v = v.Substring(0, width / 2);
       }
-      
+
       while ((p + pad + v).Length < width) {
         pad += padding;
       }
@@ -79,7 +148,7 @@ namespace NoYouDoIt.Utils {
         padding = padding.Substring(0, 1);
       }
 
-      foreach(string s in args) {
+      foreach (string s in args) {
         string ss = s;
         if (ss.Length > width) {
           ss = s.Substring(0, width);

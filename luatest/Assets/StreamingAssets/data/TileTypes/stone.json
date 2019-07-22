@@ -19,6 +19,6 @@
   ],
   "build": true,
   "name": "stone",
-  
+  "mindedProduct": "inv::stone_slabs",
   "height": 500
 }

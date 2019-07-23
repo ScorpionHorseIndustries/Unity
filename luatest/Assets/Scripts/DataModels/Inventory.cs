@@ -214,6 +214,12 @@ namespace NoYouDoIt.DataModels {
       }
       qtyAccepted = qtyToAllocted - qtyRemaining;
 
+      if (IsStockPile) {
+        World.current.inventoryManager.AddAllocatedStockpileQty(type, qtyAccepted);
+      } else if (tile != null) {
+        World.current.inventoryManager.AddAllocatedLooseQty(type, qtyAccepted);
+      }
+
       return qtyAccepted;
 
     }
@@ -227,7 +233,15 @@ namespace NoYouDoIt.DataModels {
         qtyRemaining -= tempQ;
       }
 
+
+
       qtyDeallocated = qtyRequested - qtyRemaining;
+
+      if (IsStockPile) {
+        World.current.inventoryManager.AddAllocatedStockpileQty(type, -qtyDeallocated);
+      } else if (tile != null) {
+        World.current.inventoryManager.AddAllocatedLooseQty(type, -qtyDeallocated);
+      }
 
       return qtyDeallocated;
 
@@ -337,8 +351,10 @@ namespace NoYouDoIt.DataModels {
 
       if (IsStockPile) {
         World.current.inventoryManager.AddStockpileQty(type, -qtyGiven);
+        World.current.inventoryManager.AddAllocatedStockpileQty(type, -qtyGiven);
       } else if (tile != null) {
         World.current.inventoryManager.AddLooseQty(type, -qtyGiven);
+        World.current.inventoryManager.AddAllocatedLooseQty(type, -qtyGiven);
       }
       return qtyGiven;
     }

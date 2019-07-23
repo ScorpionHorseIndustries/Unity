@@ -28,6 +28,7 @@ namespace NoYouDoIt.DataModels {
     public string name { get; private set; }
     public int currentQty;
     public int maxQty;
+    public int allocatedQty;
     public bool all = false;
     public int stackSize { get; private set; }
     public bool pendingWork = false;
@@ -118,6 +119,20 @@ namespace NoYouDoIt.DataModels {
         stockpileSettings[name].currentQty += qty;
       }
     }
+    public void AddAllocatedStockpileQty(string name, int qty) {
+      if (stockpileSettings.ContainsKey(name)) {
+        stockpileSettings[name].allocatedQty+= qty;
+      }
+    }
+
+    public void AddAllocatedLooseQty(string name, int qty) {
+      if (looseQtys.ContainsKey(name)) {
+        looseQtys[name].allocatedQty += qty;
+        if (looseQtys[name].allocatedQty < 0) {
+          looseQtys[name].allocatedQty = 0;
+        }
+      }
+    }
 
     public void AddLooseQty(string name, int qty) {
       if (looseQtys.ContainsKey(name)) {
@@ -166,7 +181,7 @@ namespace NoYouDoIt.DataModels {
 
     public int GetLooseQty(string name) {
       if (looseQtys.ContainsKey(name)) {
-        return looseQtys[name].currentQty;
+        return looseQtys[name].currentQty - looseQtys[name].allocatedQty;
       }
       return 0;
     }
@@ -180,7 +195,7 @@ namespace NoYouDoIt.DataModels {
 
     public int GetStockpileQty(string name) {
       if (stockpileSettings.ContainsKey(name)) {
-        return stockpileSettings[name].currentQty;
+        return stockpileSettings[name].currentQty - stockpileSettings[name].allocatedQty;
       }
       return 0;
       //int qty = 0;

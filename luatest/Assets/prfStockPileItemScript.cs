@@ -111,6 +111,6 @@ public class prfStockPileItemScript : MonoBehaviour {
 
   internal void SetCurrentQty(int v) {
     this.currentQty = v;
-    txtCurrentQty.text = this.currentQty.ToString();
+    txtCurrentQty.text = stockPileSetting.allocatedQty + "/" + stockPileSetting.currentQty;//this.currentQty.ToString();
   }
 }

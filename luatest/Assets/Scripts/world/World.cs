@@ -246,35 +246,41 @@ namespace NoYouDoIt.TheWorld {
       }
 
       TileChunk ch = GetChunk(0, 0);
-      List<string> itemTypes = InventoryItem.GetAllPrototypeNames();
-      for (int x = 0; x < TileChunk.CHUNK_WIDTH; x += 1) {
-        for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
+      if (Funcs.GetSettingBool("add_starting_items")) {
+        
+        List<string> itemTypes = InventoryItem.GetAllPrototypeNames();
+        for (int x = 0; x < TileChunk.CHUNK_WIDTH; x += 1) {
+          for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
 
-          if (itemTypes.Count == 0) break;
-          string itemType = itemTypes[0];
+            if (itemTypes.Count == 0) break;
+            string itemType = itemTypes[0];
 
-          Tile t = ch.GetTileAt(x, y);
-          if (t != null) {
-            if (t.AddToInventory(itemType, InventoryItem.GetStackSize(itemType)) > 0) {
+            Tile t = ch.GetTileAt(x, y);
+            if (t != null) {
+              if (t.AddToInventory(itemType, InventoryItem.GetStackSize(itemType)) > 0) {
 
-              itemTypes.RemoveAt(0);
+                itemTypes.RemoveAt(0);
+              }
+
             }
-
           }
         }
       }
 
-      for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
-        Tile a = ch.GetTileAt(2, y);
-        Tile b = ch.GetTileAt(3, y);
-        Tile c = ch.GetTileAt(4, y);
-        Tile d = ch.GetTileAt(5, y);
+      if (Funcs.GetSettingBool("add_starting_ores")) {
+        for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
+          Tile a = ch.GetTileAt(2, y);
+          Tile b = ch.GetTileAt(3, y);
+          Tile c = ch.GetTileAt(4, y);
+          Tile d = ch.GetTileAt(5, y);
 
-        a.SetType(TileType.TYPES["stone_coal"]);
-        b.SetType(TileType.TYPES["stone_iron"]);
-        c.SetType(TileType.TYPES["stone_copper"]);
-        d.SetType(TileType.TYPES["sand"]);
+          a.SetType(TileType.TYPES["stone_coal"]);
+          b.SetType(TileType.TYPES["stone_iron"]);
+          c.SetType(TileType.TYPES["stone_copper"]);
+          d.SetType(TileType.TYPES["sand"]);
+        }
       }
+
 
 
 
@@ -482,7 +488,7 @@ namespace NoYouDoIt.TheWorld {
 
     }
 
-    private void SetCurrentPower() {
+    private void UpdatePower() {
       currentPower = 0;
       usedPower = 0;
       foreach(InstalledItem item in powerGenerators) {
@@ -661,7 +667,7 @@ import 'NoYouDoIt.DataModels'
       //  Character c = characters[i];
       //  c.Update(deltaTime);
       //}
-      SetCurrentPower();
+      UpdatePower();
       inventoryManager.Update(deltaTime);
 
 

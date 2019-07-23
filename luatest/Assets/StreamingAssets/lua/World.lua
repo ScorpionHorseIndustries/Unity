@@ -23,9 +23,112 @@ function GetTotalQty(inventoryItemName)
 	return GetQty(inventoryItemName) + GetLooseQty(inventoryItemName)
 end
 
+
+function CheckStockpiles() 
+	
+	local spsList = World.current.inventoryManager.stockpileSettings.Values:GetEnumerator()
+	while spsList:MoveNext() do
+		local toCreate = nil
+		local sps = spsList.Current
+		local foundInv = nil
+		if (sps.currentQty < sps.maxQty and not sps.pendingWork) then
+			World.dbug("checking for " .. sps.name .. " c/m=" .. sps.currentQty .. "/" .. sps.maxQty)
+			local inventories = World.current.inventoryManager.stockpiles:GetEnumerator()
+			while inventories:MoveNext() do
+				local inventory = inventories.Current
+				if (inventory.tile.HasPendingWork == false) then
+
+					local tileQty = inventory:HowMany(sps.name)
+
+					World.dbug("\tchecking filled tile " .. inventory.tile.world_x .. "," .. inventory.tile.world_y .. " q=" .. tileQty)
+					if (tileQty > 0 and tileQty < sps.stackSize) then
+						foundInv = inventory
+
+						local looseQty = World.current.inventoryManager:GetLooseQty(sps.name)
+						
+						local qtyWanted = sps.maxQty - sps.currentQty
+						if (qtyWanted > sps.stackSize) then
+							qtyWanted = sps.stackSize
+						end
+
+						if (tileQty + qtyWanted > sps.stackSize) then
+							qtyWanted = sps.stackSize - tileQty
+						end
+
+						if (qtyWanted > looseQty) then
+							qtyWanted = looseQty
+						end
+						if (qtyWanted > 0) then
+							toCreate = {tile = inventory.tile, func = "SetHaul", name = sps.name, qty = qtyWanted}
+							sps.pendingWork = true
+							goto makework
+						end
+
+
+
+					
+					
+					end
+				end
+
+
+			end
+		
+
+			--look for empty
+			::checkforempty::
+			do -- limits scope
+				local e_inventories = World.current.inventoryManager.stockpiles:GetEnumerator()
+				while e_inventories:MoveNext() do
+					local e_inv = e_inventories.Current
+
+				
+
+					if (e_inv:IsEmpty() and e_inv.tile.HasPendingWork == false) then
+			
+
+						local looseQty = World.current.inventoryManager:GetLooseQty(sps.name)
+
+						World.dbug("\tchecking empty tile " .. e_inv.tile.world_x .. "," .. e_inv.tile.world_y .. " loose="..looseQty)
+						
+						local qtyWanted = sps.maxQty - sps.currentQty
+						if (qtyWanted > sps.stackSize) then
+							qtyWanted = sps.stackSize
+						end
+
+
+						if (qtyWanted > looseQty) then
+							qtyWanted = looseQty
+						end
+						if (qtyWanted > 0) then
+							toCreate = {tile = e_inv.tile, func = "SetHaul", name = sps.name, qty = qtyWanted}
+							sps.pendingWork = true
+							goto makework
+						end
+
+
+
+					end
+				end
+			end
+		end
+
+		--make work
+		::makework::
+		if (toCreate ~= nil) then
+			
+			WorkItem.MakeWorkItem(toCreate["tile"], toCreate["func"], toCreate["name"], toCreate["qty"])
+			goto finish
+		end
+		
+	end
+	::finish::
+
+end
+
 csInventoryIndex = 0
 
-function CheckStockpiles()
+function CheckStockpilesOld()
 
 	
 	local toCreate = {}

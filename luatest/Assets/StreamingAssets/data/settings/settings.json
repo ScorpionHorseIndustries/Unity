@@ -4,5 +4,7 @@
   "number_of_robots": 8,
   "noise_factor": 0.01,
   "chunk_width": 16,
-  "chunk_height": 16
+  "chunk_height": 16,
+  "add_starting_items": false,
+  "add_starting_ores": false
 }

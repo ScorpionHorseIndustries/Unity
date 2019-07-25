@@ -33,7 +33,7 @@ namespace NoYouDoIt.DataModels {
     public int stackSize { get; private set; }
     public bool pendingWork = false;
 
-    
+
 
 
     public StockPileSetting(InventoryItem item) {
@@ -48,12 +48,16 @@ namespace NoYouDoIt.DataModels {
     }
   }
 
+
+
   public class InventoryManager {
     //StockPileJob job;
     private World world;
 
     public Dictionary<string, StockPileSetting> stockpileSettings;
+    public NYDIList<StockPileSetting> StockpileSettingsList;
     public Dictionary<string, StockPileSetting> looseQtys;
+    public NYDIList<StockPileSetting> LooseSettingsList;
     private StockPileSetting[] stockpileSettingsArray;
     //private int spsIndex = 0;
 
@@ -62,6 +66,7 @@ namespace NoYouDoIt.DataModels {
     //public Dictionary<string, List<InventoryItem>> inventories;
     public List<Inventory> inventories;
     public List<Inventory> stockpiles;
+    public NYDIList<Inventory> stockpilesList;
     //private List<InventoryItem> items;
     public InventoryManager(World world) {
       this.world = world;
@@ -72,10 +77,14 @@ namespace NoYouDoIt.DataModels {
       //timers.Add(new NYDITimer("updateTimer", 2, UpdateStockPileSettings));
       timers.Add(new NYDITimer("setStockpiles", 5, UpdateStockPileList));
       stockpiles = new List<Inventory>();
+      stockpilesList = new NYDIList<Inventory>();
+
+      StockpileSettingsList = new NYDIList<StockPileSetting>();
+      LooseSettingsList = new NYDIList<StockPileSetting>();
     }
 
     public void UpdateStockPileList() {
-     // stockpiles = inventories.Where(e => e.IsStockPile).ToList<Inventory>();
+      // stockpiles = inventories.Where(e => e.IsStockPile).ToList<Inventory>();
     }
 
     public void RegisterStockpile(InstalledItem item) {
@@ -83,6 +92,7 @@ namespace NoYouDoIt.DataModels {
       if (!stockpiles.Contains(inv)) {
         stockpiles.Add(inv);
       }
+      stockpilesList.Add(inv);
 
 
     }
@@ -93,6 +103,7 @@ namespace NoYouDoIt.DataModels {
       if (stockpiles.Contains(inv)) {
         stockpiles.Remove(inv);
       }
+      stockpilesList.Remove(inv);
 
 
     }
@@ -121,7 +132,7 @@ namespace NoYouDoIt.DataModels {
     }
     public void AddAllocatedStockpileQty(string name, int qty) {
       if (stockpileSettings.ContainsKey(name)) {
-        stockpileSettings[name].allocatedQty+= qty;
+        stockpileSettings[name].allocatedQty += qty;
       }
     }
 
@@ -156,19 +167,23 @@ namespace NoYouDoIt.DataModels {
     }
 
     public void InitStockpile() {
+
       //job.naStockPileSettings = new NativeHashMap<int, int>();
       foreach (string name in InventoryItem.GetAllPrototypeNames()) {
         InventoryItem item = InventoryItem.GetPrototype(name);
 
         StockPileSetting sps = new StockPileSetting(item);
+
         stockpileSettings[name] = sps;
+        StockpileSettingsList.Add(sps);
         StockPileSetting loose = new StockPileSetting(item);
         looseQtys[name] = loose;
+        LooseSettingsList.Add(loose);
 
         //job.naStockPileSettings.TryAdd(sps.id, 0);
       }
       //stockpileSettingsArray = stockpileSettings.Values.ToArray();
-      
+
     }
 
     public void Update(float deltaTime) {
@@ -177,7 +192,7 @@ namespace NoYouDoIt.DataModels {
       }
 
 
-      }
+    }
 
     public int GetLooseQty(string name) {
       if (looseQtys.ContainsKey(name)) {
@@ -206,7 +221,7 @@ namespace NoYouDoIt.DataModels {
       //return qty;
     }
 
-    
+
     //public void UpdateStockPileSettings() {
     //  ////job.Schedule();
     //  //StockPileSetting sps = stockpileSettingsArray[spsIndex];

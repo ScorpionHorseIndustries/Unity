@@ -175,6 +175,7 @@
     <Compile Include="Assets\Scripts\Utils\MarketSim.cs" />
     <Compile Include="Assets\Scripts\Utils\MarketSimv2.cs" />
     <Compile Include="Assets\Scripts\Utils\NoiseWave.cs" />
+    <Compile Include="Assets\Scripts\Utils\NYDIList.cs" />
     <Compile Include="Assets\Scripts\Utils\SerializableDictionary.cs" />
     <Compile Include="Assets\Scripts\Utils\SetSortingLayer.cs" />
     <Compile Include="Assets\Scripts\Utils\SimplePool.cs" />

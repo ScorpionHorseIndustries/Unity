@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using NoYouDoIt.DataModels;
 using System;
+using NoYouDoIt.Utils;
+using NoYouDoIt.TheWorld;
 
 public class prfStockPileItemScript : MonoBehaviour {
 
@@ -22,6 +24,7 @@ public class prfStockPileItemScript : MonoBehaviour {
   private InventoryItem item;
   public int currentQty;
   StockPileSetting stockPileSetting;
+  StockPileSetting looseSetting;
 
   public int intValue = 32;
 
@@ -54,7 +57,7 @@ public class prfStockPileItemScript : MonoBehaviour {
     itemName = this.item.type;
     intValue = sps.maxQty;
     stringValue = intValue.ToString();
-    
+    looseSetting = World.current.inventoryManager.looseQtys[sps.name];
     Init();
   }
 
@@ -111,6 +114,9 @@ public class prfStockPileItemScript : MonoBehaviour {
 
   internal void SetCurrentQty(int v) {
     this.currentQty = v;
-    txtCurrentQty.text = stockPileSetting.allocatedQty + "/" + stockPileSetting.currentQty;//this.currentQty.ToString();
+
+
+    txtCurrentQty.text = Funcs.PadPair(14, "loose", looseSetting.allocatedQty + "/" + looseSetting.currentQty) + "-" +
+      Funcs.PadPair(14,"stockpile",stockPileSetting.allocatedQty + "/" + stockPileSetting.currentQty);//this.currentQty.ToString();
   }
 }

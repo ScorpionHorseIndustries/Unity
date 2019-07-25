@@ -39,6 +39,7 @@ namespace NoYouDoIt.DataModels {
     public void Unassign() {
       if (this.assignedRobot != null) {
         //Debug.Log("Unassigning assigned worker");
+        this.assignedRobot.work = null;
         this.assignedRobot.NewState = "wander";
         this.assignedRobot = null;
       } else {

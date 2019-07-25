@@ -258,7 +258,12 @@ namespace NoYouDoIt.TheWorld {
         float ws = type.movementFactor;
 
         if (installedItem != null) {
-          ws *= installedItem.movementFactor;
+          if (this != installedItem.GetWorkSpot()) {
+
+          } else {
+            ws *= installedItem.movementFactor;
+          }
+          
 
         } else if (inventory != null && !inventory.IsEmpty()) {
           ws *= 0.9f;

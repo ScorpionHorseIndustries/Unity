@@ -1,13 +1,49 @@
 {
-      "name": "recipe::installed::crate::decon",
-      "niceName" : "decon",
-      "buildTime": 1,
-      "products": [
-        {
-          "name": "inv::wood_planks",
-          "qtyMin": 1,
-          "qtyMax": 3,
-          "chance": 1
-        }
-      ]
+  "name": "recipe::installed::crate::decon",
+  "niceName": "decon",
+  "buildTime": 1,
+  "products": [
+    {
+      "name": "inv::wood_planks",
+      "qtyMin": 1,
+      "qtyMax": 3,
+      "chance": 1
+    },
+    {
+      "name": "inv::steel_plates",
+      "qtyMin": 1,
+      "qtyMax": 3,
+      "chance": 0.1
+    },
+    {
+      "name": "inv::copper_plates",
+      "qtyMin": 1,
+      "qtyMax": 3,
+      "chance": 0.1
+    },
+    {
+      "name": "inv::processor",
+      "qtyMin": 1,
+      "qtyMax": 1,
+      "chance": 0.02
+    },
+    {
+      "name": "inv::circuit_boards",
+      "qtyMin": 1,
+      "qtyMax": 2,
+      "chance": 0.05
+    },
+    {
+      "name": "inv::copper_wire",
+      "qtyMin": 1,
+      "qtyMax": 8,
+      "chance": 0.2
+    },
+    {
+      "name": "inv::components",
+      "qtyMin": 1,
+      "qtyMax": 8,
+      "chance": 0.1
     }
+  ]
+}

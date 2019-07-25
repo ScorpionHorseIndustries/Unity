@@ -4,6 +4,7 @@
 --------------------------------RemoveInstalledItem------------------------------------
 
 function SetRemoveInstalledItem(work) 
+	work.canWorkFromNeighbourTiles = true
 	work.OnWork:Add("OnWork_InstalledItem")
 	work.OnComplete:Add("OnComplete_AnyPre")
 	work.OnComplete:Add("OnComplete_RemoveInstalledItem")

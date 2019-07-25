@@ -37,7 +37,7 @@ namespace NoYouDoIt.DataModels {
     }
 
     private void SetOutput() {
-      if (UnityEngine.Random.Range(0, 1) < chance) {
+      if (UnityEngine.Random.Range(0.0f, 1.0f) < chance) {
         switch (type) {
           case RECIPE_PRODUCT_TYPE.ENTITY:
           case RECIPE_PRODUCT_TYPE.INVENTORY_ITEM:

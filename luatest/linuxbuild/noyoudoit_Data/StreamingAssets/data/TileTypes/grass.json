@@ -1,0 +1,24 @@
+{
+  "movementFactor": 0.6,
+  "varieties": [
+    {
+      "name": "grass_iron",
+      "zOffsetB": 60,
+      "zOffsetA": 50
+    },
+    {
+      "name": "grass_copper",
+      "zOffsetB": 110,
+      "zOffsetA": 100
+    },
+    {
+      "name": "grass_coal",
+      "zOffsetB": 30,
+      "zOffsetA": 20
+    }
+  ],
+  "build": true,
+  "name": "grass",
+  
+  "height": 250
+}

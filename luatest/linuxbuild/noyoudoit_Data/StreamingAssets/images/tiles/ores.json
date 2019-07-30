@@ -1,0 +1,127 @@
+{
+	"ppu" : 32,
+	"width" : 32,
+	"height" : 32,
+	"sprites" : [
+	{
+		"name" : "iron_0",
+		"x" : 0,
+		"y" : 0
+	},
+	{
+		"name" : "iron_1",
+		"x" : 1,
+		"y" : 0
+	},
+	{
+		"name" : "iron_2",
+		"x" : 2,
+		"y" : 0
+	},
+	{
+		"name" : "iron_3",
+		"x" : 3,
+		"y" : 0
+	},
+	{
+		"name" : "iron_4",
+		"x" : 4,
+		"y" : 0
+	},
+	{
+		"name" : "iron_5",
+		"x" : 5,
+		"y" : 0
+	},
+		{
+		"name" : "iron_6",
+		"x" : 6,
+		"y" : 0
+	},	
+		{
+		"name" : "iron_7",
+		"x" : 7,
+		"y" : 0
+	},
+	{
+		"name" : "copper_0",
+		"x" : 0,
+		"y" : 1
+	},
+	{
+		"name" : "copper_1",
+		"x" : 1,
+		"y" : 1
+	},
+	{
+		"name" : "copper_2",
+		"x" : 2,
+		"y" : 1
+	},
+	{
+		"name" : "copper_3",
+		"x" : 3,
+		"y" : 1
+	},
+	{
+		"name" : "copper_4",
+		"x" : 4,
+		"y" : 1
+	},
+	{
+		"name" : "copper_5",
+		"x" : 5,
+		"y" : 1
+	},
+		{
+		"name" : "copper_6",
+		"x" : 6,
+		"y" : 1
+	},	
+		{
+		"name" : "copper_7",
+		"x" : 7,
+		"y" : 1
+	},
+	{
+		"name" : "coal_0",
+		"x" : 0,
+		"y" : 2
+	},
+	{
+		"name" : "coal_1",
+		"x" : 1,
+		"y" : 2
+	},
+	{
+		"name" : "coal_2",
+		"x" : 2,
+		"y" : 2
+	},
+	{
+		"name" : "coal_3",
+		"x" : 3,
+		"y" : 2
+	},
+	{
+		"name" : "coal_4",
+		"x" : 4,
+		"y" : 2
+	},
+	{
+		"name" : "coal_5",
+		"x" : 5,
+		"y" : 2
+	},
+		{
+		"name" : "coal_6",
+		"x" : 6,
+		"y" : 2
+	},	
+		{
+		"name" : "coal_7",
+		"x" : 7,
+		"y" : 2
+	}
+	]
+	}

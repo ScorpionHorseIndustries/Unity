@@ -1,0 +1,76 @@
+{
+	"ppu" : 32,
+	"width" : 32,
+	"height" : 32,
+	"paletteSwaps" :  [
+		{
+		"input" : 0 ,
+		"output" : ["0x000000"]
+		},
+		{
+		"input" : 102,
+		"output" : ["0x8d5524","0xc68642","0xe0ac69","0xf1c27d","0xffdbac"]
+		},
+		{
+		"input" : 153,
+		"output" : [ 
+			"0xfff05a","0xffd25a","0xffaa5a",
+			"0xff785a", "0x191919","0x142a32",
+			"0x31534f","0x5caa6e","0xeeefc3",
+			"0xcd4c31"]
+		},
+		{
+		"input" : 204,
+		"output" : [ 
+			"0xfff05a","0xffd25a","0xffaa5a",
+			"0xff785a", "0x191919","0x142a32",
+			"0x31534f","0x5caa6e","0xeeefc3",
+			"0xcd4c31"]
+		}
+	],	
+	"sprites" : [
+		{
+		"name" : "corpse_0",
+		"x":0,
+		"y":3
+		},
+		{
+		"name" : "corpse_1",
+		"x":1,
+		"y":3
+		},
+		{
+		"name" : "corpse_2",
+		"x":0,
+		"y":2
+		},
+		{
+		"name" : "corpse_3",
+		"x":1,
+		"y":2
+		},
+		{
+		"name" : "corpse_4",
+		"x":2,
+		"y":3
+		},
+		{
+		"name" : "corpse_5",
+		"x":2,
+		"y":3
+		},
+		{
+		"name" : "corpse_6",
+		"x":3,
+		"y":2
+		},
+		{
+		"name" : "corpse_7",
+		"x":3,
+		"y":2
+		}
+		
+	
+	]
+}
+

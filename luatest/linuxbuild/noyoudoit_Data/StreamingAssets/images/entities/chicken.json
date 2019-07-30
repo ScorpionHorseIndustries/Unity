@@ -1,0 +1,87 @@
+﻿{
+  "ppu": 32,
+  "width": 32,
+  "height": 32,
+  "sprites": [
+    {
+      "name": "chicken_west",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "chicken_west_0",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "name": "chicken_west_1",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "name": "chicken_east",
+      "x": 0,
+      "y": 0,
+      "flipX": true
+    },
+    {
+      "name": "chicken_east_0",
+      "x": 0,
+      "y": 2,
+      "flipX": true
+    },
+    {
+      "name": "chicken_east_1",
+      "x": 1,
+      "y": 2,
+      "flipX": true
+    },
+    {
+      "name": "chicken_north",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "name": "chicken_north_0",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "name": "chicken_north_1",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "name": "chicken_south",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "name": "chicken_south_0",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "name": "chicken_south_1",
+      "x": 3,
+      "y": 3
+    },
+    {
+      "name": "chicken_idle_0",
+      "x": 0,
+      "y": 1
+    },
+
+    {
+      "name": "chicken_idle_1",
+      "x": 1,
+      "y": 1
+    },
+
+    {
+      "name": "chicken_idle_2",
+      "x": 2,
+      "y": 1
+    }
+  ]
+}

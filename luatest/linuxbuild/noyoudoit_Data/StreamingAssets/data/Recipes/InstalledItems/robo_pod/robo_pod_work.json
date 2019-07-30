@@ -1,0 +1,40 @@
+{
+  "name": "recipe::installed::robo_pod::work",
+  "niceName": "build robot",
+  "buildTime": 3,
+  "cost": 150,
+  "onDemand": true,
+  "btnText": "Build Robot",
+  "resources": [
+    {
+      "name": "inv::steel_plates",
+      "qty": 4
+    },
+    {
+      "name": "inv::copper_wire",
+      "qty": 2
+    },
+    {
+      "name": "inv::processor",
+      "qty": 6
+    },
+    {
+      "name": "inv::circuit_boards",
+      "qty": 6
+    },
+    {
+      "name": "inv::components",
+      "qty": 8
+    }
+  ],
+  "products": [
+    {
+      "name": "entities::basic_robot",
+      "qtyMin": 1,
+      "qtyMax": 1,
+      "chance": 1
+
+    }
+  ]
+
+}

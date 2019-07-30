@@ -1,0 +1,28 @@
+{
+  "name": "recipe::installed::atm::build",
+  "niceName": "build",
+  "buildTime": 1,
+  "cost": 25,
+  "resources": [
+    {
+      "name": "inv::steel_plates",
+      "qty": 4
+    },
+    {
+      "name": "inv::processor",
+      "qty": 1
+    },
+    {
+      "name": "inv::circuit_boards",
+      "qty": 2
+    },
+    {
+      "name": "inv::copper_wire",
+      "qty": 4
+    },
+    {
+      "name": "inv::components",
+      "qty": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+
+  "name": "installed::crate",
+  "niceName": "crate",
+  "sprite": "installed_items::crate_0",
+  "sprites": [ "installed_items::crate_0", "installed_items::crate_1", "installed_items::crate_2", "installed_items::crate_3" ],
+  "linked": false,
+  "movementFactor": 0.1,
+  "trash": true,
+  "trashSpawnChance": 0.3,
+  "build": false,
+  "neighbourTypes": [],
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::crate::build",
+  "deconstructRecipe": "recipe::installed::crate::decon",
+  "inventorySlots": 0,
+  "width": 2,
+  "height": 2
+
+}

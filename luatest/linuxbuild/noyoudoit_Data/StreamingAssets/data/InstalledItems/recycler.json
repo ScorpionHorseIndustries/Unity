@@ -1,0 +1,24 @@
+{
+
+  "name": "installed::recycler",
+  "niceName": "recycler",
+  "sprite": "installed_items::recycler_0",
+  "sprites": [],
+  "movementFactor": 0.5,
+  "linked": false,
+  "trash": false,
+  "build": true,
+  "randomRotation": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::recycler::build",
+  "updateActionCountDown": 1,
+  "width": 1,
+  "height": 2,
+  "workRecipe": "recipe::installed::recycler::work",
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "deconstructRecipe": "recipe::installed::recycler::decon",
+  "powerUsed": 0.1
+
+}

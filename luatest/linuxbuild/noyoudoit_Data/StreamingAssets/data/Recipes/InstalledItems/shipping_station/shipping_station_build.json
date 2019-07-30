@@ -1,0 +1,28 @@
+{
+		"name" : "recipe::installed::shipping_station::build",
+		"niceName" : "build",
+		"buildTime" : 2,
+		"cost" : 150,
+  "resources": [
+    {
+      "name": "inv::steel_plates",
+      "qty": 8
+    },
+    {
+      "name": "inv::copper_wire",
+      "qty": 6
+    },
+    {
+      "name": "inv::processor",
+      "qty": 3
+    },
+    {
+      "name": "inv::circuit_boards",
+      "qty": 4
+    },
+    {
+      "name": "inv::components",
+      "qty": 6
+    }
+  ]
+	}

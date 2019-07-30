@@ -1,0 +1,8 @@
+{
+      
+      "type": "inv::organic_trash",
+      "niceName": "organic trash",
+      "stackSize": 1,
+      "spriteName": "inventory_items::organic_trash",
+      "category": "trash"
+    }

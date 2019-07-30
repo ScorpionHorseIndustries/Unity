@@ -1,0 +1,8 @@
+{
+  "movementFactor": 0.4000000059604645,
+  "build": true,
+  "minedProduct": "inv::iron_ore",
+  "name": "grass_iron",
+  
+  "height": -1
+}

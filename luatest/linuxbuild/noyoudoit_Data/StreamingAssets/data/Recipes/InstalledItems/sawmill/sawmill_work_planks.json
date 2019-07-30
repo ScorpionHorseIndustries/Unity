@@ -1,0 +1,21 @@
+{
+  "name": "recipe::installed::sawmill::work::wood_planks",
+  "niceName": "make planks",
+  "buildTime": 1,
+  "resources": [
+    {
+      "name": "inv::wood_logs",
+      "qty": 1
+    }
+
+  ],
+  "products": [
+    {
+      "name": "inv::wood_planks",
+      "qtyMin": 4,
+      "qtyMax": 4,
+      "chance": 1
+    }
+
+  ]
+}

@@ -1,0 +1,13 @@
+{
+      "name": "recipe::installed::door::decon",
+	  "niceName" : "decon",
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 2,
+          "chance": 1
+        }
+      ]
+    }

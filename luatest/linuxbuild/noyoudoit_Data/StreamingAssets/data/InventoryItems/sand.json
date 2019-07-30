@@ -1,0 +1,8 @@
+{
+      
+      "type": "inv::sand",
+      "niceName": "sand",
+      "stackSize": 8,
+      "spriteName": "inventory_items::sand",
+      "category": "raw"
+    }

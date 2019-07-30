@@ -1,0 +1,28 @@
+{
+	"ppu" : 32,
+	"width" : 64,
+	"height" : 64,
+	"sprites" : [
+	
+	{
+		"name" : "crate_0",
+		"x" : 0,
+		"y" : 0
+	},
+	{
+		"name" : "crate_1",
+		"x" : 1,
+		"y" : 0
+	},
+	{
+		"name" : "crate_2",
+		"x" : 2,
+		"y" : 0
+	},
+	{
+		"name" : "crate_3",
+		"x" : 3,
+		"y" : 0
+	}
+	]
+}

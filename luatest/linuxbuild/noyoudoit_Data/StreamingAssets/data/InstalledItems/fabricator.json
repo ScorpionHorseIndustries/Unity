@@ -1,0 +1,35 @@
+﻿{
+
+  "name": "installed::fabricator",
+  "niceName": "fabricator",
+  "sprite": "installed_items::fabricator",
+  "sprites": [],
+  "movementFactor": 0.5,
+  "linked": false,
+  "trash": false,
+  "build": true,
+  "randomRotation": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::fabricator::build",
+  "updateActionCountDown": 5,
+  "width": 2,
+  "height": 2,
+
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "deconstructRecipe": "recipe::installed::fabricator::decon",
+  "workCondition": "false",
+  "workRecipe": "recipe::installed::fabricator::work::copper_wire",
+  "availableWorkRecipes": [
+    "recipe::installed::fabricator::work::copper_wire",
+    "recipe::installed::fabricator::work::processor",
+    "recipe::installed::fabricator::work::circuit_boards",
+    "recipe::installed::fabricator::work::components",
+    "recipe::installed::fabricator::work::consumer_electronics"
+  ],
+  "canChangeRecipe": true,
+  "powerUsed": 0.1
+
+
+}

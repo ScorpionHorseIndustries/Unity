@@ -1,0 +1,20 @@
+﻿{
+  "animations": [
+    {
+      "name": "anim::basic_robot::walk::south",
+      "frames": [
+        {
+          "sprite": "entities::robot_south_0",
+          "time": 0.2
+        },
+        {
+          "sprite": "entities::robot_south_1",
+          "time": 0.2
+        }
+      ]
+    }
+
+  ]
+
+
+}

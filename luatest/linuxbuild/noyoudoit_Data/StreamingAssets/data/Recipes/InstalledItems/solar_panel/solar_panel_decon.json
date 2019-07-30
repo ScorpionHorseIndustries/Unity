@@ -1,0 +1,7 @@
+﻿{
+  "name": "recipe::installed::solar_panel::decon",
+  "niceName" : "decon",
+  "buildTime": 1,
+  "cost": 50,
+  "resources": []
+}

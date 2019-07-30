@@ -1,0 +1,27 @@
+{
+
+  "name": "installed::shipping_station",
+  "niceName": "shipping station",
+  "sprite": "installed_items::shipping_station",
+  "sprites": [],
+  "linked": false,
+  "movementFactor": 0.8,
+  "trash": false,
+  "build": true,
+  "neighbourTypes": [],
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::shipping_station::build",
+  "deconstructRecipe": "recipe::installed::shipping_station::decon",
+  "inventorySlots": 0,
+  "width": 2,
+  "height": 3,
+  "workTileOffsetX": 1,
+  "updateActionCountDown": 3,
+  "workRecipe": "recipe::installed::shipping_station::work::basic_shipping_carton",
+  "workstation": true,
+  "editOnClick": true,
+  "updateAction": "OnUpdate_Workstation",
+  "workCondition": "false",
+  "powerUsed": 0.6
+
+}

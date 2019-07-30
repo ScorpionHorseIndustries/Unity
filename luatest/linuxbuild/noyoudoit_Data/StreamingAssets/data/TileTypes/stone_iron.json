@@ -1,0 +1,8 @@
+{
+  "movementFactor": 0.4,
+  "build": true,
+  "minedProduct": "inv::iron_ore",
+  "name": "stone_iron",
+  
+  "height": -1
+}

@@ -1,0 +1,39 @@
+{
+	"ppu" : 32,
+	"width" : 32,
+	"height" : 64,
+	"sprites" : [
+		{
+		"name" : "tree_sapling_0",
+		"x":0,
+		"y":0
+		},
+		{
+		"name" : "tree_sapling_1",
+		"x":1,
+		"y":0
+		},
+		{
+		"name" : "tree_sapling_2",
+		"x":2,
+		"y":0
+		},
+		{
+		"name" : "tree_sapling_3",
+		"x":3,
+		"y":0
+		},
+		{
+		"name" : "tree_mature_0",
+		"x":4,
+		"y":0
+		},
+		{
+		"name" : "tree_mature_1",
+		"x":5,
+		"y":0
+		}
+		
+	
+	]
+}

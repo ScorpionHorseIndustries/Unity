@@ -1,0 +1,8 @@
+{
+  "movementFactor": 0.4,
+  "build": true,
+  "minedProduct": "inv::copper_ore",
+  "name": "dirt_copper",
+  
+  "height": -1
+}

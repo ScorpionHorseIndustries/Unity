@@ -1,0 +1,24 @@
+{
+  "name": "recipe::installed::furnace::work::iron",
+  "niceName": "smelt steel",
+  "buildTime": 1,
+  "resources": [
+    {
+      "name": "inv::iron_ore",
+      "qty": 1
+    },
+    {
+      "name": "inv::coal",
+      "qty": 1
+    }
+  ],
+  "products": [
+    {
+      "name": "inv::steel_plates",
+      "qtyMin": 1,
+      "qtyMax": 1,
+      "chance": 1
+    }
+
+  ]
+}

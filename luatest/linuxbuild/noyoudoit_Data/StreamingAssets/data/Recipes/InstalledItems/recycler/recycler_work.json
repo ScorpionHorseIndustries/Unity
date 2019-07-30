@@ -1,0 +1,19 @@
+{
+      "name": "recipe::installed::recycler::work",
+      "niceName" : "recycle",
+      "buildTime": 1,
+      "resources": [
+        {
+          "name": "inv::organic_trash",
+          "qty": 1
+        }
+      ],
+      "products": [
+        {
+          "name": "money",
+          "qtyMin": 1,
+          "qtyMax": 4,
+          "chance": 1
+        }
+      ]
+    }

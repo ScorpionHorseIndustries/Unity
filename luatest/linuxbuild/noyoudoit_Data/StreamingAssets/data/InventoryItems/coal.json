@@ -1,0 +1,8 @@
+{
+      
+      "type": "inv::coal",
+      "niceName": "coal",
+      "stackSize": 32,
+      "spriteName": "inventory_items::coal",
+      "category": "raw"
+    }

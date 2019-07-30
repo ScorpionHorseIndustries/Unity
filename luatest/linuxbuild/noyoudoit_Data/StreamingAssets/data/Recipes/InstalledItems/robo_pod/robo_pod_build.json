@@ -1,0 +1,30 @@
+{
+      "name": "recipe::installed::robo_pod::build",
+	  "niceName" : "build",
+      "id": 12,
+      "buildTime": 4,
+      "cost": 100,
+      "resources": [
+        {
+          "name": "inv::steel_plates",
+          "qty": 8
+        },
+        {
+          "name": "inv::copper_wire",
+          "qty": 6
+        },
+        {
+          "name": "inv::processor",
+          "qty": 3
+        },
+        {
+          "name": "inv::circuit_boards",
+          "qty": 4
+        },
+        {
+          "name": "inv::components",
+          "qty": 6
+        }
+      ]
+
+    }

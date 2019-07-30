@@ -1,0 +1,37 @@
+{
+  "name": "recipe::installed::quarry::decon",
+  "niceName": "decon",
+  "buildTime": 1,
+  "products": [
+    {
+      "name": "inv::steel_plates",
+      "qtyMin": 1,
+      "qtyMax": 3,
+      "chance": 1
+    },
+    {
+      "name": "inv::processor",
+      "qtyMin": 1,
+      "qtyMax": 2,
+      "chance": 1
+    },
+    {
+      "name": "inv::circuit_boards",
+      "qtyMin": 1,
+      "qtyMax": 4,
+      "chance": 1
+    },
+    {
+      "name": "inv::copper_wire",
+      "qtyMin": 1,
+      "qtyMax": 2,
+      "chance": 0.5
+    },
+    {
+      "name": "inv::components",
+      "qtyMin": 1,
+      "qtyMax": 3,
+      "chance": 0.5
+    }
+  ]
+}

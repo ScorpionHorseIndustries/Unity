@@ -1,0 +1,10 @@
+{
+
+  "type": "inv::wood_logs",
+  "niceName": "wood logs",
+  "stackSize": 8,
+  "spriteName": "inventory_items::wood_logs",
+  "category": "raw",
+  "spawnsOnChunkGen": true,
+  "spawnsOnChunkGenChance": 0.5
+}

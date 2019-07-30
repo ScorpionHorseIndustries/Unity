@@ -1,0 +1,13 @@
+{
+  "name": "recipe::installed::sawmill::build",
+  "niceName": "build",
+  "buildTime": 3,
+  "cost": 0,
+  "resources": [
+    {
+      "name": "inv::steel_plates",
+      "qty": 6
+    }
+    
+  ]
+}

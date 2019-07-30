@@ -1,7 +1,7 @@
 {
-  "movementFactor": 0.10000000149011612,
+  "movementFactor": 0.1,
   "build": false,
   "name": "water",
   
-  "height": 1
+  "height": -1
 }

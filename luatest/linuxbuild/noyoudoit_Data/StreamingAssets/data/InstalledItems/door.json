@@ -1,0 +1,36 @@
+{
+      
+      "name": "installed::door",
+      "niceName": "door",
+      "sprite": "installed_items::door_0",
+      "sprites": [],
+      "linked": true,
+      "movementFactor": 0.9,
+      "trash": false,
+      "build": true,
+      "neighbourTypes": [ "installed::wall" ],
+      "neighbour_s": "installed_items::door_0",
+      "neighbour_ns": "installed_items::door_0",
+      "neighbour_nsw": "installed_items::door_0",
+      "neighbour_sw": "installed_items::door_0",
+      "neighbour_nesw": "installed_items::door_0",
+      "enclosesRoom": true,
+      "recipe": "recipe::installed::door::build",
+      "deconstructRecipe": "recipe::installed::door::decon",
+      "updateAction": "OnUpdate_Door",
+      "onEnterRequested": "OnEnterRequested_Door",
+      "parameters": [
+        {
+          "name": "openness",
+          "value": 0,
+          "type": "float"
+        },
+        {
+          "name": "opentime",
+          "value": 0.25,
+          "type": "float"
+        }
+      ]
+
+
+    }

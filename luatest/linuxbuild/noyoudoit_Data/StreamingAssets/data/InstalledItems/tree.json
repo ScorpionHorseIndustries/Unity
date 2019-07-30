@@ -1,0 +1,65 @@
+{
+  
+  "name": "installed::tree",
+  "niceName": "tree",
+  "sprite": "installed_items::tree_sapling_0",
+  "sprites": [],
+  "linked": false,
+  "movementFactor": 0.5,
+  "trash": true,
+  "trashSpawnChance": 0.7,
+  "canSpawnOn": [ "grass", "dirt" ],
+  "build": true,
+  "neighbourTypes": [],
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::tree::build",
+  "deconstructRecipe": "recipe::installed::tree::decon",
+  "inventorySlots": 0,
+  "width": 1,
+  "height": 2,
+  "x_clearance": 1,
+  "y_clearance": 1,
+  "updateAction": "OnUpdate_Plant",
+  "updateActionCountDown": 30,
+  "updateActionCountDownRange": 5,
+  "growth": [
+    {
+      "stage": 0,
+      "length": 2,
+      "sprite": "installed_items::tree_sapling_0",
+      "deconstructRecipe": "recipe::installed::sapling::decon"
+    },
+    {
+      "stage": 1,
+      "length": 2,
+      "sprite": "installed_items::tree_sapling_1",
+      "deconstructRecipe": "recipe::installed::sapling::decon"
+    },
+    {
+      "stage": 2,
+      "length": 2,
+      "sprite": "installed_items::tree_sapling_2",
+      "deconstructRecipe": "recipe::installed::sapling::decon"
+    },
+    {
+      "stage": 3,
+      "length": 3,
+      "sprite": "installed_items::tree_sapling_3",
+      "deconstructRecipe": "recipe::installed::sapling::decon"
+    },
+    {
+      "stage": 4,
+      "length": 4,
+      "sprite": "installed_items::tree_mature_0",
+      "deconstructRecipe": "recipe::installed::tree::decon"
+    },
+    {
+      "stage": 5,
+      "length": 4,
+      "sprite": "installed_items::tree_mature_1",
+      "deconstructRecipe": "recipe::installed::tree::decon"
+    }
+
+  ]
+
+}

@@ -1,0 +1,28 @@
+﻿{
+
+  "name": "installed::sawmill",
+  "niceName": "sawmill",
+  "sprite": "installed_items::sawmill",
+  "sprites": [],
+  "movementFactor": 0.5,
+  "linked": false,
+  "trash": false,
+  "build": true,
+  "randomRotation": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::sawmill::build",
+  "updateActionCountDown": 3,
+  "width": 2,
+  "height": 2,
+
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "deconstructRecipe": "recipe::installed::sawmill::decon",
+  "workCondition": "false",
+  "workRecipe": "recipe::installed::sawmill::work::wood_planks",
+  "canChangeRecipe": false,
+  "powerUsed": 0.1
+
+
+}

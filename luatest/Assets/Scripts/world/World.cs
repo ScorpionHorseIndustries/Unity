@@ -99,7 +99,7 @@ namespace NoYouDoIt.TheWorld {
     //objects
     //public JobQueue jobQueue;
     public WorkItemManager workManager;
-
+    public RoadMapGen citymap;
 
 
     public TileNodeMap nodeMap;
@@ -115,11 +115,11 @@ namespace NoYouDoIt.TheWorld {
 
       } catch (Exception e) {
         Debug.Log(e.Message);
-        
+
       }
 
       return "an error occurred";
-      
+
 
 
 
@@ -173,7 +173,7 @@ namespace NoYouDoIt.TheWorld {
     public TileChunk GetChunkIfExists(int x, int y) {
       //TileChunk chunk = null;
       if (x < 0 || y < 0 || x > WORLD_WIDTH - 1 || y > WORLD_HEIGHT - 1) return null;
-      return chunks[x,y];
+      return chunks[x, y];
 
       //if (chunks.ContainsKey(x)) {
       //  if (chunks[x].ContainsKey(y)) {
@@ -191,12 +191,12 @@ namespace NoYouDoIt.TheWorld {
       if (x < 0 || y < 0 || x > WORLD_WIDTH - 1 || y > WORLD_HEIGHT - 1) return null;
 
       bool newChunk = false;
-      if (chunks[x,y] == null) {
+      if (chunks[x, y] == null) {
         chunk = new TileChunk(this, x, y);
         newChunk = true;
-        chunks[x,y] = chunk;
+        chunks[x, y] = chunk;
       } else {
-        chunk = chunks[x,y];
+        chunk = chunks[x, y];
       }
       //if (chunks.ContainsKey(x)) {
       //  if (chunks[x].ContainsKey(y)) {
@@ -231,23 +231,23 @@ namespace NoYouDoIt.TheWorld {
 
       if (chunksInitialised) return;
       chunksInitialised = true;
-      chunks = new TileChunk[WORLD_WIDTH,WORLD_HEIGHT];
+      chunks = new TileChunk[WORLD_WIDTH, WORLD_HEIGHT];
       for (int x = 0; x < WORLD_WIDTH; x += 1) {
         //chunks[x] = new Dictionary<int, TileChunk>();
         for (int y = 0; y < WORLD_HEIGHT; y += 1) {
           //int xx = x * TileChunk.CHUNK_WIDTH;
           //int yy = y * TileChunk.CHUNK_HEIGHT;
 
-          chunks[x,y] = new TileChunk(this, x, y);
-          chunkList.Add(chunks[x,y]);
-          chunks[x,y].Init();
+          chunks[x, y] = new TileChunk(this, x, y);
+          chunkList.Add(chunks[x, y]);
+          chunks[x, y].Init();
         }
 
       }
 
       TileChunk ch = GetChunk(0, 0);
       if (Funcs.GetSettingBool("add_starting_items")) {
-        
+
         List<string> itemTypes = InventoryItem.GetAllPrototypeNames();
         for (int x = 0; x < TileChunk.CHUNK_WIDTH; x += 1) {
           for (int y = 0; y < TileChunk.CHUNK_HEIGHT; y += 1) {
@@ -323,6 +323,7 @@ namespace NoYouDoIt.TheWorld {
     }
 
     void InitNew(int width, int height, int tileSize) {
+      
 
 
       seed = DateTime.Now.ToLongDateString() + "_" + DateTime.Now.ToLongTimeString() + "_" + DateTime.Now.ToUniversalTime();
@@ -348,6 +349,8 @@ namespace NoYouDoIt.TheWorld {
       InstalledItem.LoadFromFile();
       InventoryItem.LoadFromFile();
 
+      citymap = RoadMapGen.Generate(WORLD_WIDTH * TileChunk.CHUNK_WIDTH, WORLD_HEIGHT * TileChunk.CHUNK_HEIGHT, TileType.countNatural);
+
 
       this.trashPrototypes = InstalledItem.trashPrototypes;
 
@@ -372,7 +375,7 @@ namespace NoYouDoIt.TheWorld {
         string output = "recipe: " + rn;
         Recipe rcp = Recipe.GetRecipe(rn);
 
-        foreach(RecipeResource rr in rcp.resources.Values) {
+        foreach (RecipeResource rr in rcp.resources.Values) {
           if (InventoryItem.GetPrototype(rr.name) == null) {
             throw new Exception(output + " item not found " + rr);
           }
@@ -389,7 +392,7 @@ namespace NoYouDoIt.TheWorld {
             case RECIPE_PRODUCT_TYPE.ENTITY:
               if (Entity.GetPrototype(rp.name) == null) {
                 throw new Exception(output + " entity not found " + rp);
-              }       
+              }
               break;
             case RECIPE_PRODUCT_TYPE.MONEY:
               break;
@@ -468,10 +471,10 @@ namespace NoYouDoIt.TheWorld {
 
     //---POWER---
 
-      //all power gen code
+    //all power gen code
     public float currentPower { get; private set; }
     public float usedPower { get; private set; }
-    
+
     public void AddPowerGen(InstalledItem item) {
       if (item.powerGenerated > 0) {
         if (!powerGenerators.Contains(item)) {
@@ -491,7 +494,7 @@ namespace NoYouDoIt.TheWorld {
     private void UpdatePower() {
       currentPower = 0;
       usedPower = 0;
-      foreach(InstalledItem item in powerGenerators) {
+      foreach (InstalledItem item in powerGenerators) {
         currentPower += item.powerGenerated;
       }
 
@@ -553,7 +556,7 @@ import 'NoYouDoIt.DataModels'
     public void SetAllNeighbours() {
       for (int x = 0; x < chunks.GetLength(0); x += 1) {
         for (int y = 0; y < chunks.GetLength(1); y += 1) {
-          TileChunk t = chunks[x,y];
+          TileChunk t = chunks[x, y];
 
           t.SetNeighbourChunks();
 
@@ -677,7 +680,7 @@ import 'NoYouDoIt.DataModels'
       }
 
 
-      foreach(InstalledItem item in installedItems) {
+      foreach (InstalledItem item in installedItems) {
         item.Update(deltaTime);
       }
       //foreach (InstalledItem item in installedItems.Where(e => e.type == "installed::stockpile" && !e.inventory.IsEmpty())) {
@@ -1473,7 +1476,7 @@ import 'NoYouDoIt.DataModels'
     }
 
     private string[] LoadNames(string file) {
-      string path = Path.Combine(Application.streamingAssetsPath, "csv", file);
+      string path = System.IO.Path.Combine(Application.streamingAssetsPath, "csv", file);
       return File.ReadAllLines(path);
     }
 

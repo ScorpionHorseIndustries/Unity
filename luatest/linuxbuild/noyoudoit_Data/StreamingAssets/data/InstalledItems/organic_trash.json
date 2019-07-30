@@ -1,0 +1,19 @@
+{
+      
+      "name": "installed::organic_trash",
+      "niceName": "organic trash",
+      "sprite": "installed_items::corpse",
+      "movementFactor": 0.8,
+      "linked": false,
+      "trash": true,
+      "trashSpawnChance": 0.3,
+      "build": false,
+      "randomRotation": true,
+      "enclosesRoom": false,
+      
+      "deconstructRecipe": "recipe::installed::organic_trash::decon",
+      "paletteSwap": true,
+      "onCreate": "SetSocialMediaName"
+
+
+    }

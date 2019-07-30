@@ -1,0 +1,97 @@
+{
+  "name": "entities::chicken",
+  "niceName": "chicken",
+  "onUpdate": "OnUpdate_Chicken",
+  "movementSpeed": 3,
+  "spriteName": "entities::chicken_south",
+  "spriteNorth": "entities::chicken_north",
+  "spriteEast": "entities::chicken_east",
+  "spriteWest": "entities::chicken_west",
+  "spriteSouth": "entities::chicken_south",
+  "getName": "pet",
+
+  "animations": [
+    {
+      "name": "east",
+      "frames": [
+        {
+          "sprite": "entities::chicken_east_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::chicken_east_1",
+          "time": 0.09
+        }
+      ]
+    },
+    {
+      "name": "west",
+      "frames": [
+        {
+          "sprite": "entities::chicken_west_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::chicken_west_1",
+          "time": 0.09
+        }
+      ]
+    },
+    {
+      "name": "north",
+      "frames": [
+        {
+          "sprite": "entities::chicken_north_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::chicken_north_1",
+          "time": 0.09
+        }
+      ]
+    },
+    {
+      "name": "south",
+      "frames": [
+        {
+          "sprite": "entities::chicken_south_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::chicken_south_1",
+          "time": 0.09
+        }
+      ]
+    },
+    {
+      "name": "idle",
+      "frames": [
+        {
+          "sprite": "entities::chicken_west",
+          "randomTimeMin": 1,
+          "randomTimeMax": 3
+        },
+        {
+          "sprite": "entities::chicken_idle_0",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::chicken_idle_1",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::chicken_idle_2",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::chicken_idle_1",
+          "time": 0.09
+        },
+        {
+          "sprite": "entities::chicken_idle_0",
+          "time": 0.09
+        }
+      ]
+    }
+  ]
+}

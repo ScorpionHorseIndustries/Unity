@@ -1,0 +1,29 @@
+{
+
+  "name": "installed::furnace",
+  "niceName": "furnace",
+  "sprite": "installed_items::furnace",
+  "sprites": [],
+  "movementFactor": 0.8,
+  "linked": false,
+  "trash": false,
+  "build": true,
+  "randomRotation": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::furnace::build",
+  "updateActionCountDown": 1,
+  "width": 1,
+  "height": 2,
+  "canChangeRecipe" :  true,
+  "availableWorkRecipes": [
+    "recipe::installed::furnace::work::iron",
+    "recipe::installed::furnace::work::copper",
+    "recipe::installed::furnace::work::sand"
+  ],
+  "workRecipe": "recipe::installed::furnace::work::iron",
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "deconstructRecipe": "recipe::installed::furnace::decon"
+
+}

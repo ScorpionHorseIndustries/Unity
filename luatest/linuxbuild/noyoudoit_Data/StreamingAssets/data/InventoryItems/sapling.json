@@ -1,0 +1,8 @@
+{
+      
+      "type": "inv::sapling",
+      "niceName": "sapling",
+      "stackSize": 8,
+      "spriteName": "inventory_items::sapling",
+      "category": "plants"
+    }

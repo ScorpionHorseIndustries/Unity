@@ -1,0 +1,6 @@
+{
+      "name": "recipe::installed::stockpile::decon",
+      "niceName" : "remove",
+      "buildTime": 1,
+      "products": []
+    }

@@ -1,0 +1,31 @@
+{
+
+  "name": "installed::quarry",
+  "niceName": "quarry",
+  "sprite": "installed_items::quarry",
+  "sprites": [],
+  "linked": false,
+  "movementFactor": 0.8,
+  "trash": false,
+  "build": true,
+  "neighbourTypes": [],
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::quarry::build",
+  "deconstructRecipe": "recipe::installed::quarry::decon",
+  "inventorySlots": 0,
+  "width": 3,
+  "height": 3,
+  "workTileOffsetX": 2,
+  "updateActionCountDown": 3,
+  "onCreate": "OnCreate_Quarry",
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  
+  "powerUsed": 0.3,
+  "canSpawnOn": [
+    "stone",
+    "sand"
+  ]
+
+}

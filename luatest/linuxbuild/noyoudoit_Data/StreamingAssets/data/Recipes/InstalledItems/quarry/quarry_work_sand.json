@@ -1,0 +1,14 @@
+{
+  "name": "recipe::installed::quarry::work::sand",
+  "niceName" : "dig sand",
+  "buildTime": 1,
+  "products": [
+    {
+      "name": "inv::sand",
+      "qtyMin": 1,
+      "qtyMax": 4,
+      "chance": 1
+    }
+
+  ]
+}

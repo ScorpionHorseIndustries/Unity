@@ -1,0 +1,8 @@
+{
+
+  "type": "inv::processor",
+  "niceName": "processor",
+  "stackSize": 32,
+  "spriteName": "inventory_items::processor",
+  "category": "manufactured"
+}

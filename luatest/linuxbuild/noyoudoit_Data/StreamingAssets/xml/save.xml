@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-16"?>
+<World>
+  <width>20</width>
+  <height>20</height>
+  <tileSize>32</tileSize>
+  <xSeed>2.095047</xSeed>
+  <ySeed>-2.279901</ySeed>
+  <noiseFactor>0.0369001</noiseFactor>
+  <characters>
+    <character>
+      <name>Taufer Matlick</name>
+      <xPos>14</xPos>
+      <yPos>13</yPos>
+      <state>IDLE</state>
+      <Job />
+    </character>
+    <character>
+      <name>Rapier Suszek</name>
+      <xPos>16</xPos>
+      <yPos>11</yPos>
+      <state>IDLE</state>
+      <Job />
+    </character>
+    <character>
+      <name>Massel Shroff</name>
+      <xPos>9</xPos>
+      <yPos>13</yPos>
+      <state>IDLE</state>
+      <Job />
+    </character>
+    <character>
+      <name>Gugger Kivela</name>
+      <xPos>14</xPos>
+      <yPos>13</yPos>
+      <state>IDLE</state>
+      <Job />
+    </character>
+    <character>
+      <name>Papadakos Michelich</name>
+      <xPos>15</xPos>
+      <yPos>15</yPos>
+      <state>IDLE</state>
+      <Job />
+    </character>
+  </characters>
+  <tileTypes>
+    <tileType>
+      <name>empty</name>
+      <id>0</id>
+    </tileType>
+    <tileType>
+      <name>snow</name>
+      <id>1</id>
+    </tileType>
+    <tileType>
+      <name>dirt</name>
+      <id>2</id>
+    </tileType>
+    <tileType>
+      <name>grass</name>
+      <id>3</id>
+    </tileType>
+    <tileType>
+      <name>water</name>
+      <id>4</id>
+    </tileType>
+    <tileType>
+      <name>stone</name>
+      <id>5</id>
+    </tileType>
+    <tileType>
+      <name>concrete</name>
+      <id>6</id>
+    </tileType>
+    <tileType>
+      <name>bedrock</name>
+      <id>7</id>
+    </tileType>
+  </tileTypes>
+  <tiles>H4sIAAAAAAAACzO3NicSGqJAMzhEFh1VR111plRRZwqEhO01RYKE1RkBIbK5hljtNYKrw64S5g+EKvzqDPGqwhbOuNURBwFVa0NOIAMAAA==</tiles>
+  <installed>H4sIAAAAAAAAC6WTwW7EIAxEf6eVqlUMmABVr/2PHqJqpTatlN5W+fcFjMd7prcXE8Zja6BCJZWn51eqkBVoARHINXKNAoiFXGH5zYkYV2j/335+t33fjuN8uy3nS//8u35v7fPieFSu+2ctvH98HdspajQs+QKQ9lSClsJDiTxoeOMSpcTqiKcdNRHVjWW0iuoj6toi1haxtgiTcUhQWdXR2i/MOVohvMJbpTF0UnMJnhI8JVxNWFyCuyxXXYUsNvM/bGb0yuhQ1cYCKuVZ5XoXKV0spgsaNtSOlnGyc7JzxJbmc9tloIjkVsogOPbmWKPNHf10c2/vMtQoiHjAYPI0JrUZ0zCmYZuGbRq2/TLSRfZ+CM+FLIdkQSRLYkM2jIZ9ujsxVITXugQAAA==</installed>
+  <Jobs />
+</World>

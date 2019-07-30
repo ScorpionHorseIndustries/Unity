@@ -1,0 +1,39 @@
+{
+	"ppu" : 32,
+	"width" : 32,
+	"height" : 32,
+  "sprites": [
+    {
+      "name": "steel_plates",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "copper_plates",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "name": "stone_slabs",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "name": "wood_planks",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "name": "wood_logs",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "name": "silicon",
+      "x": 1,
+      "y": 1
+    }
+
+
+  ]
+}

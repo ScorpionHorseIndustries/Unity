@@ -2,413 +2,493 @@
 	"ppu" : 32,
 	"width" : 32,
 	"height" : 32,
-	"sprites" : [
-	{
-		"name" : "grass_0",
-		"x" : 0,
-		"y" : 0
-	},
-	{
-		"name" : "grass_1",
-		"x" : 1,
-		"y" : 0
-	},
-	{
-		"name" : "grass_2",
-		"x" : 2,
-		"y" : 0
-	},
-	{
-		"name" : "grass_3",
-		"x" : 3,
-		"y" : 0
-	},
-	{
-		"name" : "grass_4",
-		"x" : 4,
-		"y" : 0
-	},
-	{
-		"name" : "grass_5",
-		"x" : 5,
-		"y" : 0
-	},
-		{
-		"name" : "grass_6",
-		"x" : 6,
-		"y" : 0
-	},	
-		{
-		"name" : "grass_7",
-		"x" : 7,
-		"y" : 0
-	},
-	
-	{
-		"name" : "dirt_0",
-		"x" : 0,
-		"y" : 1
-	},
-	{
-		"name" : "dirt_1",
-		"x" : 1,
-		"y" : 1
-	},
-	{
-		"name" : "dirt_2",
-		"x" : 2,
-		"y" : 1
-	},
-	{
-		"name" : "dirt_3",
-		"x" : 3,
-		"y" : 1
-	},
-	{
-		"name" : "dirt_4",
-		"x" : 4,
-		"y" : 1
-	},
-	{
-		"name" : "dirt_5",
-		"x" : 5,
-		"y" : 1
-	},
-		{
-		"name" : "dirt_6",
-		"x" : 6,
-		"y" : 1
-	},	
-		{
-		"name" : "dirt_7",
-		"x" : 7,
-		"y" : 1
-	},
-	
-	{
-		"name" : "stone_0",
-		"x" : 0,
-		"y" : 2
-	},
-	{
-		"name" : "stone_1",
-		"x" : 1,
-		"y" : 2
-	},
-	{
-		"name" : "stone_2",
-		"x" : 2,
-		"y" : 2
-	},
-	{
-		"name" : "stone_3",
-		"x" : 3,
-		"y" : 2
-	},
-	{
-		"name" : "stone_4",
-		"x" : 4,
-		"y" : 2
-	},
-	{
-		"name" : "stone_5",
-		"x" : 5,
-		"y" : 2
-	},
-		{
-		"name" : "stone_6",
-		"x" : 6,
-		"y" : 2
-	},	
-		{
-		"name" : "stone_7",
-		"x" : 7,
-		"y" : 2
-	},
-	
-	{
-		"name" : "water_0",
-		"x" : 0,
-		"y" : 3
-	},
-	{
-		"name" : "water_1",
-		"x" : 1,
-		"y" : 3
-	},
-	{
-		"name" : "water_2",
-		"x" : 2,
-		"y" : 3
-	},
-	{
-		"name" : "water_3",
-		"x" : 3,
-		"y" : 3
-	},
-	{
-		"name" : "water_4",
-		"x" : 4,
-		"y" : 3
-	},
-	{
-		"name" : "water_5",
-		"x" : 5,
-		"y" : 3
-	},
-		{
-		"name" : "water_6",
-		"x" : 6,
-		"y" : 3
-	},	
-	{
-		"name" : "water_7",
-		"x" : 7,
-		"y" : 3
-	},
-	{
-		"name" : "snow_0",
-		"x" : 0,
-		"y" : 4
-	},
-	{
-		"name" : "snow_1",
-		"x" : 1,
-		"y" : 4
-	},
-	{
-		"name" : "snow_2",
-		"x" : 2,
-		"y" : 4
-	},
-	{
-		"name" : "snow_3",
-		"x" : 3,
-		"y" : 4
-	},
-	{
-		"name" : "snow_4",
-		"x" : 4,
-		"y" : 4
-	},
-	{
-		"name" : "snow_5",
-		"x" : 5,
-		"y" : 4
-	},
-		{
-		"name" : "snow_6",
-		"x" : 6,
-		"y" : 4
-	},	
-	{
-		"name" : "snow_7",
-		"x" : 7,
-		"y" : 4
-	},
-	{
-		"name" : "concrete_0",
-		"x" : 0,
-		"y" : 5
-	},
-	{
-		"name" : "concrete_1",
-		"x" : 1,
-		"y" : 5
-	},
-	{
-		"name" : "concrete_2",
-		"x" : 2,
-		"y" : 5
-	},
-	{
-		"name" : "concrete_3",
-		"x" : 3,
-		"y" : 5
-	},
-	{
-		"name" : "concrete_4",
-		"x" : 4,
-		"y" : 5
-	},
-	{
-		"name" : "concrete_5",
-		"x" : 5,
-		"y" : 5
-	},
-		{
-		"name" : "concrete_6",
-		"x" : 6,
-		"y" : 5
-	},	
-	{
-		"name" : "concrete_7",
-		"x" : 7,
-		"y" : 5
-	},
-	{
-		"name" : "empty_0",
-		"x" : 0,
-		"y" : 6
-	},
-	{
-		"name" : "empty_1",
-		"x" : 1,
-		"y" : 6
-	},
-	{
-		"name" : "empty_2",
-		"x" : 2,
-		"y" : 6
-	},
-	{
-		"name" : "empty_3",
-		"x" : 3,
-		"y" : 6
-	},
-	{
-		"name" : "empty_4",
-		"x" : 4,
-		"y" : 6
-	},
-	{
-		"name" : "empty_5",
-		"x" : 5,
-		"y" : 6
-	},
-		{
-		"name" : "empty_6",
-		"x" : 6,
-		"y" : 6
-	},	
-	{
-		"name" : "empty_7",
-		"x" : 7,
-		"y" : 6
-	},
-	{
-		"name" : "cobble_0",
-		"x" : 0,
-		"y" : 7
-	},
-	{
-		"name" : "cobble_1",
-		"x" : 1,
-		"y" : 7
-	},
-	{
-		"name" : "cobble_2",
-		"x" : 2,
-		"y" : 7
-	},
-	{
-		"name" : "cobble_3",
-		"x" : 3,
-		"y" : 7
-	},
-	{
-		"name" : "cobble_4",
-		"x" : 4,
-		"y" : 7
-	},
-	{
-		"name" : "cobble_5",
-		"x" : 5,
-		"y" : 7
-	},
-		{
-		"name" : "cobble_6",
-		"x" : 6,
-		"y" : 7
-	},	
-	{
-		"name" : "cobble_7",
-		"x" : 7,
-		"y" : 7
-	},
-		{
-		"name" : "bedrock_0",
-		"x" : 0,
-		"y" : 8
-	},
-	{
-		"name" : "bedrock_1",
-		"x" : 1,
-		"y" : 8
-	},
-	{
-		"name" : "bedrock_2",
-		"x" : 2,
-		"y" : 8
-	},
-	{
-		"name" : "bedrock_3",
-		"x" : 3,
-		"y" : 8
-	},
-	{
-		"name" : "bedrock_4",
-		"x" : 4,
-		"y" : 8
-	},
-	{
-		"name" : "bedrock_5",
-		"x" : 5,
-		"y" : 8
-	},
-		{
-		"name" : "bedrock_6",
-		"x" : 6,
-		"y" : 8
-	},	
-	{
-		"name" : "bedrock_7",
-		"x" : 7,
-		"y" : 8
-	},
-	{
-		"name" : "sand_0",
-		"x" : 0,
-		"y" : 9
-	},
-	{
-		"name" : "sand_1",
-		"x" : 1,
-		"y" : 9
-	},
-	{
-		"name" : "sand_2",
-		"x" : 2,
-		"y" : 9
-	},
-	{
-		"name" : "sand_3",
-		"x" : 3,
-		"y" : 9
-	},
-	{
-		"name" : "sand_4",
-		"x" : 4,
-		"y" : 9
-	},
-	{
-		"name" : "sand_5",
-		"x" : 5,
-		"y" : 9
-	},
-		{
-		"name" : "sand_6",
-		"x" : 6,
-		"y" : 9
-	},	
-	{
-		"name" : "sand_7",
-		"x" : 7,
-		"y" : 9
-	}
-	
-	
-	
-	]
+  "sprites": [
+    {
+      "name": "grass_0",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "grass_1",
+      "x": 1,
+      "y": 0
+    },
+    {
+      "name": "grass_2",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "name": "grass_3",
+      "x": 3,
+      "y": 0
+    },
+    {
+      "name": "grass_4",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "name": "grass_5",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "name": "grass_6",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "name": "grass_7",
+      "x": 7,
+      "y": 0
+    },
+
+    {
+      "name": "dirt_0",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "name": "dirt_1",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "name": "dirt_2",
+      "x": 2,
+      "y": 1
+    },
+    {
+      "name": "dirt_3",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "name": "dirt_4",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "name": "dirt_5",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "name": "dirt_6",
+      "x": 6,
+      "y": 1
+    },
+    {
+      "name": "dirt_7",
+      "x": 7,
+      "y": 1
+    },
+
+    {
+      "name": "stone_0",
+      "x": 0,
+      "y": 2
+    },
+    {
+      "name": "stone_1",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "name": "stone_2",
+      "x": 2,
+      "y": 2
+    },
+    {
+      "name": "stone_3",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "name": "stone_4",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "name": "stone_5",
+      "x": 5,
+      "y": 2
+    },
+    {
+      "name": "stone_6",
+      "x": 6,
+      "y": 2
+    },
+    {
+      "name": "stone_7",
+      "x": 7,
+      "y": 2
+    },
+
+    {
+      "name": "water_0",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "name": "water_1",
+      "x": 1,
+      "y": 3
+    },
+    {
+      "name": "water_2",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "name": "water_3",
+      "x": 3,
+      "y": 3
+    },
+    {
+      "name": "water_4",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "name": "water_5",
+      "x": 5,
+      "y": 3
+    },
+    {
+      "name": "water_6",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "name": "water_7",
+      "x": 7,
+      "y": 3
+    },
+    {
+      "name": "snow_0",
+      "x": 0,
+      "y": 4
+    },
+    {
+      "name": "snow_1",
+      "x": 1,
+      "y": 4
+    },
+    {
+      "name": "snow_2",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "name": "snow_3",
+      "x": 3,
+      "y": 4
+    },
+    {
+      "name": "snow_4",
+      "x": 4,
+      "y": 4
+    },
+    {
+      "name": "snow_5",
+      "x": 5,
+      "y": 4
+    },
+    {
+      "name": "snow_6",
+      "x": 6,
+      "y": 4
+    },
+    {
+      "name": "snow_7",
+      "x": 7,
+      "y": 4
+    },
+    {
+      "name": "concrete_0",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "name": "concrete_1",
+      "x": 1,
+      "y": 5
+    },
+    {
+      "name": "concrete_2",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "name": "concrete_3",
+      "x": 3,
+      "y": 5
+    },
+    {
+      "name": "concrete_4",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "name": "concrete_5",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "name": "concrete_6",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "name": "concrete_7",
+      "x": 7,
+      "y": 5
+    },
+    {
+      "name": "empty_0",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "name": "empty_1",
+      "x": 1,
+      "y": 6
+    },
+    {
+      "name": "empty_2",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "name": "empty_3",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "name": "empty_4",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "name": "empty_5",
+      "x": 5,
+      "y": 6
+    },
+    {
+      "name": "empty_6",
+      "x": 6,
+      "y": 6
+    },
+    {
+      "name": "empty_7",
+      "x": 7,
+      "y": 6
+    },
+    {
+      "name": "cobble_0",
+      "x": 0,
+      "y": 7
+    },
+    {
+      "name": "cobble_1",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "name": "cobble_2",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "name": "cobble_3",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "name": "cobble_4",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "name": "cobble_5",
+      "x": 5,
+      "y": 7
+    },
+    {
+      "name": "cobble_6",
+      "x": 6,
+      "y": 7
+    },
+    {
+      "name": "cobble_7",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "name": "bedrock_0",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "name": "bedrock_1",
+      "x": 1,
+      "y": 8
+    },
+    {
+      "name": "bedrock_2",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "name": "bedrock_3",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "name": "bedrock_4",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "name": "bedrock_5",
+      "x": 5,
+      "y": 8
+    },
+    {
+      "name": "bedrock_6",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "name": "bedrock_7",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "name": "sand_0",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "name": "sand_1",
+      "x": 1,
+      "y": 9
+    },
+    {
+      "name": "sand_2",
+      "x": 2,
+      "y": 9
+    },
+    {
+      "name": "sand_3",
+      "x": 3,
+      "y": 9
+    },
+    {
+      "name": "sand_4",
+      "x": 4,
+      "y": 9
+    },
+    {
+      "name": "sand_5",
+      "x": 5,
+      "y": 9
+    },
+    {
+      "name": "sand_6",
+      "x": 6,
+      "y": 9
+    },
+    {
+      "name": "sand_7",
+      "x": 7,
+      "y": 9
+    },
+    {
+      "name": "building_edge_0",
+      "x": 0,
+      "y": 12
+    },
+    {
+      "name": "building_edge_1",
+      "x": 1,
+      "y": 12
+    },
+    {
+      "name": "building_edge_2",
+      "x": 2,
+      "y": 12
+    },
+    {
+      "name": "building_edge_3",
+      "x": 3,
+      "y": 12
+    },
+    {
+      "name": "building_edge_4",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "name": "building_edge_5",
+      "x": 5,
+      "y": 12
+    },
+    {
+      "name": "building_edge_6",
+      "x": 6,
+      "y": 12
+    },
+    {
+      "name": "building_edge_7",
+      "x": 7,
+      "y": 12
+    },
+    {
+      "name": "building_interior_0",
+      "x": 0,
+      "y": 13
+    },
+    {
+      "name": "building_interior_1",
+      "x": 1,
+      "y": 13
+    },
+    {
+      "name": "building_interior_2",
+      "x": 2,
+      "y": 13
+    },
+    {
+      "name": "building_interior_3",
+      "x": 3,
+      "y": 13
+    },
+    {
+      "name": "building_interior_4",
+      "x": 4,
+      "y": 13
+    },
+    {
+      "name": "building_interior_5",
+      "x": 5,
+      "y": 13
+    },
+    {
+      "name": "building_interior_6",
+      "x": 6,
+      "y": 13
+    },
+    {
+      "name": "building_interior_7",
+      "x": 7,
+      "y": 13
+    }
+
+
+
+  ]
 	
 	}

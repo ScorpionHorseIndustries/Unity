@@ -1,0 +1,42 @@
+{
+
+  "name": "installed::mining_controller",
+  "niceName": "mining controller",
+  "sprite": "installed_items::mining_controller",
+  "sprites": [],
+  "canSpawnOn": [
+    "grass_coal",
+    "grass_iron",
+    "grass_copper",
+    "dirt_coal",
+    "dirt_iron",
+    "dirt_copper",
+    "stone_coal",
+    "stone_iron",
+    "stone_copper",
+    "sand_coal",
+    "sand_iron",
+    "sand_copper"
+  ],
+  "linked": false,
+  "movementFactor": 0.8,
+  "trash": false,
+  "build": true,
+  "neighbourTypes": [],
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::mining_controller::build",
+  "deconstructRecipe": "recipe::installed::mining_controller::decon",
+  "inventorySlots": 0,
+  "width": 3,
+  "height": 3,
+  "workTileOffsetX": 1,
+  "updateActionCountDown": 3,
+  "workRecipe": "recipe::installed::mining_controller::work::iron",
+  "workstation": true,
+  "updateAction": "OnUpdate_Workstation",
+  "editOnClick": true,
+  "workCondition": "GetStockpileQty(inv__iron_ore) < 32",
+  "powerUsed" : 0.3,
+  "onCreate": "OnCreate_MiningController"
+
+}

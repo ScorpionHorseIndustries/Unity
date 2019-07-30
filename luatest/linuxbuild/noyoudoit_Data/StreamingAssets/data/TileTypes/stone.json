@@ -1,0 +1,24 @@
+{
+  "movementFactor": 0.800000011920929,
+  "varieties": [
+    {
+      "name": "stone_iron",
+      "zOffsetB": 60,
+      "zOffsetA": 50
+    },
+    {
+      "name": "stone_copper",
+      "zOffsetB": 110,
+      "zOffsetA": 100
+    },
+    {
+      "name": "stone_coal",
+      "zOffsetB": 30,
+      "zOffsetA": 20
+    }
+  ],
+  "build": true,
+  "name": "stone",
+  "mindedProduct": "inv::stone_slabs",
+  "height": 500
+}

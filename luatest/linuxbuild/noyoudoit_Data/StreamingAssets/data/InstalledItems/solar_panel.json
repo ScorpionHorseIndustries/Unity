@@ -1,0 +1,26 @@
+﻿{
+  
+  "name": "installed::solar_panel",
+  "niceName": "solar panel",
+  "sprite": "installed_items::solar_panel",
+  "sprites": [],
+  "linked": true,
+  "neighbour_s": "installed_items::solar_panel_s",
+  "neighbour_ns": "installed_items::solar_panel_ns",
+  "neighbour_nsw": "installed_items::solar_panel_nsw",
+  "neighbour_sw": "installed_items::solar_panel_sw",
+  "neighbour_nesw": "installed_items::solar_panel_nesw",
+  "neighbourTypes": [ "installed::solar_panel"],
+  "movementFactor": 0.5,
+  "trash": false,
+  "build": true,
+  "randomRotation": false,
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::solar_panel::build",
+  "updateActionCountDown": 1,
+  "width": 1,
+  "height": 1,
+  "deconstructRecipe": "recipe::installed::solar_panel::decon",
+  "powerGenerated" :  1
+
+}

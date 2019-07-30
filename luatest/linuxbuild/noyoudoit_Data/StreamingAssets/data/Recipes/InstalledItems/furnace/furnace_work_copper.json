@@ -1,0 +1,24 @@
+{
+  "name": "recipe::installed::furnace::work::copper",
+	"niceName" : "smelt copper",
+  "buildTime": 1,
+  "resources": [
+    {
+      "name": "inv::copper_ore",
+      "qty": 1
+    },
+    {
+      "name": "inv::coal",
+      "qty" :  1
+    }
+  ],
+  "products": [
+    {
+      "name": "inv::copper_plates",
+      "qtyMin": 1,
+      "qtyMax": 1,
+      "chance": 1
+    }
+
+  ]
+}

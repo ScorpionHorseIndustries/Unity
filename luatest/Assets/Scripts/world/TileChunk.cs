@@ -38,6 +38,7 @@ namespace NoYouDoIt.TheWorld {
     Dictionary<string, TileChunk> neighbours;
 
 
+
     public void Init() {
       Rect rect = new Rect(0, 0, CHUNK_WIDTH * 32, CHUNK_HEIGHT * 32);
       Vector2 pivot = new Vector2(0, 0);
@@ -60,39 +61,58 @@ namespace NoYouDoIt.TheWorld {
 
           //float xf = ((float)t.world_x + world.xSeed) * world.noiseFactor;
           //float yf = ((float)t.world_y + world.ySeed) * world.noiseFactor;
-          float n1 = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y));
-          float n2 = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y),World.current.oreZ);
-          float n = (n1 + n2) / 2;
-          int j = Mathf.FloorToInt(n * (float)TileType.countNatural);
+          RMTile rm = World.current.citymap.GetTile(t.world_x, t.world_y);
+          int n = rm.h;
+          //float n2 = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y),World.current.oreZ);
+          //float n = (n1 + n2) / 2;
+          //int j = Mathf.FloorToInt(n * (float)TileType.countNatural);
 
-          foreach (string k in TileType.TYPES.Keys) {
-            TileType tempT = TileType.TYPES[k];
+          if (rm.showsAs == TYPE.BUILDING) {
+            t.SetType(TileType.TYPES["concrete"]);
+            if (rm.btype == BUILDING_TYPE.EDGE) {
+              t.SetType(TileType.TYPES["building_edge"]);
+            } else if (rm.btype == BUILDING_TYPE.INSIDE) {
+              t.SetType(TileType.TYPES["building_interior"]);
+            }
+            
+          } else if (rm.showsAs == TYPE.ROAD) {
+            t.SetType(TileType.TYPES["concrete"]);
+          } else if (rm.showsAs == TYPE.WATER) {
+            t.SetType(TileType.TYPES["water"]);
+          } else {
 
-            if (tempT.name != "empty") {
-              if (j == tempT.heightIndex) {
 
-                t.SetType(tempT);
+            foreach (string k in TileType.TYPES.Keys) {
+              TileType tempT = TileType.TYPES[k];
 
-                if (tempT.varieties.Count == 0) {
-                  
-                } else {
-                  foreach(string variety in tempT.varieties.Keys) {
-                    TileType vt = TileType.TYPES[variety];
-                    float A = tempT.varieties[variety].Item1;
-                    float B = tempT.varieties[variety].Item2;
-                    float na = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y), A);
-                    float nb = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y), B);
-                    float navg = (na + nb) / 2f;
-                    if ((navg >= 0.95f && navg <= 1f)|| (navg >= 0.05f && navg <= 0.1f)) {
-                      t.SetType(vt);
-                      break;
+
+
+              if (tempT.name != "empty") {
+                if (n == tempT.heightIndex) {
+
+                  t.SetType(tempT);
+
+                  if (tempT.varieties.Count == 0) {
+
+                  } else {
+                    foreach (string variety in tempT.varieties.Keys) {
+                      TileType vt = TileType.TYPES[variety];
+                      float A = tempT.varieties[variety].Item1;
+                      float B = tempT.varieties[variety].Item2;
+                      float na = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y), A);
+                      float nb = World.current.SimplexNoise(((float)t.world_x), ((float)t.world_y), B);
+                      float navg = (na + nb) / 2f;
+                      if ((navg >= 0.95f && navg <= 1f) || (navg >= 0.05f && navg <= 0.1f)) {
+                        t.SetType(vt);
+                        break;
+                      }
                     }
                   }
+
+
+
+                  break;
                 }
-
-
-
-                break;
               }
             }
           }

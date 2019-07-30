@@ -1,0 +1,19 @@
+{
+      "name": "recipe::installed::wall::decon",
+      "niceName" : "decon",
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::steel_plates",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        },
+        {
+          "name": "inv::stone_slabs",
+          "qtyMin": 0,
+          "qtyMax": 4,
+          "chance": 0.7
+        }
+      ]
+    }

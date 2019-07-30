@@ -1,0 +1,121 @@
+{
+	"ppu" : 32,
+	"width" : 32,
+	"height" : 32,
+  "sprites": [
+    {
+      "name": "robot_idle",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "robot_south",
+      "x": 1,
+      "y": 1
+    },
+    {
+      "name": "robot_sitting",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "robot_north",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "name": "robot_east",
+      "x": 2,
+      "y": 2,
+      "flipX": true
+    },
+    {
+      "name": "robot_west",
+      "x": 2,
+      "y": 2
+
+    },
+    {
+      "name": "robot_south_0",
+      "x": 4,
+      "y": 2
+    },
+    {
+      "name": "robot_south_1",
+      "x": 5,
+      "y": 2
+    },
+    {
+      "name": "robot_north_0",
+      "x": 4,
+      "y": 1
+    },
+    {
+      "name": "robot_north_1",
+      "x": 5,
+      "y": 1
+    },
+    {
+      "name": "robot_idle_0",
+      "x": 0,
+      "y": 1
+    },
+    {
+      "name": "robot_idle_1",
+      "x": 0,
+      "y": 2
+    },
+
+    {
+      "name": "robot_idle_2",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "name": "robot_west_0",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "name": "robot_west_1",
+      "x": 5,
+      "y": 0
+    },
+    {
+      "name": "robot_west_2",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "name": "robot_west_3",
+      "x": 7,
+      "y": 0
+    },
+    {
+      "name": "robot_east_0",
+      "x": 4,
+      "y": 0,
+      "flipX": true
+    },
+    {
+      "name": "robot_east_1",
+      "x": 5,
+      "y": 0,
+      "flipX": true
+    },
+    {
+      "name": "robot_east_2",
+      "x": 6,
+      "y": 0,
+      "flipX": true
+    },
+    {
+      "name": "robot_east_3",
+      "x": 7,
+      "y": 0,
+      "flipX": true
+    }
+
+  ]
+}
+

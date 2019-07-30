@@ -1,0 +1,19 @@
+{
+      "name": "recipe::installed::organic_trash::decon",
+      "niceName" : "disassemble",
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::organic_trash",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 1
+        },
+        {
+          "name": "inv::wallet",
+          "qtyMin": 1,
+          "qtyMax": 1,
+          "chance": 0.7
+        }
+      ]
+    }

@@ -1,0 +1,24 @@
+{
+  "movementFactor": 0.5,
+  "varieties": [
+    {
+      "name": "dirt_iron",
+      "zOffsetB": 60,
+      "zOffsetA": 50
+    },
+    {
+      "name": "dirt_copper",
+      "zOffsetB": 110,
+      "zOffsetA": 100
+    },
+    {
+      "name": "dirt_coal",
+      "zOffsetB": 30,
+      "zOffsetA": 20
+    }
+  ],
+  "build": true,
+  "name": "dirt",
+  
+  "height": 200
+}

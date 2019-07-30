@@ -1,0 +1,8 @@
+{
+  "name": "entities::human",
+  "niceName": "human",
+  "onUpdate": "OnUpdate_Human",
+  "spriteName": "entities::human",
+  "getName" :  "human"
+
+}

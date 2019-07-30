@@ -1,0 +1,8 @@
+{
+      
+      "type": "inv::components",
+      "niceName": "components",
+      "stackSize": 64,
+      "spriteName": "inventory_items::components",
+      "category": "manufactured"
+    }

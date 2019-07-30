@@ -1,0 +1,8 @@
+{
+      
+      "type": "inv::silicon",
+      "niceName": "silicon",
+      "stackSize": 16,
+      "spriteName": "inventory_items::silicon",
+      "category": "manufactured"
+    }

@@ -1,0 +1,21 @@
+{
+      
+      "name": "installed::wall",
+      "niceName": "wall",
+      "sprite": "installed_items::walls_none",
+      "sprites": [],
+      "linked": true,
+      "neighbour_s": "installed_items::walls_s",
+      "neighbour_ns": "installed_items::walls_ns",
+      "neighbour_nsw": "installed_items::walls_nsw",
+      "neighbour_sw": "installed_items::walls_sw",
+      "neighbour_nesw": "installed_items::walls_nesw",
+      "neighbourTypes": [ "installed::door", "installed::wall" ],
+      "movementFactor": 0.00,
+      "trash": false,
+      "build": true,
+      "enclosesRoom": true,
+      "recipe": "recipe::installed::wall::build",
+      "deconstructRecipe": "recipe::installed::wall::decon"
+
+    }

@@ -1,0 +1,22 @@
+{
+
+  "name": "installed::stockpile",
+  "niceName": "stockpile",
+  "sprite": "installed_items::stockpile",
+  "sprites": [],
+  "linked": false,
+  "movementFactor": 1,
+  "trash": false,
+  "build": true,
+  "neighbourTypes": [],
+  "enclosesRoom": false,
+  "recipe": "recipe::installed::stockpile::build",
+  "deconstructRecipe": "recipe::installed::stockpile::decon",
+  "inventorySlots": 1,
+  "updateActionCountDown": 2,
+  "editOnClick": false,
+  "updateAction": "OnUpdate_Stockpile",
+  "onCreate": "OnCreate_Stockpile",
+  "onRemoved": "OnRemoved_Stockpile"
+
+}

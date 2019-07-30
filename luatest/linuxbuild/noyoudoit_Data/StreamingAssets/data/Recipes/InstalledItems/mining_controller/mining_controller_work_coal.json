@@ -1,0 +1,15 @@
+{
+      "name": "recipe::installed::mining_controller::work::coal",
+	  
+      "niceName" : "mine coal",
+      "buildTime": 1,
+      "products": [
+        {
+          "name": "inv::coal",
+          "qtyMin": 1,
+          "qtyMax": 5,
+          "chance": 0.9
+        }
+
+      ]
+    }

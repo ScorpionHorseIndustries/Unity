@@ -1,0 +1,8 @@
+{
+
+  "type": "inv::basic_shipping_carton",
+  "niceName": "shipping carton (basic)",
+  "stackSize": 1,
+  "spriteName": "inventory_items::basic_shipping_carton",
+  "category": "manufactured"
+}

@@ -6,7 +6,6 @@ S:\unity\luatest\Temp\bin\Debug\Microsoft.Win32.Primitives.dll
 S:\unity\luatest\Temp\bin\Debug\mscorlib.dll
 S:\unity\luatest\Temp\bin\Debug\netstandard.dll
 S:\unity\luatest\Temp\bin\Debug\Newtonsoft.Json.dll
-S:\unity\luatest\Temp\bin\Debug\nunit.framework.dll
 S:\unity\luatest\Temp\bin\Debug\Priority Queue.dll
 S:\unity\luatest\Temp\bin\Debug\System.AppContext.dll
 S:\unity\luatest\Temp\bin\Debug\System.Collections.Concurrent.dll
@@ -124,7 +123,6 @@ S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.StandardEvents.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Analytics.Tracker.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.CollabProxy.Editor.dll
-S:\unity\luatest\Temp\bin\Debug\Unity.Locator.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.TextMeshPro.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Timeline.dll
@@ -162,11 +160,9 @@ S:\unity\luatest\Temp\bin\Debug\UnityEngine.SharedInternalsModule.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.SpriteMaskModule.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.SpriteShapeModule.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.StreamingModule.dll
-S:\unity\luatest\Temp\bin\Debug\UnityEngine.StyleSheetsModule.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.SubstanceModule.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TerrainModule.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TerrainPhysicsModule.dll
-S:\unity\luatest\Temp\bin\Debug\UnityEngine.TestRunner.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TextCoreModule.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TextRenderingModule.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TilemapModule.dll
@@ -194,10 +190,8 @@ S:\unity\luatest\Temp\bin\Debug\UnityScript.dll
 S:\unity\luatest\Temp\bin\Debug\UnityScript.Lang.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Cecil.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.SerializationLogic.dll
-S:\unity\luatest\Temp\bin\Debug\Unity.DataContract.dll
 S:\unity\luatest\Temp\bin\Debug\ExCSS.Unity.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Legacy.NRefactory.dll
-S:\unity\luatest\Temp\bin\Debug\Unity.IvyParser.dll
 S:\unity\luatest\Temp\bin\Debug\Boo.Lang.Compiler.dll
 S:\unity\luatest\Temp\bin\Debug\Boo.Lang.PatternMatching.dll
 S:\unity\luatest\Temp\bin\Debug\Boo.Lang.Parser.dll
@@ -242,7 +236,6 @@ S:\unity\luatest\Temp\bin\Debug\UnityEngine.SharedInternalsModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.SpriteMaskModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.SpriteShapeModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.StreamingModule.xml
-S:\unity\luatest\Temp\bin\Debug\UnityEngine.StyleSheetsModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.SubstanceModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TLSModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.TerrainModule.xml
@@ -268,9 +261,6 @@ S:\unity\luatest\Temp\bin\Debug\UnityEngine.VehiclesModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.VideoModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.WindModule.xml
 S:\unity\luatest\Temp\bin\Debug\UnityEngine.XRModule.xml
-S:\unity\luatest\Temp\bin\Debug\UnityEngine.UI.xml
-S:\unity\luatest\Temp\bin\Debug\UnityEngine.TestRunner.xml
-S:\unity\luatest\Temp\bin\Debug\nunit.framework.xml
 S:\unity\luatest\Temp\bin\Debug\Newtonsoft.Json.xml
 S:\unity\luatest\Temp\bin\Debug\Priority Queue.pdb
 S:\unity\luatest\Temp\bin\Debug\Priority Queue.xml
@@ -282,7 +272,6 @@ S:\unity\luatest\Temp\bin\Debug\System.Drawing.dll
 S:\unity\luatest\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
 S:\unity\luatest\Temp\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Burst.dll
-S:\unity\luatest\Temp\bin\Debug\Unity.Burst.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Collections.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Entities.BuildUtils.dll
 S:\unity\luatest\Temp\bin\Debug\Unity.Entities.dll
@@ -324,8 +313,26 @@ S:\unity\luatest\Temp\bin\Debug\Unity.Entities.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Properties.Reflection.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Transforms.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Transforms.Editor.pdb
-S:\unity\luatest\Temp\bin\Debug\Unity.Burst.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Mathematics.Editor.pdb
 S:\unity\luatest\Temp\bin\Debug\Unity.Transforms.Hybrid.pdb
+S:\unity\luatest\Temp\bin\Debug\Unity.2D.Sprite.Editor.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.2D.Tilemap.Editor.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.Rider.Editor.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.VSCode.Editor.dll
 S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.dll
-S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.xml
+S:\unity\luatest\Temp\bin\Debug\UnityEngine.AndroidJNIModule.dll
+S:\unity\luatest\Temp\bin\Debug\UnityEngine.DSPGraphModule.dll
+S:\unity\luatest\Temp\bin\Debug\UnityEngine.InputLegacyModule.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.VSCode.Editor.pdb
+S:\unity\luatest\Temp\bin\Debug\UnityEngine.UI.pdb
+S:\unity\luatest\Temp\bin\Debug\Unity.Rider.Editor.pdb
+S:\unity\luatest\Temp\bin\Debug\Unity.2D.Sprite.Editor.pdb
+S:\unity\luatest\Temp\bin\Debug\Unity.2D.Tilemap.Editor.pdb
+S:\unity\luatest\Temp\bin\Debug\UnityEditor.UI.pdb
+S:\unity\luatest\Temp\bin\Debug\UnityEngine.AndroidJNIModule.xml
+S:\unity\luatest\Temp\bin\Debug\UnityEngine.DSPGraphModule.xml
+S:\unity\luatest\Temp\bin\Debug\UnityEngine.InputLegacyModule.xml
+S:\unity\luatest\Temp\bin\Debug\Unity.Burst.Editor.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.Burst.Unsafe.dll
+S:\unity\luatest\Temp\bin\Debug\Unity.Burst.Editor.pdb
+S:\unity\luatest\Temp\bin\Debug\Unity.Burst.Unsafe.xml

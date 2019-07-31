@@ -932,7 +932,7 @@ namespace NoYouDoIt.Controller {
 
     void OnEntityCreated(Entity r) {
       string name = r.name + "_" + r.GetHashCode();
-      Debug.Log(name + " " + r.Xint + "," + r.Yint);
+      //Debug.Log(name + " " + r.Xint + "," + r.Yint);
 
       GameObject go = CreateGameObject(name, r.Xint, r.Yint);
       //Debug.Log(go);

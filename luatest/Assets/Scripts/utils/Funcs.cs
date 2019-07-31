@@ -10,6 +10,20 @@ using NoYouDoIt.TheWorld;
 namespace NoYouDoIt.Utils {
   public static class Funcs {
 
+    public static float Random(float min, float max) {
+      return UnityEngine.Random.Range(min, max);
+    }
+
+
+    public static Vector2 RadianToVector2(float radian) {
+      return new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
+    }
+
+    public static Vector2 DegreeToVector2(float degree) {
+      return RadianToVector2(degree * Mathf.Deg2Rad);
+    }
+
+
     static Funcs() {
       LoadSettings();
 
@@ -360,7 +374,7 @@ namespace NoYouDoIt.Utils {
       return UnityEngine.Random.Range(0.0f, 100.0f) < chance;
     }
 
-    public static bool Chance(int chance = 50) {
+    public static bool Chance100(int chance = 50) {
       return UnityEngine.Random.Range(0, 100) < chance;
     }
   }

@@ -86,7 +86,7 @@ namespace NoYouDoIt.Controller {
               Sprite spriteB = GetSprite(overlay);
 
               if (spriteA.texture.width == spriteB.texture.width && spriteA.texture.height == spriteB.texture.height) {
-                Debug.Log(spriteA + "\n" + spriteB);
+                //Debug.Log(spriteA + "\n" + spriteB);
 
                 Texture2D tex = new Texture2D(32, 32, DEFAULT_TEXTURE_FORMAT, false);
                 for (int x = 0; x < 32; x += 1) {
@@ -105,7 +105,7 @@ namespace NoYouDoIt.Controller {
                 Rect rect = new Rect(0, 0, 32, 32);
                 Vector2 pivot = new Vector2(0.5f, 0.5f);
                 Sprite sprite = Sprite.Create(tex, rect, pivot, 32);
-                Debug.Log(name + "\n" + sprite);
+                //Debug.Log(name + "\n" + sprite);
                 sprites[name] = sprite;
               } else {
                 Debug.LogError(spriteA + " and " + spriteB + " are not the same size."); 

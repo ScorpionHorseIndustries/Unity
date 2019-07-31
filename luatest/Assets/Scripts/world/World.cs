@@ -21,6 +21,8 @@ namespace NoYouDoIt.TheWorld {
   using NoYouDoIt.DataModels;
   using NoYouDoIt.NYDIPaths;
   using NoYouDoIt.Controller;
+  using NoYouDoIt.Utils.Maps.CityMap;
+
   public class World : IXmlSerializable {
 
 
@@ -1417,11 +1419,11 @@ import 'NoYouDoIt.DataModels'
 
     public string GetNum() {
 
-      if (Funcs.Chance(50)) {
+      if (Funcs.Chance100(50)) {
         return UnityEngine.Random.Range(1960, 2030).ToString();
-      } else if (Funcs.Chance(2)) {
+      } else if (Funcs.Chance100(2)) {
         return 69.ToString();
-      } else if (Funcs.Chance(1)) {
+      } else if (Funcs.Chance100(1)) {
         return 420.ToString();
       } else {
         return UnityEngine.Random.Range(1900, 5000).ToString();

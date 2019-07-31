@@ -12,6 +12,8 @@ namespace NoYouDoIt.TheWorld {
   using NoYouDoIt.Utils;
   using NoYouDoIt.DataModels;
   using NoYouDoIt.Controller;
+  using NoYouDoIt.Utils.Maps.CityMap;
+  
   public class TileChunk : IXmlSerializable {
     public static readonly int CHUNK_WIDTH = Funcs.GetSettingInt("chunk_width");
     public static readonly int CHUNK_HEIGHT = Funcs.GetSettingInt("chunk_height");
@@ -129,7 +131,7 @@ namespace NoYouDoIt.TheWorld {
 
           Tile t = tiles[xx,yy];
           if (t.type.name != "empty" && t.type.name != "water") {
-            if (Funcs.Chance(1)) {
+            if (Funcs.Chance100(1)) {
               if (InstalledItem.trashPrototypes.Count > 0) {
                 string trashItemName = InstalledItem.GetRandomTrashItemName();
                 InstalledItem proto = InstalledItem.GetPrototype(trashItemName);
